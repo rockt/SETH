@@ -1,4 +1,4 @@
-package seth.wrapper;
+package seth.ner.wrapper;
 
 /**
  * User: Tim Rocktaeschel

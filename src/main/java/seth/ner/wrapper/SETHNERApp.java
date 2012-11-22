@@ -1,4 +1,6 @@
-package seth.wrapper;
+package seth.ner.wrapper;
+
+import seth.Mutation;
 
 import java.util.List;
 
@@ -9,10 +11,10 @@ import java.util.List;
  */
 
 //Java Wrapper
-public class App {
+public class SETHNERApp {
     public static void main(String[] args) {
         System.out.println(args[0]);
-        SETH seth = new SETH();
+        SETHNER seth = new SETHNER();
         List<Mutation> result = seth.extractMutations(args[0]);
         for (Mutation mutation : result) {
             System.out.println(mutation);

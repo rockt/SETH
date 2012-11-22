@@ -1,12 +1,14 @@
-package seth.wrapper;
+package seth;
+
+import seth.ner.wrapper.Type;
+
+import java.util.List;
 
 /**
  * User: Tim Rocktaeschel
  * Date: 11/9/12
  * Time: 2:14 PM
  */
-
-
 
 public class Mutation {
     private int start;
@@ -17,6 +19,7 @@ public class Mutation {
     private String wild;
     private String mutated;
     private Type type;
+    private List<String> dbSNP; //TODO
 
     public Mutation(int start, int end, String text, String ref, String location, String wild, String mutated, Type type) {
         this.start = start;
@@ -70,5 +73,9 @@ public class Mutation {
 
     public String getRef() {
         return ref;
+    }
+
+    public void normalize(List<Integer> entrezIDs) {
+        //TODO
     }
 }
