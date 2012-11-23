@@ -605,6 +605,7 @@ class SETHSuite extends FunSpec with ShouldMatchers with GivenWhenThen with Logg
           accept("NC_000003.11:g.131897971_131897972AC>C")
           accept("NM_004782.3:c.*515_*522ACACACTC>T")
           accept("NM_004006.1:c.15_355C>T")
+          accept("NP_001106653.1:p.Glu500Ter")
           reject("r.0?")
         }
         it ("Pending") {
@@ -632,6 +633,8 @@ class SingleTest extends FunSuite {
     println(mutation.toString)
   }
   test("Bugs") {
-    assert(SETH.isValid("c.15_355conNM_004006.1:c.15_355", SETH.mutation) === true) //DONE
+    //assert(SETH.isValid("c.15_355conNM_004006.1:c.15_355", SETH.mutation) === true) //DONE
+    //assert(SETH.isValid("NP_001106653.1p.Glu500Ter", SETH.mutation) === true) //TODO
+    assert(SETH.isValid("NP_001106653.1:p.Glu500Ter", SETH.mutation) === true) //DONE
   }
 }

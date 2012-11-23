@@ -207,7 +207,10 @@ class SETHNER extends RegexParsers with NonGreedy with Positional with FlattenTo
   lazy val AA1:P                = "A" | "R" | "N" | "D" | "C" | "Q" | "E" | "G" | "H" | "I" | "L" | "K" | "M" | "F" |
     "P" | "S" | "T" | "W" | "Y" | "V"
   lazy val AA3:P                = "Ala" | "Arg" | "Asn" | "Asp" | "Cys" | "Gln" | "Glu" | "Gly" | "His" | "Ile" |
-    "Leu" | "Lys" | "Met" | "Phe" | "Pro" | "Ser" | "Thr" | "Trp" | "Tyr" | "Val"
+    "Leu" | "Lys" | "Met" | "Phe" | "Pro" | "Ser" | "Thr" | "Trp" | "Tyr" | "Val" |
+  //FIXED: added termination, stop codons and ambiguous amino acids
+  "Ter" | "Sec" | "Pyl" | "Asx" | "Glx" | "Xle" | "Xaa"
+
   //FIXED: first, try matching the longer ones
   //FIXED: added '*'
   lazy val AA:P                 = AA3 | AA1 | "X" | "*"
@@ -238,7 +241,7 @@ class SETHNER extends RegexParsers with NonGreedy with Positional with FlattenTo
       (AAPtLoc ~ AA ~ ("extX" ~ "*".? ~ Number).? | ("Met1" | "M1") ~ ("?" | "ext" ~ Number))
   lazy val ProteinDel:P         = AALoc ~ ("del" ^^ { DelString(_) })
   lazy val ProteinDup:P         = AALoc ~ ("dup" ^^ { DupString(_) })
-  lazy val ProteinEq:P         = AALoc ~ ("=" ^^ { SilentString(_) })
+  lazy val ProteinEq:P          = AALoc ~ ("=" ^^ { SilentString(_) })
   lazy val ProteinVarSSR:P      = AALoc ~ "(" ~ Number ~ "_" ~ Number ~ ")"
   lazy val ProteinIns:P         = AALoc ~ ("ins" ^^ { InsString(_) }) ~ ((AA.+) ^^ { MutatedString(_) } | Number)
   lazy val ProteinIndel:P       = AALoc ~ ("delins" ^^ { InsDelString(_) }) ~ ((AA.+ ^^ { MutatedString(_) }) | Number)
