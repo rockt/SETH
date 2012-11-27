@@ -99,7 +99,8 @@ class SETHNER extends RegexParsers with NonGreedy with Positional with FlattenTo
   //EBNF akin to Laros et al. (2011)
   //DNA and RNA variant nomenclature
   //Basic lexemes
-  lazy val Nt:P                 = "a" | "c" | "g" | "t" | "u" | "A" | "C" | "G" | "T" | "U"
+  //FIXED: added unkown base N
+  lazy val Nt:P                 = "a" | "c" | "g" | "t" | "u" | "A" | "C" | "G" | "T" | "U" | "n" | "N"
   lazy val NtString:P           = Nt.+
   lazy val name:P               = "([a-z]|[A-Z]|[0-9])+".r
   lazy val Number:P             = "([0-9])+".r
@@ -189,12 +190,12 @@ class SETHNER extends RegexParsers with NonGreedy with Positional with FlattenTo
   lazy val Ins:P                = (RangeLoc ^^ { LocString(_) }) ~ ("ins" ^^ { InsString(_) }) ~
     (Nt.+ ^^ { MutatedString(_) } | Number | RangeLoc | FarLoc) //~ Nest.?
   lazy val Indel:P              = (RangeLoc ^^ { LocString(_) }) ~ "del" ~ (Nt.+ ^^ { WildString(_) } | Number).? ~
-      ("ins" ^^ { InsDelString(_) }) ~ ((Nt.+ ^^ { MutatedString(_) }) | Number | RangeLoc | FarLoc) //~ Nest.?
+    ("ins" ^^ { InsDelString(_) }) ~ ((Nt.+ ^^ { MutatedString(_) }) | Number | RangeLoc | FarLoc) //~ Nest.?
   lazy val Inv:P                = (RangeLoc ^^ { LocString(_) }) ~ ("inv" ^^ { InvString(_) }) ~ (Nt.+ ^^ { WildString(_) } | Number).? //~ Nest.?
   lazy val Conv:P               = (RangeLoc ^^ { LocString(_) }) ~ ("con" ^^ { ConString(_) }) ~ FarLoc //~ Nest.?
   lazy val TransLoc:P           = ("t" ^^ { TransLocString(_) }) ~ ChromCoords ~ "(" ~ FarLoc ~ ")"
   lazy val RawVar:P             = Indel | Subst | Del | Dup | (VarSSR ^^ { VariableShortSequenceRepeatString(_) }) | Ins | Inv | Conv
-  lazy val SingleVar:P          = ((Ref ~ RefType.?) ^^ { RefSeqString(_) }) ~ RawVar | TransLoc
+  lazy val SingleVar:P          = ((Ref ~ RefType.?) ^^ { RefSeqString(_) }) ~ ("(" ~ RawVar ~ ")" | RawVar) | TransLoc
   lazy val ExtendedRawVar:P     = RawVar ~ ("=" | "?") //FIXED: RawVar is now really extended
   lazy val UnkEffectVar:P       = Ref ~ ("(=)" | "?")
   lazy val SplicingVar:P        = Ref ~ ("spl?" | "(spl?)")
@@ -209,7 +210,7 @@ class SETHNER extends RegexParsers with NonGreedy with Positional with FlattenTo
   lazy val AA3:P                = "Ala" | "Arg" | "Asn" | "Asp" | "Cys" | "Gln" | "Glu" | "Gly" | "His" | "Ile" |
     "Leu" | "Lys" | "Met" | "Phe" | "Pro" | "Ser" | "Thr" | "Trp" | "Tyr" | "Val" |
   //FIXED: added termination, stop codons and ambiguous amino acids
-  "Ter" | "Sec" | "Pyl" | "Asx" | "Glx" | "Xle" | "Xaa"
+    "Ter" | "Sec" | "Pyl" | "Asx" | "Glx" | "Xle" | "Xaa"
 
   //FIXED: first, try matching the longer ones
   //FIXED: added '*'
@@ -231,7 +232,7 @@ class SETHNER extends RegexParsers with NonGreedy with Positional with FlattenTo
   lazy val ProteinRef:P         = ((Name ~ ":").?  ~ "p.") ^^ { RefSeqString(_) }
 
   //Single Variations
-  lazy val ProteinSingleVar:P   = ProteinRef ~ ProteinRawVar
+  lazy val ProteinSingleVar:P   = ProteinRef ~ ("(" ~ ProteinRawVar ~ ")" | ProteinRawVar)
   //FIXED: we don't want to extract =, 0 and ?
   lazy val ProteinRawVar:P      = ProteinIndel | ProteinDel | ProteinDup | ProteinFrameShift |
     (ProteinSubst ^^ { SubstString(_) }) | (ProteinVarSSR ^^ { VariableShortSequenceRepeatString(_) }) |
@@ -245,10 +246,17 @@ class SETHNER extends RegexParsers with NonGreedy with Positional with FlattenTo
   lazy val ProteinVarSSR:P      = AALoc ~ "(" ~ Number ~ "_" ~ Number ~ ")"
   lazy val ProteinIns:P         = AALoc ~ ("ins" ^^ { InsString(_) }) ~ ((AA.+) ^^ { MutatedString(_) } | Number)
   lazy val ProteinIndel:P       = AALoc ~ ("delins" ^^ { InsDelString(_) }) ~ ((AA.+ ^^ { MutatedString(_) }) | Number)
-  lazy val ProteinFrameShift:P  = LongFS | ShortFS
+  lazy val ProteinFrameShift:P  = LongFS | ShortFS | SubstFS
   lazy val ShortFS:P            = (AAPtLoc ^^ { LocString(_) })~ ("fs" ^^ { FrameShiftString(_) })
   //FIXED: added "*" and RangeLoc
   lazy val LongFS:P             = ((AAPtLoc ~ AA.?) ^^ { LocString(_) }) ~ ("fs" ^^ { FrameShiftString(_) }) ~ ("X" | "*") ~ Number
+  //FIXED: added other forms of Frame Shifts
+  lazy val SubstFS:P            = ((AA ^^ { WildString(_) }) ~ (Number ^^ { LocString(_) }) ~ "ext" ~ "*".? ~
+    ((AA.+ ~ ("-" ~ AA.+).?) ^^ { MutatedString(_) })) ~
+    ("fs" ^^ { FrameShiftString(_) })
+
+
+
 
 
   def apply(input: String) = //parse(expr, new PackratReader(new CharSequenceReader(input))) match {

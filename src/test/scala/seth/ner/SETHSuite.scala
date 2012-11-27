@@ -601,11 +601,17 @@ class SETHSuite extends FunSpec with ShouldMatchers with GivenWhenThen with Logg
         it ("Fixed") {
           accept("NP_001135419.1:p.Asn904=")
           accept("NP_116277.2:p.Tyr1850Cys")
-          reject("NM_017774.3:c.286+45798_286+45799N>T") //not valid since we do not accept N (any)
+          accept("NM_017774.3:c.286+45798_286+45799N>T")
           accept("NC_000003.11:g.131897971_131897972AC>C")
           accept("NM_004782.3:c.*515_*522ACACACTC>T")
           accept("NM_004006.1:c.15_355C>T")
           accept("NP_001106653.1:p.Glu500Ter")
+          accept("p.(Trp26*)")
+          accept("r.(123A>C)")
+          accept("NP_000268.1:p.Lys452ext*LysValfs")
+          accept("NP_031393.2:p.Met1extMet-SerValfs")
+          accept("XP_003119069.1:p.Ala239ext*AlaValfs")
+          accept("NP_001021.1:p.Met1extMet-AsnAlafs")
           reject("r.0?")
         }
         it ("Pending") {
@@ -635,6 +641,9 @@ class SingleTest extends FunSuite {
   test("Bugs") {
     //assert(SETH.isValid("c.15_355conNM_004006.1:c.15_355", SETH.mutation) === true) //DONE
     //assert(SETH.isValid("NP_001106653.1p.Glu500Ter", SETH.mutation) === true) //TODO
-    assert(SETH.isValid("NP_001106653.1:p.Glu500Ter", SETH.mutation) === true) //DONE
+    //assert(SETH.isValid("NP_001106653.1:p.Glu500Ter", SETH.mutation) === true) //DONE
+    //assert(SETH.isValid("p.(Trp26*)", SETH.mutation) === true) //DONE
+    //assert(SETH.isValid("r.(123A>C)", SETH.mutation) === true) //DONE
+    assert(SETH.isValid("NP_031393.2:p.Met1extMet-SerValfs", SETH.mutation) === true) //DONE
   }
 }
