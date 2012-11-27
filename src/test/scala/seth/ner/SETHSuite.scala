@@ -612,6 +612,10 @@ class SETHSuite extends FunSpec with ShouldMatchers with GivenWhenThen with Logg
           accept("NP_031393.2:p.Met1extMet-SerValfs")
           accept("XP_003119069.1:p.Ala239ext*AlaValfs")
           accept("NP_001021.1:p.Met1extMet-AsnAlafs")
+          accept("NT_007592.15:g.12940923_(?_12940924)insA")
+          accept("NT_007592.15:g.12940923_(?_12940924)insG")
+          accept("NM_000348.3:c.*(91_?)_*(91_?)delinsC")
+          accept("NM_000348.3:c.*(91_?)_*(91_?)delinsT")
           reject("r.0?")
         }
         it ("Pending") {
@@ -644,6 +648,8 @@ class SingleTest extends FunSuite {
     //assert(SETH.isValid("NP_001106653.1:p.Glu500Ter", SETH.mutation) === true) //DONE
     //assert(SETH.isValid("p.(Trp26*)", SETH.mutation) === true) //DONE
     //assert(SETH.isValid("r.(123A>C)", SETH.mutation) === true) //DONE
-    assert(SETH.isValid("NP_031393.2:p.Met1extMet-SerValfs", SETH.mutation) === true) //DONE
+    //assert(SETH.isValid("NP_031393.2:p.Met1extMet-SerValfs", SETH.mutation) === true) //DONE
+    //assert(SETH.isValid("91_*(91_?)", SETH.Loc) === true) //DONE
+    assert(SETH.isValid("NT_007592.15:g.12940923_(?_12940924)insA", SETH.mutation) === true) //DONE
   }
 }

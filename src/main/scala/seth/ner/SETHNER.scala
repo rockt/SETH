@@ -110,8 +110,13 @@ class SETHNER extends RegexParsers with NonGreedy with Positional with FlattenTo
   lazy val Var:P                = SingleVar //| UnkEffectVar | NoRNAVar | SplicingVar //| MultiVar | MultiTranscriptVar
 
   //Locations
-  lazy val Loc:P                = (RangeLoc | PtLoc) ^^ { LocString(_) }
+  lazy val Loc:P                = (UncertainLoc | RangeLoc | PtLoc) ^^ { LocString(_) }
+  lazy val NoPointLoc:P         = (UncertainLoc | RangeLoc) ^^ { LocString(_) }
   // | FarLoc
+  //FIXED: added uncertain location
+  lazy val Uncertain:P          = (Number ~ "_?".? | "?_".? ~ Number) ~ Offset.?
+  lazy val UncertainPart:P      = Uncertain | "(" ~ Uncertain ~ ")"
+  lazy val UncertainLoc:P       = "*".? ~ UncertainPart ~ "_" ~ "*".? ~ UncertainPart
   lazy val Offset:P             = ("+" | "-") ~ ("u" | "d").? ~ (Number | "?")
   lazy val RealPtLoc:P          = (("-" | "*").? ~ Number ~ Offset.?) | "?"
   lazy val IVSLoc:P             = "IVS" ~ Number ~ ("+" | "-") ~ Number
@@ -187,12 +192,12 @@ class SETHNER extends RegexParsers with NonGreedy with Positional with FlattenTo
   //lazy val VarSSR:P             = ((PtLoc ^^ { LocString(_) }) ~ (Nt.+ ^^ { WildString(_) }) ~ "[" ~ Number ~ "]") | (RangeLoc ~ "[" ~ Number ~ "]") | AbrSSR
   lazy val VarSSR:P             = ((PtLoc ^^ { LocString(_) }) ~ (Nt.+ ^^ { MutatedString(_) }) ~ "[" ~ Number ~ "]") |
     (RangeLoc ~ "[" ~ Number ~ "]") | AbrSSR
-  lazy val Ins:P                = (RangeLoc ^^ { LocString(_) }) ~ ("ins" ^^ { InsString(_) }) ~
+  lazy val Ins:P                = (NoPointLoc ^^ { LocString(_) }) ~ ("ins" ^^ { InsString(_) }) ~
     (Nt.+ ^^ { MutatedString(_) } | Number | RangeLoc | FarLoc) //~ Nest.?
-  lazy val Indel:P              = (RangeLoc ^^ { LocString(_) }) ~ "del" ~ (Nt.+ ^^ { WildString(_) } | Number).? ~
+  lazy val Indel:P              = (NoPointLoc ^^ { LocString(_) }) ~ "del" ~ (Nt.+ ^^ { WildString(_) } | Number).? ~
     ("ins" ^^ { InsDelString(_) }) ~ ((Nt.+ ^^ { MutatedString(_) }) | Number | RangeLoc | FarLoc) //~ Nest.?
-  lazy val Inv:P                = (RangeLoc ^^ { LocString(_) }) ~ ("inv" ^^ { InvString(_) }) ~ (Nt.+ ^^ { WildString(_) } | Number).? //~ Nest.?
-  lazy val Conv:P               = (RangeLoc ^^ { LocString(_) }) ~ ("con" ^^ { ConString(_) }) ~ FarLoc //~ Nest.?
+  lazy val Inv:P                = (NoPointLoc ^^ { LocString(_) }) ~ ("inv" ^^ { InvString(_) }) ~ (Nt.+ ^^ { WildString(_) } | Number).? //~ Nest.?
+  lazy val Conv:P               = (NoPointLoc ^^ { LocString(_) }) ~ ("con" ^^ { ConString(_) }) ~ FarLoc //~ Nest.?
   lazy val TransLoc:P           = ("t" ^^ { TransLocString(_) }) ~ ChromCoords ~ "(" ~ FarLoc ~ ")"
   lazy val RawVar:P             = Indel | Subst | Del | Dup | (VarSSR ^^ { VariableShortSequenceRepeatString(_) }) | Ins | Inv | Conv
   lazy val SingleVar:P          = ((Ref ~ RefType.?) ^^ { RefSeqString(_) }) ~ ("(" ~ RawVar ~ ")" | RawVar) | TransLoc
