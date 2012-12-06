@@ -207,7 +207,6 @@ class SETHNER extends RegexParsers with NonGreedy with Positional with FlattenTo
   lazy val NoRNAVar:P           = Ref ~ "0" ~ "?".?
 
 
-
   //Protein variant nomenclature
   //Basic lexemes
   lazy val AA1:P                = "A" | "R" | "N" | "D" | "C" | "Q" | "E" | "G" | "H" | "I" | "L" | "K" | "M" | "F" |

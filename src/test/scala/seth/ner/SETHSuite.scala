@@ -621,6 +621,11 @@ class SETHSuite extends FunSpec with ShouldMatchers with GivenWhenThen with Logg
         it ("Pending") {
           pending
           accept("c.15_355conNM_004006.1:c.15_355")
+          reject("G:C>AT")
+          reject("18:1delta")
+          reject("DFDBA>c")
+          reject("DODAC>N")
+          reject("A:T>T")
         }
         it ("Questionable") {
           pending
@@ -630,6 +635,7 @@ class SETHSuite extends FunSpec with ShouldMatchers with GivenWhenThen with Logg
           accept("(?_-244)_32+?")
           accept("c.(?_-244)_32+?del")
           accept("7(TG)3_6")(SETH.AbrSSR)
+          accept("NC_000009.11:g.97222895delCinsACC")
         }
       }
     }
