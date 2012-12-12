@@ -62,8 +62,11 @@ object Uniprot2Tab extends App {
                      var pos: String = "",
                      var residue: String = "",
                      var wildtype: String = "") {
-    def complete = typ == "sequence variant" && !(desc.isEmpty | pos.isEmpty | residue.isEmpty | wildtype.isEmpty)
-    def dbSNP = if (desc.contains("dbSNP:rs")) desc.substring(10, desc.length-1) else ""
+    def complete = typ == "sequence variant" && !(dbSNP.isEmpty | pos.isEmpty | residue.isEmpty | wildtype.isEmpty)
+
+
+    val dbSNPPattern = "rs[1-9][0-9]+".r
+    lazy val dbSNP = if (desc.contains("dbSNP:rs")) dbSNPPattern.findFirstIn(desc).get.drop(2) else ""
   }
 
 

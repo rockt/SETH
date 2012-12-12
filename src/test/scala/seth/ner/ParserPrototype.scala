@@ -60,5 +60,10 @@ object ConstructorPrototype extends App {
   println(Test("a1"))
   println(Test("a1", "b1"))
 
-  println("""<feature type="sequence variant" id="VAR_027897" description="(in dbSNP:rs1248696)" evidence="1 9 10 11">""".split("\"").toList)
+
+
+  val dbSNPPattern = "rs[1-9][0-9]+".r
+  def dbSNP(s: String) = dbSNPPattern.findFirstIn(s).getOrElse("")
+
+  println(dbSNP("""<feature type="sequence variant" id="VAR_027897" description="(in dbSNP:rs1248696)" evidence="1 9 10 11">"""))
 }
