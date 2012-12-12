@@ -1,5 +1,6 @@
 package seth
 
+import ner.{FlattenToMutation, NonGreedy}
 import scala.util.parsing.combinator._
 import util.parsing.input.Positional
 
@@ -52,6 +53,12 @@ object ParserPrototype extends App with RegexParsers with NonGreedy with Positio
   val testChar = "abc"
   val output = CombinatorParser.parseAll(CombinatorParser.content, testChar).getOrElse(None)
   println(flatten(output))
+}
 
+object ConstructorPrototype extends App {
+  case class Test(a: String, var b: String = "")
+  println(Test("a1"))
+  println(Test("a1", "b1"))
 
+  println("""<feature type="sequence variant" id="VAR_027897" description="(in dbSNP:rs1248696)" evidence="1 9 10 11">""".split("\"").toList)
 }
