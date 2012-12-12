@@ -150,7 +150,7 @@ class SETHNER extends RegexParsers with NonGreedy with Positional with FlattenTo
 
   //FIXED: added other reference sequences
   lazy val OtherRefs:P          = (RS | Accs) ~ ":".r.?
-  lazy val NumberPointNumber:P  = "[0-9]".r.* ~ ("\\.".r ~ "[0-9]".r.*).?
+  lazy val NumberPointNumber:P  = "[0-9]".r.+ ~ ("\\.".r ~ "[0-9]".r.*).?
   lazy val RS:P                 = "rs" ~ "[1-9]".r.? ~ "[0-9]".r.*
   lazy val Accs:P               = (AccRefs | AccNumRefs | AccNumRefRange) ~ NumberPointNumber
 
@@ -217,8 +217,8 @@ class SETHNER extends RegexParsers with NonGreedy with Positional with FlattenTo
     "Ter" | "Sec" | "Pyl" | "Asx" | "Glx" | "Xle" | "Xaa"
 
   //FIXED: first, try matching the longer ones
-  //FIXED: added '*'
-  lazy val AA:P                 = AA3 | AA1 | "X" | "*"
+  //FIXED: added '*' and '?'
+  lazy val AA:P                 = AA3 | AA1 | "X" | "*" | "?"
   lazy val Name:P               = "[a-zA-Z0-9_\\.]".r.+
 
   //Top-level Rule
@@ -228,8 +228,8 @@ class SETHNER extends RegexParsers with NonGreedy with Positional with FlattenTo
   //lazy val AALoc:P              = (AAPtLoc ^^ { WildString(_) }) ~ ("_" ~ (AAPtLoc ^^ { MutatedString(_) })).? //| AARange
   //lazy val AALoc:P              = AAPtLoc ~ ("_" ~ AAPtLoc).? //| AARange
   lazy val AALoc:P              = (AAPtLoc ~ ("_" ~ AAPtLoc).?) ^^ { LocString(_) } //| AARange
-  //lazy val AAPtLoc:P            = (AA ^^ { WildString(_) }) ~ (ProteinPtLoc ^^ { LocString(_) })
-  lazy val AAPtLoc:P            = AA ~ ProteinPtLoc
+  lazy val AAPtLoc:P            = (AA ^^ { WildString(_) }) ~ (ProteinPtLoc ^^ { LocString(_) })
+  //lazy val AAPtLoc:P            = AA ~ ProteinPtLoc
   lazy val ProteinPtLoc:P       = ("-"|"*").? ~ Number | Number ~ ("+" | "-") ~ Number
 
   //Reference sequences
@@ -243,7 +243,7 @@ class SETHNER extends RegexParsers with NonGreedy with Positional with FlattenTo
     ProteinIns | ProteinEq
     // | "=" | "?" | "0" | "0?"
   lazy val ProteinSubst:P       = ((AA ^^ { WildString(_) }) ~ (Number ^^ { LocString(_) }) ~ (AA ^^ { MutatedString(_) })) |
-      (AAPtLoc ~ AA ~ ("extX" ~ "*".? ~ Number).? | ("Met1" | "M1") ~ ("?" | "ext" ~ Number))
+      (AAPtLoc ~ (AA  ^^ { MutatedString(_) }) ~ ("extX" ~ "*".? ~ Number).? | ("Met1" | "M1") ~ ("?" | "ext" ~ Number))
   lazy val ProteinDel:P         = AALoc ~ ("del" ^^ { DelString(_) })
   lazy val ProteinDup:P         = AALoc ~ ("dup" ^^ { DupString(_) })
   lazy val ProteinEq:P          = AALoc ~ ("=" ^^ { SilentString(_) })
@@ -302,6 +302,9 @@ class SETHNER extends RegexParsers with NonGreedy with Positional with FlattenTo
       val lChar = (if (m.start - 1 >= 0) text.charAt(m.start - 1) else " ").toString
       val rChar = (if (m.end < text.length) text.charAt(m.end) else " ").toString
       !(lChar.matches(left) && rChar.matches(right))
+    }).filter((m:Mutation) => {
+      !(m.loc.isEmpty && m.ref.endsWith(":") && m.ref.length < 3) &&
+      !(m.ref matches("[0-9]+:"))
     })
   }
 

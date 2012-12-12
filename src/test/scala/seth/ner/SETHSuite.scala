@@ -617,15 +617,15 @@ class SETHSuite extends FunSpec with ShouldMatchers with GivenWhenThen with Logg
           accept("NM_000348.3:c.*(91_?)_*(91_?)delinsC")
           accept("NM_000348.3:c.*(91_?)_*(91_?)delinsT")
           reject("r.0?")
+          assert(SETH.extractMutations("G:C>AT").isEmpty)
+          assert(SETH.extractMutations("18:1delta").isEmpty)
+          assert(SETH.extractMutations("DFDBA>c").isEmpty)
+          assert(SETH.extractMutations("DODAC>N").isEmpty)
+          assert(SETH.extractMutations("A:T>T").isEmpty)
         }
         it ("Pending") {
           pending
           accept("c.15_355conNM_004006.1:c.15_355")
-          reject("G:C>AT")
-          reject("18:1delta")
-          reject("DFDBA>c")
-          reject("DODAC>N")
-          reject("A:T>T")
         }
         it ("Questionable") {
           pending
@@ -657,6 +657,8 @@ class SingleTest extends FunSuite {
     //assert(SETH.isValid("r.(123A>C)", SETH.mutation) === true) //DONE
     //assert(SETH.isValid("NP_031393.2:p.Met1extMet-SerValfs", SETH.mutation) === true) //DONE
     //assert(SETH.isValid("91_*(91_?)", SETH.Loc) === true) //DONE
-    assert(SETH.isValid("NT_007592.15:g.12940923_(?_12940924)insA", SETH.mutation) === true) //DONE
+    //assert(SETH.isValid("NT_007592.15:g.12940923_(?_12940924)insA", SETH.mutation) === true) //DONE
+    println(SETH.extractMutations("p.M1?").head)
+
   }
 }
