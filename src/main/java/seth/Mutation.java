@@ -3,6 +3,7 @@ package seth;
 import seth.ner.wrapper.Type;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * User: Tim Rocktaeschel
@@ -11,6 +12,11 @@ import java.util.List;
  */
 
 public class Mutation {
+
+    public enum Tool{
+        MUTATIONFINDER, SETH
+    }
+
     private int start;
     private int end;
     private String text;
@@ -19,9 +25,10 @@ public class Mutation {
     private String wild;
     private String mutated;
     private Type type;
-    private List<String> dbSNP; //TODO
+    private Enum<Tool> tool;
+    private Set<Integer> dbSNP; //TODO
 
-    public Mutation(int start, int end, String text, String ref, String location, String wild, String mutated, Type type) {
+    public Mutation(int start, int end, String text, String ref, String location, String wild, String mutated, Type type, Tool tool) {
         this.start = start;
         this.end = end;
         this.text = text;
@@ -30,6 +37,7 @@ public class Mutation {
         this.wild = wild;
         this.mutated = mutated;
         this.type = type;
+        this.tool = tool;
     }
 
     public String toString() {
@@ -40,7 +48,9 @@ public class Mutation {
             "\n\tref:   " + ref +
             "\n\twild:  " + wild +
             "\n\tmut:   " + mutated +
-            "\n\ttype:  " + type;
+            "\n\ttype:  " + type +
+            "\n\ttool:  " + tool
+                ;
     }
 
     public int getStart() {
@@ -73,6 +83,10 @@ public class Mutation {
 
     public String getRef() {
         return ref;
+    }
+
+    public Enum<Tool> getTool() {
+        return tool;
     }
 
     public void normalize(List<Integer> entrezIDs) {

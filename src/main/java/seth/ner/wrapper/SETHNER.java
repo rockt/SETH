@@ -33,7 +33,8 @@ public class SETHNER {
                 mutation.loc(),
                 mutation.wild(),
                 mutation.mutated(),
-                mutation.typ()
+                mutation.typ(),
+                Mutation.Tool.SETH
         );
     }
 }
