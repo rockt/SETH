@@ -1,0 +1,30 @@
+SETH - SNP Extraction Tool for Human Variations
+
+SETH is a text mining software for extracting mentions of single nucleotide polymorphism written 
+in the latest nomenclature of the Human Genome Variation Society for the description of sequence variants. 
+It uses Scala parser combinators to specify a recently published EBNF for this nomenclature [1].
+
+
+Current Components:
+/src/main/scala/seth/ner/SETHNER - Named Entity Recognition
+
+Under Development:
+Normalization to dbSNP entries
+
+Using SETH's mutation NER component in your code:
+    import seth.ner.SETHNER
+    val extractor = new SETHNER
+    val sentence = "some text containing mutation mentions"
+    val mutations = extractor.extractMutations(sentence)
+    for (mutation <- mutations) 
+      println(
+        mutation.text, 
+        mutation.start,
+        mutation.end,
+        mutation.typ, 
+        mutation.ref, 
+        mutation.loc, 
+        mutation.wild, 
+        mutation.mutated
+      )
+
