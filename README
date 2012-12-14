@@ -12,7 +12,7 @@ Under Development:
 Normalization to dbSNP entries
 
 Using SETH's mutation NER component in your code:
-'''scala
+
     import seth.ner.SETHNER
     val extractor = new SETHNER
 
@@ -31,5 +31,3 @@ Using SETH's mutation NER component in your code:
         mutation.wild, 
         mutation.mutated
       )
-'''
-
