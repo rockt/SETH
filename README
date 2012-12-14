@@ -12,10 +12,13 @@ Under Development:
 Normalization to dbSNP entries
 
 Using SETH's mutation NER component in your code:
+'''scala
     import seth.ner.SETHNER
     val extractor = new SETHNER
+
     //example sentence taken from: http://www.ncbi.nlm.nih.gov/pubmed/18823551
     val text = "Mutations in the DBD (p.G56R, p.N65_C67del, p.R76Q, p.R76W, p.G88V, p.R97H, p.R104Q, and p.R104W) and LBD (p.A256E, p.L263P, p.P276fs, p.V302I, p.R309G, p.R311Q, p.R334G, p.L336P, p.Q350X, p.L353V, p.R385P, and p.M407K) demonstrated a variable reduction in NR2E3-mediated increase in transcriptional activity when mutant NR2E3 construct was cotransfected with both NRL and CRX."
+
     val mutations = extractor.extractMutations(text)
     for (mutation <- mutations) 
       println(
@@ -28,4 +31,5 @@ Using SETH's mutation NER component in your code:
         mutation.wild, 
         mutation.mutated
       )
+'''
 
