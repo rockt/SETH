@@ -31,3 +31,5 @@ Using SETH's mutation NER component in your code:
         mutation.wild, 
         mutation.mutated
       )
+
+[1] J. F. J. Laros, A. Blavier, J. T. den Dunnen, and P. E. M. Taschner, “A formalized description of the standard human variant nomenclature in Extended Backus-Naur Form.,” BMC bioinformatics, vol. 12 Suppl 4, p. S5. 2011.
