@@ -368,7 +368,7 @@ trait FlattenToString extends Parsers {
 }
 
 /**
- * Flattens a parse result to mutation mention.
+ * Flattens a parse result to mutation mention
  */
 trait FlattenToMutation extends FlattenToString {
   //TODO: actually, we only need a list of ParsedStrings
