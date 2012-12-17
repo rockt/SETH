@@ -4,14 +4,13 @@ SETH is a text mining software for extracting mentions of single nucleotide poly
 in the latest nomenclature of the Human Genome Variation Society for the description of sequence variants. 
 It uses Scala parser combinators to specify a recently published EBNF for this nomenclature [1].
 
-
-## Current Components:
+### Current Components:
 /src/main/scala/seth/ner/SETHNER - Named Entity Recognition
 
-## Under Development:
+### Under Development:
 Normalization to dbSNP entries
 
-## Using SETH's mutation NER component in your code:
+### Using SETH's mutation NER component in your code:
 ```scala
     import seth.ner.SETHNER
     val extractor = new SETHNER
