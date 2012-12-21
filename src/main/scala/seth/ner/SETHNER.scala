@@ -397,8 +397,10 @@ trait FlattenToMutation extends FlattenToString {
         val temp = flattenToString(loc.parse)
         mutation.loc = if (temp.head == '(' && temp.last == ')') temp.tail.dropRight(1) else temp
       }
-      case wild:WildString => mutation.wild = flattenToString(wild.parse)
-      case mutated:MutatedString => mutation.mutated = flattenToString(mutated.parse)
+      //TODO: map to single char representation
+      case wild:WildString => mutation.wild = abbreviate(flattenToString(wild.parse))
+      //TODO: map to single char representation
+      case mutated:MutatedString => mutation.mutated = abbreviate(flattenToString(mutated.parse))
       case ref:RefSeqString => mutation.ref = flattenToString(ref.parse)
       case typ:DelString => mutation.typ = DELETION
       case typ:SubstString => mutation.typ = SUBSTITUTION
@@ -414,5 +416,43 @@ trait FlattenToMutation extends FlattenToString {
       case typ:MutationType => mutation.typ = OTHER //TODO: add more types
     }
     mutation
+  }
+
+  private val aminoAcidMap = Map(
+    "Ala" -> "A",
+    "Arg" -> "R",
+    "Asn" -> "N",
+    "Asp" -> "D",
+    "Cys" -> "C",
+    "Gln" -> "Q",
+    "Glu" -> "E",
+    "Gly" -> "G",
+    "His" -> "H",
+    "Ile" -> "I",
+    "Leu" -> "L",
+    "Lys" -> "K",
+    "Met" -> "M",
+    "Phe" -> "F",
+    "Pro" -> "P",
+    "Ser" -> "S",
+    "Thr" -> "T",
+    "Trp" -> "W",
+    "Tyr" -> "Y",
+    "Val" -> "V",
+    "Ter" -> "X",
+    "Sec" -> "U",
+    "Pyl" -> "O",
+    "Asx" -> "B",
+    "Glx" -> "Z",
+    "Xle" -> "J",
+    "Xaa" -> "X"
+  )
+
+  private def abbreviate(aminoSeq: String): String = {
+    (for (a <- aminoSeq.grouped(3)) yield {
+      val tmp = aminoAcidMap.get(a).getOrElse("")
+      if (tmp.isEmpty) return aminoSeq
+      tmp
+    }).mkString("")
   }
 }
