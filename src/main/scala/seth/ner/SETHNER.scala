@@ -12,6 +12,9 @@ import wrapper.Type._
 import wrapper.Type
 import annotation.tailrec
 
+/**
+ * Scala app for command line use of SETH
+ */
 object SETHNERApp extends App {
   val SETH = new SETHNER
   if (args.size > 0) {
@@ -23,11 +26,22 @@ object SETHNERApp extends App {
   else println("Usage: java -jar seth.jar \"The remaining four variants, namely c.905T>C (rs121965091), c.1177C>T (rs1211965090), c.*156G>A (rs121965092) and c.2251-37C>A (rs2470353), were rare in the case–control analysis.\"")
 }
 
+/**
+ *
+ * @param start Start of the mutation mention in a text
+ * @param end End of the mutation mention in a text
+ * @param text Textual representation the a mutation
+ */
 case class Mutation(var start:Int, var end:Int, text: String) {
+  //location of the mutation in the genome
   var loc: String = ""
+  //reference sequence
   var ref: String = ""
+  //wildtype
   var wild: String = ""
+  //residue
   var mutated: String = ""
+  //type of the mutation
   var typ: Type = _
   override def toString = text +
     "\n\tstart: " + start +
@@ -36,22 +50,27 @@ case class Mutation(var start:Int, var end:Int, text: String) {
     (if(!ref.isEmpty)     "\n\tref:   " else "") + ref +
     (if(!wild.isEmpty)    "\n\twild:  " else "") + wild +
     (if(!mutated.isEmpty) "\n\tmut:   " else "") + mutated +
-    (if(typ != null)     "\n\ttype:  " else "") + typ
+    (if(typ != null)      "\n\ttype:  " else "") + typ
   def addOffset(offset: Int) {
     this.start = this.start + offset
     this.end = this.end + offset
   }
 }
 
-
-
-//to keep track of start position of matches
+/**
+ * Keeps track of the position of a match during parsing
+ * @param t
+ * @tparam T
+ */
 case class Span[T](t: T) extends Positional
 
-//to aggregate information while parsing
-class ParsedString(val parse: Any) extends FlattenToMutation {
-  val string = "" //flattenToString(parse)
-}
+
+/**
+ * Represents a partial match during parsing as String rather than a parse result
+ * @param parse
+ */
+class ParsedString(val parse: Any) extends FlattenToMutation { val string = "" }
+
 case class Empty() extends ParsedString("")
 case class RefSeqString(override val parse: Any) extends ParsedString(parse)
 case class LocString(override val parse: Any) extends ParsedString(parse)
@@ -72,17 +91,20 @@ case class FrameShiftString(override val parse: Any) extends ParsedString(parse)
 case class VariableShortSequenceRepeatString(override val parse: Any) extends ParsedString(parse) with MutationType
 
 
-//TODO: we could include semantic constraints
-
+//TODO: we could include more semantic constraints
+/**
+ * NER component of SETH
+ *
+ * Parses a string and yields all mentions of mutations that obey to the latest variant nomenclature of HGVS.
+ */
 class SETHNER extends RegexParsers with NonGreedy with Positional with FlattenToMutation with PackratParsers {
   //type P = PackratParser[Any]
   type P = Parser[Any]
   override def skipWhitespace = false
 
-  //represents characters that do not correspond to a mutation
+  //represents chars outside of a mutation mention
   val any = """.|\w|\n|\r""".r
   val eof = """\z""".r
-
   //prevent non-mutation chars from consuming mutations
   lazy val noMutation:P         = nonGreedy(any, mutation)
   //prevent non-mutation chars from consuming eof
@@ -93,26 +115,25 @@ class SETHNER extends RegexParsers with NonGreedy with Positional with FlattenTo
 
   //finds mutations by parsing the sentence
   lazy val expr                 = rep(sequence) <~ rest
-
+  //a mutation either refers to the nucleotide or the protein sequence
   lazy val mutation:P           = Var | ProteinVar
 
   //EBNF akin to Laros et al. (2011)
   //DNA and RNA variant nomenclature
   //Basic lexemes
-  //FIXED: added unkown base N
+  //FIXED: added unkown base N / n
   lazy val Nt:P                 = "a" | "c" | "g" | "t" | "u" | "A" | "C" | "G" | "T" | "U" | "n" | "N"
   lazy val NtString:P           = Nt.+
   lazy val name:P               = "([a-z]|[A-Z]|[0-9])+".r
   lazy val Number:P             = "([0-9])+".r
 
   //Top-level Rule
-  //FIXED: we do not want to extract stuff like r.0? and r.spl?
+  //FIXED: we do not want to extract mentions like r.0? and r.spl?
   lazy val Var:P                = SingleVar //| UnkEffectVar | NoRNAVar | SplicingVar //| MultiVar | MultiTranscriptVar
 
   //Locations
   lazy val Loc:P                = (UncertainLoc | RangeLoc | PtLoc) ^^ { LocString(_) }
   lazy val NoPointLoc:P         = (UncertainLoc | RangeLoc) ^^ { LocString(_) }
-  // | FarLoc
   //FIXED: added uncertain location
   lazy val Uncertain:P          = (Number ~ "_?".? | "?_".? ~ Number) ~ Offset.?
   lazy val UncertainPart:P      = Uncertain | "(" ~ Uncertain ~ ")"
@@ -148,12 +169,11 @@ class SETHNER extends RegexParsers with NonGreedy with Positional with FlattenTo
   lazy val LRG:P                = "LRG" ~ ("[0-9]".r).+ ~ ("_" ~ (LRGTranscriptID | LRGProteinID)).?
   lazy val Chrom:P              = name
 
-  //FIXED: added other reference sequences
+  //FIXED: added more reference sequences
   lazy val OtherRefs:P          = (RS | Accs) ~ ":".r.?
   lazy val NumberPointNumber:P  = "[0-9]".r.+ ~ ("\\.".r ~ "[0-9]".r.*).?
   lazy val RS:P                 = "rs" ~ "[1-9]".r.? ~ "[0-9]".r.*
   lazy val Accs:P               = (AccRefs | AccNumRefs | AccNumRefRange) ~ NumberPointNumber
-
   //from http://www.ncbi.nlm.nih.gov/books/NBK21091/table/ch18.T.refseq_accession_numbers_and_mole/?report=objectonly
   lazy val AccRefs:P            = ("AC" | "NC" | "NG" | "NT" | "NW" | "NS" | "NZ" | "NP" | "NM" | "NR" | "XM" | "XR") ~ "_"
   //from http://www.ncbi.nlm.nih.gov/Sequin/acc.html
@@ -179,8 +199,6 @@ class SETHNER extends RegexParsers with NonGreedy with Positional with FlattenTo
       "J | K | L | M | N").r
   lazy val AccNumRefRange:P     = "([A-E]|G)[A-Z][A-Z][A-Z]".r | "A[A-Z][A-Z][A-Z][A-Z]".r
 
-
-
   //Single Variations
   lazy val Subst:P              = ((RangeLoc | PtLoc).? ^^ { LocString(_) }) ~ (Nt.+ ^^ { WildString(_) }) ~
     (">" ^^ { SubstString(_) }) ~ (Nt.+ ^^ { MutatedString(_) })
@@ -189,7 +207,6 @@ class SETHNER extends RegexParsers with NonGreedy with Positional with FlattenTo
   lazy val Dup:P                = Loc ~ ("dup" ^^ { DupString(_) }) ~ ((Nt.+ ^^ { MutatedString(_) })| Number).? //~ Nest.?
   //FIXME: really? this does not accept 7(TG)3_6
   lazy val AbrSSR:P             = (PtLoc ^^ { LocString(_) }) ~ (Nt.+ ^^ { MutatedString(_) }) ~ "(" ~ Number ~ "_" ~ Number ~ ")"
-  //lazy val VarSSR:P             = ((PtLoc ^^ { LocString(_) }) ~ (Nt.+ ^^ { WildString(_) }) ~ "[" ~ Number ~ "]") | (RangeLoc ~ "[" ~ Number ~ "]") | AbrSSR
   lazy val VarSSR:P             = ((PtLoc ^^ { LocString(_) }) ~ (Nt.+ ^^ { MutatedString(_) }) ~ "[" ~ Number ~ "]") |
     (RangeLoc ~ "[" ~ Number ~ "]") | AbrSSR
   lazy val Ins:P                = (NoPointLoc ^^ { LocString(_) }) ~ ("ins" ^^ { InsString(_) }) ~
@@ -207,6 +224,7 @@ class SETHNER extends RegexParsers with NonGreedy with Positional with FlattenTo
   lazy val NoRNAVar:P           = Ref ~ "0" ~ "?".?
 
 
+
   //Protein variant nomenclature
   //Basic lexemes
   lazy val AA1:P                = "A" | "R" | "N" | "D" | "C" | "Q" | "E" | "G" | "H" | "I" | "L" | "K" | "M" | "F" |
@@ -216,7 +234,6 @@ class SETHNER extends RegexParsers with NonGreedy with Positional with FlattenTo
   //FIXED: added termination, stop codons and ambiguous amino acids
     "Ter" | "Sec" | "Pyl" | "Asx" | "Glx" | "Xle" | "Xaa"
 
-  //FIXED: first, try matching the longer ones
   //FIXED: added '*' and '?'
   lazy val AA:P                 = AA3 | AA1 | "X" | "*" | "?"
   lazy val Name:P               = "[a-zA-Z0-9_\\.]".r.+
@@ -225,11 +242,8 @@ class SETHNER extends RegexParsers with NonGreedy with Positional with FlattenTo
   lazy val ProteinVar:P         = ProteinSingleVar
 
   //Locations
-  //lazy val AALoc:P              = (AAPtLoc ^^ { WildString(_) }) ~ ("_" ~ (AAPtLoc ^^ { MutatedString(_) })).? //| AARange
-  //lazy val AALoc:P              = AAPtLoc ~ ("_" ~ AAPtLoc).? //| AARange
   lazy val AALoc:P              = (AAPtLoc ~ ("_" ~ AAPtLoc).?) ^^ { LocString(_) } //| AARange
   lazy val AAPtLoc:P            = (AA ^^ { WildString(_) }) ~ (ProteinPtLoc ^^ { LocString(_) })
-  //lazy val AAPtLoc:P            = AA ~ ProteinPtLoc
   lazy val ProteinPtLoc:P       = ("-"|"*").? ~ Number | Number ~ ("+" | "-") ~ Number
 
   //Reference sequences
@@ -259,28 +273,25 @@ class SETHNER extends RegexParsers with NonGreedy with Positional with FlattenTo
     ((AA.+ ~ ("-" ~ AA.+).?) ^^ { MutatedString(_) })) ~
     ("fs" ^^ { FrameShiftString(_) })
 
-
-
-
-
+  /**
+   * Parses the input string and extracts all mutation mentions
+   * @param input The string from which mutation mentions should be extracted
+   * @return A list of spans for mutation mention metaches
+   */
   def apply(input: String) = //parse(expr, new PackratReader(new CharSequenceReader(input))) match {
     parse(expr, input) match {
       case Success(result, next) => result
       case failure: NoSuccess => List()
     }
 
-  //allowed chars left and right to a mutation (from MutationFinder)
-  val left = """(?:^|[\s\(\[\'"/,\-])"""
-  val right = """(?=([.,\s)\]\'":;\-?!/]|$))"""
-
   def extractMutations(text: String):List[Mutation] = {
-    //whitespace tokenization
+    //tokenize the text using whitespace tokenization
     val spacePos = 0 :: (for (i <- 0 until text.length) yield {
       val ch = text.charAt(i).toString
       if (ch matches ("\\s")) i+1 else 0
     }).toList.filter(_ != 0) ++ List(text.length)
 
-    //words with offset in text
+    //calculate the offset of all words
     @tailrec
     def getWords(acc: List[(Int, String)], pos: List[Int]):List[(Int,String)] = pos match {
       case Nil => acc
@@ -293,12 +304,17 @@ class SETHNER extends RegexParsers with NonGreedy with Positional with FlattenTo
     }
     val words = getWords(Nil, spacePos).reverse
 
-    //extract mutations
+    //allowed chars left and right to a mutation (from MutationFinder)
+    lazy val left = """(?:^|[\s\(\[\'"/,\-])"""
+    lazy val right = """(?=([.,\s)\]\'":;\-?!/]|$))"""
+
+    //extract mutations from words
     (for ((offset, word) <- words; parse <- this(word)) yield {
       val mutation = flattenToMutation(parse)
       mutation.addOffset(offset)
       mutation
     }).filter((m:Mutation) => {
+      //only keep matches with a valid boundary
       val lChar = (if (m.start - 1 >= 0) text.charAt(m.start - 1) else " ").toString
       val rChar = (if (m.end < text.length) text.charAt(m.end) else " ").toString
       !(lChar.matches(left) && rChar.matches(right))
@@ -351,6 +367,9 @@ trait FlattenToString extends Parsers {
   }
 }
 
+/**
+ * Flattens a parse result to mutation mention
+ */
 trait FlattenToMutation extends FlattenToString {
   //TODO: actually, we only need a list of ParsedStrings
   private def flatten2(any: Any): List[(String, ParsedString)] = {
@@ -378,8 +397,10 @@ trait FlattenToMutation extends FlattenToString {
         val temp = flattenToString(loc.parse)
         mutation.loc = if (temp.head == '(' && temp.last == ')') temp.tail.dropRight(1) else temp
       }
-      case wild:WildString => mutation.wild = flattenToString(wild.parse)
-      case mutated:MutatedString => mutation.mutated = flattenToString(mutated.parse)
+      //TODO: map to single char representation
+      case wild:WildString => mutation.wild = abbreviate(flattenToString(wild.parse))
+      //TODO: map to single char representation
+      case mutated:MutatedString => mutation.mutated = abbreviate(flattenToString(mutated.parse))
       case ref:RefSeqString => mutation.ref = flattenToString(ref.parse)
       case typ:DelString => mutation.typ = DELETION
       case typ:SubstString => mutation.typ = SUBSTITUTION
@@ -395,5 +416,43 @@ trait FlattenToMutation extends FlattenToString {
       case typ:MutationType => mutation.typ = OTHER //TODO: add more types
     }
     mutation
+  }
+
+  private val aminoAcidMap = Map(
+    "Ala" -> "A",
+    "Arg" -> "R",
+    "Asn" -> "N",
+    "Asp" -> "D",
+    "Cys" -> "C",
+    "Gln" -> "Q",
+    "Glu" -> "E",
+    "Gly" -> "G",
+    "His" -> "H",
+    "Ile" -> "I",
+    "Leu" -> "L",
+    "Lys" -> "K",
+    "Met" -> "M",
+    "Phe" -> "F",
+    "Pro" -> "P",
+    "Ser" -> "S",
+    "Thr" -> "T",
+    "Trp" -> "W",
+    "Tyr" -> "Y",
+    "Val" -> "V",
+    "Ter" -> "X",
+    "Sec" -> "U",
+    "Pyl" -> "O",
+    "Asx" -> "B",
+    "Glx" -> "Z",
+    "Xle" -> "J",
+    "Xaa" -> "X"
+  )
+
+  private def abbreviate(aminoSeq: String): String = {
+    (for (a <- aminoSeq.grouped(3)) yield {
+      val tmp = aminoAcidMap.get(a).getOrElse("")
+      if (tmp.isEmpty) return aminoSeq
+      tmp
+    }).mkString("")
   }
 }

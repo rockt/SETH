@@ -629,7 +629,6 @@ class SETHSuite extends FunSpec with ShouldMatchers with GivenWhenThen with Logg
         }
         it ("Questionable") {
           pending
-
           accept("c.13-?_300+?del")
           accept("c.?_-244_32+?del")
           accept("?_-244_32+?del")
@@ -637,6 +636,12 @@ class SETHSuite extends FunSpec with ShouldMatchers with GivenWhenThen with Logg
           accept("c.(?_-244)_32+?del")
           accept("7(TG)3_6")(SETH.AbrSSR)
           accept("NC_000009.11:g.97222895delCinsACC")
+          accept("c.385G<T")
+          accept("c145A>G")
+          accept("p.E228 K")
+          accept("c.2097-2098insT") //needs to be an underscore
+          accept("c.861insG") //no range
+          accept("c.164insA") //no range
         }
       }
     }
@@ -658,7 +663,9 @@ class SingleTest extends FunSuite {
     //assert(SETH.isValid("NP_031393.2:p.Met1extMet-SerValfs", SETH.mutation) === true) //DONE
     //assert(SETH.isValid("91_*(91_?)", SETH.Loc) === true) //DONE
     //assert(SETH.isValid("NT_007592.15:g.12940923_(?_12940924)insA", SETH.mutation) === true) //DONE
-    println(SETH.extractMutations("p.M1?").head)
+    assert(SETH.isValid("c.861insG", SETH.mutation) === true)
+
+    //println(SETH.extractMutations("p.M1?").head)
 
   }
 }
