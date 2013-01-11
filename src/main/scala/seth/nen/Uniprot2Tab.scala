@@ -29,6 +29,22 @@ class CounterWithMax(printStep: Int, max: Int) extends Counter(printStep) {
   }
 }
 
+/**
+ * Extracts features from Uniprot.
+ * Usage     :  scala Uniprot2Tab.scala $1 $2 $3 $4
+ * Arguments :
+ *  $1 Input :  Path to Uniprot XML file
+ *
+ *  $2 Input :  Path to a mapping from Uniprot to EntrezGene
+ *
+ *  $3 Output:  List of features
+ *    Schema :  EntrezGeneID -TAB- Feature Name -TAB- Location
+ *    Example:  5528	splice variant	85-116
+ *
+ *  $4 Output:  List of dbSNP
+ *    Schema :  snp_id -TAB- locus_id -TAB- aa_Position -TAB- residue -TAB- wildtype
+ *    Example:  1050654	3106	155	S	R
+ */
 object Uniprot2Tab extends App {
   if (args.length != 4) {
     println("Usage: uniprotxml idmapping outputmapping outputdbsnp")
