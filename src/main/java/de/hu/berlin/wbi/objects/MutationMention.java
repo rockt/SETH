@@ -63,6 +63,9 @@ public class MutationMention {
     /** Flag indicating if this SNP is possibly a NSM. */
     protected boolean nsm;
 
+    /** List with normalized SNPs*/
+    protected List<dbSNPNormalized> normalized;
+
     /** Refers to which tool has been used for extraction */
     public enum Tool{
         MUTATIONFINDER, SETH
@@ -80,12 +83,12 @@ public class MutationMention {
      *            NER-SNP
      * @return normalized mutations
      */
-    public List<dbSNPNormalized> getPossibledbSNPs(List<dbSNP> candidates, List <UniprotFeature>features) {
-        List<dbSNPNormalized> result = new ArrayList<dbSNPNormalized>(1);
+    public void normalizeSNP(List<dbSNP> candidates, List<UniprotFeature> features) {
+        normalized = new ArrayList<dbSNPNormalized>(1);
 
         //Check if we have sufficient information to normalize the current mutation
         if (wtResidue == null || mutResidue == null || position == null)
-            return result;
+            return;
 
         //Iterate over all possible Candidates and try to normalize this specific mention
         for (dbSNP candidate : candidates) {
@@ -95,20 +98,20 @@ public class MutationMention {
 
                 //Normalize PSM using the 'hgvs' information from dbSNP..
                 if(normalizePSMSimpleHGVS(candidate))
-                    result.add(new dbSNPNormalized(candidate, true, false, true, null, true));
+                    normalized.add(new dbSNPNormalized(candidate, true, false, true, null, true));
 
                 if(normalizePSMSimpleHGVSSwap(candidate))
-                    result.add(new dbSNPNormalized(candidate, true, false, true, null, false));
+                    normalized.add(new dbSNPNormalized(candidate, true, false, true, null, false));
 
                 if(normalizePSMMethionineHGVS(candidate))
-                    result.add(new dbSNPNormalized(candidate, false, true, true, null, true));
+                    normalized.add(new dbSNPNormalized(candidate, false, true, true, null, true));
 
                 if(normalizePSMMethionineSwapHGVS(candidate))
-                    result.add(new dbSNPNormalized(candidate, false, true, true, null, false));
+                    normalized.add(new dbSNPNormalized(candidate, false, true, true, null, false));
 
                 //Now we try to normalize to DNA using HGVS information
                 if (forwardNSMSimple(candidate) || reverseNSMSimple(candidate))
-                    result.add(new dbSNPNormalized(candidate, true, false, false, null, true));
+                    normalized.add(new dbSNPNormalized(candidate, true, false, false, null, true));
             }
 
             //Normalize candidate using information in 'PSM' table
@@ -120,28 +123,27 @@ public class MutationMention {
                 if (forward || reverse){
 
                     if (normalizePSMSimple(candidate) ) //Exact match?
-                        result.add(new dbSNPNormalized(candidate, true, false, true, null, forward));
+                        normalized.add(new dbSNPNormalized(candidate, true, false, true, null, forward));
 
                     if(normalizePSMMethionine(candidate)) //Methionine Offset of 1?
-                        result.add(new dbSNPNormalized(candidate, false, true, true, null, forward));
+                        normalized.add(new dbSNPNormalized(candidate, false, true, true, null, forward));
 
                     UniprotFeature feature = normalizePSMVariableOffset(candidate, features);	//match using UniProt features
                     if(feature != null){
-                        result.add(new dbSNPNormalized(candidate, false, false, true, feature, forward));
+                        normalized.add(new dbSNPNormalized(candidate, false, false, true, feature, forward));
                     }
                 }
             }
         }
 
-        result = cleanResults(result);
-        return result;
+        normalized = cleanResults(normalized);
     }
 
     /**
      * Sometimes one SNP mention can be normalized to the same dbSNP identifier
      * several times. As some information is stored redundant.
      * Therefore we have to remove some duplicates from the list and
-     * also we return only the results with highest association score (no impact visible for Evaluation)
+     * also we return only the results with highest association score (no impact for evaluation)
      * @param snpList   List of SNPs to be cleansed
      * @return Cleansed SNP list
      */
@@ -707,5 +709,17 @@ public class MutationMention {
      */
     public String getRef() {
         return ref;
+    }
+
+    /**
+     * Returns all dbSNP entries associated with this mutation mention
+     * @return dbSNP entries
+     */
+    public List<dbSNPNormalized> getNormalized() {
+
+        if(normalized == null)
+            throw new RuntimeException("Method normalize has to be invoked first ");
+
+        return normalized;
     }
 }

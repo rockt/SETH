@@ -41,6 +41,7 @@ import de.hu.berlin.wbi.objects.dbSNPNormalized;
 public class MinimalExample {
 
 	/**
+     * Minimal example for SNP normalization
 	 * @throws SQLException 
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
@@ -61,7 +62,8 @@ public class MinimalExample {
 				
     	final List<dbSNP> potentialSNPs = dbSNP.getSNP(gene);	//Get a list of dbSNPs which could potentially represent the SNP from (mutation)
     	final List<UniprotFeature> features = UniprotFeature.getFeatures(gene);
-    	List<dbSNPNormalized> normalized = mutation.getPossibledbSNPs(potentialSNPs, features);	//And here we have  a list of all dbSNPs with which I could successfully associate the mutation    	
+        mutation.normalizeSNP(potentialSNPs, features);
+    	List<dbSNPNormalized> normalized = mutation.getNormalized();	//And here we have  a list of all dbSNPs with which I could successfully associate the mutation
     	
     	for(dbSNPNormalized snp : normalized){
     		System.out.println(mutation +" --- rs=" +snp.getRsID());

@@ -138,8 +138,9 @@ public class NormalizeDB {
 				for (Gene gene : genes) {
 					final List<dbSNP> potentialSNPs = geneToDbSNP.get(gene);
 					final List<UniprotFeature> features = geneToUniProtFeature.get(gene);
+                    mutation.normalizeSNP(potentialSNPs, features);
 
-					normalized.addAll(mutation.getPossibledbSNPs(potentialSNPs, features));
+					normalized.addAll(mutation.getNormalized());
 				}
 
 				// It is interesting that some rsID's can map to different genes;

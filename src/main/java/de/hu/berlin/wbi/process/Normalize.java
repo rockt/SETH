@@ -98,7 +98,8 @@ public class Normalize {
 				for (Gene gene : genes) {
 					List<dbSNP> potentialSNPs = dbSNP.getSNP(gene.getGeneID());
 					final List<UniprotFeature> features = UniprotFeature.getFeatures(gene.getGeneID());
-					normalized.addAll(mutation.getPossibledbSNPs(potentialSNPs, features));
+                    mutation.normalizeSNP(potentialSNPs, features);
+					normalized.addAll(mutation.getNormalized());
 				}
 
 				// Print the normalisation-result to stdout

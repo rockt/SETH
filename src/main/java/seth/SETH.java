@@ -109,7 +109,8 @@ public class SETH {
         final List<UniprotFeature> features = UniprotFeature.getFeatures(gene);    //Get all associated UniProt features
 
         for(MutationMention mutation : mutations){
-            List<dbSNPNormalized> normalized = mutation.getPossibledbSNPs(potentialSNPs, features);	//Get list of all dbSNP entries with which I could successfully associate the mutation
+            mutation.normalizeSNP(potentialSNPs, features);
+            List<dbSNPNormalized> normalized = mutation.getNormalized();	//Get list of all dbSNP entries with which I could successfully associate the mutation
 
             // Print information
             for(dbSNPNormalized snp : normalized){
