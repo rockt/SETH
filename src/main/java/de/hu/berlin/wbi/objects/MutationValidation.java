@@ -46,7 +46,7 @@ public class MutationValidation extends MutationMention {
 	private int dbSNP;
 
 	/** Either NSM or PSM. */
-	private String type;
+	private String mutationType;
 	
 	/** Contains the actual text of the mutation mention (e.g. 271 from Arginine to Cysteine)*/ 
 	private String entity;
@@ -61,10 +61,10 @@ public class MutationValidation extends MutationMention {
 	 * @param position -- Mutation mocation (e.g. 271)
 	 */
 	public MutationValidation(int dbSNP, EntityOffset location, String wtResidue,
-			String mutResidue, String position, String type, String entity) {
+			String mutResidue, String position, String mutationType, String entity) {
 		super();
 		this.dbSNP = dbSNP;
-		this.type = type;
+		this.mutationType = mutationType;
 
 		this.location = location;
 		this.wtResidue = wtResidue;
@@ -87,8 +87,8 @@ public class MutationValidation extends MutationMention {
 	 * 
 	 * @return the either NSM or PSM
 	 */
-	public String getType() {
-		return type;
+	public String getMutationType() {
+		return mutationType;
 	}
 	
 	/**
