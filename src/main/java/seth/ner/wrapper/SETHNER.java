@@ -1,7 +1,7 @@
 package seth.ner.wrapper;
 
+import de.hu.berlin.wbi.objects.MutationMention;
 import scala.collection.Iterator;
-import seth.Mutation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +14,8 @@ import java.util.List;
 public class SETHNER {
     seth.ner.SETHNER mutationExtractor = new seth.ner.SETHNER();
 
-    public List<Mutation> extractMutations(String text) {
-        List<Mutation> result = new ArrayList<Mutation>();
+    public List<MutationMention> extractMutations(String text) {
+        List<MutationMention> result = new ArrayList<MutationMention>();
         Iterator<seth.ner.Mutation> iter = mutationExtractor.extractMutations(text).toIterator();
         while (iter.hasNext()) {
             seth.ner.Mutation mutation = iter.next();
@@ -24,8 +24,8 @@ public class SETHNER {
         return result;
     }
 
-    private Mutation convert(seth.ner.Mutation mutation) {
-        return new Mutation(
+    private MutationMention convert(seth.ner.Mutation mutation) {
+        return new MutationMention(
                 mutation.start(),
                 mutation.end(),
                 mutation.text(),
@@ -34,7 +34,7 @@ public class SETHNER {
                 mutation.wild(),
                 mutation.mutated(),
                 mutation.typ(),
-                Mutation.Tool.SETH
+                MutationMention.Tool.SETH
         );
     }
 }

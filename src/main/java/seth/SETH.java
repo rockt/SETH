@@ -1,5 +1,6 @@
 package seth;
 
+import de.hu.berlin.wbi.objects.MutationMention;
 import edu.uchsc.ccp.nlp.ei.mutation.MutationException;
 import edu.uchsc.ccp.nlp.ei.mutation.MutationFinder;
 import edu.uchsc.ccp.nlp.ei.mutation.PointMutation;
@@ -21,8 +22,8 @@ public class SETH {
         this.seth = new SETHNER();
     }
 
-    public List<Mutation> findMutations(String text){
-        List<Mutation> mutations = new ArrayList<Mutation>();
+    public List<MutationMention> findMutations(String text){
+        List<MutationMention> mutations = new ArrayList<MutationMention>();
 
         //Extract variations following the latest HGVS nomenclature
         mutations.addAll(seth.extractMutations(text));
@@ -37,9 +38,9 @@ public class SETH {
                for(int [] location : map.get(mutation)){
                    String originalMatch =  text.substring(location[0], location[1]);
 
-                   mutations.add(new Mutation(location[0], location[1], originalMatch, "NA", pm.getPosition(),
+                   mutations.add(new MutationMention(location[0], location[1], originalMatch, "NA", pm.getPosition(),
                            String.valueOf(pm.getWtResidue()), String.valueOf(pm.getMutResidue()),
-                           Type.SUBSTITUTION, Mutation.Tool.MUTATIONFINDER));
+                           Type.SUBSTITUTION, MutationMention.Tool.MUTATIONFINDER));
                }
            }
 
@@ -55,7 +56,7 @@ public class SETH {
         String text = "p.A123T and Ala123Tyr";
         SETH seth = new SETH("resources/mutations.txt");
 
-        for(Mutation mutation : seth.findMutations(text)){
+        for(MutationMention mutation : seth.findMutations(text)){
             System.out.println("'" +text.subSequence(mutation.getStart(), mutation.getEnd()) +"'");
         }
 

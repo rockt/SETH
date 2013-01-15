@@ -1,9 +1,7 @@
 package seth.seth.eval;
 
-import seth.Mutation;
 import seth.SETH;
-import seth.ner.wrapper.Type;
-
+import de.hu.berlin.wbi.objects.MutationMention;
 import java.io.*;
 import java.util.List;
 
@@ -48,20 +46,20 @@ public class ApplyNER {
                 bw.append(pmid);
             }
 
-            List<Mutation> mutations = seth.findMutations(text);
-            for(Mutation mutation : mutations){
+            List<MutationMention> mutations = seth.findMutations(text);
+            for(MutationMention mutation : mutations){
 
-                if(mutationFinderFormat && mutation.getTool().equals(Mutation.Tool.MUTATIONFINDER))
-                  bw.append("\t" +mutation.getWild() +mutation.getLocation() +mutation.getMutated());
+                if(mutationFinderFormat && mutation.getTool().equals(MutationMention.Tool.MUTATIONFINDER))
+                  bw.append("\t" +mutation.getWtResidue() +mutation.getLocation() +mutation.getMutResidue());
                 else
                     bw.append("\t" +mutation.getText());
 
 
                 if(!mutationFinderFormat) {
-                    if(mutation.getTool().equals(Mutation.Tool.SETH))
+                    if(mutation.getTool().equals(MutationMention.Tool.SETH))
                         bw.append(pmid +"\t" +mutation.getStart() +"\t" +mutation.getEnd() +"\t" +mutation.getText() +"\t" +"SETH");
 
-                    else if(mutation.getTool().equals(Mutation.Tool.MUTATIONFINDER))
+                    else if(mutation.getTool().equals(MutationMention.Tool.MUTATIONFINDER))
                         bw.append(pmid +"\t" +mutation.getStart() +"\t" +mutation.getEnd() +"\t" +mutation.getText() +"\t" +"MF");
 
                     else

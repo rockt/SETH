@@ -13,6 +13,7 @@ import java.util.Set;
 
 public class Mutation {
 
+    /** Refers to which tool has been used for extraction */
     public enum Tool{
         MUTATIONFINDER, SETH
     }

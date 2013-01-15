@@ -59,7 +59,7 @@ public class EvaluateNER {
 
     /**
      * Loads SETH predictions
-     * @return
+     * @return Predicted Entities
      * @throws IOException
      */
     private static Map<Integer, List<Entity>> readPredictions() throws IOException {
@@ -85,7 +85,7 @@ public class EvaluateNER {
 
     /**
      * Loads goldstandard annotations
-     * @return
+     * @return  Goldstandard entities
      * @throws IOException
      */
     private static Map<Integer, List<Entity>> readGoldStandard() throws IOException {
