@@ -16,12 +16,14 @@ import java.util.Map;
  *
  */
 public class EvaluateNER {
-    private static String goldFolder = "/home/philippe/workspace/snp-normalizer/data/Results_Brat";
-    private static String corpusResult=      "/home/philippe/workspace/thomas/seth/corpus/all.txt";
 
     public static void main(String[] args) throws IOException {
-        Map<Integer, List<Entity>> goldstandardMap =  readGoldStandard();
-        Map<Integer, List<Entity>> predictionMap =      readPredictions();
+
+        String goldFolder = "/home/philippe/workspace/snp-normalizer/data/Results_Brat";
+        String corpusResult=      "/home/philippe/workspace/thomas/seth/corpus/all.txt";
+
+        Map<Integer, List<Entity>> goldstandardMap =  readGoldStandard(goldFolder);
+        Map<Integer, List<Entity>> predictionMap =      readPredictions(corpusResult);
 
         System.out.println("Evaluating for " +goldstandardMap.size() +" abstracts");
         int tp =0; int fp=0; int fn=0;
@@ -62,7 +64,7 @@ public class EvaluateNER {
      * @return Predicted Entities
      * @throws IOException
      */
-    private static Map<Integer, List<Entity>> readPredictions() throws IOException {
+    private static Map<Integer, List<Entity>> readPredictions(String corpusResult) throws IOException {
         Map<Integer, List<Entity>> entityMap = new HashMap<Integer, List<Entity>>();
 
         BufferedReader br = new BufferedReader(new FileReader(new File(corpusResult)));
@@ -88,7 +90,7 @@ public class EvaluateNER {
      * @return  Goldstandard entities
      * @throws IOException
      */
-    private static Map<Integer, List<Entity>> readGoldStandard() throws IOException {
+    private static Map<Integer, List<Entity>> readGoldStandard(String goldFolder) throws IOException {
 
         File folder = new File(goldFolder);
         if(folder.isFile())

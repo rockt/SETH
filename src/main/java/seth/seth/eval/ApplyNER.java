@@ -49,10 +49,11 @@ public class ApplyNER {
             List<MutationMention> mutations = seth.findMutations(text);
             for(MutationMention mutation : mutations){
 
+                bw.append("\t");
                 if(mutationFinderFormat && mutation.getTool().equals(MutationMention.Tool.MUTATIONFINDER))
-                  bw.append("\t" +mutation.getWtResidue() +mutation.getLocation() +mutation.getMutResidue());
+                  bw.append(mutation.getWtResidue() +mutation.getLocation() +mutation.getMutResidue());
                 else
-                    bw.append("\t" +mutation.getText());
+                    bw.append(mutation.getText());
 
 
                 if(!mutationFinderFormat) {

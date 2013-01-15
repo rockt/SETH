@@ -46,7 +46,7 @@ public class HGVS {
 	private String mutation;
 
 	/**  */
-	private static Pattern locationPattern  = Pattern.compile("[A-Za-z]");
+	private static final Pattern locationPattern  = Pattern.compile("[A-Za-z]");
 
 	/**
 	 * Construct a HGVS object based on a HGVS string (e.g. "NM_123c.234A>T")

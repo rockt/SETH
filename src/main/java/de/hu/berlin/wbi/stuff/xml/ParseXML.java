@@ -45,11 +45,11 @@ import de.hu.berlin.wbi.objects.DatabaseConnection;
  */
 public class ParseXML extends DefaultHandler{
 
-	StringBuilder hgvs = null;
-	SNP snp;
-	static DatabaseConnection dbconn ;
-	static PreparedStatement psHGVS;
-	static PreparedStatement psmHGVS;
+    private StringBuilder hgvs = null;
+    private SNP snp;
+    private static DatabaseConnection dbconn ;
+    private static PreparedStatement psHGVS;
+    private static PreparedStatement psmHGVS;
 
 	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, SQLException {
 		Properties property = new Properties();

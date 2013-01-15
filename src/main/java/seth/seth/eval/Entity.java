@@ -8,11 +8,11 @@ package seth.seth.eval;
  * General representation of a textual mutation mention used for evaluation
  */
 public class Entity {
-    private String id;   // e.g. T1
-    private String type; // e.g. SNP
-    private int start;   // e.g. 66
-    private int end;     // e.g. 71
-    private String entity; // e.g. G145V
+    private final String id;   // e.g. T1
+    private final String type; // e.g. SNP
+    private final int start;   // e.g. 66
+    private final int end;     // e.g. 71
+    private final String entity; // e.g. G145V
 
     public Entity(String id, String type, int start, int end, String entity) {
         this.id = id;

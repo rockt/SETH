@@ -19,10 +19,10 @@ public class SETH {
 
 
     /** SETH object for recognizing nomenclature SNPs*/
-    private SETHNER seth;
+    private final SETHNER seth;
 
     /** MutationFinder object for recognizing free-text SNPs*/
-    private MutationFinder mf;
+    private final MutationFinder mf;
 
     /**
      * Initializes {@link MutationFinder} and {@link SETHNER}.

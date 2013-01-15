@@ -43,13 +43,13 @@ import java.util.zip.GZIPInputStream;
 public class MutationValidation extends MutationMention {
 
 	/** manually annotated {@link dbSNP} entry from gold-standard. */
-	private int dbSNP;
+	private final int dbSNP;
 
 	/** Either NSM or PSM. */
-	private String mutationType;
+	private final String mutationType;
 	
 	/** Contains the actual text of the mutation mention (e.g. 271 from Arginine to Cysteine)*/ 
-	private String entity;
+	private final String entity;
 
 	/**
 	 * Constructor 
@@ -103,13 +103,12 @@ public class MutationValidation extends MutationMention {
 	/**
 	 * Reads the mutation from the annotated corpus and returns these mutations.
 	 * 
-	 * @param file
+	 * @param file    Annotated corpus
 	 * @return list of correct mutations
-	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
 	public static  Map<Integer,List<MutationValidation>> readMutationsValidation(String file)
-			throws FileNotFoundException, IOException {
+			throws  IOException {
 		Map<Integer,List<MutationValidation>> result = new HashMap<Integer, List<MutationValidation>>();
 		BufferedReader br;
 

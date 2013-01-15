@@ -13,7 +13,7 @@ import java.util.List;
  * Time: 2:15 PM
  */
 public class SETHNER {
-    seth.ner.SETHNER mutationExtractor = new seth.ner.SETHNER();
+    private final seth.ner.SETHNER mutationExtractor = new seth.ner.SETHNER();
 
     public List<MutationMention> extractMutations(String text) {
         List<MutationMention> result = new ArrayList<MutationMention>();

@@ -27,7 +27,6 @@ public abstract class AA_Mapper {
     public static Map<String, String> populateAminoAcidThreeToOneLookupMap() {
         /* populate the three-letter to one-letter lookup map */
         Map<String, String> amino_acid_three_to_one_map = new HashMap<String, String>();
-        amino_acid_three_to_one_map = new HashMap<String, String>();
         amino_acid_three_to_one_map.put("ALA", "A");
         amino_acid_three_to_one_map.put("GLY", "G");
         amino_acid_three_to_one_map.put("LEU", "L");

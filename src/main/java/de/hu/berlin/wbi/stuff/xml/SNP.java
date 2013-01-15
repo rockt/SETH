@@ -31,9 +31,9 @@ import java.util.Set;
  *
  */
 public class SNP {
-	private int rsId;
-	private Set<PSM>   psms;
-	private List<String> hgvs; 
+	private final int rsId;
+	private final Set<PSM>   psms;
+	private final List<String> hgvs;
 	
 	public SNP(int rsId) {
 		super();
@@ -47,8 +47,8 @@ public class SNP {
 		boolean add=false;
 		loop:for(PSM tmpSNP : psms){
 			if(tmpSNP.getAaLoc() == psm.getAaLoc() && tmpSNP.getEntrez() == psm.getEntrez()){
-				if(psm.wildtype != null)
-					tmpSNP.setWildtype(psm.wildtype);
+				if(psm.getWildtype() != null)
+					tmpSNP.setWildtype(psm.getWildtype());
 				else
 					tmpSNP.addMutations(psm.mutations);
 				add = true;

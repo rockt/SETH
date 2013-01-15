@@ -39,22 +39,22 @@ public class Gene {
 	private static PreparedStatement gene2pubmedQuery;
 
 	/** Article ID. */
-	protected int pmid;
+    private int pmid;
 
 	/** Gene-ID (Entrez in our case). */
-	protected int geneID;
+    private int geneID;
 
 	/** Confidence for the found gene. (Only for NER) */
-	protected int confidence;
+    private int confidence;
 
 	/** Associated species. */
-	protected int species;
+    private int species;
 
 	/** Found at which position. (Only for NER) */
-	protected EntityOffset location;
+    private EntityOffset location;
 
 	/** String in the text. (Only for NER) */
-	protected String entity;
+    private String entity;
 
 	/**
      * Empty constructor

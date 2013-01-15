@@ -51,21 +51,21 @@ import java.util.List;
 public class UniprotFeature{
 
 	/** Gene identifier (Currently Entrez-Gene) */
-	private int geneId;
+	private final int geneId;
 
 	/** Modification type (e.g. signal peptide)*/
-	private String modificationType;
+	private final String modificationType;
 
 	/** Start location */
-	private int startLoc;
+	private final int startLoc;
 
 	/** End location */
-	private int endLoc;
+	private final int endLoc;
 
-	/**  */
+	/**  Database connection */
 	private static DatabaseConnection conn = null;
 
-	/**  */
+	/**  Prepared statement for UniProt query*/
 	private static PreparedStatement uniprotQuery;
 
 	public UniprotFeature(int geneId, String modificationType, int startLoc,

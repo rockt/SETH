@@ -26,9 +26,9 @@ import java.util.Set;
  *
  */
 public class PSM {
-	int entrez;
-	int aaLoc;
-	String wildtype;
+    private int entrez;
+    private int aaLoc;
+    private String wildtype;
 	Set<String> mutations;
 		
 	public PSM(int entrez, int aaLoc, String reference, String mutations) {

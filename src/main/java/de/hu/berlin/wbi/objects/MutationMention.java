@@ -40,19 +40,19 @@ import java.util.zip.GZIPInputStream;
 public class MutationMention {
 
     /** Type of Mutation (e.g. substitution, insertion, ...) */
-    private Type type;
+    protected Type type;
 
     /** Refers to which tool has been used for extraction */
-    private Enum<Tool> tool;
+    protected Enum<Tool> tool;
 
     /** Location in the text. */
     protected EntityOffset location;
 
     /** Text mention. */
-    private String text;
+    protected String text;
 
     /** Used reference sequence (e.g. c., g., ...) */
-    private String ref;
+    protected String ref;
 
     /** Wildtype residue. */
     protected String wtResidue;
@@ -72,11 +72,11 @@ public class MutationMention {
     }
 
     /** Pattern is used to extract wildtype-location-residue from a string e.g. A123T  */
-    private static Pattern pattern = Pattern.compile("^([A-Z])([\\-\\+\\*]?[1-9][0-9]*[\\-\\+]?[0-9]*)([A-Z])$");
+    private static final Pattern pattern = Pattern.compile("^([A-Z])([\\-\\+\\*]?[1-9][0-9]*[\\-\\+]?[0-9]*)([A-Z])$");
 
     /**
      * This method evaluates if some of the {@link de.hu.berlin.wbi.objects.dbSNP} provided in <b>candidates</b>
-     * actually equals the text-mined {@link seth.MutationMention}
+     * actually equals the text-mined {@link MutationMention}
      *
      * @param candidates
      *            List of dbSNP-entries which might actually describe this
@@ -144,10 +144,10 @@ public class MutationMention {
      * Sometimes one SNP mention can be normalized to the same dbSNP identifier
      * several times. As some information is stored redundant.
      * Therefore we have to remove some duplicates from the list
-     * @param snpList
-     * @return
+     * @param snpList   List of SNPs to be cleansed
+     * @return Cleansed SNP list
      */
-    public static List<dbSNPNormalized> cleanResults(List<dbSNPNormalized> snpList) {
+    private static List<dbSNPNormalized> cleanResults(List<dbSNPNormalized> snpList) {
 
         Map<Integer, dbSNPNormalized> map = new HashMap<Integer, dbSNPNormalized>();
         for(dbSNPNormalized snp : snpList){
@@ -188,9 +188,9 @@ public class MutationMention {
     }
 
     /**
-     * Check if the {@link seth.MutationMention} mention can be exactly normalized to a PSM-candidate
+     * Check if the {@link MutationMention} mention can be exactly normalized to a PSM-candidate
      *
-     * @param candidate
+     * @param candidate  dbSNP candidate
      * @return true if the mutation mention can be normalized to a PSM-candidate
      */
     private boolean normalizePSMSimple(dbSNP candidate) {
@@ -200,9 +200,9 @@ public class MutationMention {
 
 
     /**
-     * Check if the {@link seth.MutationMention} mention can be normalized to a PSM-candidate with an offset of "one" (Leading methione was not used)
+     * Check if the {@link MutationMention} mention can be normalized to a PSM-candidate with an offset of "one" (Leading methione was not used)
      *
-     * @param candidate
+     * @param candidate    dbSNP candidate
      * @return true if the mutation mention can be normalized to a PSM-candidate with a +/-1 offset
      */
     private boolean normalizePSMMethionine(dbSNP candidate) {
@@ -212,9 +212,9 @@ public class MutationMention {
     }
 
     /**
-     * Check if the {@link seth.MutationMention} mention can be normalized to a PSM-candidate with a variable offset, derived from UniProt
+     * Check if the {@link MutationMention} mention can be normalized to a PSM-candidate with a variable offset, derived from UniProt
      *
-     * @param candidate
+     * @param candidate     dbSNP candidate
      * @param features List of possible UniProt features
      * @return null if candidate can not be normalized, or the feature which was used to normalize the candidate
      */
@@ -233,11 +233,11 @@ public class MutationMention {
     }
 
     /**
-     * Check if the {@link seth.MutationMention} mention can be exactly normalized to a PSM-candidate
+     * Check if the {@link MutationMention} mention can be exactly normalized to a PSM-candidate
      * In difference to normalizePSMSimple, this method uses information from the associated HGVS objects
      * This makes a big difference as both information sources (XML and HGVS) are complementary
      *
-     * @param candidate
+     * @param candidate   dbSNP candidate
      * @return true if the mutation mention can be normalized to a PSM-candidate
      */
     private boolean normalizePSMSimpleHGVS(dbSNP candidate){
@@ -260,11 +260,11 @@ public class MutationMention {
 
 
     /**
-     * Check if the {@link seth.MutationMention} mention can be exactly normalized to a PSM-candidate (reverse allele order)
+     * Check if the {@link MutationMention} mention can be exactly normalized to a PSM-candidate (reverse allele order)
      * In difference to normalizePSMSimple, this method uses information from the associated HGVS objects
      * This makes a big difference as both information sources (XML and HGVS) are complementary
      *
-     * @param candidate
+     * @param candidate   dbSNP candidate
      * @return true if the mutation mention can be normalized to a PSM-candidate
      */
     private boolean normalizePSMSimpleHGVSSwap(dbSNP candidate){
@@ -286,10 +286,10 @@ public class MutationMention {
     }
 
     /**
-     * Check if the {@link seth.MutationMention} mention can be normalized to a PSM-candidate with an offset of 1
+     * Check if the {@link MutationMention} mention can be normalized to a PSM-candidate with an offset of 1
      * In difference to normalizePSMSimple, this method uses information from the associated HGVS objects
      *
-     * @param candidate
+     * @param candidate    dbSNP candidate
      * @return true if the mutation mention can be normalized to a PSM-candidate with a +/-1 offset
      */
     private boolean normalizePSMMethionineHGVS(dbSNP candidate) {
@@ -321,10 +321,10 @@ public class MutationMention {
     }
 
     /**
-     * Check if the {@link seth.MutationMention} mention can be normalized to a PSM-candidate with an offset of 1
+     * Check if the {@link MutationMention} mention can be normalized to a PSM-candidate with an offset of 1
      * In difference to normalizePSMSimple, this method uses information from the associated HGVS objects
      *
-     * @param candidate
+     * @param candidate    dbSNP candidate
      * @return true if the mutation mention can be normalized to a PSM-candidate with a +/-1 offset
      */
     private boolean normalizePSMMethionineSwapHGVS(dbSNP candidate) {
@@ -359,7 +359,7 @@ public class MutationMention {
      * Normalization of nucleotide sequence mutations (NSM) for
      * genes located on the forward strand.
      *
-     * @param candidate
+     * @param candidate     dbSNP candidate
      * @return true if the mutation mention can be normalized to a NSM and the gene is in fwd direction
      */
     private boolean forwardNSMSimple(dbSNP candidate) {
@@ -402,7 +402,7 @@ public class MutationMention {
     /**
      *
      *
-     * @param candidate
+     * @param candidate     dbSNP candidate
      * @return @return true if the mutation mention can be normalized to a NSM and the gene is in bwd direction
      */
     private boolean reverseNSMSimple(dbSNP candidate) {
@@ -447,7 +447,7 @@ public class MutationMention {
      * @throws java.io.IOException
      */
     public static Map<Integer,List<MutationMention>> readMutations(String file)
-            throws FileNotFoundException, IOException {
+            throws IOException {
         Map<Integer,List<MutationMention>> result = new HashMap<Integer, List<MutationMention>>();
         BufferedReader br;
 
@@ -498,7 +498,7 @@ public class MutationMention {
     /**
      * Generates a Mutation object from a String like "A123T".
      *
-     * @param mutation
+     * @param mutation   Mutationstring (e.g. A123T)
      */
     public MutationMention(String mutation) {
         super();
@@ -520,8 +520,8 @@ public class MutationMention {
 
     /**
      *
-     * @param location
-     * @param mutation
+     * @param location   Location in text
+     * @param mutation    Mutationstring (e.g. A123T)
      */
     public MutationMention(EntityOffset location, String mutation) {
         super();
@@ -589,7 +589,7 @@ public class MutationMention {
      * @param location
      *            the new position of the mutation
      */
-    public void setLocation(EntityOffset location) {
+    private void setLocation(EntityOffset location) {
         this.location = location;
     }
 

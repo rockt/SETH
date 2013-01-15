@@ -202,7 +202,7 @@ public class NormalizeDB {
 	 * @param secs number of seconds
 	 * @return Human readable time format
 	 */
-	static String formatAsHHMMSS(long secs)
+	static private String formatAsHHMMSS(long secs)
 	{
 		final long hours = secs / 3600,
 		remainder = secs % 3600,

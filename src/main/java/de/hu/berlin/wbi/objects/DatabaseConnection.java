@@ -31,15 +31,15 @@ import java.util.Properties;
  */
 public class DatabaseConnection {
 
-	private String user;
-	private String password;
-	private String database;
-	private String host;
-	private String driver;
+	private final String user;
+	private final String password;
+	private final String database;
+	private final String host;
+	private final String driver;
 	private ResultSet rs;
 
 	private Connection conn;
-	Statement stmt;
+	private Statement stmt;
 
 	/**
 	 * Set up a database connection, by using a java-property object

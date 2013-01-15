@@ -106,10 +106,11 @@ public class Normalize {
 						+ mutation.toNormalized() + "\t"
 						+ mutation.getLocation().getStart() + "\t"
 						+ mutation.getLocation().getStop());
-				for (dbSNPNormalized norm : normalized)
+				for (dbSNPNormalized norm : normalized) {
 					// Print results to stdout
-					sb.append("\trs" + norm.getRsID());
-
+					sb.append("\trs");
+                    sb.append(norm.getRsID());
+                }
 				System.out.println(sb);
 
 				if (normalized.size() >= 1)
