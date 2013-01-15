@@ -40,7 +40,7 @@ public class MutationMention {
     protected Type type;
 
     /** Refers to which tool has been used for extraction */
-    protected Enum<Tool> tool;
+    protected Tool tool;
 
     /** Location in the text. */
     protected EntityOffset location;
@@ -695,7 +695,7 @@ public class MutationMention {
      * Returns {@link Tool} used to find mutation  (MutationFinder or SETH)
      * @return {@link Tool} used to find mutation
      */
-    public Enum<Tool> getTool() {
+    public Tool getTool() {
         return tool;
     }
 
@@ -726,4 +726,6 @@ public class MutationMention {
 
         return normalized;
     }
+
+
 }
