@@ -138,7 +138,7 @@ public class NormalizeDB {
 				for (Gene gene : genes) {
 					final List<dbSNP> potentialSNPs = geneToDbSNP.get(gene);
 					final List<UniprotFeature> features = geneToUniProtFeature.get(gene);
-                    mutation.normalizeSNP(potentialSNPs, features);
+                    mutation.normalizeSNP(potentialSNPs, features, false);
 
 					normalized.addAll(mutation.getNormalized());
 				}

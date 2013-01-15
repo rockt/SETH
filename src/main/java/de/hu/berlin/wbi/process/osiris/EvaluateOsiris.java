@@ -150,7 +150,7 @@ public class EvaluateOsiris {
 					for(int gene :  genes){
 						final List<dbSNP> potentialSNPs = dbSNP.getSNP(gene);	//Get a list of dbSNPs which could potentially represent the SNP from (mutation)
 						final List<UniprotFeature> features = UniprotFeature.getFeatures(gene);
-                        mutation.normalizeSNP(potentialSNPs, features);
+                        mutation.normalizeSNP(potentialSNPs, features, false);
 						List<dbSNPNormalized> normalized = mutation.getNormalized();	//And here we have  a list of all dbSNPs with which I could successfully associate the mutation
 						for(dbSNPNormalized norm : normalized)
 							rsNorm.add(norm.getRsID());

@@ -78,13 +78,17 @@ public class MutationMention {
      * This method evaluates if some of the {@link de.hu.berlin.wbi.objects.dbSNP} provided in <b>candidates</b>
      * actually equals the text-mined {@link MutationMention}
      *
-     * @param candidates
-     *            List of dbSNP-entries which might actually describe this
-     *            NER-SNP
+     * @param candidates List of dbSNP-entries which might actually describe this SNP
+     * @param features List of associated uniprot features
+     * @param append Sometimes normalization has to be invoked several times (for several genes) Should we append result or not?
+     *
+     *
      * @return normalized mutations
      */
-    public void normalizeSNP(List<dbSNP> candidates, List<UniprotFeature> features) {
-        normalized = new ArrayList<dbSNPNormalized>(1);
+    public void normalizeSNP(List<dbSNP> candidates, List<UniprotFeature> features, boolean append) {
+
+        if(append == false || normalized == null)
+           normalized = new ArrayList<dbSNPNormalized>(1);
 
         //Check if we have sufficient information to normalize the current mutation
         if (wtResidue == null || mutResidue == null || position == null)
