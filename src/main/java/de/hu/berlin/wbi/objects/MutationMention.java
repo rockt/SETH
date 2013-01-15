@@ -22,10 +22,7 @@ import de.hu.berlin.wbi.objects.*;
 import seth.ner.wrapper.Type;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
@@ -143,26 +140,27 @@ public class MutationMention {
     /**
      * Sometimes one SNP mention can be normalized to the same dbSNP identifier
      * several times. As some information is stored redundant.
-     * Therefore we have to remove some duplicates from the list
+     * Therefore we have to remove some duplicates from the list and
+     * also we return only the results with highest association score (no impact visible for Evaluation)
      * @param snpList   List of SNPs to be cleansed
      * @return Cleansed SNP list
      */
     private static List<dbSNPNormalized> cleanResults(List<dbSNPNormalized> snpList) {
 
-        Map<Integer, dbSNPNormalized> map = new HashMap<Integer, dbSNPNormalized>();
-        for(dbSNPNormalized snp : snpList){
-            int key = snp.getRsID();
+        //We only return those dbSNP entries with highest confidence (actually no impact is visible)
+        Collections.sort(snpList);
+        int value = snpList.size() > 0 ? snpList.get(0).getConfidence() : Integer.MIN_VALUE;
 
-            if(map.containsKey(key)){
-                if(map.get(key).getConfidence() < snp.getConfidence())
-                    map.put(key, snp);
-            }
-            else{
-                map.put(key, snp);
+        List<dbSNPNormalized> topResult = new ArrayList<dbSNPNormalized>();
+        Set<Integer> seen = new HashSet<Integer>();
+        for(dbSNPNormalized snp : snpList){
+            if(value == snp.getConfidence() && !seen.contains(snp.getRsID())){
+                topResult.add(snp);
+                seen.add(snp.getRsID());
             }
         }
 
-        return new ArrayList<dbSNPNormalized>(map.values());
+        return topResult;
     }
 
 
@@ -657,8 +655,8 @@ public class MutationMention {
      */
     @Override
     public String toString() {
-        return "MutationMention [location=" + location
-                + ", mutResidue=" + mutResidue + ", position=" + position + ", wtResidue=" + wtResidue
+        return "MutationMention [location=" + location.getStart() +"-" +location.getStop()
+                + ", mutResidue=" + mutResidue + ", location=" + location + ", wtResidue=" + wtResidue
                 + "]";
     }
 
