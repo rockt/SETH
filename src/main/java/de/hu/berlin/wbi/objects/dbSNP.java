@@ -60,14 +60,14 @@ public class dbSNP {
 	/** Used to split residues  */
 	private static final Pattern pattern = Pattern.compile("\\|");
 
-	/**  */
+    /** Database connection */
+    private static DatabaseConnection conn = null;
+
+    /** Prepared statement for HGVS entries*/
+    private static PreparedStatement hgvsQuery;
+
+    /** Prepared statement for PSM entries*/
 	private static PreparedStatement snpQuery;
-
-	/**  */
-	private static PreparedStatement hgvsQuery;
-
-	/**  */
-	private static DatabaseConnection conn = null;
 
 	/**
 	 * Initializes prepared statements for retrieving SNP information
@@ -190,9 +190,9 @@ public class dbSNP {
      * Constructor
 	 * @param rsID        dbSNP identifier
 	 * @param geneID      Entrez Gene identifier
-	 * @param residues
-	 * @param aaPosition
-	 * @param wildtype
+	 * @param residues    PSM residues
+	 * @param aaPosition  PSM location
+	 * @param wildtype    PSM wildtype allele
 	 */
 	public dbSNP(int rsID, int geneID, Set<String> residues, 
 			int aaPosition, String wildtype) {
@@ -212,7 +212,7 @@ public class dbSNP {
 	}
 
 	/**
-	 * @param rsID
+	 * @param rsID   dbSNP ID
 	 */
 	public void setRsID(int rsID) {
 		this.rsID = rsID;
@@ -226,7 +226,7 @@ public class dbSNP {
 	}
 
 	/**
-	 * @param geneID
+	 * @param geneID    Entrez Gene ID
 	 */
 	public void setGeneID(int geneID) {
 		this.geneID = geneID;
@@ -249,7 +249,7 @@ public class dbSNP {
 	/**
 	 * 
 	 * 
-	 * @param residues
+	 * @param residues    PSM residues
 	 */
 	public void setResidues(Set<String> residues) {
 		this.residues = residues;
@@ -263,7 +263,7 @@ public class dbSNP {
 	}
 
 	/**
-	 * @param aaPosition
+	 * @param aaPosition   Amino acid location
 	 */
 	public void setAaPosition(int aaPosition) {
 		this.aaPosition = aaPosition;
@@ -279,7 +279,7 @@ public class dbSNP {
 	}
 
 	/**
-	 * @param hgvs
+	 * @param hgvs     HGVS entries associated with this SNP
 	 */
 	public void setHgvs(Set<HGVS> hgvs) {
 		this.hgvs = hgvs;

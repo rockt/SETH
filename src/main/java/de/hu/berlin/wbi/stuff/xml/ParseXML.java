@@ -47,7 +47,7 @@ public class ParseXML extends DefaultHandler{
 
     private StringBuilder hgvs = null;
     private SNP snp;
-    private static DatabaseConnection dbconn ;
+
     private static PreparedStatement psHGVS;
     private static PreparedStatement psmHGVS;
 
@@ -58,8 +58,8 @@ public class ParseXML extends DefaultHandler{
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.exit(1);
-		} 		
-		dbconn = new DatabaseConnection(property);
+		}
+        DatabaseConnection dbconn = new DatabaseConnection(property);
 		dbconn.connect();
 		psHGVS =  dbconn.getConn().prepareStatement("INSERT INTO " +property.getProperty("database.hgvs_view") +" (locus_id, snp_id, hgvs, refseq) VALUES (?, ?, ?, ?)");
 		psmHGVS = dbconn.getConn().prepareStatement("INSERT INTO " +property.getProperty("database.SNPTable")  +" (snp_id, locus_id, aa_Position, residue, wildtype) VALUES (?, ?, ?, ?, ?)"); 
