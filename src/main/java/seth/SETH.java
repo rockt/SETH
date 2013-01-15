@@ -1,6 +1,6 @@
 package seth;
 
-import de.hu.berlin.wbi.objects.MutationMention;
+import de.hu.berlin.wbi.objects.*;
 import edu.uchsc.ccp.nlp.ei.mutation.MutationException;
 import edu.uchsc.ccp.nlp.ei.mutation.MutationFinder;
 import edu.uchsc.ccp.nlp.ei.mutation.PointMutation;
@@ -8,6 +8,10 @@ import seth.ner.wrapper.SETHNER;
 import seth.ner.wrapper.Type;
 
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.*;
 
 /**
@@ -73,13 +77,47 @@ public class SETH {
     }
 
     //Minimal example to apply both tools
-    public static void main(String[] args){
-        String text = "p.A123T and Ala123Tyr";
-        SETH seth = new SETH("resources/mutations.txt");
+    public static void main(String[] args)throws SQLException, IOException {
+        String text = "p.A123T and Val158Met";
 
-        for(MutationMention mutation : seth.findMutations(text)){
-            System.out.println("'" +text.subSequence(mutation.getStart(), mutation.getEnd()) +"'");
+        /** Part1: Recognition of mutation mentions */
+        SETH seth = new SETH("resources/mutations.txt");
+        List<MutationMention> mutations = seth.findMutations(text);
+        try{
+            for(MutationMention mutation : mutations){
+                System.out.println(mutation.toNormalized());
+            }
         }
+       catch(Throwable e){
+              e.printStackTrace();
+       }
+
+
+       /** Part 2: Normalization of mutation mentions to dbSNP
+        * This part communicates with a local database dump
+       */
+        final Properties property = new Properties();
+        property.loadFromXML(new FileInputStream(new File("myProperty.xml"))); //Load property file
+        final DatabaseConnection mysql = new DatabaseConnection(property);
+
+        mysql.connect(); //Connect with local derby Database
+        dbSNP.init(mysql, property.getProperty("database.PSM"), property.getProperty("database.hgvs_view"));
+        UniprotFeature.init(mysql, property.getProperty("database.uniprot"));
+
+        int gene = 1312;	//Entrez Gene ID associated with the current sentence
+        final List<dbSNP> potentialSNPs = dbSNP.getSNP(gene);	//Get a list of dbSNPs which could potentially represent the mutation mention
+        final List<UniprotFeature> features = UniprotFeature.getFeatures(gene);    //Get all associated UniProt features
+
+        for(MutationMention mutation : mutations){
+            List<dbSNPNormalized> normalized = mutation.getPossibledbSNPs(potentialSNPs, features);	//Get list of all dbSNP entries with which I could successfully associate the mutation
+
+            // Print information
+            for(dbSNPNormalized snp : normalized){
+                System.out.println(mutation +" --- rs" +snp.getRsID());
+            }
+        }
+
+
 
     }
 }
