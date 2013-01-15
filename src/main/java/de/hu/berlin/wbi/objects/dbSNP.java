@@ -38,22 +38,22 @@ import java.util.regex.Pattern;
 public class dbSNP {
 
 	/** dbSNP internal id. */
-	private int rsID;
+	protected int rsID;
 
 	/** gene associated with this dbSNP entry. */
-    private int geneID;
+    protected int geneID;
 
 	/** known mutated amino acid residues for this SNP */
-    private Set<String> residues;
+    protected Set<String> residues;
 
 	/** Mutation has one wildtype  */
-    private String wildtype;
+    protected String wildtype;
 
 	/** location of the mutation in terms of amino acids  */
-    private int aaPosition;
+    protected int aaPosition;
 
 	/** Different Strings describing the variations in <a href="http://www.hgvs.org/mutnomen/"HGVS</a> nomenclature */
-    private Set<HGVS> hgvs;
+    protected Set<HGVS> hgvs;
 
 
 
