@@ -7,14 +7,29 @@ import edu.uchsc.ccp.nlp.ei.mutation.PointMutation;
 import seth.ner.wrapper.SETHNER;
 import seth.ner.wrapper.Type;
 
+
 import java.util.*;
 
-//S.E.T.H. — SNP Extraction Tool for Human Variations
+/**
+ * This class encapsulates {@link MutationFinder} and {@link SETHNER}.
+ * This allows to recognize SNPs written in the latest HGVS nomenclature (e.g. p.Ala123Tyr)
+ * and SNPs written in free text (e.g. Ala to Tyr substitution at position 123)
+ */
 public class SETH {
 
+
+    /** SETH object for recognizing nomenclature SNPs*/
     private SETHNER seth;
+
+    /** MutationFinder object for recognizing free-text SNPs*/
     private MutationFinder mf;
 
+    /**
+     * Initializes {@link MutationFinder} and {@link SETHNER}.
+     * Requires a file with regular expressions for MutationFinder
+     *
+     * @param regexFile File location with regular expressions for MutationFinder
+     */
     public SETH(String regexFile) {
         super();
 
@@ -22,6 +37,11 @@ public class SETH {
         this.seth = new SETHNER();
     }
 
+    /**
+     * Searches for mutation mentions in applied text and returns them
+     * @param text Text possibly containing a mutation mention
+     * @return List of {@link MutationMention}
+     */
     public List<MutationMention> findMutations(String text){
         List<MutationMention> mutations = new ArrayList<MutationMention>();
 
@@ -52,6 +72,7 @@ public class SETH {
         return mutations;
     }
 
+    //Minimal example to apply both tools
     public static void main(String[] args){
         String text = "p.A123T and Ala123Tyr";
         SETH seth = new SETH("resources/mutations.txt");

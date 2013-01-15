@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Java wrapper for actual SETHNER code written in Scala
  * User: Tim Rocktaeschel
  * Date: 11/9/12
  * Time: 2:15 PM
