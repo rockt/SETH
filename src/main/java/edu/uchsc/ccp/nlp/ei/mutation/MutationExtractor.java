@@ -49,7 +49,14 @@ public abstract class MutationExtractor {
         amino_acid_three_to_one_map.put("ASN", "N");
         amino_acid_three_to_one_map.put("ASP", "D");
         amino_acid_three_to_one_map.put("THR", "T");
-
+        
+//http://en.wikipedia.org/wiki/Amino_acid#Table_of_standard_amino_acid_abbreviations_and_side_chain_properties        
+        amino_acid_three_to_one_map.put("ASX", "B");
+        amino_acid_three_to_one_map.put("GLX", "Z");
+        amino_acid_three_to_one_map.put("XLE", "J");
+        amino_acid_three_to_one_map.put("TER", "X");	//TER and STP are often used to describe a stop codon
+        amino_acid_three_to_one_map.put("STP", "X");
+ 
         return amino_acid_three_to_one_map;
     }
 
@@ -84,6 +91,13 @@ public abstract class MutationExtractor {
         amino_acid_name_to_one_map.put("ASPARAGINE", "N");
         amino_acid_name_to_one_map.put("ASPARTIC ACID", "D");
         amino_acid_name_to_one_map.put("THREONINE", "T");
+        
+        amino_acid_name_to_one_map.put("TERM", "X");
+        amino_acid_name_to_one_map.put("STOP", "X");
+        amino_acid_name_to_one_map.put("AMBER", "X");
+        amino_acid_name_to_one_map.put("UMBER", "X");
+        amino_acid_name_to_one_map.put("OCHRE", "X");
+        amino_acid_name_to_one_map.put("OPAL", "X");
 
         return amino_acid_name_to_one_map;
     }
