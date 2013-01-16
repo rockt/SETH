@@ -25,7 +25,7 @@ public abstract class MutationExtractor {
      * 
      * @return a mapping from three-letter code to one-letter code
      */
-    protected static Map<String, String> populateAminoAcidThreeToOneLookupMap() {
+    public static Map<String, String> populateAminoAcidThreeToOneLookupMap() {
         /* populate the three-letter to one-letter lookup map */
         Map<String, String> amino_acid_three_to_one_map = new HashMap<String, String>();
         amino_acid_three_to_one_map = new HashMap<String, String>();

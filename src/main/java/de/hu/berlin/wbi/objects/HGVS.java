@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with snp-normalizer.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import de.hu.berlin.wbi.stuff.AA_Mapper;
+import edu.uchsc.ccp.nlp.ei.mutation.MutationFinder;
 
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -82,7 +82,7 @@ public class HGVS {
 				}
 			}
 			else  if (type =='p'){				//Protein-mentions are extracted from dbSNP directly, but sometimes the XML/database information is incomplete (e.g. rs4684677 contains not the wildtype amino acid)
-				Map<String, String> map = AA_Mapper.populateAminoAcidThreeToOneLookupMap();
+				Map<String, String> map = MutationFinder.populateAminoAcidThreeToOneLookupMap();
 				String s = string.substring(2);	//String contains a substring of s (minus reference sequence at beginning)
 				this.type = 'p';	
 				Pattern mutationMattern = Pattern.compile("([A-Za-z]+)([1-9][0-9]*)([A-Za-z]+|=)");
