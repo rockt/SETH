@@ -19,7 +19,6 @@ import java.util.Set;
 
 import org.apache.oro.text.regex.MalformedPatternException;
 import org.apache.oro.text.regex.MatchResult;
-import org.apache.oro.text.regex.Pattern;
 import org.apache.oro.text.regex.PatternMatcher;
 import org.apache.oro.text.regex.PatternMatcherInput;
 import org.apache.oro.text.regex.Perl5Compiler;
@@ -65,7 +64,7 @@ public class MutationFinder extends MutationExtractor {
      * point mutation to the groups that they are members of. These mappings are stored in the Map<String, Integer>, where the String is one of
      * MUT_RES, WT_RES, or POS, and the Integer represents its parenthetical group.
      */
-    private Map<Pattern, Map<String, Integer>> regular_expressions;
+    private Map<MyPattern, Map<String, Integer>> regular_expressions;
 
     /**
      * Initialization of MutationFinder requires a set of regular expressions that will be used to detect mutations. This constructor loads the
@@ -107,9 +106,10 @@ public class MutationFinder extends MutationExtractor {
      *            implementation. This conversion is handled by this constructor.
      */
     public MutationFinder(Set<String> unprocessed_python_regexes) {
-        regular_expressions = new HashMap<Pattern, Map<String, Integer>>();
+        regular_expressions = new HashMap<MyPattern, Map<String, Integer>>();
+        int elementNumber =0;
         for (String python_regex : unprocessed_python_regexes) {
-            processPythonRegex(python_regex);
+            processPythonRegex(python_regex, elementNumber++);
         }
     }
 
@@ -129,9 +129,9 @@ public class MutationFinder extends MutationExtractor {
         try {
             /* convert the regular expression string into a Pattern class here and add it to the regular_expressions Set */
             if (regexStr.endsWith(CASE_SENSITIVE)) {
-                regular_expressions.put(compiler.compile(regexStr.substring(0, regexStr.lastIndexOf('['))), groupMappings);
+                regular_expressions.put(new MyPattern(compiler.compile(regexStr.substring(0, regexStr.lastIndexOf('['))), regexStr, line), groupMappings);
             } else {
-                regular_expressions.put(compiler.compile(regexStr, Perl5Compiler.CASE_INSENSITIVE_MASK), groupMappings);
+                regular_expressions.put(new MyPattern(compiler.compile(regexStr, Perl5Compiler.CASE_INSENSITIVE_MASK), regexStr, line), groupMappings);
             }
         } catch (MalformedPatternException mpe) {
             mpe.printStackTrace();
@@ -144,16 +144,17 @@ public class MutationFinder extends MutationExtractor {
      */
     private void loadRegularExpressionsFromFile(File file) {
         /* initialize the regular_expressions set */
-        regular_expressions = new HashMap<Pattern, Map<String, Integer>>();
+        regular_expressions = new HashMap<MyPattern, Map<String, Integer>>();
         BufferedReader br = null;
         int count = 0;
         try {
             FileReader fr = new FileReader(file);
             br = new BufferedReader(fr);
-            String line;
+            String line; int lineNumber=0;
             while ((line = br.readLine()) != null) {
+            	lineNumber++;
                 if (!line.startsWith("#")) {
-                    processPythonRegex(line);
+                    processPythonRegex(line,lineNumber);
                     count++;
 
                     if (count % 100 == 0) {
@@ -206,7 +207,7 @@ public class MutationFinder extends MutationExtractor {
      * This method counts the number of open parentheses that are part of the regular expression (i.e. not escaped, "\(") before the given index.
      */
     private static int countRegExParenthesesBeforeIndex(String regexStr, int index) {
-        java.util.regex.Pattern p = java.util.regex.Pattern.compile("[^\\\\]\\(");
+        java.util.regex.Pattern p = java.util.regex.Pattern.compile("[^\\\\]\\((?!\\?:)"); //Means !\(; everything instead of '\' followed by (; than not followed(?!) by ?:
         java.util.regex.Matcher m = p.matcher(regexStr);
         int count = 0;
         int currentIndex = -1;
@@ -214,10 +215,10 @@ public class MutationFinder extends MutationExtractor {
             count++;
             currentIndex = m.start();
         }
-        return count;
+        return count -1; //The first expression is not counted
     }
 
-    /*
+    /**
      * Perform precision increasing post-processing steps. Remove false positives indicated by: mutant and wild-type residues being identical (e.g.
      * A42A)
      */
@@ -259,40 +260,55 @@ public class MutationFinder extends MutationExtractor {
         Map<Mutation, Set<int[]>> extractedMutations = new HashMap<Mutation, Set<int[]>>();
 
         /* cycle through each pattern and look for matches */
-        for (Pattern pattern : regular_expressions.keySet()) {
+        for (MyPattern pattern : regular_expressions.keySet()) {
             PatternMatcher m = new Perl5Matcher();
             PatternMatcherInput input = new PatternMatcherInput(rawText);
 
             /* recall the group numbers for the POS, WT_RES, and MUT_RES tags within the patterns */
-            Map<String, Integer> groupMappings = regular_expressions.get(pattern);
+            final Map<String, Integer> groupMappings = regular_expressions.get(pattern);
 
-            /* create a new PointMutation for each match */
-            while (m.contains(input, pattern)) {
-                int pos_group = groupMappings.get(POS);
-                int wtres_group = groupMappings.get(WT_RES);
-                int mutres_group = groupMappings.get(MUT_RES);
-
+            //Minor speed gain, if this is not declared in the while loop
+            int pos_group = groupMappings.get(POS);
+            int wtres_group = groupMappings.get(WT_RES);
+            int mutres_group = groupMappings.get(MUT_RES);
+            
+            /* create a new PointMutation for each match */            
+            while (m.contains(input, pattern.getPattern())) {
+            	int id = pattern.getId();
+            	
                 MatchResult result = m.getMatch();
-
-                Mutation pm = new PointMutation(Integer.parseInt(result.group(pos_group)), result.group(wtres_group), result
-                        .group(mutres_group));
-                // /*
-                // * The span of the mutation is calcluated as the min # start span of the three components and the max end span # of the three
-                // * components -- these are then packed up as an int array of size 2.
-                // */
-                //
-                int[] span = new int[2];
-                span[0] = Math.min(result.beginOffset(pos_group), Math.min(result.beginOffset(wtres_group), result
-                        .beginOffset(mutres_group)));
-                span[1] = Math.max(result.endOffset(pos_group), Math.max(result.endOffset(wtres_group), result.endOffset(mutres_group)));
-
-                /* now store the mutation and the span */
-                if (extractedMutations.containsKey(pm)) {
-                    extractedMutations.get(pm).add(span);
-                } else {
-                    Set<int[]> spans = new HashSet<int[]>();
-                    spans.add(span);
-                    extractedMutations.put(pm, spans);
+//                System.out.println(result.group(pos_group) +" " +result.group(wtres_group) +" " +result
+//                        .group(mutres_group));
+                try{
+                	
+                	PointMutation pm = new PointMutation(result.group(pos_group).replaceAll("\\s", ""), result.group(wtres_group), result
+	                        .group(mutres_group));
+	                
+	                if(pm.isValid() == false)	//Add only mutation if it is valid (basically checks location)
+	                	continue;
+	                
+	                pm.setId(id);
+	                
+	                // /*
+	                // * The span of the mutation is calculated as the min # start span of the three components and the max end span # of the three
+	                // * components -- these are then packed up as an int array of size 2.
+	                // */
+	                //
+	                int[] span = new int[2];
+	                span[0] = Math.min(result.beginOffset(pos_group), Math.min(result.beginOffset(wtres_group), result
+	                        .beginOffset(mutres_group)));
+	                span[1] = Math.max(result.endOffset(pos_group), Math.max(result.endOffset(wtres_group), result.endOffset(mutres_group)));
+	
+	                /* now store the mutation and the span */
+	                if (extractedMutations.containsKey(pm)) {
+	                    extractedMutations.get(pm).add(span);
+	                } else {
+	                    Set<int[]> spans = new HashSet<int[]>();
+	                    spans.add(span);
+	                    extractedMutations.put(pm, spans);
+	                }
+                }catch(NumberFormatException nfe){
+                	System.err.println("Problem parsing: " +result.group(pos_group) +" " +result.group(wtres_group) +" " +result.group(mutres_group));
                 }
             }
         }
