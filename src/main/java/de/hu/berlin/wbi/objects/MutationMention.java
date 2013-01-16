@@ -720,10 +720,6 @@ public class MutationMention {
      * @return dbSNP entries
      */
     public List<dbSNPNormalized> getNormalized() {
-
-        if(normalized == null)
-            throw new RuntimeException("Method normalize has to be invoked first ");
-
         return normalized;
     }
 
