@@ -20,7 +20,8 @@ import java.util.Map;
 
 public class Mutation {
 
-    private int position;
+	private int id; //By which pattern has the mutation been found?
+    private String position;
 
     /**
      * 
@@ -28,30 +29,15 @@ public class Mutation {
      *            the sequence position or start position of the mutation
      */
     public Mutation(int position) throws MutationException {
-        this.position = position;
-        checkPosition();
+        this.position = Integer.toString(position);
     }
     /**
      * 
      * @param position --
      *            the sequence position or start position of the mutation
      */
-    public Mutation(String position) throws MutationException {
-        try {
-            this.position = Integer.parseInt(position);    
-        } catch (NumberFormatException nfe) {
-            throw new MutationException("Invalid position: " + position);
-        }
-        
-        checkPosition();
-    }
-    
-
-    /* This method checks to see the position is > 0. If it is not, then a MutationException is thrown */
-    private void checkPosition() throws MutationException {
-        if (position < 1) {
-            throw new MutationException("Position must be greater than 0");
-        }
+    public Mutation(String position) {
+    	this.position = position;
     }
 
     /**
@@ -59,11 +45,23 @@ public class Mutation {
      * 
      * @return an int representing the position or start position of the mutation
      */
-    public int getPosition() {
+    public String getPosition() {
         return position;
     }
-
-    /*
+    
+    /**
+    *  Retrieves the pattern id
+    * 
+    * @return an int representing the patternId
+    */
+    public int getId() {
+		return id;
+	}
+    
+	public void setId(int id) {
+		this.id = id;
+	}
+	/*
      * This is a simple utility method to combine to mappings. In the context of MutationFinder, this method is used to combine mappings among amino
      * acid codes. The mappings contained in "additionalMappings" are added to "inputMap"
      */
