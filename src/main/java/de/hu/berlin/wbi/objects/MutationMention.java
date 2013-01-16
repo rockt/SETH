@@ -66,6 +66,9 @@ public class MutationMention {
     /** List with normalized SNPs*/
     protected List<dbSNPNormalized> normalized;
 
+    /** Which regular expression has been used to extract this SNP from text (MutationFinder only)*/
+    protected int patternId;
+
     /** Refers to which tool has been used for extraction */
     public enum Tool{
         MUTATIONFINDER, SETH
@@ -723,5 +726,19 @@ public class MutationMention {
         return normalized;
     }
 
+    /**
+     * Retrieves the pattern ID used for extracting the current Mutation mention
+     * @return  pattern Id
+     */
+    public int getPatternId() {
+        return patternId;
+    }
 
+    /**
+     * Sets pattern ID
+     * @param patternId   pattern ID
+     */
+    public void setPatternId(int patternId) {
+        this.patternId = patternId;
+    }
 }

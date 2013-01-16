@@ -62,9 +62,11 @@ public class SETH {
                for(int [] location : map.get(mutation)){
                    String originalMatch =  text.substring(location[0], location[1]);
 
-                   mutations.add(new MutationMention(location[0], location[1], originalMatch, "NA", pm.getPosition(),
+                   MutationMention tmpMutation =    new MutationMention(location[0], location[1], originalMatch, "NA", pm.getPosition(),
                            String.valueOf(pm.getWtResidue()), String.valueOf(pm.getMutResidue()),
-                           Type.SUBSTITUTION, MutationMention.Tool.MUTATIONFINDER));
+                           Type.SUBSTITUTION, MutationMention.Tool.MUTATIONFINDER);
+                   tmpMutation.setPatternId(pm.getId());
+                   mutations.add(tmpMutation);
                }
            }
 
