@@ -19,8 +19,11 @@ public class EvaluateNER {
 
     public static void main(String[] args) throws IOException {
 
-        String goldFolder = "/home/philippe/workspace/snp-normalizer/data/Results_Brat";
-        String corpusResult=      "/home/philippe/workspace/thomas/seth/corpus/all.txt";
+        if(args.length != 2)
+            printErrorMessage();
+
+        String goldFolder = args[0];
+        String corpusResult= args[1];
 
         Map<Integer, List<Entity>> goldstandardMap =  readGoldStandard(goldFolder);
         Map<Integer, List<Entity>> predictionMap =      readPredictions(corpusResult);
@@ -38,7 +41,7 @@ public class EvaluateNER {
                     tp++;
                 else{
                     fn++;
-                    System.out.println(pmid +" " +e);
+                    //System.out.println(pmid +" " +e);
                 }
             }
             fp+=prediction.size();
@@ -50,13 +53,18 @@ public class EvaluateNER {
 
 
         }
+
+        double recall = (double) tp/(tp+fn);
+        double precision = (double) tp/(tp+fp);
+        double f1 = 2*(precision*recall)/(precision+recall);
+
         DecimalFormat df = new DecimalFormat( "0.00" );
         System.err.println("TP " +tp);
         System.err.println("FP " +fp);
         System.err.println("FN " +fn);
-        System.err.println("Recall " +df.format((double) tp/(tp+fn)));
-        System.err.println("Precision " +df.format((double) tp/(tp+fp)));
-
+        System.err.println("Precision " +df.format(precision));
+        System.err.println("Recall " +df.format(recall));
+        System.err.println("F1 " +df.format(f1));
     }
 
     /**
@@ -65,6 +73,7 @@ public class EvaluateNER {
      * @throws IOException
      */
     private static Map<Integer, List<Entity>> readPredictions(String corpusResult) throws IOException {
+        System.out.println("Reading predictions from " +corpusResult);
         Map<Integer, List<Entity>> entityMap = new HashMap<Integer, List<Entity>>();
 
         BufferedReader br = new BufferedReader(new FileReader(new File(corpusResult)));
@@ -91,6 +100,7 @@ public class EvaluateNER {
      * @throws IOException
      */
     private static Map<Integer, List<Entity>> readGoldStandard(String goldFolder) throws IOException {
+        System.out.println("Reading goldstandard annotaitons from " +goldFolder);
 
         File folder = new File(goldFolder);
         if(folder.isFile())
@@ -130,5 +140,11 @@ public class EvaluateNER {
 
         }
         return entityMap;
+    }
+
+    private static void printErrorMessage(){
+        System.err.println("ERROR: Invalid number of input parameters. Execution requires two input parameters.");
+        System.err.println("PARAMETERS:  goldFolder SETH-prediction");
+        System.exit(1);
     }
 }
