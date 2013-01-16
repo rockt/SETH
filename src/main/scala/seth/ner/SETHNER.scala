@@ -276,7 +276,7 @@ class SETHNER extends RegexParsers with NonGreedy with Positional with FlattenTo
   /**
    * Parses the input string and extracts all mutation mentions
    * @param input The string from which mutation mentions should be extracted
-   * @return A list of spans for mutation mention metaches
+   * @return A list of spans for mutation mention matches
    */
   def apply(input: String) = //parse(expr, new PackratReader(new CharSequenceReader(input))) match {
     parse(expr, input) match {
