@@ -65,7 +65,7 @@ public abstract class MutationExtractor {
      * 
      * @return a mapping from amino acid full name to one-letter code
      */
-    protected static Map<String, String> populateAminoAcidNameToOneLookupMap() {
+    public static Map<String, String> populateAminoAcidNameToOneLookupMap() {
         /* populate the amino acid name to one-letter lookup map */
         Map<String, String> amino_acid_name_to_one_map = new HashMap<String, String>();
         amino_acid_name_to_one_map = new HashMap<String, String>();

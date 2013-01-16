@@ -118,8 +118,7 @@ public class MutationFinder extends MutationExtractor {
      * must remove the ?P<wt_res> ?P<pos> ?P<mt_res> tags, and log the group number (based on counting parentheses) that they are members of. The
      * regular expressions are then compiled, with or without the case-insensitive flag.
      */
-    private void processPythonRegex(String regexStr) {
-
+    private void processPythonRegex(String regexStr, int line) {
         Map<String, Integer> groupMappings = extractMappingsFromPythonRegex(regexStr);
 
         /* remove the ?P<wt_res>, ?P<pos>, and ?P<mt_res> tags from the regular expression string */
