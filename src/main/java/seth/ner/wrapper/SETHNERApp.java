@@ -1,15 +1,15 @@
 package seth.ner.wrapper;
 
-import java.util.List;
 import de.hu.berlin.wbi.objects.MutationMention;
+
+import java.util.List;
 /**
- * Minimal example to apply {@link SETHNER} (exluding MutationFinder)  on free text
+ * Minimal example to apply {@link SETHNER} (exluding MutationFinder) on free text
  * User: Tim Rocktaeschel
  * Date: 11/9/12
  * Time: 11:12 AM
  */
 
-//Java Wrapper
 public class SETHNERApp {
     public static void main(String[] args) {
         System.out.println(args[0]);
