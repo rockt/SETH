@@ -1,7 +1,11 @@
 package edu.uchsc.ccp.nlp.ei.mutation;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+
 
 /**
  * A class for storing information about protein point mutations
@@ -25,23 +29,6 @@ public class PointMutation extends Mutation {
 
     private char mutResidue;
 
-    /**
-     * Initialize the object and call the base class constructor.
-     * 
-     * @param position
-     *            the sequence position or start position of the mutation
-     * @param wtResidue
-     *            the wild-type (pre-mutation) residue identity (a string)
-     * @param mutResidue
-     *            the mutant (post-mutation) residue identity (a string)
-     * @throws MutationException
-     *             Residues identities are validated to ensure that they are within the canonical set of amino acid residues are normalized to their
-     *             one-letter abbreviations.
-     */
-    public PointMutation(int position, String wtResidue, String mutResidue) throws MutationException {
-        super(position);
-        initialize(wtResidue, mutResidue);
-    }
 
     public PointMutation(String position, String wtResidue, String mutResidue) throws MutationException {
         super(position);
@@ -55,6 +42,34 @@ public class PointMutation extends Mutation {
 
         this.wtResidue = normalizeResidueIdentity(wtResidue);
         this.mutResidue = normalizeResidueIdentity(mutResidue);
+    }
+    
+    /**
+     * Only Nucleotide Sequence Mutations (NSM) are allowed to have a positional offset of < 0
+     * This method checks if the position of a mutation is valid;
+     * @return
+     */
+	public boolean isValid(){
+    	
+    	try{
+    		int pos = Integer.parseInt(this.getPosition());
+    		    		    		
+    		if(pos <= 0){
+    			
+    			Character []  nucleotides= {'A', 'T', 'G', 'C'}; 
+    			Set<Character> nucleotidesSet  = new HashSet<Character>(Arrays.asList(nucleotides));
+
+    			if(nucleotidesSet.contains(wtResidue) == true && nucleotidesSet.contains(mutResidue))
+    				return true;
+    			else
+    				return false;   			
+    		}
+    		
+    	}catch(NumberFormatException nfe){
+            return true;       //If position is not a number, we assume it is valid
+    	}
+
+    	return true;
     }
 
     /**
@@ -70,7 +85,7 @@ public class PointMutation extends Mutation {
         if (abbreviationLookup.containsKey(residue)) {
             return abbreviationLookup.get(residue).charAt(0);
         } else {
-            throw new MutationException("Input residue not recognized, must be a standard residue: " + residue);
+            throw new MutationException("Input residue not recognized, must be a standard residue: '" + residue +"'");
         }
     }
 
@@ -103,7 +118,13 @@ public class PointMutation extends Mutation {
         amino_acid_three_to_one_map.put("N", "N");
         amino_acid_three_to_one_map.put("D", "D");
         amino_acid_three_to_one_map.put("T", "T");
-
+        
+        //http://en.wikipedia.org/wiki/Amino_acid#Table_of_standard_amino_acid_abbreviations_and_side_chain_properties
+        amino_acid_three_to_one_map.put("B","B");
+        amino_acid_three_to_one_map.put("Z","Z");
+        amino_acid_three_to_one_map.put("J","J");
+        amino_acid_three_to_one_map.put("X", "X");
+        
         return amino_acid_three_to_one_map;
     }
 
@@ -154,7 +175,7 @@ public class PointMutation extends Mutation {
      */
     @Override
     public String toString() {
-        return (this.getWtResidue() + Integer.toString(this.getPosition()) + this.getMutResidue());
+        return (this.getWtResidue() + this.getPosition() + this.getMutResidue());
     }
 
     /**
@@ -170,7 +191,7 @@ public class PointMutation extends Mutation {
 
         PointMutation pm;
         try {
-            pm = new PointMutation(Integer.parseInt(wNm.substring(1, wNm.length() - 1)), Character.toString(wNm.charAt(0)), Character
+            pm = new PointMutation(wNm.substring(1, wNm.length() - 1), Character.toString(wNm.charAt(0)), Character
                     .toString(wNm.charAt(wNm.length() - 1)));
             return pm;
         } catch (Exception e) {
