@@ -19,14 +19,15 @@ public class EvaluateNER {
 
     public static void main(String[] args) throws IOException {
 
-        if(args.length != 2)
+        if(args.length != 3)
             printErrorMessage();
 
         String goldFolder = args[0];
         String corpusResult= args[1];
+        String tool= args[2];
 
         Map<Integer, List<Entity>> goldstandardMap =  readGoldStandard(goldFolder);
-        Map<Integer, List<Entity>> predictionMap =      readPredictions(corpusResult);
+        Map<Integer, List<Entity>> predictionMap =      readPredictions(corpusResult, tool);
 
         System.out.println("Evaluating for " +goldstandardMap.size() +" abstracts");
         int tp =0; int fp=0; int fn=0;
@@ -37,6 +38,7 @@ public class EvaluateNER {
                 prediction = new ArrayList<Entity>();
 
             for(Entity e : goldstandard){
+
                 if(prediction.remove(e))
                     tp++;
                 else{
@@ -47,9 +49,9 @@ public class EvaluateNER {
             fp+=prediction.size();
 
             //Inspect false positives
-            //for(Entity p : prediction){
-            //   System.out.println(pmid +" " +p);
-            //}
+            for(Entity p : prediction){
+               System.out.println(pmid +" " +p);
+            }
 
 
         }
@@ -72,7 +74,7 @@ public class EvaluateNER {
      * @return Predicted Entities
      * @throws IOException
      */
-    private static Map<Integer, List<Entity>> readPredictions(String corpusResult) throws IOException {
+    private static Map<Integer, List<Entity>> readPredictions(String corpusResult, String tool) throws IOException {
         System.out.println("Reading predictions from " +corpusResult);
         Map<Integer, List<Entity>> entityMap = new HashMap<Integer, List<Entity>>();
 
@@ -80,17 +82,19 @@ public class EvaluateNER {
         while(br.ready()){
             String array[] = br.readLine().split("\t");
             int pmid = Integer.parseInt(array[0]);
-            Entity entity = new Entity("", "SNP", Integer.parseInt(array[1]), Integer.parseInt(array[2]), array[3]);
 
-            if(entityMap.containsKey(pmid))
-                entityMap.get(pmid).add(entity);
-            else{
-                List<Entity> tmpList = new ArrayList<Entity>();
-                tmpList.add(entity);
-                entityMap.put(pmid, tmpList);
+            if(array[4].equals(tool) || tool.toUpperCase().equals("BOTH")){
+                Entity entity = new Entity("", "SNP", Integer.parseInt(array[1]), Integer.parseInt(array[2]), array[3], array[4]);
+
+                if(entityMap.containsKey(pmid))
+                    entityMap.get(pmid).add(entity);
+                else{
+                    List<Entity> tmpList = new ArrayList<Entity>();
+                    tmpList.add(entity);
+                    entityMap.put(pmid, tmpList);
+                }
             }
         }
-
         return entityMap;
     }
 
@@ -100,7 +104,7 @@ public class EvaluateNER {
      * @throws IOException
      */
     private static Map<Integer, List<Entity>> readGoldStandard(String goldFolder) throws IOException {
-        System.out.println("Reading goldstandard annotaitons from " +goldFolder);
+        System.out.println("Reading goldstandard annotations from " +goldFolder);
 
         File folder = new File(goldFolder);
         if(folder.isFile())
@@ -122,7 +126,7 @@ public class EvaluateNER {
                 String annotation [] = array[1].split(" ");
 
                 if(annotation[0].equals("SNP")){
-                    Entity entity = new Entity(array[0], annotation[0], Integer.parseInt(annotation[1]), Integer.parseInt(annotation[2]), array[2]);
+                    Entity entity = new Entity(array[0], annotation[0], Integer.parseInt(annotation[1]), Integer.parseInt(annotation[2]), array[2], "goldstandard");
 
                     if(entityMap.containsKey(pmid))
                         entityMap.get(pmid).add(entity);
@@ -143,8 +147,8 @@ public class EvaluateNER {
     }
 
     private static void printErrorMessage(){
-        System.err.println("ERROR: Invalid number of input parameters. Execution requires two input parameters.");
-        System.err.println("PARAMETERS:  goldFolder SETH-prediction");
+        System.err.println("ERROR: Invalid number of input parameters. Execution requires three input parameters.");
+        System.err.println("PARAMETERS:  goldFolder SETH-prediction tool [MF|SETH|BOTH]");
         System.exit(1);
     }
 }

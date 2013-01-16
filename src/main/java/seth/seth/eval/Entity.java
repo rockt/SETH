@@ -13,13 +13,15 @@ public class Entity {
     private final int start;   // e.g. 66
     private final int end;     // e.g. 71
     private final String entity; // e.g. G145V
+    private final String tool; //SETH or MF
 
-    public Entity(String id, String type, int start, int end, String entity) {
+    public Entity(String id, String type, int start, int end, String entity, String tool) {
         this.id = id;
         this.type = type;
         this.start = start;
         this.end = end;
         this.entity = entity;
+        this.tool = tool;
     }
 
     @Override
@@ -30,6 +32,7 @@ public class Entity {
                 ", start=" + start +
                 ", end=" + end +
                 ", entity='" + entity + '\'' +
+                ", tool=" +tool + '\'' +
                 '}';
     }
 
