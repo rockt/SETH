@@ -9,11 +9,12 @@ package seth.seth.eval;
  */
 public class Entity {
     private final String id;   // e.g. T1
-    private final String type; // e.g. SNP
+    private final String tool; //SETH or MF
+
     private final int start;   // e.g. 66
     private final int end;     // e.g. 71
+    private final String type; // e.g. SNP
     private final String entity; // e.g. G145V
-    private final String tool; //SETH or MF
 
     public Entity(String id, String type, int start, int end, String entity, String tool) {
         this.id = id;
@@ -54,6 +55,10 @@ public class Entity {
 
     public String getEntity() {
         return entity;
+    }
+
+    public String getTool() {
+        return tool;
     }
 
     @Override
