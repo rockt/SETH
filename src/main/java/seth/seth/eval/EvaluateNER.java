@@ -2,10 +2,7 @@ package seth.seth.eval;
 
 import java.io.*;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -22,51 +19,102 @@ public class EvaluateNER {
         if(args.length != 3)
             printErrorMessage();
 
-        String goldFolder = args[0];
-        String corpusResult= args[1];
-        String tool= args[2];
+        String predictFile=args[0];
+        String yearFile = args[1];
+        String goldFolder = args[2];
 
+        Map<Integer, List<Entity>> predictMap = readPredictions(predictFile, "BOTH");
+        Map<Integer, Integer>   yearMap  =   readYearFile(yearFile);
         Map<Integer, List<Entity>> goldstandardMap =  readGoldStandard(goldFolder);
-        Map<Integer, List<Entity>> predictionMap =      readPredictions(corpusResult, tool);
-
-        System.out.println("Evaluating for " +goldstandardMap.size() +" abstracts");
-        int tp =0; int fp=0; int fn=0;
-        for(int pmid : goldstandardMap.keySet()){
-            List<Entity> goldstandard = goldstandardMap.get(pmid);
-            List<Entity> prediction =   predictionMap.get(pmid);
-            if(prediction == null)
-                prediction = new ArrayList<Entity>();
-
-            for(Entity e : goldstandard){
-
-                if(prediction.remove(e))
-                    tp++;
-                else{
-                    fn++;
-                    //System.out.println(pmid +" " +e);
-                }
-            }
-            fp+=prediction.size();
-
-            //Inspect false positives
-            for(Entity p : prediction){
-               System.out.println(pmid +" " +p);
-            }
 
 
+        Map<Integer, Performance> mfPerformance = new HashMap<Integer, Performance>(21);
+        Map<Integer, Performance> sethPerformance = new HashMap<Integer, Performance>(21);
+
+        for(int year : yearMap.values()){
+            mfPerformance.put(year, new Performance());
+            sethPerformance.put(year, new Performance());
         }
 
-        double recall = (double) tp/(tp+fn);
-        double precision = (double) tp/(tp+fp);
-        double f1 = 2*(precision*recall)/(precision+recall);
+        Performance performance = new Performance();
 
+        for(int pmid : goldstandardMap.keySet()){
+            List<Entity> predicted = predictMap.get(pmid);
+            List<Entity> goldstandard = goldstandardMap.get(pmid);
+
+            if(predicted != null){
+                for(Entity entity : predicted){
+                    if(goldstandard.contains(entity)){
+                        performance.addTP();
+
+                        if(entity.getTool().equals("MF"))
+                            mfPerformance.get(yearMap.get(pmid)).addTP();
+                        else if(entity.getTool().equals("SETH"))
+                            sethPerformance.get(yearMap.get(pmid)).addTP();
+                        else
+                            throw new RuntimeException("Unknown tool " +entity.getTool());
+
+                        goldstandard.remove(entity);
+                    }
+                    else{
+                        performance.addFP();
+
+                        if(entity.getTool().equals("MF"))
+                            mfPerformance.get(yearMap.get(pmid)).addFP();
+                        else if(entity.getTool().equals("SETH"))
+                            sethPerformance.get(yearMap.get(pmid)).addFP();
+                        else
+                            throw new RuntimeException("Unknown tool " +entity.getTool());
+                    }
+                }
+            }
+            performance.addFN(goldstandard.size());
+        }
+
+        performance.calculate();
         DecimalFormat df = new DecimalFormat( "0.00" );
-        System.err.println("TP " +tp);
-        System.err.println("FP " +fp);
-        System.err.println("FN " +fn);
-        System.err.println("Precision " +df.format(precision));
-        System.err.println("Recall " +df.format(recall));
-        System.err.println("F1 " +df.format(f1));
+        System.err.println("Precision " +df.format(performance.getPrecision()));
+        System.err.println("Recall " +df.format(performance.getRecall()));
+        System.err.println("F1 " +df.format(performance.getF1()));
+
+
+        List<Integer> years = new ArrayList<Integer>(mfPerformance.keySet()) ;
+        Collections.sort(years);
+
+        /**
+        BufferedWriter bw = new BufferedWriter(new FileWriter(new File("result.tsv")));
+        for(int year : years){
+            bw.append(year +"\t" +mfPerformance.get(year).getTP() +"\t" +"MF\n");
+            bw.append(year +"\t" +sethPerformance.get(year).getTP() +"\t" +"SETH\n");
+        }
+        bw.close();
+         **/
+
+    }
+    private static Map<Integer, Integer > readYearFile(String file) throws IOException {
+        Map<Integer, Integer> result = new HashMap<Integer, Integer>();
+
+        BufferedReader br = new BufferedReader(new FileReader(new File(file)));
+
+        while(br.ready()){
+            String array [] = br.readLine().split("\t");
+
+            if(array.length != 2)
+                throw new RuntimeException("Error in" +array);
+
+            int year = Integer.parseInt(array[0]);
+            int pmid = Integer.parseInt(array[1]);
+
+
+            if(result.containsKey(pmid))
+                throw new RuntimeException("Duplicate pmid " +pmid);
+
+            result.put(pmid, year);
+        }
+
+        System.out.println(result.size() +" year mappings loaded");
+
+        return result;
     }
 
     /**
@@ -74,7 +122,7 @@ public class EvaluateNER {
      * @return Predicted Entities
      * @throws IOException
      */
-    private static Map<Integer, List<Entity>> readPredictions(String corpusResult, String tool) throws IOException {
+    public static Map<Integer, List<Entity>> readPredictions(String corpusResult, String tool) throws IOException {
         System.out.println("Reading predictions from " +corpusResult);
         Map<Integer, List<Entity>> entityMap = new HashMap<Integer, List<Entity>>();
 
@@ -95,6 +143,14 @@ public class EvaluateNER {
                 }
             }
         }
+
+        int sum=0;
+        for(int pmid : entityMap.keySet()){
+            sum+= entityMap.get(pmid).size();
+        }
+
+        System.out.println(entityMap.size() +" articles with " +sum +" predictions loaded");
+
         return entityMap;
     }
 
@@ -103,7 +159,7 @@ public class EvaluateNER {
      * @return  Goldstandard entities
      * @throws IOException
      */
-    private static Map<Integer, List<Entity>> readGoldStandard(String goldFolder) throws IOException {
+    public static Map<Integer, List<Entity>> readGoldStandard(String goldFolder) throws IOException {
         System.out.println("Reading goldstandard annotations from " +goldFolder);
 
         File folder = new File(goldFolder);
@@ -143,12 +199,22 @@ public class EvaluateNER {
                 entityMap.put(pmid, new ArrayList<Entity>());
 
         }
+
+        int sum=0;
+        for(int pmid : entityMap.keySet()){
+            sum+= entityMap.get(pmid).size();
+        }
+
+        System.out.println(entityMap.size() +" articles with " +sum +" annotations loaded");
+
         return entityMap;
     }
 
     private static void printErrorMessage(){
         System.err.println("ERROR: Invalid number of input parameters. Execution requires three input parameters.");
-        System.err.println("PARAMETERS:  goldFolder SETH-prediction tool [MF|SETH|BOTH]");
+        System.err.println("PARAMETERS:  goldFolder SETH-prediction yearMapping");
         System.exit(1);
     }
+
+
 }
