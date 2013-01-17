@@ -23,7 +23,7 @@ public class EvaluateNER {
         String yearFile = args[1];
         String goldFolder = args[2];
 
-        Map<Integer, List<Entity>> predictMap = readPredictions(predictFile, "BOTH");
+        Map<Integer, List<Entity>> predictMap = readPredictions(predictFile);
         Map<Integer, Integer>   yearMap  =   readYearFile(yearFile);
         Map<Integer, List<Entity>> goldstandardMap =  readGoldStandard(goldFolder);
 
@@ -122,7 +122,7 @@ public class EvaluateNER {
      * @return Predicted Entities
      * @throws IOException
      */
-    public static Map<Integer, List<Entity>> readPredictions(String corpusResult, String tool) throws IOException {
+    public static Map<Integer, List<Entity>> readPredictions(String corpusResult) throws IOException {
         System.out.println("Reading predictions from " +corpusResult);
         Map<Integer, List<Entity>> entityMap = new HashMap<Integer, List<Entity>>();
 
@@ -131,17 +131,16 @@ public class EvaluateNER {
             String array[] = br.readLine().split("\t");
             int pmid = Integer.parseInt(array[0]);
 
-            if(array[4].equals(tool) || tool.toUpperCase().equals("BOTH")){
-                Entity entity = new Entity("", "SNP", Integer.parseInt(array[1]), Integer.parseInt(array[2]), array[3], array[4]);
+            Entity entity = new Entity("", "SNP", Integer.parseInt(array[1]), Integer.parseInt(array[2]), array[3], array[4]);
 
-                if(entityMap.containsKey(pmid))
-                    entityMap.get(pmid).add(entity);
-                else{
-                    List<Entity> tmpList = new ArrayList<Entity>();
-                    tmpList.add(entity);
-                    entityMap.put(pmid, tmpList);
-                }
+            if(entityMap.containsKey(pmid))
+                entityMap.get(pmid).add(entity);
+            else{
+                List<Entity> tmpList = new ArrayList<Entity>();
+                tmpList.add(entity);
+                entityMap.put(pmid, tmpList);
             }
+
         }
 
         int sum=0;
