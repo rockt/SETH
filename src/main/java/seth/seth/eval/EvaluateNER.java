@@ -100,7 +100,7 @@ public class EvaluateNER {
             String array [] = br.readLine().split("\t");
 
             if(array.length != 2)
-                throw new RuntimeException("Error in" +array);
+                throw new RuntimeException("Error in" + Arrays.toString(array));
 
             int year = Integer.parseInt(array[0]);
             int pmid = Integer.parseInt(array[1]);
