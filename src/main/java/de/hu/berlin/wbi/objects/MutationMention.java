@@ -674,7 +674,11 @@ public class MutationMention {
      */
     public String toNormalized() {
 
-        return wtResidue + position + mutResidue;
+        if(this.getType().equals(Type.SUBSTITUTION))
+           return wtResidue + position + mutResidue;
+
+        else
+            return text;
     }
 
     /**
