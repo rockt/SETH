@@ -21,3 +21,4 @@ R5	AssociatedTo Arg1:T11 Arg2:T8
 R6	AssociatedTo Arg1:T12 Arg2:T8	
 R7	AssociatedTo Arg1:T13 Arg2:T8	
 T16	Gene 1470 1474	RYR1
+T17	SNP 1169 1181	p.Cys4664Arg

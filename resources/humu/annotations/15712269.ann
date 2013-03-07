@@ -20,5 +20,5 @@ R7	AssociatedTo Arg1:T9 Arg2:T2
 R8	AssociatedTo Arg1:T10 Arg2:T2	
 R9	AssociatedTo Arg1:T11 Arg2:T2	
 R10	AssociatedTo Arg1:T12 Arg2:T2	
-T13	Gene 737 744	p.H200L
-T14	Gene 792 799	p.G801D
+T13	SNP 737 744	p.H200L
+T14	SNP 792 799	p.G801D
