@@ -1,7 +1,7 @@
 package seth.ner
 
 /**
- * User: Tim Rocktaeschel
+ * User: rockt
  * Date: 10/29/12
  * Time: 1:56 PM
  */
@@ -30,7 +30,7 @@ object SETHNERApp extends App {
  *
  * @param start Start of the mutation mention in a text
  * @param end End of the mutation mention in a text
- * @param text Textual representation the a mutation
+ * @param text Textual representation of the a mutation
  */
 case class Mutation(var start:Int, var end:Int, text: String) {
   //location of the mutation in the genome

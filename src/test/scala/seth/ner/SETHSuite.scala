@@ -5,7 +5,7 @@ import org.scalatest.matchers.ShouldMatchers
 import com.codahale.logula.Logging
 
 /**
- * User: Tim Rocktaeschel
+ * User: rockt
  * Date: 10/30/12
  * Time: 9:09 AM
  */
@@ -664,6 +664,8 @@ class SingleTest extends FunSuite {
     //assert(SETH.isValid("91_*(91_?)", SETH.Loc) === true) //DONE
     //assert(SETH.isValid("NT_007592.15:g.12940923_(?_12940924)insA", SETH.mutation) === true) //DONE
     assert(SETH.isValid("c.861insG", SETH.mutation) === true)
+    assert(SETH.isValid("AF177763.1:g.203A>C", SETH.mutation) === true)
+    assert(SETH.isValid("p.Cys817Valfs", SETH.mutation) === true)
 
     //println(SETH.extractMutations("p.M1?").head)
 
