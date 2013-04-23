@@ -12,7 +12,7 @@ import java.util.List;
  * Time: 15:07
  * To change this template use File | Settings | File Templates.
  *
- * Can be used to apply SETH on both corpora (MutationFinder and our corpus consisting of 210 abstracts)
+ * Can be used to apply SETH on both corpora (MutationFinder and the human mutation corpus consisting of 210 abstracts)
  * Input corpora are both in the same format, but output is slightly different, as the MutationFinder corpus
  * provides no information about the actual position of a mutation in the text
  */
@@ -49,14 +49,11 @@ public class ApplyNER {
             List<MutationMention> mutations = seth.findMutations(text);
             for(MutationMention mutation : mutations){
 
-                bw.append("\t");
-                if(mutationFinderFormat && mutation.getTool().equals(MutationMention.Tool.MUTATIONFINDER))
-                  bw.append(mutation.getWtResidue() +mutation.getLocation() +mutation.getMutResidue());
-                else
-                    bw.append(mutation.getText());
+                if(mutationFinderFormat){
+                    bw.append("\t" +mutation.getWtResidue() +mutation.getPosition() +mutation.getMutResidue());
+                }
 
-
-                if(!mutationFinderFormat) {
+                else{
                     if(mutation.getTool().equals(MutationMention.Tool.SETH))
                         bw.append(pmid +"\t" +mutation.getStart() +"\t" +mutation.getEnd() +"\t" +mutation.getText() +"\t" +"SETH");
 

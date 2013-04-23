@@ -119,13 +119,18 @@ public class Evaluate {
 		}
 		
 		
-		
+        double recall = (double) tp/(tp+fn);
+        double precision = (double) tp/(tp+fp);
+        double f1 = 2*(precision*recall)/(precision+recall);
+
 		DecimalFormat df = new DecimalFormat( "0.00" );
 		System.err.println("TP " +tp);
 		System.err.println("FP " +fp);
-		System.err.println("FN " +fn);	
-		System.err.println("Recall " +df.format((double) tp/(tp+fn)));
-		System.err.println("Precision " +df.format((double) tp/(tp+fp)));
+		System.err.println("FN " +fn);
+        System.err.println("Precision " +df.format(precision));
+		System.err.println("Recall " +df.format(recall));
+        System.err.println("F1 " +df.format(f1));
+
 	}
 
 	private static void printUsage() {
