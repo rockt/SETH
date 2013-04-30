@@ -10,7 +10,7 @@ import java.util.List;
  * Java wrapper for actual {@link seth.ner.SETHNER} code written in Scala
  */
 public class SETHNER {
-    private final seth.ner.SETHNER mutationExtractor = new seth.ner.SETHNER();
+    private final seth.ner.SETHNER mutationExtractor = new seth.ner.SETHNER(false);
 
     /**
      * Extracts mentions of mutations written in the HGVS nomenclature from natural language text

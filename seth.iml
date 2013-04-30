@@ -32,7 +32,6 @@
     <orderEntry type="library" name="Maven: org.scalaj:scalaj-collection_2.9.1:1.2" level="project" />
     <orderEntry type="library" name="Maven: mysql:mysql-connector-java:5.1.22" level="project" />
     <orderEntry type="library" name="Maven: org.apache.derby:derby:10.9.1.0" level="project" />
-    <orderEntry type="library" name="Maven: MutationFinderExtended:MutationFinderExtended:2012-12-13" level="project" />
     <orderEntry type="library" name="Maven: JakartaOro:JakartaOro:2.0.8" level="project" />
   </component>
 </module>
