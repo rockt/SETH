@@ -71,7 +71,7 @@ public class MutationMention {
 
     /** Refers to which tool has been used for extraction */
     public enum Tool{
-        MUTATIONFINDER, SETH
+        MUTATIONFINDER, SETH, REGEX
     }
 
     /** Pattern is used to extract wildtype-location-residue from a string e.g. A123T  */
@@ -665,7 +665,7 @@ public class MutationMention {
     @Override
     public String toString() {
         return "MutationMention [location=" + location.getStart() +"-" +location.getStop()
-                + ", mutResidue=" + mutResidue + ", location=" + location + ", wtResidue=" + wtResidue
+                + ", mutResidue=" + mutResidue + ", location=" +position + ", wtResidue=" + wtResidue +", text=" +text
                 + "]";
     }
 
@@ -674,7 +674,7 @@ public class MutationMention {
      */
     public String toNormalized() {
 
-        if(this.getType().equals(Type.SUBSTITUTION))
+        if(this.getTool().equals(Tool.MUTATIONFINDER))
            return wtResidue + position + mutResidue;
 
         else
