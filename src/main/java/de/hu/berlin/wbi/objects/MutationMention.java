@@ -71,11 +71,19 @@ public class MutationMention {
 
     /** Refers to which tool has been used for extraction */
     public enum Tool{
-        MUTATIONFINDER, SETH, REGEX
+        MUTATIONFINDER, SETH, REGEX, DBSNP
     }
 
     /** Pattern is used to extract wildtype-location-residue from a string e.g. A123T  */
     private static final Pattern pattern = Pattern.compile("^([A-Z])([\\-\\+\\*]?[1-9][0-9]*[\\-\\+]?[0-9]*)([A-Z])$");
+
+
+
+    public void normalizeSNP(int id){
+        dbSNP snp = new dbSNP();
+        snp.setRsID(id);
+        normalized.add(new dbSNPNormalized(snp, true, false, false, null, true));
+    }
 
     /**
      * This method evaluates if some of the {@link de.hu.berlin.wbi.objects.dbSNP} provided in <b>candidates</b>
