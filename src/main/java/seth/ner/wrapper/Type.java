@@ -15,5 +15,6 @@ public enum Type {
     FRAMESHIFT,
     SILENT,
     SHORT_SEQUENCE_REPEAT,
+    DBSNP_MENTION,
     OTHER
 }
