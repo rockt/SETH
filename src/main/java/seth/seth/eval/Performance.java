@@ -6,6 +6,8 @@ package seth.seth.eval;
  * Date: 17.01.13
  * Time: 15:06
  * To change this template use File | Settings | File Templates.
+ *
+ * Class is used to calculate NER performance on different  corpora
  */
 public class Performance {
 
@@ -13,7 +15,6 @@ public class Performance {
         protected int tn;
         protected int fp;
         protected int fn;
-
 
         private double precision;
         private double recall;
