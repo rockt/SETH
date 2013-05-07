@@ -13,7 +13,8 @@ import java.util.List;
 public class SETHNERApp {
     public static void main(String[] args) {
         System.out.println(args[0]);
-        SETHNER seth = new SETHNER();
+        SETHNER seth = new SETHNER(true);
+
         List<MutationMention> result = seth.extractMutations(args[0]);
         for (MutationMention mutation : result) {
             System.out.println(mutation);
