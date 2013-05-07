@@ -158,7 +158,7 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
   //Reference sequences
   lazy val Ref:P                = (((RefSeqAcc | GeneSymbol) ~ ":") ~ RefType.?) |
     (((RefSeqAcc | GeneSymbol) ~ ":").? ~ RefType) | OtherRefs
-  lazy val RefType:P            = ("c" | "g" | "m" | "n" | "r") ~ (if (strictNomenclature) "." else ".".?) ~ ws
+  lazy val RefType:P            = ("c" | "g" | "m" | "n" | "r") ~ (if (strictNomenclature) "." else ".".?)
   lazy val RefSeqAcc:P          = GenBankRef | LRG
   lazy val GenBankRef:P         = (GI | AccNo) ~ ("(" ~ GeneSymbol ~ ")").?
   lazy val GI:P                 = ("GI" ~ ":".?).? ~ Number
@@ -320,7 +320,7 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
       parse <- this(word)
     } yield {
       val mutation = flattenToMutation(parse)
-      mutation.addOffset(offset) //FIXME!
+      mutation.addOffset(offset)
       mutation
     }).filter((m:Mutation) => {
       //only keep matches with a valid boundary
