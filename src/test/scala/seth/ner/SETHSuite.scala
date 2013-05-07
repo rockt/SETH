@@ -5,7 +5,7 @@ import org.scalatest.matchers.ShouldMatchers
 import com.codahale.logula.Logging
 
 /**
- * User: Tim Rocktaeschel
+ * User: rockt
  * Date: 10/30/12
  * Time: 9:09 AM
  */
@@ -165,7 +165,7 @@ class SETHSuite extends FunSpec with ShouldMatchers with GivenWhenThen with Logg
       it ("RefType") { implicit val parser = SETH.RefType
         accept("c.")
         accept("n.")
-        reject("n")
+        //reject("n")
         reject("a.")
         reject("aa")
         reject("aa.")
@@ -245,8 +245,8 @@ class SETHSuite extends FunSpec with ShouldMatchers with GivenWhenThen with Logg
       it ("Subst") { implicit val parser = SETH.Subst
         accept("123A>G")
         reject("123A<G")
-        reject("123A->G")
-        reject("123A-->G")
+        //reject("123A->G")
+        //reject("123A-->G")
         reject("A123G")
       }
       it ("Del") { implicit val parser = SETH.Del
@@ -664,8 +664,89 @@ class SingleTest extends FunSuite {
     //assert(SETH.isValid("91_*(91_?)", SETH.Loc) === true) //DONE
     //assert(SETH.isValid("NT_007592.15:g.12940923_(?_12940924)insA", SETH.mutation) === true) //DONE
     assert(SETH.isValid("c.861insG", SETH.mutation) === true)
+    assert(SETH.isValid("AF177763.1:g.203A>C", SETH.mutation) === true)
+    assert(SETH.isValid("p.Cys817Valfs", SETH.mutation) === true)
 
     //println(SETH.extractMutations("p.M1?").head)
+  }
 
+  test("Whitespace fix") {
+    val text = "c.111A > T c.222C-->T c 333C --> T"
+    //val text = "a  test"
+    //val text = "a test with          whitespaces"
+    val mutations = SETH.extractMutations(text)
+    for (mutation <- mutations) {
+      println("[" + text.substring(mutation.start, mutation.end) + "]\n" + mutation)
+    }
+  /*
+    c.5465A > T
+    c.70C > T
+    c.834G > C
+    c.835-7T > G
+    c.835-7T > G
+    c.5465A > T
+    c.5465A > T
+    c.834G > C
+    c.70C > T
+    c.70C > T
+    c.70C > T
+    c.845-17A > G
+    c.834G > C
+    c.835-7T > G
+    c.5465A > T
+    p.Ser119fsX
+    c.592C-->T
+    g.1755 G > A
+    c.646G > C
+    c.370-371insA
+    c.370-371insA
+    p. K237N
+    c.310 G>T
+    p. Glu104X
+    p. Pro184ArgfsX19
+    c. *469 C>A
+    c.471 C>T
+    c.579 G>A
+    p. Gln193Gln
+    c.871 G>A
+    p. Asp291Asn
+    p.T3708fs3769
+    c.6799G --> A
+    p.Cys817Valfs X15
+    c.4002A > G
+    c.304ins(GCG)
+    c.1544-?_2916+?
+    c.1445T > G
+    p.R469[R,X]
+    p.E947stop
+    g.203A>C
+    c.899A > T
+    g.80_87delT CGCGAAG
+    c.861+1G > T
+    c.1402-1C > G
+    c.2316-1G > A
+    c.2919+1G > A
+    c.2838+5G > A
+    c.G1714C
+    c.G1714A
+    c.70C > T
+    c.835-7T > G
+    c.835-7T > G
+    c.423-6del8ins13
+    c. 423 -6delAAATAGGTinsGAAGCAAGATCAG
+    c.5465A > T
+    c.5465A > T
+    c.834G > C
+    c.70C > T
+    c.70C > T
+    c.70C > T
+    c.3927_3931del AAAGA
+    c.3927_3931del AAAGA
+    c.5465A > T
+    c.5465A > T
+    c.845-17A > G
+    c.834G > C
+    c.835-7T > G
+     */
   }
 }

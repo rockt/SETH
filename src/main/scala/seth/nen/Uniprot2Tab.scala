@@ -6,7 +6,7 @@ import collection.mutable
 import java.util.zip.GZIPInputStream
 
 /**
- * User: Tim Rocktaeschel
+ * User: rockt
  * Date: 11/15/12
  * Time: 2:09 PM
  */

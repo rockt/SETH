@@ -5,7 +5,7 @@ import scala.util.parsing.combinator._
 import util.parsing.input.Positional
 
 /**
- * User: Tim Rocktaeschel
+ * User: rockt
  * Date: 11/8/12
  * Time: 12:58 PM
  */

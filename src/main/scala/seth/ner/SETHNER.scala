@@ -1,7 +1,7 @@
 package seth.ner
 
 /**
- * User: Tim Rocktaeschel
+ * User: rockt
  * Date: 10/29/12
  * Time: 1:56 PM
  */
@@ -30,7 +30,7 @@ object SETHNERApp extends App {
  *
  * @param start Start of the mutation mention in a text
  * @param end End of the mutation mention in a text
- * @param text Textual representation the a mutation
+ * @param text Textual representation of the a mutation
  */
 case class Mutation(var start:Int, var end:Int, text: String) {
   //location of the mutation in the genome
@@ -97,10 +97,14 @@ case class VariableShortSequenceRepeatString(override val parse: Any) extends Pa
  *
  * Parses a string and yields all mentions of mutations that obey to the latest variant nomenclature of HGVS.
  */
-class SETHNER extends RegexParsers with NonGreedy with Positional with FlattenToMutation with PackratParsers {
+class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with NonGreedy with Positional with FlattenToMutation with PackratParsers {
   //type P = PackratParser[Any]
   type P = Parser[Any]
   override def skipWhitespace = false
+
+  //optional whitespace
+  lazy val ws:P                 = if (strictNomenclature) "".r else " ".r.*
+  lazy val gt:P                 = if (strictNomenclature) ">" else (">" | "->" | "-->" | "=>")
 
   //represents chars outside of a mutation mention
   val any = """.|\w|\n|\r""".r
@@ -154,7 +158,7 @@ class SETHNER extends RegexParsers with NonGreedy with Positional with FlattenTo
   //Reference sequences
   lazy val Ref:P                = (((RefSeqAcc | GeneSymbol) ~ ":") ~ RefType.?) |
     (((RefSeqAcc | GeneSymbol) ~ ":").? ~ RefType) | OtherRefs
-  lazy val RefType:P            = ("c" | "g" | "m" | "n" | "r") ~ "."
+  lazy val RefType:P            = ("c" | "g" | "m" | "n" | "r") ~ (if (strictNomenclature) "." else ".".?) ~ ws
   lazy val RefSeqAcc:P          = GenBankRef | LRG
   lazy val GenBankRef:P         = (GI | AccNo) ~ ("(" ~ GeneSymbol ~ ")").?
   lazy val GI:P                 = ("GI" ~ ":".?).? ~ Number
@@ -201,7 +205,7 @@ class SETHNER extends RegexParsers with NonGreedy with Positional with FlattenTo
 
   //Single Variations
   lazy val Subst:P              = ((RangeLoc | PtLoc).? ^^ { LocString(_) }) ~ (Nt.+ ^^ { WildString(_) }) ~
-    (">" ^^ { SubstString(_) }) ~ (Nt.+ ^^ { MutatedString(_) })
+    ws ~ (gt ^^ { SubstString(_) }) ~ ws ~ (Nt.+ ^^ { MutatedString(_) })
   lazy val Del:P                = (Loc ^^ { LocString(_) }) ~ ("del" ^^ { DelString(_) }) ~
     ((Nt.+ ^^ { WildString(_) })| Number).?
   lazy val Dup:P                = Loc ~ ("dup" ^^ { DupString(_) }) ~ ((Nt.+ ^^ { MutatedString(_) })| Number).? //~ Nest.?
@@ -279,17 +283,17 @@ class SETHNER extends RegexParsers with NonGreedy with Positional with FlattenTo
    * @return A list of spans for mutation mention matches
    */
   def apply(input: String) = //parse(expr, new PackratReader(new CharSequenceReader(input))) match {
-    parse(expr, input) match {
-      case Success(result, next) => result
-      case failure: NoSuccess => List()
-    }
+      parse(expr, input) match {
+        case Success(result, next) => result
+        case failure: NoSuccess => List()
+      }
 
   def extractMutations(text: String):List[Mutation] = {
     //tokenize the text using whitespace tokenization
     val spacePos = 0 :: (for (i <- 0 until text.length) yield {
       val ch = text.charAt(i).toString
       if (ch matches ("\\s")) i+1 else 0
-    }).toList.filter(_ != 0) ++ List(text.length)
+    }).toList.filter(_ != 0) ++ List(text.length+1)
 
     //calculate the offset of all words
     @tailrec
@@ -298,7 +302,7 @@ class SETHNER extends RegexParsers with NonGreedy with Positional with FlattenTo
       case x::Nil => acc
       case x::y::xs => getWords(
         //do not keep words longer than 500 characters
-        if (text.substring(x,y).length < 500) (x, text.substring(x,y)) :: acc else acc,
+        if (0 < text.substring(x,y-1).length && text.substring(x,y-1).length < 500) (x, text.substring(x,y-1)) :: acc else acc,
         y :: xs
       )
     }
@@ -308,10 +312,15 @@ class SETHNER extends RegexParsers with NonGreedy with Positional with FlattenTo
     lazy val left = """(?:^|[\s\(\[\'"/,\-])"""
     lazy val right = """(?=([.,\s)\]\'":;\-?!/]|$))"""
 
-    //extract mutations from words
-    (for ((offset, word) <- words; parse <- this(word)) yield {
+    //extract mutations from 4grams of words (to account for possible whitespaces)
+    (for {
+      trigram <- words.sliding(4)
+      offset = trigram.head._1
+      word = trigram.map(_._2).mkString("", " ", "")
+      parse <- this(word)
+    } yield {
       val mutation = flattenToMutation(parse)
-      mutation.addOffset(offset)
+      mutation.addOffset(offset) //FIXME!
       mutation
     }).filter((m:Mutation) => {
       //only keep matches with a valid boundary
@@ -321,7 +330,7 @@ class SETHNER extends RegexParsers with NonGreedy with Positional with FlattenTo
     }).filter((m:Mutation) => {
       !(m.loc.isEmpty && m.ref.endsWith(":") && m.ref.length < 3) &&
       !(m.ref matches("[0-9]+:"))
-    })
+    }).toList.distinct
   }
 
   def isValid(input: String, parser:this.Parser[Any]): Boolean = {
