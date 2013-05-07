@@ -60,6 +60,9 @@ public class ApplyNER {
                     else if(mutation.getTool().equals(MutationMention.Tool.MUTATIONFINDER))
                         bw.append(pmid +"\t" +mutation.getStart() +"\t" +mutation.getEnd() +"\t" +mutation.getText() +"\t" +"MF");
 
+                    else if(mutation.getTool().equals(MutationMention.Tool.REGEX))
+                        bw.append(pmid +"\t" +mutation.getStart() +"\t" +mutation.getEnd() +"\t" +mutation.getText() +"\t" +"REGEX");
+
                     else
                         throw new RuntimeException();
 

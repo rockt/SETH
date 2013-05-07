@@ -9,7 +9,7 @@ import java.util.*;
  * User: philippe
  * Date: 21.12.12
  * Time: 11:12
- * Evaluates prediction results of SETH on the corpus consisting of 210 articles from human mutation
+ * Evaluates prediction results of SETH on the corpus consisting of 210 articles from human mutation   and the XY articles from ?? journal
  *
  */
 public class EvaluateNER {
@@ -30,10 +30,12 @@ public class EvaluateNER {
 
         Map<Integer, Performance> mfPerformance = new HashMap<Integer, Performance>(21);
         Map<Integer, Performance> sethPerformance = new HashMap<Integer, Performance>(21);
+        Map<Integer, Performance> regexPerformance = new HashMap<Integer, Performance>(21);
 
         for(int year : yearMap.values()){
             mfPerformance.put(year, new Performance());
             sethPerformance.put(year, new Performance());
+            regexPerformance.put(year, new Performance());
         }
 
         Performance performance = new Performance();
@@ -51,6 +53,8 @@ public class EvaluateNER {
                             mfPerformance.get(yearMap.get(pmid)).addTP();
                         else if(entity.getTool().equals("SETH"))
                             sethPerformance.get(yearMap.get(pmid)).addTP();
+                        else if(entity.getTool().equals("REGEX"))
+                            regexPerformance.get(yearMap.get(pmid)).addTP();
                         else
                             throw new RuntimeException("Unknown tool " +entity.getTool());
 
@@ -58,17 +62,23 @@ public class EvaluateNER {
                     }
                     else{
                         performance.addFP();
+//                        System.out.println("FP" +pmid +" " +entity);
 
                         if(entity.getTool().equals("MF"))
                             mfPerformance.get(yearMap.get(pmid)).addFP();
                         else if(entity.getTool().equals("SETH"))
                             sethPerformance.get(yearMap.get(pmid)).addFP();
+                        else if(entity.getTool().equals("REGEX"))
+                            regexPerformance.get(yearMap.get(pmid)).addFP();
                         else
                             throw new RuntimeException("Unknown tool " +entity.getTool());
                     }
                 }
             }
             performance.addFN(goldstandard.size());
+            for(Entity entity : goldstandard){
+                System.out.println("FN" +pmid +" " +entity);
+            }
         }
 
         performance.calculate();
@@ -180,7 +190,7 @@ public class EvaluateNER {
 
                 String annotation [] = array[1].split(" ");
 
-                if(annotation[0].equals("SNP")){
+                if(annotation[0].equals("SNP") || annotation[0].equals("mutation")){
                     Entity entity = new Entity(array[0], annotation[0], Integer.parseInt(annotation[1]), Integer.parseInt(annotation[2]), array[2], "goldstandard");
 
                     if(entityMap.containsKey(pmid))
