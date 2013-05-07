@@ -28,7 +28,7 @@ public class ApplyNER {
         boolean mutationFinderFormat = Boolean.parseBoolean(args[2]);
         String annotationOutput = args[3];
 
-        SETH seth = new SETH(regexFile);
+        SETH seth = new SETH(regexFile, true, !mutationFinderFormat);
         File file = new File(corpusFile);
         if(!file.isFile())
             throw new RuntimeException("Provide corpus-file, instead of folder");
