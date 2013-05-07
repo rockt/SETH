@@ -13,8 +13,8 @@ public class SETHNER {
     private final seth.ner.SETHNER mutationExtractor ;
 
 
-    public SETHNER(boolean fuzzyGrammar){
-        mutationExtractor = new seth.ner.SETHNER(fuzzyGrammar);
+    public SETHNER(boolean exactGrammar){
+        mutationExtractor = new seth.ner.SETHNER(exactGrammar);
     }
 
     /**
