@@ -249,7 +249,7 @@ public class Gene {
 				while (rs.next()) {
 					final Gene tmp = new Gene(pmid, rs.getInt("id"),
 							rs.getInt("confidence"), rs.getInt("species"),
-							new EntityOffset(rs.getInt("begin"), rs.getInt("end")),
+							new EntityOffset(rs.getInt("beginGene"), rs.getInt("endGene")),
 							rs.getString("entity"));
 
 					if (entrezs.add(tmp.getGeneID())) {
