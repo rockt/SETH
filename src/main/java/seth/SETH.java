@@ -25,20 +25,36 @@ public class SETH {
     /** SETH object for recognizing nomenclature SNPs*/
     private final SETHNER seth;
 
-    /** MutationFinder object for recognizing free-text SNPs*/
+    /** MutationFinder object for recognizing free-text Substitutions*/
     private final MutationFinder mf;
+
+    /** Set of regular expressions for finding free text deletions, insertions, etc.*/
+    private final OldNomenclature bl;
+
+    /** Detects dbSNP mentions (e.g., rs334) */
+    private final dbSNPRecognizer snpRecognizer;
 
     /**
      * Initializes {@link MutationFinder} and {@link SETHNER}.
      * Requires a file with regular expressions for MutationFinder
      *
      * @param regexFile File location with regular expressions for MutationFinder
+     * @param exactGrammar   If true, SETH uses the exact EBNF grammar, otherwise matching is fuzzy
+     * @param oldNomenclature If true, SETH searches for deletions, insertions, frameshifts in old nomenclature
      */
-    public SETH(String regexFile) {
+    public SETH(String regexFile, boolean exactGrammar, boolean oldNomenclature){
         super();
 
         this.mf = new MutationFinder(regexFile);
-        this.seth = new SETHNER();
+        this.seth = new SETHNER(exactGrammar);
+        this.snpRecognizer = new dbSNPRecognizer();
+
+        if(oldNomenclature)
+            this.bl = new OldNomenclature();
+        else
+            this.bl = null;
+
+
     }
 
     /**
@@ -51,6 +67,13 @@ public class SETH {
 
         //Extract variations following the latest HGVS nomenclature
         mutations.addAll(seth.extractMutations(text));
+
+        //Extract variations following dbSNP nomenclature
+        mutations.addAll(snpRecognizer.extractMutations(text));
+
+        //Extracts variations following different Nomenclature forms
+        if(bl != null)
+            mutations.addAll(bl.extractMutations(text));
 
         //Extract mutations, using a modified version of MutationFinder
        try {
@@ -83,7 +106,7 @@ public class SETH {
         String text = "p.A123T and Val158Met";
 
         /** Part1: Recognition of mutation mentions */
-        SETH seth = new SETH("resources/mutations.txt");
+        SETH seth = new SETH("resources/mutations.txt", true, true);
         List<MutationMention> mutations = seth.findMutations(text);
         try{
             for(MutationMention mutation : mutations){
@@ -111,6 +134,7 @@ public class SETH {
         final List<UniprotFeature> features = UniprotFeature.getFeatures(gene);    //Get all associated UniProt features
 
         for(MutationMention mutation : mutations){
+            System.out.println(mutation);
             mutation.normalizeSNP(potentialSNPs, features, false);
             List<dbSNPNormalized> normalized = mutation.getNormalized();	//Get list of all dbSNP entries with which I could successfully associate the mutation
 
