@@ -20,6 +20,7 @@ package de.hu.berlin.wbi.objects;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
@@ -55,6 +56,10 @@ public class Gene {
 
 	/** String in the text. (Only for NER) */
     private String entity;
+
+    private static String beginColumnName = null;
+
+    private static String endColumnName = null;
 
 	/**
      * Empty constructor
@@ -207,20 +212,22 @@ public class Gene {
 	 * Initializes the prepared statements  for retrieving
      * gene information for one PubMed article
 	 * 
-	 * @param mysql   Database connection
+	 * @param connection   Database connection
 	 * @param geneTable   Table name for GNAT results
      * @param gene2Pubmed Table name for gene2PubMed results
 	 * @throws SQLException
 	 */
-	public static void init(DatabaseConnection mysql, String geneTable, String gene2Pubmed)
+	public static void init(DatabaseConnection connection, String geneTable, String gene2Pubmed)
 			throws SQLException {
-		if (geneTable != null && !geneTable.equals(""))
-			Gene.geneQuery = mysql.getConn().prepareStatement("SELECT * " + "FROM " + geneTable + " WHERE pmid = ? AND species = 9606");
+		if (geneTable != null && !geneTable.equals(""))                                                                                      {
+			Gene.geneQuery = connection.getConn().prepareStatement("SELECT * " + "FROM " + geneTable + " WHERE pmid = ? AND species = 9606");
+            checkDatabase();
+        }
 		else
 			Gene.geneQuery =  null;			
 		
 		if(gene2Pubmed != null && !gene2Pubmed.equals(""))
-			Gene.gene2pubmedQuery = mysql.getConn().prepareStatement("SELECT geneId, pmid FROM " +gene2Pubmed +" WHERE pmid = ?");
+			Gene.gene2pubmedQuery = connection.getConn().prepareStatement("SELECT geneId, pmid FROM " +gene2Pubmed +" WHERE pmid = ?");
 		else
 			Gene.gene2pubmedQuery = null;
 		
@@ -240,16 +247,17 @@ public class Gene {
 		final Set<Gene> genes = new HashSet<Gene>();
 				
 		try {
-			
+
 			//If NER results are available we extract genes from this table
 			if(geneQuery != null){
 				geneQuery.setInt(1, pmid);
 				geneQuery.execute();
 				final ResultSet rs = geneQuery.getResultSet();
+
 				while (rs.next()) {
 					final Gene tmp = new Gene(pmid, rs.getInt("id"),
 							rs.getInt("confidence"), rs.getInt("species"),
-							new EntityOffset(rs.getInt("beginGene"), rs.getInt("endGene")),
+							new EntityOffset(rs.getInt(beginColumnName), rs.getInt(endColumnName)),
 							rs.getString("entity"));
 
 					if (entrezs.add(tmp.getGeneID())) {
@@ -284,4 +292,31 @@ public class Gene {
 
 		return genes;
 	}
+
+
+    /**
+     * This method is used to determine if the Gene table contains the column beginGene (if not, we use begin)
+     * Invoked only once
+     * @throws SQLException
+     */
+    private static void checkDatabase() throws SQLException {
+
+        geneQuery.setInt(1, 25000000);
+        geneQuery.execute();
+        final ResultSet rs = geneQuery.getResultSet();
+
+        ResultSetMetaData meta = rs.getMetaData();
+        int numCol = meta.getColumnCount();
+        for (int i = 1; i < numCol+1; i++){
+            if(meta.getColumnName(i).equals("beginGene"))
+            {   rs.close();
+                beginColumnName = "beginGene";
+                endColumnName = "endGene";
+                return;
+            }
+        }
+        beginColumnName = "begin";
+        endColumnName = "end";
+        rs.close();;
+    }
 }
