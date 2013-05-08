@@ -1,11 +1,20 @@
 # Copyright (c) 2007 Regents of the University of Colorado
 # Please refer to licensing agreement at MUTATIONFINDER_HOME/doc/license.txt
 #New regex 1: PPOSWRES->MRES  e.g -650A>T; instad of > an arrow is also permitted, see(PMID: 19568425) 
-(?:^|[\s\(\[\'"/,;])(?P<pos>(-{0,1}\s?)[1-9][0-9]*(?:\s?[+-]\s?[1-9][0-9]*))\s{0,1}(?P<wt_res>[ATGC])\s{0,1}(?:-{0,2}>|→)\s{0,1}(?P<mut_res>[ATGC])(?=([.,\s)\]\'":;\-?!/]|$))[CASE_SENSITIVE]
+(?:^|[\s\(\[\'"/,;])(?P<pos>([+-]?\s?)[1-9][0-9]*(?:\s?[+-]\s?[1-9][0-9]*)?)\s{0,1}(?P<wt_res>[ATGC])\s{0,1}(?:-{0,2}>|→)\s{0,1}(?P<mut_res>[ATGC])(?=([.,\s)\]\'":;\-?!/]|$))[CASE_SENSITIVE]
 #New regex 2: PPOSWRES/MRES e.g. -123A/T or 123A\T, also for protein mentions
-(?:^|[\s\(\[\'"/,;])(?P<pos>(-{0,1}\s?)[1-9][0-9]*(?:\s?[+-]\s?[1-9][0-9]*)?)\s{0,1}(?P<wt_res>[CISQMNPKDTFAGHLRWVEYBZJX])\s{0,1}(?:/|\\)\s{0,1}(?P<mut_res>[CISQMNPKDTFAGHLRWVEYBZJX])(?=([.,\s)\]\'":;\-?!/]|$))[CASE_SENSITIVE]
+(?:^|[\s\(\[\'"/,;])(?P<pos>([+-]?\s?)[1-9][0-9]*(?:\s?[+-]\s?[1-9][0-9]*)?)\s{0,1}(?P<wt_res>[CISQMNPKDTFAGHLRWVEYBZJX])\s{0,1}(?:/|\\)\s{0,1}(?P<mut_res>[CISQMNPKDTFAGHLRWVEYBZJX])(?=([.,\s)\]\'":;\-?!/]|$))[CASE_SENSITIVE]
 #New regex 3: +/- 123Ala[/\]Tyr (Almost the same as regex2, but for three letter amino acids only)
-(?:^|[\s\(\[\'"/,;])(?P<pos>[1-9][0-9]*)\s{0,1}(?P<wt_res>(?:CYS|ILE|SER|GLN|MET|ASN|PRO|LYS|ASP|THR|PHE|ALA|GLY|HIS|LEU|ARG|TRP|VAL|GLU|TYR))\s{0,1}(?:/|\\)\s{0,1}(?P<mut_res>(?:CYS|ILE|SER|GLN|MET|ASN|PRO|LYS|ASP|THR|PHE|ALA|GLY|HIS|LEU|ARG|TRP|VAL|GLU|TYR))(?=([.,\s)\]\'":;\-?!/]|$))
+(?:^|[\s\(\[\'"/,;])(?P<pos>[1-9][0-9]*)\s{0,1}(?P<wt_res>(?:CYS|ILE|SER|GLN|MET|ASN|PRO|LYS|ASP|THR|PHE|ALA|GLY|HIS|LEU|ARG|TRP|VAL|GLU|TYR|ASX|GLX|XLE|TER|STP|STOP|TERM))\s{0,1}(?:/|\\)\s{0,1}(?P<mut_res>(?:CYS|ILE|SER|GLN|MET|ASN|PRO|LYS|ASP|THR|PHE|ALA|GLY|HIS|LEU|ARG|TRP|VAL|GLU|TYR|ASX|GLX|XLE|TER|STP|STOP|TERM))(?=([.,\s)\]\'":;\-?!/]|$))
+#New regex 4a: in general used to describe allelic variants (e.g., M/V470, M/V 470)
+(?:^|[\s\(\[\'"/,;])(?P<wt_res>[CISQMNPKDTFAGHLRWVEYBZJX])/(?P<mut_res>[CISQMNPKDTFAGHLRWVEYBZJX])\s?(?P<pos>[1-9][0-9]*)(?=([.,\s)\]\'":;\-?!/]|$))[CASE_SENSITIVE]
+#New regex 4b: in general used to describe allelic variants (e.g., Met/Val470, Met/Val 470)
+(?:^|[\s\(\[\'"/,;])(?P<wt_res>(?:CYS|ILE|SER|GLN|MET|ASN|PRO|LYS|ASP|THR|PHE|ALA|GLY|HIS|LEU|ARG|TRP|VAL|GLU|TYR|ASX|GLX|XLE|TER|STP|STOP|TERM))/(?P<mut_res>(?:CYS|ILE|SER|GLN|MET|ASN|PRO|LYS|ASP|THR|PHE|ALA|GLY|HIS|LEU|ARG|TRP|VAL|GLU|TYR|ASX|GLX|XLE|TER|STP|STOP|TERM))\s?(?P<pos>[1-9][0-9]*)(?=([.,\s)\]\'":;\-?!/]|$))
+#New regex 5a: WRES-->MRES at PPOS
+(?:^|[\s\(\[\'"/,;])(?P<wt_res>(?:[CISQMNPKDTFAGHLRWVEYBZJX]|CYS|ILE|SER|GLN|MET|ASN|PRO|LYS|ASP|THR|PHE|ALA|GLY|HIS|LEU|ARG|TRP|VAL|GLU|TYR|ASX|GLX|XLE|TER|STP|STOP|TERM))\s{0,1}(?:-{0,2}>|→)\s{0,1}(?P<mut_res>(?:[CISQMNPKDTFAGHLRWVEYBZJX]|CYS|ILE|SER|GLN|MET|ASN|PRO|LYS|ASP|THR|PHE|ALA|GLY|HIS|LEU|ARG|TRP|VAL|GLU|TYR|ASX|GLX|XLE|TER|STP|STOP|TERM)) at (?P<pos>[1-9][0-9]*)(?=([.,\s)\]\'":;\-?!/]|$))
+# WRES-->MRES at PPOS (generated from mutationfinder WRES-->MRES at _position_ PPOS)
+(?:^|[\s\(\[\'"/,;\-])(?P<wt_res>(?:A(?:LA(?:NINE)?|MBER|RG(?:ININE)?|S(?:P(?:AR(?:T(?:IC ACID|ATE)|AGINE))?|N|X))|MET(?:HIONINE)?|CYS(?:TEINE)?|L(?:EU(?:CINE)?|YS(?:INE)?)|O(?:CHRE|PAL)|I(?:SOLEUCINE|LE)|UMBER|T(?:ER(?:M)?|R(?:P|YPTOPHAN)|HR(?:EONINE)?|YR(?:OSINE)?)|VAL(?:INE)?|P(?:HE(?:NYLALANINE)?|RO(?:LINE)?)|S(?:T(?:P|OP)|ER(?:INE)?)|GL(?:U(?:TAM(?:ATE|I(?:C ACID|NE)))?|N|Y(?:CINE)?|X)|HIS(?:TIDINE)?|XLE))-->(?P<mut_res>(?:A(?:LA(?:NINE)?|MBER|RG(?:ININE)?|S(?:P(?:AR(?:T(?:IC ACID|ATE)|AGINE))?|N|X))|MET(?:HIONINE)?|CYS(?:TEINE)?|L(?:EU(?:CINE)?|YS(?:INE)?)|O(?:CHRE|PAL)|I(?:SOLEUCINE|LE)|UMBER|T(?:ER(?:M)?|R(?:P|YPTOPHAN)|HR(?:EONINE)?|YR(?:OSINE)?)|VAL(?:INE)?|P(?:HE(?:NYLALANINE)?|RO(?:LINE)?)|S(?:T(?:P|OP)|ER(?:INE)?)|GL(?:U(?:TAM(?:ATE|I(?:C ACID|NE)))?|N|Y(?:CINE)?|X)|HIS(?:TIDINE)?|XLE)) at (?P<pos>[1-9][0-9]*)(?=([.,\s)\]\'":;\-?!/]|$))
+#From here on come the modified pattern from MutationFinder
 # WRESPPOSMRES (single-letter, case sentitive)
 (?:^|[\s\(\[\'"/,;\-])(?P<wt_res>[CISQMNPKDTFAGHLRWVEYBZJX])(?P<pos>[+-]?[1-9][0-9]+)(?:\s?)(?P<mut_res>[CISQMNPKDTFAGHLRWVEYBZJX])(?=([.,\s)\]\'":;\-?!/]|$))[CASE_SENSITIVE]
 # WRESPPOSMRES
