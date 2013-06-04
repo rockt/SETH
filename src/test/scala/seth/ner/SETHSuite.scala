@@ -671,82 +671,41 @@ class SingleTest extends FunSuite {
   }
 
   test("Whitespace fix") {
-    val text = "c.111A > T c.222C-->T c 333C --> T"
+    //val text = "c.111A > T c.222C-->T c 333C --> T"
+    //val text = "Mutation analysis was performed in six patients leading to the detection of c.3036_3038delGGT and NM_004006.1:c.3G>T."
+    val text = "Causative GJB2 mutations were identified in 31 (15.2%)patients, and two common mutations, c.35delG and L90P (c.269T>C), accounted for 72.1% and 9.8% of GJB2 disease alleles."
     //val text = "a  test"
     //val text = "a test with          whitespaces"
     val mutations = SETH.extractMutations(text)
     for (mutation <- mutations) {
       println("[" + text.substring(mutation.start, mutation.end) + "]\n" + mutation)
     }
-  /*
-    c.5465A > T
-    c.70C > T
-    c.834G > C
-    c.835-7T > G
-    c.835-7T > G
-    c.5465A > T
-    c.5465A > T
-    c.834G > C
-    c.70C > T
-    c.70C > T
-    c.70C > T
-    c.845-17A > G
-    c.834G > C
-    c.835-7T > G
-    c.5465A > T
-    p.Ser119fsX
-    c.592C-->T
-    g.1755 G > A
-    c.646G > C
-    c.370-371insA
-    c.370-371insA
-    p. K237N
-    c.310 G>T
-    p. Glu104X
-    p. Pro184ArgfsX19
-    c. *469 C>A
-    c.471 C>T
-    c.579 G>A
-    p. Gln193Gln
-    c.871 G>A
-    p. Asp291Asn
-    p.T3708fs3769
-    c.6799G --> A
-    p.Cys817Valfs X15
-    c.4002A > G
-    c.304ins(GCG)
-    c.1544-?_2916+?
-    c.1445T > G
-    p.R469[R,X]
-    p.E947stop
-    g.203A>C
-    c.899A > T
-    g.80_87delT CGCGAAG
-    c.861+1G > T
-    c.1402-1C > G
-    c.2316-1G > A
-    c.2919+1G > A
-    c.2838+5G > A
-    c.G1714C
-    c.G1714A
-    c.70C > T
-    c.835-7T > G
-    c.835-7T > G
-    c.423-6del8ins13
-    c. 423 -6delAAATAGGTinsGAAGCAAGATCAG
-    c.5465A > T
-    c.5465A > T
-    c.834G > C
-    c.70C > T
-    c.70C > T
-    c.70C > T
-    c.3927_3931del AAAGA
-    c.3927_3931del AAAGA
-    c.5465A > T
-    c.5465A > T
-    c.845-17A > G
-    c.834G > C
-    c.835-7T > G
-     */
+  }
+
+  test("More Bugs") {
+    assert(SETH.isValid("p.990delM", SETH.mutation) === true)
+    assert(SETH.isValid("c.2970-2972 delAAT", SETH.mutation) === true)
+    assert(SETH.isValid("c. 529T>C", SETH.mutation) === true)
+    assert(SETH.isValid("p. W177R", SETH.mutation) === true)
+    assert(SETH.isValid("c.861insG", SETH.mutation) === true)
+    assert(SETH.isValid("c.164insA", SETH.mutation) === true)
+  }
+
+  test("CNVs") {
+    val debug = true
+    //assert(SETH.isValid("chr11:125,940..155,000", SETH.CNV) === true)
+    //assert(SETH.isValid("chr5:70,060,034-70,481,083", SETH.CNV) === true)
+    //short forms (working!)
+    /*
+    assert(SETH.isValid("46,xx", SETH.CNV, debug) === true)
+    assert(SETH.isValid("47,xx,+21", SETH.CNV, debug) === true)
+    assert(SETH.isValid("45,xx,-15", SETH.CNV, debug) === true)
+    assert(SETH.isValid("46,xx,del(5)(p14)", SETH.CNV, debug) === true)
+    assert(SETH.isValid("46,xx,t(2;3)(q31;p21)", SETH.CNV, debug) === true)
+    assert(SETH.isValid("47,xx,+2,t(2;3)(q31;p21),del(5)(p14)", SETH.CNV, debug) === true)
+    */
+    //long forms (buggy!)
+    assert(SETH.isValid("46,xx,del(1)(pter->q21)", SETH.CNV, debug) === true)
+    //assert(SETH.isValid("46,xx,del(1)(pter->q21::q31->qter)", SETH.CNV, debug) === true)
   }
 }

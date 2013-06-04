@@ -277,6 +277,62 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
     ((AA.+ ~ ("-" ~ AA.+).?) ^^ { MutatedString(_) })) ~
     ("fs" ^^ { FrameShiftString(_) })
 
+
+  //EBNF akin to PhD thesis of Craig Larman
+  //Short form grammar
+  //Terminals
+  lazy val Num:P                = "[0-9]+".r
+  lazy val Sign:P               = "+" | "-"
+  lazy val ChY:P                = "y"
+  lazy val ChX:P                = "x"
+  lazy val SexChrom:P           = ChX | ChY
+  lazy val Autosome:P           = Num
+  lazy val AnyChrom:P           = SexChrom | Autosome
+  lazy val Arm:P                = "p" | "q"
+  lazy val Region:P             = Arm ~ Num
+  lazy val Band:P               = Region ~ "." ~ Num
+  lazy val ChPartUpToArm:P      = Band | Region | Arm
+  lazy val ChPartDownToRegion:P = Arm | Region
+
+  //Production rules
+  //Rearrangements
+  lazy val UpToTwoBreakRea:P    = "(" ~ Autosome ~ ")(" ~ ChPartUpToArm ~ ChPartDownToRegion.? ~ ")"
+  lazy val TwoChromTwoBreakRea:P= "(" ~ Autosome ~ ";" ~ Autosome ~ ")(" ~ ChPartUpToArm ~ ";" ~ ChPartUpToArm ~ ")"
+  //Structural abnormalities
+  lazy val Translocation:P      = "t" ~ TwoChromTwoBreakRea
+  lazy val Deletion:P           = "del" ~ UpToTwoBreakRea
+  lazy val StructuralAbnorm:P   = Deletion | Translocation
+  //Numeric abnormalities
+  lazy val ChPartOfDiffLength:P = AnyChrom ~ ChPartDownToRegion ~ Sign
+  lazy val NumericAbnorm:P      = "+" ~ "?".? ~ AnyChrom ~ Sign.? | "-" ~ "?".? ~ AnyChrom | "+".? ~ ChPartOfDiffLength
+
+  lazy val Abnorm:P             = StructuralAbnorm | NumericAbnorm
+  lazy val AbnormList:P         = Abnorm ~ ("," ~ AbnormList).?
+  lazy val YList:P              = ChY ~ YList.?
+  lazy val XList:P              = ChX ~ XList.?
+  lazy val SexList:P            = XList ~ YList | XList | YList
+  lazy val ShortForm:P          = log(Num ~ ",".? ~ (SexList ~ "," ~ AbnormList | SexList | AbnormList))("ShortForm")
+
+  //Long form grammar
+  //Terminals
+  lazy val Ch:P                 = Num | "x" | "y"
+  lazy val Centromere:P         = "cen"
+  lazy val LFRegion:P           = Ch ~ Arm ~ Num
+  lazy val LFBand:P             = LFRegion ~ "." ~ Num
+  lazy val Terminal:P           = Ch ~ "pter" | Ch ~ "qter"
+
+  //Production rules
+  lazy val BandEnd:P            = Centromere | Terminal | Region | Band
+  lazy val EndBand:P            = BandEnd
+  lazy val StartBand:P          = BandEnd
+  lazy val BandSection:P        = StartBand ~ "->" ~ EndBand
+  lazy val LongForm:P           = log(BandEnd | BandSection | (BandSection ~ "::" ~ LongForm))("LongForm")
+
+  //Copy-Number Variations
+  lazy val CNV:P                = log(ShortForm | LongForm)("CNV")
+
+  //debugging using log, e.g.: log(ShortForm | LongForm)("CNV")
+
   /**
    * Parses the input string and extracts all mutation mentions
    * @param input The string from which mutation mentions should be extracted
@@ -333,10 +389,13 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
     }).toList.distinct
   }
 
-  def isValid(input: String, parser:this.Parser[Any]): Boolean = {
+  def isValid(input: String, parser:this.Parser[Any], debug: Boolean = false): Boolean = {
     val result = parseAll(parser, input) match {
       case Success(result,_) => result
-      case failure: NoSuccess => List()
+      case failure: NoSuccess => {
+        if (debug) println(failure)
+        List()
+      }
     }
     result match {
       case List() => false
