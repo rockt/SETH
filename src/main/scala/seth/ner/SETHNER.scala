@@ -16,7 +16,8 @@ import annotation.tailrec
  * Scala app for command line use of SETH
  */
 object SETHNERApp extends App {
-  val SETH = new SETHNER
+  //val SETH = new SETHNER
+  val SETH = new SETHNER()
   if (args.size > 0) {
     for (sentence <- args(0).split("\n")) {
       println(sentence)
@@ -88,6 +89,7 @@ case class InvString(override val parse: Any) extends ParsedString(parse) with M
 case class ConString(override val parse: Any) extends ParsedString(parse) with MutationType
 case class TransLocString(override val parse: Any) extends ParsedString(parse) with MutationType
 case class FrameShiftString(override val parse: Any) extends ParsedString(parse) with MutationType
+case class CNVString(override val parse: Any) extends ParsedString(parse) with MutationType
 case class VariableShortSequenceRepeatString(override val parse: Any) extends ParsedString(parse) with MutationType
 
 
@@ -120,7 +122,7 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
   //finds mutations by parsing the sentence
   lazy val expr                 = rep(sequence) <~ rest
   //a mutation either refers to the nucleotide or the protein sequence
-  lazy val mutation:P           = Var | ProteinVar
+  lazy val mutation:P           = Var | ProteinVar | (CNV ^^ { CNVString })
 
   //EBNF akin to Laros et al. (2011)
   //DNA and RNA variant nomenclature
@@ -283,8 +285,8 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
   //Terminals
   lazy val Num:P                = "[0-9]+".r
   lazy val Sign:P               = "+" | "-"
-  lazy val ChY:P                = "y"
-  lazy val ChX:P                = "x"
+  lazy val ChY:P                = "y" | "Y"
+  lazy val ChX:P                = "x" | "X"
   lazy val SexChrom:P           = ChX | ChY
   lazy val Autosome:P           = Num
   lazy val AnyChrom:P           = SexChrom | Autosome
@@ -311,11 +313,11 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
   lazy val YList:P              = ChY ~ YList.?
   lazy val XList:P              = ChX ~ XList.?
   lazy val SexList:P            = XList ~ YList | XList | YList
-  lazy val ShortForm:P          = log(Num ~ ",".? ~ (SexList ~ "," ~ AbnormList | SexList | AbnormList))("ShortForm")
+  lazy val ShortForm:P          = Num ~ ",".? ~ (SexList ~ "," ~ AbnormList | SexList | AbnormList)
 
   //Long form grammar
   //Terminals
-  lazy val Ch:P                 = Num | "x" | "y"
+  lazy val Ch:P                 = Num | ChY | ChX
   lazy val Centromere:P         = "cen"
   lazy val LFRegion:P           = Ch ~ Arm ~ Num
   lazy val LFBand:P             = LFRegion ~ "." ~ Num
@@ -326,10 +328,14 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
   lazy val EndBand:P            = BandEnd
   lazy val StartBand:P          = BandEnd
   lazy val BandSection:P        = StartBand ~ "->" ~ EndBand
-  lazy val LongForm:P           = log(BandEnd | BandSection | (BandSection ~ "::" ~ LongForm))("LongForm")
+  lazy val LongForm:P           = BandEnd | BandSection | (BandSection ~ "::" ~ LongForm)
 
+  //Chr
+  lazy val Chr:P                = "chr" ~ (Ch) ~ ":" ~ Num ~ "-" ~ Num ~ ("+"|"-").?
   //Copy-Number Variations
-  lazy val CNV:P                = log(ShortForm | LongForm)("CNV")
+  lazy val CNV:P                = ShortForm | LongForm | Chr
+
+
 
   //debugging using log, e.g.: log(ShortForm | LongForm)("CNV")
 
@@ -481,6 +487,7 @@ trait FlattenToMutation extends FlattenToString {
       case typ:FrameShiftString => mutation.typ = FRAMESHIFT
       case typ:SilentString => mutation.typ = SILENT
       case typ:VariableShortSequenceRepeatString => mutation.typ = SHORT_SEQUENCE_REPEAT
+      case typ:CNVString => mutation.typ = COPY_NUMBER_VARIATION
       case typ:MutationType => mutation.typ = OTHER //TODO: add more types
     }
     mutation

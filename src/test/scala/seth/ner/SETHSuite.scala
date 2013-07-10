@@ -705,7 +705,8 @@ class SingleTest extends FunSuite {
     assert(SETH.isValid("47,xx,+2,t(2;3)(q31;p21),del(5)(p14)", SETH.CNV, debug) === true)
     */
     //long forms (buggy!)
-    assert(SETH.isValid("46,xx,del(1)(pter->q21)", SETH.CNV, debug) === true)
+    //assert(SETH.isValid("46,xx,del(1)(pter->q21)", SETH.CNV, debug) === true)
+    assert(SETH.isValid("15q11-q13", SETH.CNV, debug) === true)
     //assert(SETH.isValid("46,xx,del(1)(pter->q21::q31->qter)", SETH.CNV, debug) === true)
   }
 }
