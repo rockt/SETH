@@ -16,7 +16,8 @@ import annotation.tailrec
  * Scala app for command line use of SETH
  */
 object SETHNERApp extends App {
-  val SETH = new SETHNER
+  //val SETH = new SETHNER
+  val SETH = new SETHNER()
   if (args.size > 0) {
     for (sentence <- args(0).split("\n")) {
       println(sentence)
@@ -88,6 +89,7 @@ case class InvString(override val parse: Any) extends ParsedString(parse) with M
 case class ConString(override val parse: Any) extends ParsedString(parse) with MutationType
 case class TransLocString(override val parse: Any) extends ParsedString(parse) with MutationType
 case class FrameShiftString(override val parse: Any) extends ParsedString(parse) with MutationType
+case class CNVString(override val parse: Any) extends ParsedString(parse) with MutationType
 case class VariableShortSequenceRepeatString(override val parse: Any) extends ParsedString(parse) with MutationType
 
 
@@ -120,7 +122,7 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
   //finds mutations by parsing the sentence
   lazy val expr                 = rep(sequence) <~ rest
   //a mutation either refers to the nucleotide or the protein sequence
-  lazy val mutation:P           = Var | ProteinVar
+  lazy val mutation:P           = Var | ProteinVar | (CNV ^^ { CNVString })
 
   //EBNF akin to Laros et al. (2011)
   //DNA and RNA variant nomenclature
@@ -277,6 +279,66 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
     ((AA.+ ~ ("-" ~ AA.+).?) ^^ { MutatedString(_) })) ~
     ("fs" ^^ { FrameShiftString(_) })
 
+
+  //EBNF akin to PhD thesis of Craig Larman
+  //Short form grammar
+  //Terminals
+  lazy val Num:P                = "[0-9]+".r
+  lazy val Sign:P               = "+" | "-"
+  lazy val ChY:P                = "y" | "Y"
+  lazy val ChX:P                = "x" | "X"
+  lazy val SexChrom:P           = ChX | ChY
+  lazy val Autosome:P           = Num
+  lazy val AnyChrom:P           = SexChrom | Autosome
+  lazy val Arm:P                = "p" | "q"
+  lazy val Region:P             = Arm ~ Num
+  lazy val Band:P               = Region ~ "." ~ Num
+  lazy val ChPartUpToArm:P      = Band | Region | Arm
+  lazy val ChPartDownToRegion:P = Arm | Region
+
+  //Production rules
+  //Rearrangements
+  lazy val UpToTwoBreakRea:P    = "(" ~ Autosome ~ ")(" ~ ChPartUpToArm ~ ChPartDownToRegion.? ~ ")"
+  lazy val TwoChromTwoBreakRea:P= "(" ~ Autosome ~ ";" ~ Autosome ~ ")(" ~ ChPartUpToArm ~ ";" ~ ChPartUpToArm ~ ")"
+  //Structural abnormalities
+  lazy val Translocation:P      = "t" ~ TwoChromTwoBreakRea
+  lazy val Deletion:P           = "del" ~ UpToTwoBreakRea
+  lazy val StructuralAbnorm:P   = Deletion | Translocation
+  //Numeric abnormalities
+  lazy val ChPartOfDiffLength:P = AnyChrom ~ ChPartDownToRegion ~ Sign
+  lazy val NumericAbnorm:P      = "+" ~ "?".? ~ AnyChrom ~ Sign.? | "-" ~ "?".? ~ AnyChrom | "+".? ~ ChPartOfDiffLength
+
+  lazy val Abnorm:P             = StructuralAbnorm | NumericAbnorm
+  lazy val AbnormList:P         = Abnorm ~ ("," ~ AbnormList).?
+  lazy val YList:P              = ChY ~ YList.?
+  lazy val XList:P              = ChX ~ XList.?
+  lazy val SexList:P            = XList ~ YList | XList | YList
+  lazy val ShortForm:P          = Num ~ ",".? ~ (SexList ~ "," ~ AbnormList | SexList | AbnormList)
+
+  //Long form grammar
+  //Terminals
+  lazy val Ch:P                 = Num | ChY | ChX
+  lazy val Centromere:P         = "cen"
+  lazy val LFRegion:P           = Ch ~ Arm ~ Num
+  lazy val LFBand:P             = LFRegion ~ "." ~ Num
+  lazy val Terminal:P           = Ch ~ "pter" | Ch ~ "qter"
+
+  //Production rules
+  lazy val BandEnd:P            = Centromere | Terminal | Region | Band
+  lazy val EndBand:P            = BandEnd
+  lazy val StartBand:P          = BandEnd
+  lazy val BandSection:P        = StartBand ~ "->" ~ EndBand
+  lazy val LongForm:P           = BandEnd | BandSection | (BandSection ~ "::" ~ LongForm)
+
+  //Chr
+  lazy val Chr:P                = "chr" ~ (Ch) ~ ":" ~ Num ~ "-" ~ Num ~ ("+"|"-").?
+  //Copy-Number Variations
+  lazy val CNV:P                = ShortForm | LongForm | Chr
+
+
+
+  //debugging using log, e.g.: log(ShortForm | LongForm)("CNV")
+
   /**
    * Parses the input string and extracts all mutation mentions
    * @param input The string from which mutation mentions should be extracted
@@ -333,10 +395,13 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
     }).toList.distinct
   }
 
-  def isValid(input: String, parser:this.Parser[Any]): Boolean = {
+  def isValid(input: String, parser:this.Parser[Any], debug: Boolean = false): Boolean = {
     val result = parseAll(parser, input) match {
       case Success(result,_) => result
-      case failure: NoSuccess => List()
+      case failure: NoSuccess => {
+        if (debug) println(failure)
+        List()
+      }
     }
     result match {
       case List() => false
@@ -422,6 +487,7 @@ trait FlattenToMutation extends FlattenToString {
       case typ:FrameShiftString => mutation.typ = FRAMESHIFT
       case typ:SilentString => mutation.typ = SILENT
       case typ:VariableShortSequenceRepeatString => mutation.typ = SHORT_SEQUENCE_REPEAT
+      case typ:CNVString => mutation.typ = COPY_NUMBER_VARIATION
       case typ:MutationType => mutation.typ = OTHER //TODO: add more types
     }
     mutation

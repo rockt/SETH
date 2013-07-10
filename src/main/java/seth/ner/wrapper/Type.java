@@ -16,5 +16,6 @@ public enum Type {
     SILENT,
     SHORT_SEQUENCE_REPEAT,
     DBSNP_MENTION,
+    COPY_NUMBER_VARIATION,
     OTHER
 }
