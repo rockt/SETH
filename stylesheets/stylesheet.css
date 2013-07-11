@@ -90,7 +90,7 @@ header h2 {
 }
 
 .inner {
-  width: 620px;
+  width: 1000px;
   margin: 0 auto;
 }
 
@@ -166,20 +166,21 @@ a.button span {
 }
 
 code, pre {
-  font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal;
+  /*font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal;*/
+  font-family: Courier New, Terminal;
   color: #222;
-  margin-bottom: 30px;
-  font-size: 14px;
+  margin-bottom: 3px;
+  font-size: 12px;
 }
 
 code {
   background-color: #f2f2f2;
-  border: solid 1px #ddd;
+  border: solid 0px #ddd;
   padding: 0 3px;
 }
 
 pre {
-  padding: 20px;
+  padding: 10px;
   background: #303030;
   color: #f2f2f2;
   text-shadow: none;
@@ -242,17 +243,18 @@ form {
 
 h1 {
   font-size: 32px;
+  color: #303030;
 } 
 
 h2 {
   font-size: 22px;
   font-weight: bold;
-  color: #303030;
+  color: #505050;
   margin-bottom: 8px;
 } 
 
 h3 {
-  color: #d5000d;
+  color: #808080;
   font-size: 18px;
   font-weight: bold;
   margin-bottom: 8px;
