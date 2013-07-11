@@ -1,1 +1,1 @@
-See http://rockt.github.io/SETH/
+See http://rockt.github.com/SETH/
