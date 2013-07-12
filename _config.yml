@@ -1,2 +1,2 @@
-markdown: maruku
+markdown: redcarpet
 auto: true
