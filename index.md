@@ -1,6 +1,7 @@
 ---
 layout: default
 ---
+
 SETH is a software that extracts and normalizes mentions of single nucleotide polymorphisms and copy number variations
 from natural language texts.
 It implements grammars for mutation mentions as Scala parser combinatiors.
@@ -36,7 +37,6 @@ Minimal example
 
 
 # Code Example
-```scala
     import seth.ner.SETHNER
     val extractor = new SETHNER
 
@@ -55,7 +55,7 @@ Minimal example
         mutation.wild,
         mutation.mutated
       )
-```
+
 # Installation
 
 TODO
