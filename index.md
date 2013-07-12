@@ -36,7 +36,7 @@ Minimal example
 
 
 # Code Example
-
+```scala
     import seth.ner.SETHNER
     val extractor = new SETHNER
 
@@ -55,7 +55,7 @@ Minimal example
         mutation.wild,
         mutation.mutated
       )
-
+```
 # Installation
 
 TODO
