@@ -165,8 +165,8 @@ Additionally, we included results from the gene name recognition tool GNAT appli
 Updated results are available on the GeneView web site (http://bc3.informatik.hu-berlin.de/download)
 
 ## Step 2: Conversion to embedded Derby database
-	The mySQL database is dumped into XML files using apache ddlUtils (http://db.apache.org/ddlutils/) and later transfered into an embedded database.
-	Ant scripts can be found in  "./data/ddlUtils/build.xml"
+The mySQL database is dumped into XML files using apache [ddlUtils](http://db.apache.org/ddlutils/) and later transfered into an embedded database.
+Ant scripts can be found in ./data/ddlUtils/build.xml (**TODO** ???).
 ### Execution of ddlUtils
 	export ANT_OPTS=-Xmx24g
 ### Export mySQL Database to DDL XML (takes about 20min)
