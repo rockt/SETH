@@ -5,9 +5,9 @@ layout: default
 SETH is a software that performs named entity recognition (NER) of single nucleotide polymorphisms (SNPs) and copy
 number variations (CNVs) from natural language texts. SETH's NER component is based on Scala parser combinatiors.
 By implementing an EBNF grammar proposed by Laros *et al.* (2011), 
-these parsers are able to identify structured mentions of mutations that obey the [HGVS nomenclature](http://www.hgvs.org/mutnomen/) (den Dunnen and Antonarakis, 2000).
-To get hold of unstructured mentions, SETH integrates MutationFinder (Caporaso *et al.*, 2007).
-Extracted structured and unstructured mentions of SNPs are linked to [dbSNP](http://www.ncbi.nlm.nih.gov/SNP/),
+these parsers are able to identify mentions of mutations that obey the [HGVS nomenclature](http://www.hgvs.org/mutnomen/) (den Dunnen and Antonarakis, 2000).
+To get hold of mentions not following the nomenclature, SETH integrates MutationFinder (Caporaso *et al.*, 2007).
+Extracted SNP mentions are linked to [dbSNP](http://www.ncbi.nlm.nih.gov/SNP/),
 a process referred to as named entity normalization (NEN).
 
 
@@ -21,7 +21,7 @@ a process referred to as named entity normalization (NEN).
 	MutationMention [span=104-108, mutResidue=P, location=90, wtResidue=L, text=L90P, type=SUBSTITUTION, tool=MUTATIONFINDER]
 	
 # NEN
-Given mentions of SNPs and a list of genes (*i.e.* [entrez-gene](http://www.ncbi.nlm.nih.gov/gene) identifiers), SETH normalizes SNPs to
+Given mentions of SNPs and a list of genes (*i.e.* [Entrez gene](http://www.ncbi.nlm.nih.gov/gene) identifiers), SETH normalizes SNPs to
 dbSNP identifiers.
 To extract gene mentions, we use the output of the tool [GNAT](http://gnat.sourceforge.net/) (Hakenberg *et al.*, 2011)
 together with the gene2pubmed information from NCBI.
@@ -131,7 +131,7 @@ Database (Oxford).
 Bioinformatics, 29(11), 1433–1439.
 
 # Rebuilding the database used for SNP normalization
-**WARNING:** We provide a stand-alone (embedded) [derby database](https://docs.google.com/file/d/0B9uTfq0OyHAsdDNMQzNxWDRhZVE/edit?usp=sharing). 
+**WARNING:** We provide a stand-alone (embedded) [Derby database](https://docs.google.com/file/d/0B9uTfq0OyHAsdDNMQzNxWDRhZVE/edit?usp=sharing). 
 The following steps are only needed if you want to build the database for normalization from scratch.
 
 ## Step 1: Setting up a database for parts of dbSNP database and the genes found in the relevant articles.
@@ -149,6 +149,7 @@ We would be happy to get feedback about using SETH with other databases.
 	wget ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.xml.gz
 #### Download UniProt mapping
 	wget ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping/idmapping.dat.gz
+
 ### Set up the database with the tables "b134_SNPContigLocusId_37_2", ...,  and "genes"
 	CREATE DATABASE dbSNP137 CHARACTER SET latin1;
 	mysql <dbName> -h <hostname> -u <username> -p<password> data/table.sql
@@ -170,7 +171,7 @@ The mySQL database is dumped into XML files using Apache [ddlUtils](http://db.ap
 Ant scripts can be found in ./data/ddlUtils/build.xml (**TODO** ???).
 ### Execution of ddlUtils
 	export ANT_OPTS=-Xmx24g
-### Export mySQL Database to DDL XML (takes about 20min)
-	time ant -v export-source-db
+### Export mySQL Database to DDL XML (takes ~20min)
+	ant -v export-source-db
 ### Convert DDL-XML to Derby database (takes several hours)
-	time ant import-target-db
+	ant import-target-db

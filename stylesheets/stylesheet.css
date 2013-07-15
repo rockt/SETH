@@ -105,7 +105,7 @@ header h2 {
 }
 
 #downloads {
-  margin-bottom: 40px;
+  margin-bottom: 20px;
 }
 
 a.button {
@@ -256,6 +256,7 @@ form {
 h1 {
   font-size: 32px;
   color: #303030;
+  margin-bottom: 12px;
 } 
 
 h2 {
@@ -263,6 +264,7 @@ h2 {
   font-weight: bold;
   color: #505050;
   margin-bottom: 8px;
+  margin-bottom: 10px;
 } 
 
 h3 {
@@ -270,12 +272,14 @@ h3 {
   font-size: 18px;
   font-weight: bold;
   margin-bottom: 8px;
+  margin-top: 8px;
 } 
  
 h4 {
   font-size: 16px;
   color: #303030;
   font-weight: bold;
+  margin-top: 6px;
 } 
 
 h5 {
@@ -311,6 +315,7 @@ blockquote {
 ul li {
   list-style: disc inside;
   padding-left: 20px;
+  margin-bottom: 4px;
 }
 
 ol li {
