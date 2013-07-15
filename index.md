@@ -3,43 +3,24 @@ layout: default
 ---
 
 SETH is a software that performs named entity recognition (NER) of single nucleotide polymorphisms (SNPs) and copy
-number variations (CNVs) from natural language texts. SETH's NER component is based on Scala parser combinatiors,
-which are able to identify structured mentions of mutations that obey nomenclature (den Dunnen and Antonarakis, 2000) by
-implementing an EBNF grammar proposed by Laros *et al.* (2011).
+number variations (CNVs) from natural language texts. SETH's NER component is based on Scala parser combinatiors.
+By implementing an EBNF grammar proposed by Laros *et al.* (2011), 
+these parsers are able to identify structured mentions of mutations that obey nomenclature (den Dunnen and Antonarakis, 2000).
 To get hold of unstructured mentions, SETH integrates MutationFinder (Caporaso *et al.*, 2007).
 Extracted structured and unstructured mentions of SNPs are linked to [dbSNP](http://www.ncbi.nlm.nih.gov/SNP/),
 a process referred to as named entity normalization (NEN).
 
 
 # NER
-Given an input text, SETH extracts mentions of mutations. (**TODO**: find better example)
-
 ## Command-line Usage
-**TODO**: Develop a command-line version that uses MutationFinder in addition. Also output the which software extracted
-the mention.
 
-    $ java -cp seth.jar seth.ner.SETHNERApp "Two common mutations, c.35delG and L90P (c.269T>C)."
-
-    MATCH: c.35delG
-        start: 22
-        end:   30
-        loc:   35
-        ref:   c.
-        wild:  G
-        type:  DELETION
-
-    MATCH: c.269T>C
-        start: 41
-        end:   49
-        loc:   269
-        ref:   c.
-        wild:  T
-        mut:   C
-        type:  SUBSTITUTION
-
-
+    java -cp seth.jar seth.ner.wrapper.SETHNERAppMut "Causative GJB2 mutations were identified in 31 (15.2%) patients, and two common mutations, c.35delG and L90P (c.269T>C), accounted for 72.1% and 9.8% of GJB2 disease alleles."
+	MutationMention [span=91-99, mutResidue=, location=35, wtResidue=G, text=c.35delG, type=DELETION, tool=SETH]
+	MutationMention [span=110-118, mutResidue=C, location=269, wtResidue=T, text=c.269T>C, type=SUBSTITUTION, tool=SETH]
+	MutationMention [span=104-108, mutResidue=P, location=90, wtResidue=L, text=L90P, type=SUBSTITUTION, tool=MUTATIONFINDER]
+	
 # NEN
-Given mentions of SNPs and a list of genes (*i.e.* entrez-gene identifiers), SETH normalizes SNPs to
+Given mentions of SNPs and a list of genes (*i.e.* [entrez-gene](http://www.ncbi.nlm.nih.gov/gene) identifiers), SETH normalizes SNPs to
 dbSNP identifiers.
 To extract gene mentions, we use the output of the tool [GNAT](http://gnat.sourceforge.net/) (Hakenberg *et al.*, 2011)
 together with the gene2pubmed information from NCBI.
@@ -49,14 +30,16 @@ the normalization process
 For user convenience, we provide a [database dump](https://docs.google.com/file/d/0B9uTfq0OyHAsdDNMQzNxWDRhZVE/edit?usp=sharing) (~2GB).
 
 ## Command-line Usage
-    $ java -cp lib/mysql-connector-java-5.0.3-bin.jar:lib/snp-normalizer.jar de.hu.berlin.wbi.process.Normalize property.xml resources/snpExample.txt
+    java -cp lib/mysql-connector-java-5.0.3-bin.jar:lib/snp-normalizer.jar de.hu.berlin.wbi.process.Normalize property.xml resources/snpExample.txt
 
 **TODO**: output?
 
 # Code Examples
 ## NER
-### Java [seth.ner.wrapper.SETHNERApp](https://github.com/rockt/SETH/blob/master/src/main/java/seth/ner/wrapper/SETHNERApp.java#L13-L24)
-### Scala [seth.ner.SETHNERApp](https://github.com/rockt/SETH/blob/master/src/main/scala/seth/ner/SETHNER.scala#L18-L28)
+### Scala [EBNF implemented as parser combinators](https://github.com/rockt/SETH/blob/master/src/main/scala/seth/ner/SETHNER.scala#L127-L336)
+### Scala (excluding MutationFinder) [seth.ner.SETHNERApp](https://github.com/rockt/SETH/blob/master/src/main/scala/seth/ner/SETHNER.scala#L18-L28)
+### Java (excluding MutationFinder) [seth.ner.wrapper.SETHNERApp](https://github.com/rockt/SETH/blob/master/src/main/java/seth/ner/wrapper/SETHNERApp.java#L13-L24)
+### Java (including MutationFinder) [seth.ner.wrapper.SETHNERAppMut](https://github.com/rockt/SETH/blob/master/src/main/java/seth/ner/wrapper/SETHNERAppMut.java#L14-L25)
 ## NEN
 ### Java [de.hu.berlin.wbi.process.MinimalExample](https://github.com/rockt/SETH/blob/master/src/main/java/de/hu/berlin/wbi/process/MinimalExample.java#L50-L71)
 ## NER and NEN
