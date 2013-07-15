@@ -98,7 +98,7 @@ Precision 0.95
 Recall    0.58
 F1        0.72
 
-#### Corpus of Osiris (Furlong *et al.*, 2008)
+#### Corpus of OSIRIS (Furlong *et al.*, 2008)
     java -cp seth.jar de.hu.berlin.wbi.process.osiris.EvaluateOsiris myProperty.xml resources/OSIRIS/corpus.xml
 Precision 0.98
 Recall    0.85
@@ -154,7 +154,7 @@ We would be happy to get feedback about using SETH with other databases.
 	CREATE DATABASE dbSNP137 CHARACTER SET latin1;
 	mysql <dbName> -h <hostname> -u <username> -p<password> data/table.sql
 ### Import the data files needed for normalization
-#### Parse dbSNP XML dump
+#### Parse dbSNP-XML dump
 	time java -cp lib/snp-normalizer.jar:lib/mysql-connector-java-5.0.3-bin.jar de.hu.berlin.wbi.stuff.xml.ParseXML property.xml /path/with/dbSNP-XML/files/...
 #### Parse UniProt-XML for protein-sequence mutations (PSM) and post-translational modifications (*e.g.* signaling peptides)
 	scala Uniprot2Tab.scala uniprot_sprot.xml.gz idmapping.dat.gz uniprot.dat PSM.dat
@@ -170,7 +170,7 @@ Updated results are available on the GeneView web site (http://bc3.informatik.hu
 The mySQL database is dumped into XML files using Apache [ddlUtils](http://db.apache.org/ddlutils/) and later transfered into an embedded Derby database.
 Ant scripts can be found in ./data/ddlUtils/build.xml (**TODO** ???).
 
-### Export mySQL Database to DDL XML (takes ~20min)
+### Export mySQL Database to DDL-XML (takes ~20min)
 	export ANT_OPTS=-Xmx24g
 	ant -v export-source-db
 ### Convert DDL-XML to Derby database (takes several hours)
