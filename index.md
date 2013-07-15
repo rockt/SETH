@@ -49,14 +49,14 @@ For user convenience, we provide a [dump as embedded Derby database](https://doc
 
 ## Evaluate NER
 
-#### Human Mutation corpus I (~210 abstracts)
+#### Human Mutation corpus I (210 abstracts)
     java -cp seth.jar seth.seth.eval.ApplyNER resources/humu/corpus.txt resources/mutations.txt false resources/humu.seth
     java -cp seth.jar seth.seth.eval.EvaluateNER resources/humu.seth resources/humu/yearMapping.txt  resources/humu/annotations/
 Precision 0.98
 Recall    0.84
 F1        0.90
 
-#### Human Mutation corpus II (~420 abstracts)
+#### Human Mutation corpus II (420 abstracts)
     java -cp seth.jar seth.seth.eval.ApplyNER resources/american/corpus.txt resources/mutations.txt false resources/american.seth
     java -cp seth.jar seth.seth.eval.EvaluateNER resources/american.seth resources/american/yearMapping.txt resources/american/annotations/
 Precision 0.88
