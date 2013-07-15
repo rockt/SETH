@@ -54,6 +54,11 @@ body {
   font-family: 'Helvetica Neue', Helvetica, Arial, serif;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
   /*color: #6d6d6d;*/
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  -ms-hyphens: auto;
+  hyphens: auto;
+  text-align: justify;
   color: #444;
 }
 
@@ -188,14 +193,14 @@ code {
 
 pre {
   padding: 4px;
-  background: #fee;
+  background: #fff;
   color: #f2f2f2;
   text-shadow: none;
   overflow: auto;
 }
 pre code {
   color: #333;
-  background-color: #fee;
+  background-color: #fff;
   border: none;
   padding: 0;
 }
