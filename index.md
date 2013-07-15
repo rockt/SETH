@@ -17,9 +17,9 @@ a process referred to as named entity normalization (NEN).
     java -cp seth.jar seth.ner.wrapper.SETHNERAppMut "Causative GJB2 mutations were identified in 31 (15.2%) patients, and two common mutations, c.35delG and L90P (c.269T>C), accounted for 72.1% and 9.8% of GJB2 disease alleles."
 
 	MutationMention [span=91-99, mutResidue=, location=35, wtResidue=G, text=c.35delG, type=DELETION, tool=SETH]
-	MutationMention [span=110-118, mutResidue=C, location=269, wtResidue=T, text=c.269T>C, type=SUBSTITUTION, tool=SETH]
 	MutationMention [span=104-108, mutResidue=P, location=90, wtResidue=L, text=L90P, type=SUBSTITUTION, tool=MUTATIONFINDER]
-	
+    MutationMention [span=110-118, mutResidue=C, location=269, wtResidue=T, text=c.269T>C, type=SUBSTITUTION, tool=SETH]
+
 # NEN
 Given mentions of SNPs and a list of genes (*i.e.* [Entrez gene](http://www.ncbi.nlm.nih.gov/gene) identifiers), SETH normalizes SNPs to
 dbSNP identifiers.
