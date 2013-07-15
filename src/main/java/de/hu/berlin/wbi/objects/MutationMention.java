@@ -18,10 +18,12 @@ package de.hu.berlin.wbi.objects;
  along with snp-normalizer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import de.hu.berlin.wbi.objects.*;
 import seth.ner.wrapper.Type;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -672,9 +674,9 @@ public class MutationMention {
      */
     @Override
     public String toString() {
-        return "MutationMention [location=" + location.getStart() +"-" +location.getStop()
+        return "MutationMention [span=" + location.getStart() +"-" +location.getStop()
                 + ", mutResidue=" + mutResidue + ", location=" +position + ", wtResidue=" + wtResidue +", text=" +text
-                + "]";
+                + ", type=" + getType() + ", tool=" + getTool() + "]";
     }
 
     /**
