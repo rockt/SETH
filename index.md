@@ -49,14 +49,14 @@ For user convenience, we provide a [dump as embedded Derby database](https://doc
 
 ## Evaluate NER
 
-#### Human Mutation corpus I (~200 abstracts)
+#### Human Mutation corpus I (~210 abstracts)
     java -cp seth.jar seth.seth.eval.ApplyNER resources/humu/corpus.txt resources/mutations.txt false resources/humu.seth
     java -cp seth.jar seth.seth.eval.EvaluateNER resources/humu.seth resources/humu/yearMapping.txt  resources/humu/annotations/
 Precision 0.98
 Recall    0.84
 F1        0.90
 
-#### Human Mutation corpus II (~400 abstracts)
+#### Human Mutation corpus II (~420 abstracts)
     java -cp seth.jar seth.seth.eval.ApplyNER resources/american/corpus.txt resources/mutations.txt false resources/american.seth
     java -cp seth.jar seth.seth.eval.EvaluateNER resources/american.seth resources/american/yearMapping.txt resources/american/annotations/
 Precision 0.88
@@ -169,9 +169,9 @@ Updated results are available on the GeneView web site (http://bc3.informatik.hu
 ## Step 2: Conversion to embedded Derby database
 The mySQL database is dumped into XML files using Apache [ddlUtils](http://db.apache.org/ddlutils/) and later transfered into an embedded Derby database.
 Ant scripts can be found in ./data/ddlUtils/build.xml (**TODO** ???).
-### Execution of ddlUtils
-	export ANT_OPTS=-Xmx24g
+
 ### Export mySQL Database to DDL XML (takes ~20min)
+	export ANT_OPTS=-Xmx24g
 	ant -v export-source-db
 ### Convert DDL-XML to Derby database (takes several hours)
 	ant import-target-db

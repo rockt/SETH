@@ -257,6 +257,7 @@ h1 {
   font-size: 32px;
   color: #303030;
   margin-bottom: 12px;
+  margin-top: 12px;
 } 
 
 h2 {
@@ -264,7 +265,7 @@ h2 {
   font-weight: bold;
   color: #505050;
   margin-bottom: 8px;
-  margin-bottom: 10px;
+  margin-top: 10px;
 } 
 
 h3 {
