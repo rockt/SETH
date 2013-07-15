@@ -164,12 +164,12 @@ We would be happy to get feedback about using SETH with other databases.
 Additionally, we included results from the gene name recognition tool GNAT applied on all of PubMed and PubMed Central (as of 09/12/2012).
 Updated results are available on the GeneView web site (http://bc3.informatik.hu-berlin.de/download)
 
-## Step 2:
-     The mySQL database is dumped into XML files using apache ddlUtils (http://db.apache.org/ddlutils/) and later transfered into an embedded database.
-     Ant scripts can be found in  "./data/ddlUtils/build.xml"
+## Step 2: Conversion to embedded Derby database
+	The mySQL database is dumped into XML files using apache ddlUtils (http://db.apache.org/ddlutils/) and later transfered into an embedded database.
+	Ant scripts can be found in  "./data/ddlUtils/build.xml"
 ### Execution of ddlUtils
-     export ANT_OPTS=-Xmx24g
+	export ANT_OPTS=-Xmx24g
 ### Export mySQL Database to DDL XML (takes about 20min)
-     time ant -v export-source-db
+	time ant -v export-source-db
 ### Convert DDL-XML to Derby database (takes several hours)
-     time ant import-target-db
+	time ant import-target-db
