@@ -5,7 +5,7 @@ layout: default
 SETH is a software that performs named entity recognition (NER) of single nucleotide polymorphisms (SNPs) and copy
 number variations (CNVs) from natural language texts. SETH's NER component is based on Scala parser combinatiors.
 By implementing an EBNF grammar proposed by Laros *et al.* (2011), 
-these parsers are able to identify structured mentions of mutations that obey nomenclature (den Dunnen and Antonarakis, 2000).
+these parsers are able to identify structured mentions of mutations that obey the [HGVS nomenclature](http://www.hgvs.org/mutnomen/) (den Dunnen and Antonarakis, 2000).
 To get hold of unstructured mentions, SETH integrates MutationFinder (Caporaso *et al.*, 2007).
 Extracted structured and unstructured mentions of SNPs are linked to [dbSNP](http://www.ncbi.nlm.nih.gov/SNP/),
 a process referred to as named entity normalization (NEN).
@@ -15,6 +15,7 @@ a process referred to as named entity normalization (NEN).
 ## Command-line Usage
 
     java -cp seth.jar seth.ner.wrapper.SETHNERAppMut "Causative GJB2 mutations were identified in 31 (15.2%) patients, and two common mutations, c.35delG and L90P (c.269T>C), accounted for 72.1% and 9.8% of GJB2 disease alleles."
+
 	MutationMention [span=91-99, mutResidue=, location=35, wtResidue=G, text=c.35delG, type=DELETION, tool=SETH]
 	MutationMention [span=110-118, mutResidue=C, location=269, wtResidue=T, text=c.269T>C, type=SUBSTITUTION, tool=SETH]
 	MutationMention [span=104-108, mutResidue=P, location=90, wtResidue=L, text=L90P, type=SUBSTITUTION, tool=MUTATIONFINDER]

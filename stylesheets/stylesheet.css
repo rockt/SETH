@@ -188,14 +188,14 @@ code {
 
 pre {
   padding: 4px;
-  background: #fcc;
+  background: #fee;
   color: #f2f2f2;
   text-shadow: none;
   overflow: auto;
 }
 pre code {
   color: #333;
-  background-color: #fcc;
+  background-color: #fee;
   border: none;
   padding: 0;
 }
