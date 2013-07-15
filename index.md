@@ -139,7 +139,7 @@ Data is stored in a local mySQL database, but any other database can be used.
 However, in this case you have to adopt the following description to your database type. 
 We would be happy to get feedback about using SETH with other databases.
 
-### Download the necessary dbSNP-data-files (This tutorial currently covers dbSNP Version 137)
+### Download the necessary dbSNP files (we used dbSNP version 137)
 #### Download XML dump from dbSNP
 	wget ftp://ftp.ncbi.nih.gov/snp/organisms/human_9606/XML/ds\*.gz
 #### Download gene2pubmed links from Entrez gene
@@ -149,15 +149,15 @@ We would be happy to get feedback about using SETH with other databases.
 	wget ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.xml.gz
 #### Download UniProt mapping
 	wget ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping/idmapping.dat.gz
-### Setting up the database with the tables "b134_SNPContigLocusId_37_2", ...,  and "genes"
+### Set up the database with the tables "b134_SNPContigLocusId_37_2", ...,  and "genes"
 	CREATE DATABASE dbSNP137 CHARACTER SET latin1;
 	mysql <dbName> -h <hostname> -u <username> -p<password> data/table.sql
-### Import the data files needed for normalisation
+### Import the data files needed for normalization
 #### Parse dbSNP XML dump
 	time java -cp lib/snp-normalizer.jar:lib/mysql-connector-java-5.0.3-bin.jar de.hu.berlin.wbi.stuff.xml.ParseXML property.xml /path/with/dbSNP-XML/files/...
-#### Parse UniProt-XML for protein-sequence mutations (PSM) and for post-translational modifications (e.g. signaling peptides)
+#### Parse UniProt-XML for protein-sequence mutations (PSM) and post-translational modifications (*e.g.* signaling peptides)
 	scala Uniprot2Tab.scala uniprot_sprot.xml.gz idmapping.dat.gz uniprot.dat PSM.dat
-#### Inpute gene2pubmed, UniProt, and PSM
+#### Import gene2pubmed, UniProt and PSM
 	mysqlimport  --fields-terminated-by='\t' --delete --local --verbose --host <hostname> --user=<username> --password=<password> <dbName> gene2pubmed
 	mysqlimport  --fields-terminated-by='\t' --delete --local --verbose --host <hostname> --user=<username> --password=<password> <dbName> uniprot.dat
 	mysqlimport  --fields-terminated-by='\t' --local --verbose --host <hostname> --user=<username> --password=<password> <dbName> PSM.dat
@@ -166,7 +166,7 @@ Additionally, we included results from the gene name recognition tool GNAT appli
 Updated results are available on the GeneView web site (http://bc3.informatik.hu-berlin.de/download)
 
 ## Step 2: Conversion to embedded Derby database
-The mySQL database is dumped into XML files using apache [ddlUtils](http://db.apache.org/ddlutils/) and later transfered into an embedded database.
+The mySQL database is dumped into XML files using Apache [ddlUtils](http://db.apache.org/ddlutils/) and later transfered into an embedded Derby database.
 Ant scripts can be found in ./data/ddlUtils/build.xml (**TODO** ???).
 ### Execution of ddlUtils
 	export ANT_OPTS=-Xmx24g
