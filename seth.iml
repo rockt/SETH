@@ -26,7 +26,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="scala-library (2)" level="project" />
     <orderEntry type="library" name="Maven: org.scala-lang:scala-library:2.9.2" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.8.1" level="project" />
+    <orderEntry type="library" name="Maven: junit:junit:4.8.1" level="project" />
     <orderEntry type="library" name="Maven: org.scalatest:scalatest_2.9.0:1.8" level="project" />
     <orderEntry type="library" name="Maven: com.codahale:logula_2.9.1:2.1.3" level="project" />
     <orderEntry type="library" name="Maven: log4j:log4j:1.2.16" level="project" />
