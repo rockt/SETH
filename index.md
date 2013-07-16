@@ -90,7 +90,7 @@ F₁        0.90
     java -cp seth.jar seth.seth.eval.EvaluateNER resources/american.seth resources/american/yearMapping.txt resources/american/annotations/
 Precision 0.88
 Recall    0.82
-F<sub>1</sub>        0.85
+F₁        0.85
 
 #### MutationFinder corpus using original MutationFinder scripts (Caporaso *et al.*, 2007)
     java -cp seth.jar seth.seth.eval.ApplyNER resources/mutationfinder/corpus/devo_text.txt resources/mutations.txt true resources/devo_text.seth
@@ -98,26 +98,26 @@ F<sub>1</sub>        0.85
     python resources/mutationfinder/origDist/performance.py resources/devo_text.seth  resources/mutationfinder/corpus/devo_gold_std.txt
 Precision 0.97
 Recall    0.83
-F<sub>1</sub>        0.89
+F₁        0.89
 
     python resources/mutationfinder/origDist/performance.py resources/test_text.seth  resources/mutationfinder/corpus/test_gold_std.txt
 Precision 0.97
 Recall    0.81
-F<sub>1</sub>        0.88
+F₁        0.88
 
 #### Corpus of Wei *et al.* (2013)
     java -cp seth.jar seth.seth.eval.ApplyNERToWei resources/Wei2013/train.txt  resources/mutations.txt  resources/Wei2013.seth
     java -cp seth.jar seth.seth.eval.EvaluateWei resources/Wei2013/train.txt resources/Wei2013.seth
 Precision 0.94
 Recall    0.81
-F<sub>1</sub>        0.87
+F₁        0.87
 
 #### Corpus of Verspoor *et al.* (2013)
     java -cp seth.jar seth.seth.eval.ApplyNerToVerspoor resources/Verspoor2013/corpus/ resources/mutations.txt resources/Verspoor2013.seth
     java -cp seth.jar seth.seth.eval.EvaluateVerspoor resources/Verspoor2013/annotations/ resources/Verspoor2013.seth
 Precision 0.86
 Recall    0.14
-F<sub>1</sub>        0.24
+F₁        0.24
 
 ## Evaluate NEN
 
@@ -125,13 +125,13 @@ F<sub>1</sub>        0.24
     java -cp seth.jar de.hu.berlin.wbi.process.Evaluate myProperty.xml resources/thomas2011/corpus.txt
 Precision 0.95
 Recall    0.58
-F<sub>1</sub>        0.72
+F₁        0.72
 
 #### Corpus of OSIRIS (Furlong *et al.*, 2008)
     java -cp seth.jar de.hu.berlin.wbi.process.osiris.EvaluateOsiris myProperty.xml resources/OSIRIS/corpus.xml
 Precision 0.98
 Recall    0.85
-F<sub>1</sub>        0.91
+F₁        0.91
 
 # References
 - Caporaso, J. G. *et al.* (2007). 
