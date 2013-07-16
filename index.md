@@ -39,7 +39,7 @@ containing a list of mutations that SETH should link to dbSNP (*i.e.* rs numbers
 
 	Normalising mutations from 'resources/snpExample.txt' and properties from 'resources/property.xml'
 	16 mutations for normalisation loaded
-	    PMID    Mutation	Start	End		dbSNP
+	    PMID    Mutation	Start	End	dbSNP
 	15345705      G1651A      419   425
 	15290009       V158M      149   158    rs4680
 	15645182        A72S       15    23    rs6267
