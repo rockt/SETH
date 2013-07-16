@@ -32,7 +32,30 @@ For user convenience, we provide a [dump as embedded Derby database](https://doc
 ## Command-line Usage
     java -cp lib/mysql-connector-java-5.0.3-bin.jar:lib/snp-normalizer.jar de.hu.berlin.wbi.process.Normalize property.xml resources/snpExample.txt
 
-**TODO**: output?
+	Normalising mutations from 'resources/snpExample.txt' and properties from 'myProperty.xml'
+	16 mutations for normalisation loaded
+	15345705    G1651A    419    425
+	15290009    V158M    149    158    rs4680
+	15645182    A72S    15    23    rs6267
+	14973783    V103I    208    213    rs2229616
+	15457404    V158M    937    946    rs4680
+	15098000    V158M    349    358    rs4680
+	12600718    R219K    599    604    rs2230806
+	12600718    R1587K    945    951    rs2230808
+	15245581    T321C    1356    1361    rs3747174
+	15464268    S12T    621    625    rs1937
+	11933203    C707T    685    691
+	14984467    C17948T    577    585
+	15268889    G2014A    1316    1322
+	15670788    C2757G    726    733
+	15670788    C5748T    755    762
+	15564288    R72P    1204    1212    rs1042522
+	15564288    K751Q    747    756    rs13181
+	15564288    D312N    722    731    rs1799793
+	14755442    E2578G    699    709    rs1009382
+	15615772    P141L    1040    1045    rs2227564
+	
+	Normalization possible for 14/20 mentions
 
 # Code Examples
 ## NER
@@ -134,31 +157,30 @@ Bioinformatics, 29(11), 1433–1439.
 **WARNING:** We provide a stand-alone (embedded) [Derby database](https://docs.google.com/file/d/0B9uTfq0OyHAsdDNMQzNxWDRhZVE/edit?usp=sharing). 
 The following steps are only needed if you want to build the database for normalization from scratch.
 
-## Step 1: Setting up a database for parts of dbSNP database and the genes found in the relevant articles.
 Data is stored in a local mySQL database, but any other database can be used. 
 However, in this case you have to adopt the following description to your database type. 
 We would be happy to get feedback about using SETH with other databases.
 
-### Download the necessary dbSNP files (we used dbSNP version 137)
-#### Download XML dump from dbSNP
+## Download the necessary dbSNP files (we used dbSNP version 137)
+### Download XML dump from dbSNP
 	wget ftp://ftp.ncbi.nih.gov/snp/organisms/human_9606/XML/ds\*.gz
-#### Download gene2pubmed links from Entrez gene
+### Download gene2pubmed links from Entrez gene
 	wget ftp://ftp.ncbi.nih.gov/gene/DATA/gene2pubmed.gz
 	gunzip gene2pubmed.gz
-#### Download UniProt
+### Download UniProt
 	wget ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.xml.gz
-#### Download UniProt mapping
+### Download UniProt mapping
 	wget ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping/idmapping.dat.gz
 
-### Set up the database with the tables "b134_SNPContigLocusId_37_2", ...,  and "genes"
+## Set up the database with the tables "b134_SNPContigLocusId_37_2", ...,  and "genes"
 	CREATE DATABASE dbSNP137 CHARACTER SET latin1;
 	mysql <dbName> -h <hostname> -u <username> -p<password> data/table.sql
-### Import the data files needed for normalization
-#### Parse dbSNP-XML dump
+## Import the data files needed for normalization
+### Parse dbSNP-XML dump
 	time java -cp lib/snp-normalizer.jar:lib/mysql-connector-java-5.0.3-bin.jar de.hu.berlin.wbi.stuff.xml.ParseXML property.xml /path/with/dbSNP-XML/files/...
-#### Parse UniProt-XML for protein-sequence mutations (PSM) and post-translational modifications (*e.g.* signaling peptides)
+### Parse UniProt-XML for protein-sequence mutations (PSM) and post-translational modifications (*e.g.* signaling peptides)
 	scala Uniprot2Tab.scala uniprot_sprot.xml.gz idmapping.dat.gz uniprot.dat PSM.dat
-#### Import gene2pubmed, UniProt and PSM
+### Import gene2pubmed, UniProt and PSM
 	mysqlimport  --fields-terminated-by='\t' --delete --local --verbose --host <hostname> --user=<username> --password=<password> <dbName> gene2pubmed
 	mysqlimport  --fields-terminated-by='\t' --delete --local --verbose --host <hostname> --user=<username> --password=<password> <dbName> uniprot.dat
 	mysqlimport  --fields-terminated-by='\t' --local --verbose --host <hostname> --user=<username> --password=<password> <dbName> PSM.dat
@@ -166,12 +188,9 @@ We would be happy to get feedback about using SETH with other databases.
 Additionally, we included results from the gene name recognition tool GNAT applied on all of PubMed and PubMed Central (as of 09/12/2012).
 Updated results are available on the GeneView web site (http://bc3.informatik.hu-berlin.de/download)
 
-## Step 2: Conversion to embedded Derby database
-The mySQL database is dumped into XML files using Apache [ddlUtils](http://db.apache.org/ddlutils/) and later transfered into an embedded Derby database.
-Ant scripts can be found in ./data/ddlUtils/build.xml (**TODO** ???).
+Finally, we converted the mySQL database into XML using Apache [ddlUtils](http://db.apache.org/ddlutils/) 
+and subsequently used this XML to compile an embedded Derby database.
 
-### Export mySQL Database to DDL-XML (takes ~20min)
-	export ANT_OPTS=-Xmx24g
-	ant -v export-source-db
-### Convert DDL-XML to Derby database (takes several hours)
-	ant import-target-db
+# Contact
+For questions, remarks or bug-reports please contact Philippe Thomas:
+thomas [at] informatik [dot] hu-berlin [dot] de
