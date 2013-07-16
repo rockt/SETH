@@ -84,12 +84,14 @@ public class Normalize {
 		}
 		// Try to normalize each mutation
 		int possible = 0;
+        int nMutatons = 0;
 		for(int pmid : mutations.keySet()){
 
 			// Get all Genes found for this article
 			Set<Gene> genes = Gene.queryGenesForArticle(pmid);
 			
 			for (MutationMention mutation : mutations.get(pmid)) {
+                nMutatons++;
 			
 				// List of possible normalizations for this SNP
 				Set<dbSNPNormalized> normalized = new HashSet<dbSNPNormalized>();
@@ -121,7 +123,7 @@ public class Normalize {
 		}
 		
 		System.err.println("Normalization possible for " + possible + "/"
-				+ mutations.size() + " mentions");
+				+ nMutatons + " mentions");
 		mysql.disconnect();
 	}
 
