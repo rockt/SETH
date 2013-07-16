@@ -342,11 +342,13 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
   lazy val Chr:P                = "chr" ~ (Ch) ~ ":" ~ Num ~ "-" ~ Num ~ ("+"|"-").?
 
   //fixed: was not captured before
-  lazy val AdditionalForm:P     = Num ~ Arm ~ Num ~ "-" ~ Arm ~ Num
-  lazy val ChrList:P            = "chr" ~ (Ch) ~ ":" ~ Num ~ ("," ~ Num).+ ~ (".." | "-") ~ Num ~ ("," ~ Num).+ ~ ("+"|"-").?
+  lazy val AdditionalForm:P     = Num ~ Arm ~ Num ~ ("-"|"–") ~ Arm ~ (Num ~ ("." ~ Num).?).? |
+                                  Num ~ Arm ~ Num ~ ("." ~ Num).?
+
+  lazy val ChrList:P            = "chr" ~ (Ch) ~ ":" ~ Num ~ ("," ~ Num).+ ~ (".." | "-" | "–") ~ Num ~ ("," ~ Num).+ ~ ("+"|"-").?
 
   //Copy-Number Variations
-  lazy val CNV:P                = AdditionalForm | ChrList | ShortForm | LongForm | Chr
+  lazy val CNV:P                = AdditionalForm | ChrList | ShortForm | LongForm | Chr | LFRegion
 
 
 

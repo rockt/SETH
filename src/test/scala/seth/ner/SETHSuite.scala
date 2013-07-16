@@ -714,5 +714,14 @@ class SingleTest extends FunSuite {
     assert(SETH.isValid("133X", SETH.CNV, debug) === false)
     assert(SETH.isValid("45,X", SETH.CNV, debug) === false)
     assert(SETH.isValid("5178Y", SETH.CNV, debug) === false)
+    //other acceptance tests
+    assert(SETH.isValid("8p12–q12.1", SETH.CNV, debug) === true)
+    assert(SETH.isValid("15q11-q13", SETH.CNV, debug) === true)
+    assert(SETH.isValid("15q11.2", SETH.CNV, debug) === true)
+    assert(SETH.isValid("15q12", SETH.CNV, debug) === true)
+    assert(SETH.isValid("Xp22", SETH.CNV, debug) === true)
+    assert(SETH.isValid("Xq28", SETH.CNV, debug) === true)
+    assert(SETH.isValid("15q26-qter", SETH.CNV, debug) === true)
+    assert(SETH.isValid("17p11.2", SETH.CNV, debug) === true)
   }
 }
