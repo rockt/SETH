@@ -193,4 +193,5 @@ and subsequently used this XML to compile an embedded Derby database.
 
 # Contact
 For questions, remarks or bug-reports please contact Philippe Thomas:
-thomas [at] informatik [dot] hu-berlin [dot] de
+
+thomas \[at\] informatik \[dot\] hu-berlin \[dot\] de
