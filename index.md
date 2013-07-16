@@ -30,9 +30,14 @@ the normalization process.
 For user convenience, we provide a [dump as embedded Derby database](https://docs.google.com/file/d/0B9uTfq0OyHAsdDNMQzNxWDRhZVE/edit?usp=sharing) (~2GB).
 
 ## Command-line Usage
-    java -cp lib/mysql-connector-java-5.0.3-bin.jar:lib/snp-normalizer.jar de.hu.berlin.wbi.process.Normalize property.xml resources/snpExample.txt
+To use SETH's NEN component from the command line, you need to provida a [XML property file](https://github.com/rockt/SETH/blob/master/resources/propery.xml) 
+that handles the connection to the Derby database. 
+Subsequently, you can provide a TSV file (with PubMed ID, mutation mention, start and end position) 
+containing a list of mutations that SETH should link to dbSNP (*i.e.* rs numbers).
 
-	Normalising mutations from 'resources/snpExample.txt' and properties from 'myProperty.xml'
+    java -cp lib/mysql-connector-java-5.0.3-bin.jar:lib/snp-normalizer.jar de.hu.berlin.wbi.process.Normalize resources/property.xml resources/snpExample.txt
+
+	Normalising mutations from 'resources/snpExample.txt' and properties from 'resources/property.xml'
 	16 mutations for normalisation loaded
 	15345705    G1651A    419    425
 	15290009    V158M    149    158    rs4680
