@@ -83,7 +83,7 @@ containing a list of mutations that SETH should link to dbSNP (*i.e.* rs numbers
     java -cp seth.jar seth.seth.eval.EvaluateNER resources/humu.seth resources/humu/yearMapping.txt  resources/humu/annotations/
 Precision 0.98
 Recall    0.84
-F<sub>1</sub>        0.90
+F₁        0.90
 
 #### Human Mutation corpus II (420 abstracts)
     java -cp seth.jar seth.seth.eval.ApplyNER resources/american/corpus.txt resources/mutations.txt false resources/american.seth
