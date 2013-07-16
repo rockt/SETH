@@ -486,8 +486,10 @@ public class MutationMention {
                 MutationMention tmp = new MutationMention(array[1]);
                 tmp.setLocation(new EntityOffset(Integer.parseInt(array[2]),
                         Integer.parseInt(array[3])));
+                tmp.tool = Tool.MUTATIONFINDER;
 
-                if(!result.containsKey(pmid))
+
+                if(result.containsKey(pmid))
                     result.get(pmid).add(tmp);
 
                 else{
