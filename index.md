@@ -39,26 +39,27 @@ containing a list of mutations that SETH should link to dbSNP (*i.e.* rs numbers
 
 	Normalising mutations from 'resources/snpExample.txt' and properties from 'resources/property.xml'
 	16 mutations for normalisation loaded
-	15345705    G1651A    419    425
-	15290009    V158M    149    158    rs4680
-	15645182    A72S    15    23    rs6267
-	14973783    V103I    208    213    rs2229616
-	15457404    V158M    937    946    rs4680
-	15098000    V158M    349    358    rs4680
-	12600718    R219K    599    604    rs2230806
-	12600718    R1587K    945    951    rs2230808
-	15245581    T321C    1356    1361    rs3747174
-	15464268    S12T    621    625    rs1937
-	11933203    C707T    685    691
-	14984467    C17948T    577    585
-	15268889    G2014A    1316    1322
-	15670788    C2757G    726    733
-	15670788    C5748T    755    762
-	15564288    R72P    1204    1212    rs1042522
-	15564288    K751Q    747    756    rs13181
-	15564288    D312N    722    731    rs1799793
-	14755442    E2578G    699    709    rs1009382
-	15615772    P141L    1040    1045    rs2227564
+	    PMID    Mutation	Start	End		dbSNP
+	15345705      G1651A      419   425
+	15290009       V158M      149   158    rs4680
+	15645182        A72S       15    23    rs6267
+	14973783       V103I      208   213 rs2229616
+	15457404       V158M      937   946    rs4680
+	15098000       V158M      349   358    rs4680
+	12600718       R219K      599   604 rs2230806
+	12600718      R1587K      945   951 rs2230808
+	15245581       T321C     1356  1361 rs3747174
+	15464268        S12T      621   625    rs1937
+	11933203       C707T      685   691
+	14984467     C17948T      577   585
+	15268889      G2014A     1316  1322
+	15670788      C2757G      726   733
+	15670788      C5748T      755   762
+	15564288        R72P     1204  1212 rs1042522
+	15564288       K751Q      747   756   rs13181
+	15564288       D312N      722   731 rs1799793
+	14755442      E2578G      699   709 rs1009382
+	15615772       P141L     1040  1045 rs2227564
 	
 	Normalization possible for 14/20 mentions
 
@@ -82,14 +83,14 @@ containing a list of mutations that SETH should link to dbSNP (*i.e.* rs numbers
     java -cp seth.jar seth.seth.eval.EvaluateNER resources/humu.seth resources/humu/yearMapping.txt  resources/humu/annotations/
 Precision 0.98
 Recall    0.84
-F1        0.90
+F<sub>1</sub>        0.90
 
 #### Human Mutation corpus II (420 abstracts)
     java -cp seth.jar seth.seth.eval.ApplyNER resources/american/corpus.txt resources/mutations.txt false resources/american.seth
     java -cp seth.jar seth.seth.eval.EvaluateNER resources/american.seth resources/american/yearMapping.txt resources/american/annotations/
 Precision 0.88
 Recall    0.82
-F1        0.85
+F<sub>1</sub>        0.85
 
 #### MutationFinder corpus using original MutationFinder scripts (Caporaso *et al.*, 2007)
     java -cp seth.jar seth.seth.eval.ApplyNER resources/mutationfinder/corpus/devo_text.txt resources/mutations.txt true resources/devo_text.seth
@@ -97,26 +98,26 @@ F1        0.85
     python resources/mutationfinder/origDist/performance.py resources/devo_text.seth  resources/mutationfinder/corpus/devo_gold_std.txt
 Precision 0.97
 Recall    0.83
-F1        0.89
+F<sub>1</sub>        0.89
 
     python resources/mutationfinder/origDist/performance.py resources/test_text.seth  resources/mutationfinder/corpus/test_gold_std.txt
 Precision 0.97
 Recall    0.81
-F1        0.88
+F<sub>1</sub>        0.88
 
 #### Corpus of Wei *et al.* (2013)
     java -cp seth.jar seth.seth.eval.ApplyNERToWei resources/Wei2013/train.txt  resources/mutations.txt  resources/Wei2013.seth
     java -cp seth.jar seth.seth.eval.EvaluateWei resources/Wei2013/train.txt resources/Wei2013.seth
 Precision 0.94
 Recall    0.81
-F1        0.87
+F<sub>1</sub>        0.87
 
 #### Corpus of Verspoor *et al.* (2013)
     java -cp seth.jar seth.seth.eval.ApplyNerToVerspoor resources/Verspoor2013/corpus/ resources/mutations.txt resources/Verspoor2013.seth
     java -cp seth.jar seth.seth.eval.EvaluateVerspoor resources/Verspoor2013/annotations/ resources/Verspoor2013.seth
 Precision 0.86
 Recall    0.14
-F1        0.24
+F<sub>1</sub>        0.24
 
 ## Evaluate NEN
 
@@ -124,13 +125,13 @@ F1        0.24
     java -cp seth.jar de.hu.berlin.wbi.process.Evaluate myProperty.xml resources/thomas2011/corpus.txt
 Precision 0.95
 Recall    0.58
-F1        0.72
+F<sub>1</sub>        0.72
 
 #### Corpus of OSIRIS (Furlong *et al.*, 2008)
     java -cp seth.jar de.hu.berlin.wbi.process.osiris.EvaluateOsiris myProperty.xml resources/OSIRIS/corpus.xml
 Precision 0.98
 Recall    0.85
-F1        0.91
+F<sub>1</sub>        0.91
 
 # References
 - Caporaso, J. G. *et al.* (2007). 
