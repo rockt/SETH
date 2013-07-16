@@ -107,6 +107,7 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
   //optional whitespace
   lazy val ws:P                 = if (strictNomenclature) "".r else " ".r.*
   lazy val gt:P                 = if (strictNomenclature) ">" else (">" | "->" | "-->" | "=>")
+  lazy val com:P                = if (strictNomenclature) "," else ("," | " " | "" | "." | ";")
 
   //represents chars outside of a mutation mention
   val any = """.|\w|\n|\r""".r
@@ -283,7 +284,7 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
   //EBNF akin to PhD thesis of Craig Larman
   //Short form grammar
   //Terminals
-  lazy val Num:P                = "[0-9]+".r
+  lazy val Num:P                = "[0-9]+".r ~ ("." ~ "[0-9]+".r).?
   lazy val Sign:P               = "+" | "-"
   lazy val ChY:P                = "y" | "Y"
   lazy val ChX:P                = "x" | "X"
@@ -300,13 +301,20 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
   //Production rules
   //Rearrangements
   //fixed: accounted for the (pter->q21) case
-  lazy val InsideBreakRea:P     = ChPartUpToArm ~ ("->".? ~ ChPartDownToRegion).?
-  lazy val UpToTwoBreakRea:P    = "(" ~ Autosome ~ ")(" ~ InsideBreakRea ~ ("::" ~ InsideBreakRea).* ~ ")"
-  lazy val TwoChromTwoBreakRea:P= "(" ~ Autosome ~ ";" ~ Autosome ~ ")(" ~ ChPartUpToArm ~ ";" ~ ChPartUpToArm ~ ")"
+  lazy val InsideBreakRea:P     = ChPartUpToArm ~ (("->" | "-->").? ~ ChPartDownToRegion).?
+  //fixed: SexChrom is fine as well
+  lazy val UpToTwoBreakRea:P    = "(" ~ AnyChrom ~ ")" ~ ("(" ~ InsideBreakRea ~ ("::" ~ InsideBreakRea).* ~ ")").?
+  //fixed: SexChrom is fine as well
+  //lazy val TwoChromTwoBreakRea:P= "(" ~ Autosome ~ ";" ~ Autosome ~ ")(" ~ ChPartUpToArm ~ ";" ~ ChPartUpToArm ~ ")"
+  lazy val TwoChromTwoBreakRea:P= "(" ~ AnyChrom ~ (";" | ":") ~ AnyChrom ~ ")(" ~ ChPartUpToArm ~ (";" | ":") ~ ChPartUpToArm ~ ")"
   //Structural abnormalities
-  lazy val Translocation:P      = "t" ~ TwoChromTwoBreakRea
-  lazy val Deletion:P           = "del" ~ UpToTwoBreakRea
-  lazy val StructuralAbnorm:P   = Deletion | Translocation
+  //fixed: I have no idea what it means, but I found this mention: 46,X,der(X)t(X;6)(q22;p23) (PMID: 21931936)
+  lazy val Translocation:P      = ("der(" ~ AnyChrom ~ ")").? ~ "t" ~ TwoChromTwoBreakRea
+  //fixed: Again, no idea what this is: 46,X,idic(Y)(p11.31) (PMID: 21078420)
+  lazy val Deletion:P           = ("del" | "idic") ~ UpToTwoBreakRea
+  //fixed: 46,X,der(X)(pter->q21.1::p11.4->pter) (PMID: 20117774)
+  lazy val Der:P                = "der(" ~ AnyChrom ~ ")" ~ ("(" ~ InsideBreakRea ~ ("::" ~ InsideBreakRea).* ~ ")").?
+  lazy val StructuralAbnorm:P   = Deletion | Der | Translocation
   //Numeric abnormalities
   lazy val ChPartOfDiffLength:P = AnyChrom ~ ChPartDownToRegion ~ Sign
 
@@ -315,12 +323,12 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
   lazy val NumericAbnorm:P      = "+" ~ "?".? ~ AnyChrom ~ Sign.? | "-" ~ "?".? ~ AnyChrom | "+".? ~ ChPartOfDiffLength
 
   lazy val Abnorm:P             = StructuralAbnorm | NumericAbnorm
-  lazy val AbnormList:P         = Abnorm ~ ("," ~ AbnormList).?
+  lazy val AbnormList:P         = Abnorm ~ (com ~ AbnormList).?
   lazy val YList:P              = ChY ~ YList.?
   lazy val XList:P              = ChX ~ XList.?
   lazy val SexList:P            = XList ~ YList | XList | YList
   //fixed: we are only interested in abnormalities
-  lazy val ShortForm:P          = Num ~ ",".? ~ (SexList ~ "," ~ AbnormList)
+  lazy val ShortForm:P          = Num ~ com.? ~ (SexList ~ com ~ AbnormList)
 
   //Long form grammar
   //Terminals
@@ -334,7 +342,7 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
   lazy val BandEnd:P            = Centromere | Terminal | Region | Band
   lazy val EndBand:P            = BandEnd
   lazy val StartBand:P          = BandEnd
-  lazy val BandSection:P        = StartBand ~ "->" ~ EndBand
+  lazy val BandSection:P        = StartBand ~ ("->" | "-->") ~ EndBand
   //fixed: only BandEnd or BandSection is just to unspecific
   lazy val LongForm:P           = (BandSection ~ "::" ~ LongForm) //BandEnd | BandSection
 
@@ -347,8 +355,9 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
 
   lazy val ChrList:P            = "chr" ~ (Ch) ~ ":" ~ Num ~ ("," ~ Num).+ ~ (".." | "-" | "–") ~ Num ~ ("," ~ Num).+ ~ ("+"|"-").?
 
+  //fixed: added single Translocation to account for der(Y)t(Y;1)(q12:q21) (PMID: 20684010)
   //Copy-Number Variations
-  lazy val CNV:P                = AdditionalForm | ChrList | ShortForm | LongForm | Chr | LFRegion
+  lazy val CNV:P                = (Translocation | AdditionalForm | ChrList | ShortForm | LongForm | Chr | LFRegion).+
 
 
 

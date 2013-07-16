@@ -649,7 +649,7 @@ class SETHSuite extends FunSpec with ShouldMatchers with GivenWhenThen with Logg
 }
 
 class SingleTest extends FunSuite {
-  val SETH = new SETHNER
+  val SETH = new SETHNER(false)
   test("Mutation object creation") {
     val mutation = SETH.extractMutations("p.Pro243Ser")(0)
     println(mutation.toString)
@@ -706,7 +706,7 @@ class SingleTest extends FunSuite {
     assert(SETH.isValid("46,xx,del(1)(pter->q21::q31->qter)", SETH.CNV, debug) === true)
     assert(SETH.isValid("chr11:125,940..155,000", SETH.CNV, debug) === true)
     assert(SETH.isValid("chr5:70,060,034-70,481,083", SETH.CNV) === true)
-    //don not dare to tell me these are valid CNVs
+    //do not dare to tell me these are valid CNVs
     assert(SETH.isValid("cen", SETH.CNV, debug) === false)
     assert(SETH.isValid("5-y", SETH.CNV, debug) === false)
     assert(SETH.isValid("1-14", SETH.CNV, debug) === false)
@@ -723,5 +723,18 @@ class SingleTest extends FunSuite {
     assert(SETH.isValid("Xq28", SETH.CNV, debug) === true)
     assert(SETH.isValid("15q26-qter", SETH.CNV, debug) === true)
     assert(SETH.isValid("17p11.2", SETH.CNV, debug) === true)
+    //hard cases
+    assert(SETH.isValid("47,XY+21", SETH.CNV, debug) === true)
+    assert(SETH.isValid("47 XY+21", SETH.CNV, debug) === true)
+    assert(SETH.isValid("46,X,t(X;16)(p11.23;p12.3)", SETH.CNV, debug) === true)
+    assert(SETH.isValid("46,X,der(X)t(X;6)(q22;p23)", SETH.CNV, debug) === true)
+    assert(SETH.isValid("46,X,del(Y)", SETH.CNV, debug) === true)
+    assert(SETH.isValid("46,X,del(Y)(p11.31)", SETH.CNV, debug) === true)
+    assert(SETH.isValid("46,X,idic(Y)(p11.31)", SETH.CNV, debug) === true)
+    assert(SETH.isValid("der(Y)t(Y;1)(q12:q21)", SETH.CNV, debug) === true)
+    assert(SETH.isValid("46,X,der(X)(pter->q21.1::p11.4->pter)", SETH.CNV, debug) === true)
+    assert(SETH.isValid("46,X,der(X)(pter->q21.1::p11.4-->pter)", SETH.CNV, debug) === true)
+    assert(SETH.isValid("46,X,del(X)(p11.23)", SETH.CNV, debug) === true)
+    //assert(SETH.isValid("der(X)del(X)(p11.23)dup(X)(p11.21p11.22)", SETH.CNV, debug) === true) //this one is really tricky
   }
 }
