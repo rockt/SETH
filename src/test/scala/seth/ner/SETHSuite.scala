@@ -692,21 +692,27 @@ class SingleTest extends FunSuite {
   }
 
   test("CNVs") {
-    val debug = true
-    //assert(SETH.isValid("chr11:125,940..155,000", SETH.CNV) === true)
-    //assert(SETH.isValid("chr5:70,060,034-70,481,083", SETH.CNV) === true)
+    val debug = false
     //short forms (working!)
-    /*
-    assert(SETH.isValid("46,xx", SETH.CNV, debug) === true)
+    assert(SETH.isValid("46,xx", SETH.CNV, debug) === false) //too unspecific
     assert(SETH.isValid("47,xx,+21", SETH.CNV, debug) === true)
     assert(SETH.isValid("45,xx,-15", SETH.CNV, debug) === true)
     assert(SETH.isValid("46,xx,del(5)(p14)", SETH.CNV, debug) === true)
     assert(SETH.isValid("46,xx,t(2;3)(q31;p21)", SETH.CNV, debug) === true)
     assert(SETH.isValid("47,xx,+2,t(2;3)(q31;p21),del(5)(p14)", SETH.CNV, debug) === true)
-    */
-    //long forms (buggy!)
-    //assert(SETH.isValid("46,xx,del(1)(pter->q21)", SETH.CNV, debug) === true)
+    //long froms
     assert(SETH.isValid("15q11-q13", SETH.CNV, debug) === true)
-    //assert(SETH.isValid("46,xx,del(1)(pter->q21::q31->qter)", SETH.CNV, debug) === true)
+    assert(SETH.isValid("46,xx,del(1)(pter->q21)", SETH.CNV, debug) === true)
+    assert(SETH.isValid("46,xx,del(1)(pter->q21::q31->qter)", SETH.CNV, debug) === true)
+    assert(SETH.isValid("chr11:125,940..155,000", SETH.CNV, debug) === true)
+    assert(SETH.isValid("chr5:70,060,034-70,481,083", SETH.CNV) === true)
+    //don not dare to tell me these are valid CNVs
+    assert(SETH.isValid("cen", SETH.CNV, debug) === false)
+    assert(SETH.isValid("5-y", SETH.CNV, debug) === false)
+    assert(SETH.isValid("1-14", SETH.CNV, debug) === false)
+    assert(SETH.isValid("p30", SETH.CNV, debug) === false)
+    assert(SETH.isValid("133X", SETH.CNV, debug) === false)
+    assert(SETH.isValid("45,X", SETH.CNV, debug) === false)
+    assert(SETH.isValid("5178Y", SETH.CNV, debug) === false)
   }
 }
