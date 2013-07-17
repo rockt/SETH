@@ -67,7 +67,7 @@ containing a list of mutations that SETH should link to dbSNP (*i.e.* rs numbers
 
 # Code Examples
 ## NER
-### Scala [EBNF implemented as parser combinators](https://github.com/rockt/SETH/blob/master/src/main/scala/seth/ner/SETHNER.scala#L127-L336)
+### Scala [EBNF implemented as parser combinators](https://github.com/rockt/SETH/blob/master/src/main/scala/seth/ner/SETHNER.scala#L128-L356)
 ### Scala (excluding MutationFinder) [seth.ner.SETHNERApp](https://github.com/rockt/SETH/blob/master/src/main/scala/seth/ner/SETHNER.scala#L18-L28)
 ### Java (excluding MutationFinder) [seth.ner.wrapper.SETHNERApp](https://github.com/rockt/SETH/blob/master/src/main/java/seth/ner/wrapper/SETHNERApp.java#L13-L24)
 ### Java (including MutationFinder) [seth.ner.wrapper.SETHNERAppMut](https://github.com/rockt/SETH/blob/master/src/main/java/seth/ner/wrapper/SETHNERAppMut.java#L14-L25)
