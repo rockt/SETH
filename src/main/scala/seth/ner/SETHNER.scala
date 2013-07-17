@@ -107,7 +107,8 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
   //optional whitespace
   lazy val ws:P                 = if (strictNomenclature) "".r else " ".r.*
   lazy val gt:P                 = if (strictNomenclature) ">" else (">" | "->" | "-->" | "=>")
-  lazy val com:P                = if (strictNomenclature) "," else ("," | " " | "" | "." | ";")
+  lazy val com:P                = if (strictNomenclature) "," else ("," | " " | "." | ";")
+  lazy val com2:P               = if (strictNomenclature) "," else ("," | " " | "" | "." | ";")
 
   //represents chars outside of a mutation mention
   val any = """.|\w|\n|\r""".r
@@ -284,7 +285,8 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
   //EBNF akin to PhD thesis of Craig Larman
   //Short form grammar
   //Terminals
-  lazy val Num:P                = "[0-9]+".r ~ ("." ~ "[0-9]+".r).?
+  lazy val Num:P                = "[1-9]+[0-9]*".r ~ ("." ~ "[1-9]+[0-9]*".r).?
+  lazy val Num0:P               = "[0-9]+".r ~ ("." ~ "[0-9]+".r).?
   lazy val Sign:P               = "+" | "-"
   lazy val ChY:P                = "y" | "Y"
   lazy val ChX:P                = "x" | "X"
@@ -328,7 +330,7 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
   lazy val XList:P              = ChX ~ XList.?
   lazy val SexList:P            = XList ~ YList | XList | YList
   //fixed: we are only interested in abnormalities
-  lazy val ShortForm:P          = Num ~ com.? ~ (SexList ~ com ~ AbnormList)
+  lazy val ShortForm:P          = Num ~ com ~ (SexList ~ com2 ~ AbnormList)
 
   //Long form grammar
   //Terminals
@@ -347,9 +349,9 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
   lazy val LongForm:P           = (BandSection ~ "::" ~ LongForm) //BandEnd | BandSection
 
   //Chr
-  lazy val Chr:P                = "chr" ~ (Ch) ~ ":" ~ Num ~ "-" ~ Num ~ ("+"|"-").?
+  lazy val Chr:P                = "chr" ~ (Ch) ~ ":" ~ Num0 ~ "-" ~ Num0 ~ ("+"|"-").?
 
-  lazy val ChrList:P            = "chr" ~ (Ch) ~ ":" ~ Num ~ ("," ~ Num).+ ~ (".." | "-" | "–") ~ Num ~ ("," ~ Num).+ ~ ("+"|"-").?
+  lazy val ChrList:P            = "chr" ~ (Ch) ~ ":" ~ Num0 ~ ("," ~ Num0).+ ~ (".." | "-" | "–") ~ Num0 ~ ("," ~ Num0).+ ~ ("+"|"-").?
 
   //fixed: added single Translocation to account for der(Y)t(Y;1)(q12:q21) (PMID: 20684010)
   //Copy-Number Variations

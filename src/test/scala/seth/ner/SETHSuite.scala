@@ -650,6 +650,7 @@ class SETHSuite extends FunSpec with ShouldMatchers with GivenWhenThen with Logg
 
 class SingleTest extends FunSuite {
   val SETH = new SETHNER(false)
+  //val SETH = new SETHNER(true)
   test("Mutation object creation") {
     val mutation = SETH.extractMutations("p.Pro243Ser")(0)
     println(mutation.toString)
@@ -699,6 +700,7 @@ class SingleTest extends FunSuite {
     assert(SETH.isValid("46,xx,del(5)(p14)", SETH.CNV, debug) === true)
     assert(SETH.isValid("46,xx,t(2;3)(q31;p21)", SETH.CNV, debug) === true)
     assert(SETH.isValid("47,xx,+2,t(2;3)(q31;p21),del(5)(p14)", SETH.CNV, debug) === true)
+
     //long froms
     assert(SETH.isValid("46,xx,del(1)(pter->q21)", SETH.CNV, debug) === true)
     assert(SETH.isValid("46,xx,del(1)(pter->q21::q31->qter)", SETH.CNV, debug) === true)
@@ -706,12 +708,12 @@ class SingleTest extends FunSuite {
     assert(SETH.isValid("chr5:70,060,034-70,481,083", SETH.CNV) === true)
     //hard cases
     assert(SETH.isValid("47,XY+21", SETH.CNV, debug) === true)
-    assert(SETH.isValid("47 XY+21", SETH.CNV, debug) === true)
     assert(SETH.isValid("46,X,t(X;16)(p11.23;p12.3)", SETH.CNV, debug) === true)
     assert(SETH.isValid("46,X,der(X)t(X;6)(q22;p23)", SETH.CNV, debug) === true)
     assert(SETH.isValid("46,X,del(Y)", SETH.CNV, debug) === true)
     assert(SETH.isValid("46,X,del(Y)(p11.31)", SETH.CNV, debug) === true)
     assert(SETH.isValid("46,X,idic(Y)(p11.31)", SETH.CNV, debug) === true)
+
     assert(SETH.isValid("der(Y)t(Y;1)(q12:q21)", SETH.CNV, debug) === true)
     assert(SETH.isValid("46,X,der(X)(pter->q21.1::p11.4->pter)", SETH.CNV, debug) === true)
     assert(SETH.isValid("46,X,der(X)(pter->q21.1::p11.4-->pter)", SETH.CNV, debug) === true)
@@ -735,6 +737,18 @@ class SingleTest extends FunSuite {
     assert(SETH.isValid("17p11.2", SETH.CNV, debug) === false)
     assert(SETH.isValid("46,xx", SETH.CNV, debug) === false)
     assert(SETH.isValid("15q11-q13", SETH.CNV, debug) === false)
+
+
+    assert(SETH.isValid("47 XY+21", SETH.CNV, debug) === true)
+    assert(SETH.isValid("1x-y", SETH.CNV, debug) === false)
+    assert(SETH.isValid("2X-4", SETH.CNV, debug) === false)
+    assert(SETH.isValid("4X-8", SETH.CNV, debug) === false)
+    assert(SETH.isValid("46 X-X", SETH.CNV, debug) === true)
+
+    assert(SETH.isValid("1.03 x -29", SETH.CNV, debug) === false)
+    assert(SETH.isValid("1.03 x -29", SETH.CNV, debug) === false)
+    assert(SETH.isValid("0.81x+0.13", SETH.CNV, debug) === false)
+
   }
 
   test("FPs found by Lennart") {
