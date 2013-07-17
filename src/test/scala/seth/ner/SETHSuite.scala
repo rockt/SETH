@@ -736,4 +736,9 @@ class SingleTest extends FunSuite {
     assert(SETH.isValid("46,xx", SETH.CNV, debug) === false)
     assert(SETH.isValid("15q11-q13", SETH.CNV, debug) === false)
   }
+
+  test("FPs found by Lennart") {
+    "Using the S49 T-cell lymphoma system for the study of immunodeficiency diseases, we characterized several variants in purine salvage"
+    //MutationFinder extracts: MutationMention [span=10-15, mutResidue=T, location=49, wtResidue=S, text=S49 T, type=SUBSTITUTION, tool=MUTATIONFINDER]
+  }
 }

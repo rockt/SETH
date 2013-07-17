@@ -349,18 +349,11 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
   //Chr
   lazy val Chr:P                = "chr" ~ (Ch) ~ ":" ~ Num ~ "-" ~ Num ~ ("+"|"-").?
 
-  //fixed: was not captured before
-  lazy val AdditionalForm:P     = Num ~ Arm ~ Num ~ ("-"|"–") ~ Arm ~ (Num ~ ("." ~ Num).?).?
-                                  //too unspecfic: Num ~ Arm ~ Num ~ ("." ~ Num).?
-
   lazy val ChrList:P            = "chr" ~ (Ch) ~ ":" ~ Num ~ ("," ~ Num).+ ~ (".." | "-" | "–") ~ Num ~ ("," ~ Num).+ ~ ("+"|"-").?
 
   //fixed: added single Translocation to account for der(Y)t(Y;1)(q12:q21) (PMID: 20684010)
   //Copy-Number Variations
   lazy val CNV:P                = (Translocation | ChrList | ShortForm | LongForm | Chr).+
-  //fixed too unspecific: LFRegion | AdditionalForm
-
-
 
   //debugging using log, e.g.: log(ShortForm | LongForm)("CNV")
 
