@@ -737,18 +737,29 @@ class SingleTest extends FunSuite {
     assert(SETH.isValid("17p11.2", SETH.CNV, debug) === false)
     assert(SETH.isValid("46,xx", SETH.CNV, debug) === false)
     assert(SETH.isValid("15q11-q13", SETH.CNV, debug) === false)
-
-
-    assert(SETH.isValid("47 XY+21", SETH.CNV, debug) === true)
     assert(SETH.isValid("1x-y", SETH.CNV, debug) === false)
     assert(SETH.isValid("2X-4", SETH.CNV, debug) === false)
     assert(SETH.isValid("4X-8", SETH.CNV, debug) === false)
-    assert(SETH.isValid("46 X-X", SETH.CNV, debug) === true)
+
 
     assert(SETH.isValid("1.03 x -29", SETH.CNV, debug) === false)
     assert(SETH.isValid("1.03 x -29", SETH.CNV, debug) === false)
     assert(SETH.isValid("0.81x+0.13", SETH.CNV, debug) === false)
 
+    //open bugs
+    assert(SETH.isValid("47 XY+21", SETH.CNV, debug) === true)
+    assert(SETH.isValid("46 X-X", SETH.CNV, debug) === true)
+    assert(SETH.isValid("10.10 x +10", SETH.CNV, debug) === false)
+    assert(SETH.isValid("1 X-4", SETH.CNV, debug) === false)
+    assert(SETH.isValid("2.67 x +2.59", SETH.CNV, debug) === false)
+    assert(SETH.isValid("47 x -7.2", SETH.CNV, debug) === false)
+    assert(SETH.isValid("7 X -1", SETH.CNV, debug) === false)
+    assert(SETH.isValid("3.7 x-1", SETH.CNV, debug) === false)
+    assert(SETH.isValid("3 x -29", SETH.CNV, debug) === false)
+    assert(SETH.isValid("10 X -1.32", SETH.CNV, debug) === false)
+    assert(SETH.isValid("815 X-2", SETH.CNV, debug) === false)
+    //unsure
+    //assert(SETH.isValid("4,x-8", SETH.CNV, debug) === false)
   }
 
   test("FPs found by Lennart") {

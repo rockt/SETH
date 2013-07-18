@@ -107,8 +107,8 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
   //optional whitespace
   lazy val ws:P                 = if (strictNomenclature) "".r else " ".r.*
   lazy val gt:P                 = if (strictNomenclature) ">" else (">" | "->" | "-->" | "=>")
-  lazy val com:P                = if (strictNomenclature) "," else ("," | " " | "." | ";")
-  lazy val com2:P               = if (strictNomenclature) "," else ("," | " " | "" | "." | ";")
+  lazy val com:P                = if (strictNomenclature) "," else ("," | "." | ";")
+  lazy val com2:P               = if (strictNomenclature) "," else ("," | "" | "" | "." | ";")
 
   //represents chars outside of a mutation mention
   val any = """.|\w|\n|\r""".r
@@ -330,7 +330,8 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
   lazy val XList:P              = ChX ~ XList.?
   lazy val SexList:P            = XList ~ YList | XList | YList
   //fixed: we are only interested in abnormalities
-  lazy val ShortForm:P          = Num ~ com ~ (SexList ~ com2 ~ AbnormList)
+  lazy val ShortForm:P          = Num ~ com ~ (SexList ~ com2 ~ AbnormList) |
+                                  "[1-4][0-9]".r ~ (com | " ") ~ (SexList ~ com2 ~ AbnormList)
 
   //Long form grammar
   //Terminals
