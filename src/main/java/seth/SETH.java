@@ -63,7 +63,7 @@ public class SETH {
      * @return List of {@link MutationMention}
      */
     public List<MutationMention> findMutations(String text){
-        List<MutationMention> mutations = new ArrayList<MutationMention>();
+        Set<MutationMention> mutations = new HashSet<MutationMention>();
 
         //Extract variations following the latest HGVS nomenclature
         mutations.addAll(seth.extractMutations(text));
@@ -98,7 +98,10 @@ public class SETH {
             System.exit(1);
         }
 
-        return mutations;
+        List<MutationMention> result = new ArrayList<MutationMention>();
+        result.addAll(mutations);
+
+        return result;
     }
 
     //Minimal example to apply both tools
