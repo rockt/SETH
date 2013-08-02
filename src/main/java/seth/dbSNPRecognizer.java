@@ -18,16 +18,21 @@ import java.util.regex.Pattern;
 public class dbSNPRecognizer {
 
     final private static String prefix="(^|[\\s\\(\\)\\[\\'\"/,\\-])"; //>
-    final private static String suffix="(?=([\\.,\\s\\)\\(\\]\\'\":;\\-/]|$|:?[ATGC]>[ATGC]))";
-    final private static Pattern dbSNP = Pattern.compile(prefix +"(rs[1-9][0-9]*)" +suffix);
+    final private static String midfix="(:?[ATGC]>[ATGC])?";
+    final private static String suffix="(?=([\\.,\\s\\)\\(\\]\\'\":;\\-/]|$))";
+    final private static Pattern dbSNP = Pattern.compile(prefix +"(rs[1-9][0-9]*)" +midfix +suffix);
 
     public List<MutationMention> extractMutations(String text) {
         List<MutationMention> result = new ArrayList<MutationMention>();
 
         Matcher matcher = dbSNP.matcher(text);
         while (matcher.find()){
-            MutationMention mm = new MutationMention(matcher.start(2), matcher.end(2), matcher.group(2), null, null, null, null, Type.DBSNP_MENTION, MutationMention.Tool.DBSNP);
-            int rsId = Integer.parseInt(mm.getText().substring(2));
+
+            int begin = matcher.start(2);
+            int end = matcher.group(3) == null ? matcher.end(2) : matcher.end(3);
+
+            MutationMention mm = new MutationMention(begin, end, text.substring(begin, end), null, null, null, null, Type.DBSNP_MENTION, MutationMention.Tool.DBSNP);
+            //int rsId = Integer.parseInt(matcher.group(2).substring(2));
             result.add(mm);
         }
 
