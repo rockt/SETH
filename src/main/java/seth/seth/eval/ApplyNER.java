@@ -54,19 +54,27 @@ public class ApplyNER {
                 }
 
                 else{
-                    if(mutation.getTool().equals(MutationMention.Tool.SETH))
+                    if(mutation.getTool().equals(MutationMention.Tool.SETH)){
                         bw.append(pmid +"\t" +mutation.getStart() +"\t" +mutation.getEnd() +"\t" +mutation.getText() +"\t" +"SETH");
+                        bw.append("\n");
+                    }
 
-                    else if(mutation.getTool().equals(MutationMention.Tool.MUTATIONFINDER))
+                    else if(mutation.getTool().equals(MutationMention.Tool.MUTATIONFINDER)){
                         bw.append(pmid +"\t" +mutation.getStart() +"\t" +mutation.getEnd() +"\t" +mutation.getText() +"\t" +"MF");
+                        bw.append("\n");
+                    }
 
-                    else if(mutation.getTool().equals(MutationMention.Tool.REGEX))
+                    else if(mutation.getTool().equals(MutationMention.Tool.REGEX)){
                         bw.append(pmid +"\t" +mutation.getStart() +"\t" +mutation.getEnd() +"\t" +mutation.getText() +"\t" +"REGEX");
+                        bw.append("\n");
+                    }
+
+                    else if(mutation.getTool().equals(MutationMention.Tool.DBSNP))      {} //Ignore as these mentions are not annotated
+//                        bw.append(pmid +"\t" +mutation.getStart() +"\t" +mutation.getEnd() +"\t" +mutation.getText() +"\t" +"DBSNP");
 
                     else
                         throw new RuntimeException();
 
-                    bw.append("\n");
                 }
             }
 
@@ -75,6 +83,7 @@ public class ApplyNER {
         }
         br.close();
         bw.close();
+        System.out.println("Seth finished");
     }
 
     private static void printErrorMessage(){

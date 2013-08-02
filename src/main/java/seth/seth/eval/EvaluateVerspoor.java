@@ -58,7 +58,7 @@ public class EvaluateVerspoor {
         }
 
         performance.calculate();
-        DecimalFormat df = new DecimalFormat( "0.00" );
+        DecimalFormat df = new DecimalFormat( "0.000" );
         System.err.println("Precision " +df.format(performance.getPrecision()));
         System.err.println("Recall " +df.format(performance.getRecall()));
         System.err.println("F1 " +df.format(performance.getF1()));

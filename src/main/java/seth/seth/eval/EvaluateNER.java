@@ -31,11 +31,13 @@ public class EvaluateNER {
         Map<Integer, Performance> mfPerformance = new HashMap<Integer, Performance>(21);
         Map<Integer, Performance> sethPerformance = new HashMap<Integer, Performance>(21);
         Map<Integer, Performance> regexPerformance = new HashMap<Integer, Performance>(21);
+        Map<Integer, Performance> dbSNPPerformance = new HashMap<Integer, Performance>(21);
 
         for(int year : yearMap.values()){
             mfPerformance.put(year, new Performance());
             sethPerformance.put(year, new Performance());
             regexPerformance.put(year, new Performance());
+            dbSNPPerformance.put(year, new Performance());
         }
 
         Performance performance = new Performance();
@@ -55,6 +57,8 @@ public class EvaluateNER {
                             sethPerformance.get(yearMap.get(pmid)).addTP();
                         else if(entity.getTool().equals("REGEX"))
                             regexPerformance.get(yearMap.get(pmid)).addTP();
+                        else if(entity.getTool().equals("DBSNP"))
+                            dbSNPPerformance.get(yearMap.get(pmid)).addTP();
                         else
                             throw new RuntimeException("Unknown tool " +entity.getTool());
 
@@ -62,7 +66,7 @@ public class EvaluateNER {
                     }
                     else{
                         performance.addFP();
-//                        System.out.println("FP" +pmid +" " +entity);
+                        System.out.println("FP" +pmid +" " +entity);
 
                         if(entity.getTool().equals("MF"))
                             mfPerformance.get(yearMap.get(pmid)).addFP();
@@ -70,19 +74,21 @@ public class EvaluateNER {
                             sethPerformance.get(yearMap.get(pmid)).addFP();
                         else if(entity.getTool().equals("REGEX"))
                             regexPerformance.get(yearMap.get(pmid)).addFP();
+                        else if(entity.getTool().equals("DBSNP"))
+                              dbSNPPerformance.get(yearMap.get(pmid)).addFP();
                         else
                             throw new RuntimeException("Unknown tool " +entity.getTool());
                     }
                 }
             }
             performance.addFN(goldstandard.size());
-            for(Entity entity : goldstandard){
+           /* for(Entity entity : goldstandard){
                 System.out.println("FN" +pmid +" " +entity);
-            }
+            }*/
         }
 
         performance.calculate();
-        DecimalFormat df = new DecimalFormat( "0.00" );
+        DecimalFormat df = new DecimalFormat( "0.000" );
         System.err.println("Precision " +df.format(performance.getPrecision()));
         System.err.println("Recall " +df.format(performance.getRecall()));
         System.err.println("F1 " +df.format(performance.getF1()));
@@ -91,14 +97,14 @@ public class EvaluateNER {
         List<Integer> years = new ArrayList<Integer>(mfPerformance.keySet()) ;
         Collections.sort(years);
 
-        /**
+
         BufferedWriter bw = new BufferedWriter(new FileWriter(new File("result.tsv")));
         for(int year : years){
             bw.append(year +"\t" +mfPerformance.get(year).getTP() +"\t" +"MF\n");
             bw.append(year +"\t" +sethPerformance.get(year).getTP() +"\t" +"SETH\n");
         }
         bw.close();
-         **/
+
 
     }
     private static Map<Integer, Integer > readYearFile(String file) throws IOException {
