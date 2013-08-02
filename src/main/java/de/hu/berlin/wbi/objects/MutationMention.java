@@ -757,4 +757,40 @@ public class MutationMention {
     public void setPatternId(int patternId) {
         this.patternId = patternId;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        MutationMention that = (MutationMention) o;
+
+        if (nsm != that.nsm) return false;
+        if (location != null ? !location.equals(that.location) : that.location != null) return false;
+        if (mutResidue != null ? !mutResidue.equals(that.mutResidue) : that.mutResidue != null) return false;
+        if (normalized != null ? !normalized.equals(that.normalized) : that.normalized != null) return false;
+        if (position != null ? !position.equals(that.position) : that.position != null) return false;
+        if (ref != null ? !ref.equals(that.ref) : that.ref != null) return false;
+        if (text != null ? !text.equals(that.text) : that.text != null) return false;
+        if (tool != that.tool) return false;
+        if (type != that.type) return false;
+        if (wtResidue != null ? !wtResidue.equals(that.wtResidue) : that.wtResidue != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = type != null ? type.hashCode() : 0;
+        result = 31 * result + (tool != null ? tool.hashCode() : 0);
+        result = 31 * result + (location != null ? location.hashCode() : 0);
+        result = 31 * result + (text != null ? text.hashCode() : 0);
+        result = 31 * result + (ref != null ? ref.hashCode() : 0);
+        result = 31 * result + (wtResidue != null ? wtResidue.hashCode() : 0);
+        result = 31 * result + (mutResidue != null ? mutResidue.hashCode() : 0);
+        result = 31 * result + (position != null ? position.hashCode() : 0);
+        result = 31 * result + (nsm ? 1 : 0);
+        result = 31 * result + (normalized != null ? normalized.hashCode() : 0);
+        return result;
+    }
 }
