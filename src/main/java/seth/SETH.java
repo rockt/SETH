@@ -68,7 +68,7 @@ public class SETH {
         //Extract variations following the latest HGVS nomenclature
         mutations.addAll(seth.extractMutations(text));
 
-        //Extract variations following dbSNP nomenclature
+        //Extract variations following dbSNP nomenclature (e.g. rs123A>T)
         mutations.addAll(snpRecognizer.extractMutations(text));
 
         //Extracts variations following different Nomenclature forms
@@ -98,8 +98,50 @@ public class SETH {
             System.exit(1);
         }
 
-        List<MutationMention> result = new ArrayList<MutationMention>();
-        result.addAll(mutations);
+
+        //Post-processing:
+        //Some mentions can be found be different tools. Thus, we remove all duplicates by preserving the longest element
+        //E.g., IVS2 + 1G>A is recognized  Mutationfinder (2+1G>A) and correctly Tool.Regex
+        List<MutationMention> result = new ArrayList<MutationMention>(mutations.size());
+        for(MutationMention mm : mutations){
+
+            boolean contained = false;
+            loop:for(MutationMention m : result){
+
+                //In case the two recognized mutation mentions are equally long Tool.DBSNP wins over Tool.SETH
+                if(mm.getStart() == m.getStart() && mm.getEnd() == m.getEnd()){
+
+                    if(mm.getTool() == MutationMention.Tool.SETH && m.getTool() == MutationMention.Tool.DBSNP){
+                        contained = true;
+                        break loop;
+                    }
+                    else if(m.getTool() == MutationMention.Tool.SETH && mm.getTool() == MutationMention.Tool.DBSNP){
+                        result.remove(m);
+                        break loop;
+                    }
+                    else{
+                        contained = true;
+                        break loop;
+                    }
+                }
+
+                //If the new mention is smaller than the mention contained in the result, do nothing
+                else if(mm.getStart() >= m.getStart() && mm.getEnd() <= m.getEnd()){
+                    contained = true;
+                    break loop;
+                }
+
+                //If the new mention is longer, remove the old mention and add the new one
+                if(m.getStart() >= mm.getStart() && m.getEnd() <= mm.getEnd()){
+                    result.remove(m);
+                    break loop;
+                }
+            }
+
+            if(!contained)
+                result.add(mm);
+
+        }
 
         return result;
     }
