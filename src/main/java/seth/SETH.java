@@ -119,10 +119,10 @@ public class SETH {
                         result.remove(m);
                         break loop;
                     }
-                    else{
-                        contained = true;
-                        break loop;
-                    }
+//                    else{
+//                        contained = true;
+//                        break loop;
+//                    }
                 }
 
                 //If the new mention is smaller than the mention contained in the result, do nothing
