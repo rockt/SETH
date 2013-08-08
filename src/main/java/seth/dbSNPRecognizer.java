@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 public class dbSNPRecognizer {
 
     final private static String prefix="(^|[\\s\\(\\)\\[\\'\"/,\\-])"; //>
-    final private static String midfix="(:?[ATGC]>[ATGC])?";
+    final private static String midfix="(:?[ATGC]\\s?>\\s?[ATGC])?";
     final private static String suffix="(?=([\\.,\\s\\)\\(\\]\\'\":;\\-/]|$))";
     final private static Pattern dbSNP = Pattern.compile(prefix +"(rs[1-9][0-9]*)" +midfix +suffix);
 
