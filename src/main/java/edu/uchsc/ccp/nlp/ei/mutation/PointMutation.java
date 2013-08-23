@@ -66,9 +66,15 @@ public class PointMutation extends Mutation {
     		}
     		
     	}catch(NumberFormatException nfe){
-            return true;       //If position is not a number, we assume it is valid
-    	}
+            //If position is not a number (e.g., 123-12, or *12) we assume it is true in case of nucleotides
+            Character []  nucleotides= {'A', 'T', 'G', 'C'};
+            Set<Character> nucleotidesSet  = new HashSet<Character>(Arrays.asList(nucleotides));
 
+            if(nucleotidesSet.contains(wtResidue) == true && nucleotidesSet.contains(mutResidue))
+                return true;
+            else
+                return false;
+    	}
     	return true;
     }
 
@@ -124,6 +130,7 @@ public class PointMutation extends Mutation {
         amino_acid_three_to_one_map.put("Z","Z");
         amino_acid_three_to_one_map.put("J","J");
         amino_acid_three_to_one_map.put("X", "X");
+        amino_acid_three_to_one_map.put("*", "X");
         
         return amino_acid_three_to_one_map;
     }
