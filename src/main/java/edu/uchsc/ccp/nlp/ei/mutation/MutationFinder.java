@@ -54,6 +54,8 @@ public class MutationFinder extends MutationExtractor {
 
     protected final static String POS = "?P<pos>";
 
+    protected final static Set<String> ambiguous  = new HashSet<String>();     //Contains a list of ambiguous "mutation"-names (e.g., T47D generally refers to a cell-line and not to a mutation)
+
     /*
      * regular_expressions: an interative set of regular expressions to be applied for extracting mutations. These are in the default python syntax
      * (i.e., perl regular expressions), with the single exception being that regular expressions which should be performed in a case sensitive manner
@@ -79,6 +81,7 @@ public class MutationFinder extends MutationExtractor {
     public MutationFinder(String fileName) {
         File file = new File(fileName);
         loadRegularExpressionsFromFile(file);
+        initializeAmbiguousMentions();
     }
 
     /**
@@ -177,6 +180,41 @@ public class MutationFinder extends MutationExtractor {
             }
         }
         System.err.println("Completed loading of regular expressions: " + regular_expressions.size() + " loaded.");
+    }
+
+    /**
+     * Add some ambiguous mentions, which often refer to other concepts instead of mutations
+     */
+    private void initializeAmbiguousMentions(){
+        ambiguous.add("T47D");
+        ambiguous.add("T98G");
+        ambiguous.add("L5178Y");
+        ambiguous.add("J774A");
+        ambiguous.add("H295R");
+        ambiguous.add("F442A");
+        ambiguous.add("C33A");
+        ambiguous.add("C57L");
+        ambiguous.add("J558L");
+        ambiguous.add("A375P");
+        ambiguous.add("A375M");
+        ambiguous.add("C-33A");
+        ambiguous.add("V38A");
+        ambiguous.add("R201C");
+        ambiguous.add("B10R");
+        ambiguous.add("K562R");
+        ambiguous.add("B10S");
+        ambiguous.add("R3327H");
+        ambiguous.add("H322M");
+        ambiguous.add("N1003A");
+        ambiguous.add("H295A");
+        ambiguous.add("A5H");
+        ambiguous.add("T42A");
+        ambiguous.add("V15B");
+        ambiguous.add("H510A");
+        ambiguous.add("T2C");
+
+
+        ambiguous.add("S100B");//A frequent protein
     }
 
     /*
@@ -279,13 +317,18 @@ public class MutationFinder extends MutationExtractor {
 //                System.out.println(result.group(pos_group) +" " +result.group(wtres_group) +" " +result
 //                        .group(mutres_group));
                 try{
-                	
+
                 	PointMutation pm = new PointMutation(result.group(pos_group).replaceAll("\\s", ""), result.group(wtres_group), result
 	                        .group(mutres_group));
-	                
-	                if(pm.isValid() == false)	//Add only mutation if it is valid (basically checks location)
+
+                    //Add only mutation if it is valid (basically checks location)
+	                if(pm.isValid() == false)
 	                	continue;
-	                
+
+                    //If a mutation is deemed to be ambiguous, we check if the extracted wildtype or mutated residue are in fact long forms (e.g., Ala)
+                    if(ambiguous.contains(pm.toString()) && result.group(wtres_group).trim().length() == 1 && result.group(mutres_group).trim().length() == 1)
+                        continue;
+
 	                pm.setId(id);
 	                
 	                // /*
