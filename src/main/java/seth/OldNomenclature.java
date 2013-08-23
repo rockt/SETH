@@ -24,7 +24,7 @@ public class OldNomenclature {
     //final private static Pattern dbSNP = Pattern.compile(prefix +"(rs[1-9][0-9]*)" +suffix);
 
     //852delA, 852delAT, 852del, 852del22, 852-123delA, 852+123delT
-    final private static Pattern dnaDeletionPattern = Pattern.compile(prefix +"(?<group>(?<pos>[+-]?[1-9][0-9]*(?:\\s?[+-_]\\s?[1-9][0-9]*)?)\\s?(del)\\s?(?<wt>([ATGC]|[0-9])*))" +suffix);
+    final private static Pattern dnaDeletionPattern = Pattern.compile(prefix +"(?<group>(?<pos>[+-]?[1-9][0-9]*(?:\\s?[+-_]\\s?[1-9][0-9]*)?)\\s?(del)\\s?(?<wt>([ATGC]|[0-9])+))" +suffix);
     //IVS123+12A->T, IVS123-12A->T
     final private static Pattern ivsPattern = Pattern.compile(prefix +"(?<group>(?<pos>IVS[-]?[1-9][0-9]*\\s?[+-]\\s?[1-9][0-9]*)\\s?(?<wt>[ATGC])\\s?(?:-{0,2}>|→|/|\\\\)\\s?(?<mut>[ATGC]))" +suffix);
 
@@ -33,7 +33,7 @@ public class OldNomenclature {
     final private static Pattern protDeletionPatternLong = Pattern.compile(prefix +"(?<group>(?<wt>CYS|ILE|SER|GLN|MET|ASN|PRO|LYS|ASP|THR|PHE|ALA|GLY|HIS|LEU|ARG|TRP|VAL|GLU|TYR)(?<pos>[1-9][0-9]*)del)" +suffix, Pattern.CASE_INSENSITIVE);
 
     //deltaF508, DeltaF508,
-    final private static Pattern codonDeletionPattern = Pattern.compile(prefix +"(?<group>([dD]elta|Δ)(?<wt>[CISQMNPKDTFAGHLRWVEYBZJX])(?<pos>[1-9][0-9]*)?)" +suffix);
+    final private static Pattern codonDeletionPattern = Pattern.compile(prefix +"(?<group>([dD]elta|Δ)(?<wt>[CISQMNPKDTFAGHLRWVEYBZJX])(?<pos>[1-9][0-9]*))" +suffix);
     final private static Pattern codonDeletionPattern2 = Pattern.compile(prefix +"(?<group>([dD]elta|Δ)(?<pos>[1-9][0-9]*))" +suffix);      //delta123
 
 
