@@ -53,7 +53,7 @@ public class EvaluateWei {
             }
             performance.addFN(goldstandard.size());
             for(Entity entity : goldstandard){
-               // System.out.println("FN" +pmid +" " +entity);
+                System.out.println("FN" +pmid +" " +entity);
             }
         }
 

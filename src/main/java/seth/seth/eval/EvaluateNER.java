@@ -82,9 +82,9 @@ public class EvaluateNER {
                 }
             }
             performance.addFN(goldstandard.size());
-           /* for(Entity entity : goldstandard){
+            for(Entity entity : goldstandard){
                 System.out.println("FN" +pmid +" " +entity);
-            }*/
+            }
         }
 
         performance.calculate();
@@ -102,6 +102,8 @@ public class EvaluateNER {
         for(int year : years){
             bw.append(year +"\t" +mfPerformance.get(year).getTP() +"\t" +"MF\n");
             bw.append(year +"\t" +sethPerformance.get(year).getTP() +"\t" +"SETH\n");
+            bw.append(year +"\t" +regexPerformance.get(year).getTP() +"\t" +"REGEX\n");
+            bw.append(year +"\t" +dbSNPPerformance.get(year).getTP() +"\t" +"DBSNP\n");
         }
         bw.close();
 
