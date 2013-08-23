@@ -17,3 +17,5 @@ R5	AssociatedTo Arg1:T9 Arg2:T11
 T12	Gene 1228 1234	LGMD1A
 T13	Gene 1331 1337	LGMD1A
 T14	Gene 1311 1319	myotilin
+T15	SNP 608 634	serine 55 to phenylalanine
+R6	AssociatedTo Arg1:T15 Arg2:T5	

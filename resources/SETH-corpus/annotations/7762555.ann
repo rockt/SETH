@@ -22,3 +22,9 @@ T15	SNP 1384 1389	A114V
 T16	SNP 1394 1399	I278T
 T17	SNP 1505 1510	G307S
 T18	SNP 1515 1523	A1224-2C
+T19	SNP 344 398	arginine-to-glutamic acid substitution at position 125
+T20	SNP 603 657	threonine-to-methionine substitution at amino acid 257
+T21	SNP 1047 1092	proline-to-serine substitution at position 88
+R7	AssociatedTo Arg1:T19 Arg2:T3	
+R8	AssociatedTo Arg1:T20 Arg2:T3	
+R9	AssociatedTo Arg1:T21 Arg2:T3	
