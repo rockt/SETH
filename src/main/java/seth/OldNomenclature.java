@@ -34,7 +34,7 @@ public class OldNomenclature {
 
     //deltaF508, DeltaF508,
     final private static Pattern codonDeletionPattern = Pattern.compile(prefix +"(?<group>([dD]elta|Δ)(?<wt>[CISQMNPKDTFAGHLRWVEYBZJX])(?<pos>[1-9][0-9]*))" +suffix);
-    final private static Pattern codonDeletionPattern2 = Pattern.compile(prefix +"(?<group>([dD]elta|Δ)(?<pos>[1-9][0-9]*))" +suffix);      //delta123
+    //final private static Pattern codonDeletionPattern2 = Pattern.compile(prefix +"(?<group>([dD]elta|Δ)(?<pos>[1-9][0-9]*))" +suffix);      //delta123  (too unspecific for us to normalize)
 
 
     //852insA, 852insAT, 852ins, 852ins22, 852-123insA, 852+123insT
@@ -83,6 +83,7 @@ public class OldNomenclature {
         }
 
 
+        /**
         m = codonDeletionPattern2.matcher(text);
         while(m.find()){
             int start = m.start(2);
@@ -90,6 +91,7 @@ public class OldNomenclature {
             MutationMention mm = new MutationMention(start, end, text.substring(start, end), "p.", m.group("pos"),  null, null, Type.DELETION, MutationMention.Tool.REGEX);
             result.add(mm);
         }
+        */
 
         m = ivsPattern.matcher(text);
         while(m.find()){
