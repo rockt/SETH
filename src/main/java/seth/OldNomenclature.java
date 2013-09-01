@@ -1,12 +1,16 @@
 package seth;
 
 import de.hu.berlin.wbi.objects.MutationMention;
+import edu.uchsc.ccp.nlp.ei.mutation.MutationFinder;
 import seth.ner.wrapper.Type;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static edu.uchsc.ccp.nlp.ei.mutation.MutationExtractor.populateAminoAcidThreeToOneLookupMap;
 
 /**
  * Created with IntelliJ IDEA.
@@ -34,7 +38,7 @@ public class OldNomenclature {
 
     //deltaF508, DeltaF508,
     final private static Pattern codonDeletionPattern = Pattern.compile(prefix +"(?<group>([dD]elta|Δ)(?<wt>[CISQMNPKDTFAGHLRWVEYBZJX])(?<pos>[1-9][0-9]*))" +suffix);
-    //final private static Pattern codonDeletionPattern2 = Pattern.compile(prefix +"(?<group>([dD]elta|Δ)(?<pos>[1-9][0-9]*))" +suffix);      //delta123  (too unspecific for us to normalize)
+    final private static Pattern codonDeletionPattern2 = Pattern.compile(prefix +"(?<group>([dD]elta|Δ)(?<wt>CYS|ILE|SER|GLN|MET|ASN|PRO|LYS|ASP|THR|PHE|ALA|GLY|HIS|LEU|ARG|TRP|VAL|GLU|TYR)(?<pos>[1-9][0-9]*))" +suffix, Pattern.CASE_INSENSITIVE);
 
 
     //852insA, 852insAT, 852ins, 852ins22, 852-123insA, 852+123insT
@@ -68,9 +72,10 @@ public class OldNomenclature {
         }
         m = protDeletionPatternLong.matcher(text);
         while(m.find()){
+            Map<String, String> map = MutationFinder.populateAminoAcidThreeToOneLookupMap();
             int start = m.start(2);
             int end   = m.start(2)+m.group("group").length();//m.end(m.groupCount());
-            MutationMention mm = new MutationMention(start, end, text.substring(start, end), "p.", m.group("pos"),  m.group("wt"), null, Type.DELETION, MutationMention.Tool.REGEX);
+            MutationMention mm = new MutationMention(start, end, text.substring(start, end), "p.", m.group("pos"),  map.get(m.group("wt").toUpperCase()), null, Type.DELETION, MutationMention.Tool.REGEX);
             result.add(mm);
         }
 
@@ -82,16 +87,15 @@ public class OldNomenclature {
             result.add(mm);
         }
 
-
-        /**
-        m = codonDeletionPattern2.matcher(text);
+        m = codonDeletionPattern2.matcher(text);  //TODO
         while(m.find()){
+            Map<String, String> map = MutationFinder.populateAminoAcidThreeToOneLookupMap();
             int start = m.start(2);
             int end   = m.start(2)+m.group("group").length();//m.end(m.groupCount());
-            MutationMention mm = new MutationMention(start, end, text.substring(start, end), "p.", m.group("pos"),  null, null, Type.DELETION, MutationMention.Tool.REGEX);
+            MutationMention mm = new MutationMention(start, end, text.substring(start, end), "p.", m.group("pos"),  map.get(m.group("wt").toUpperCase()), null, Type.DELETION, MutationMention.Tool.REGEX);
             result.add(mm);
         }
-        */
+
 
         m = ivsPattern.matcher(text);
         while(m.find()){
