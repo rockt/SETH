@@ -686,8 +686,19 @@ public class MutationMention {
      */
     public String toNormalized() {
 
-        if(this.getTool().equals(Tool.MUTATIONFINDER))
+        if(this.getTool().equals(Tool.MUTATIONFINDER)){
            return wtResidue + position + mutResidue;
+        }
+
+        else if(this.getTool().equals(Tool.REGEX)){
+            //This is a special case, as deletions can have several different abbreviations (e.g., delta, del, or Δ)
+            if(this.getType().equals(Type.DELETION))
+                return  wtResidue+position +"del";
+
+            else
+                return text;
+        }
+
 
         else
             return text;
