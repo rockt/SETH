@@ -62,7 +62,7 @@ public class ParseXML extends DefaultHandler{
         DatabaseConnection dbconn = new DatabaseConnection(property);
 		dbconn.connect();
 		psHGVS =  dbconn.getConn().prepareStatement("INSERT INTO " +property.getProperty("database.hgvs_view") +" (locus_id, snp_id, hgvs, refseq) VALUES (?, ?, ?, ?)");
-		psmHGVS = dbconn.getConn().prepareStatement("INSERT INTO " +property.getProperty("database.SNPTable")  +" (snp_id, locus_id, aa_Position, residue, wildtype) VALUES (?, ?, ?, ?, ?)"); 
+		psmHGVS = dbconn.getConn().prepareStatement("INSERT INTO " +property.getProperty("database.PSM")  +" (snp_id, locus_id, aa_Position, residue, wildtype) VALUES (?, ?, ?, ?, ?)");
 
 		String xmlFolder ="/home/philippe/workspace/snp-normalizer/data/dat/";
 		if(args.length != 1)
