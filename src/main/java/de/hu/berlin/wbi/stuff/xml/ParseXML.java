@@ -149,6 +149,10 @@ public class ParseXML extends DefaultHandler{
 					continue;			
 
 				try {
+
+                    if(psm.getMutations().length() > 128 || psm.getWildtype().length() > 128)    //These entries lead to an SQL-Exception otherwise
+                       continue;
+
 					psmHGVS.setInt(1, snp.getRsId());
 					psmHGVS.setInt(2, psm.getEntrez());
 					psmHGVS.setInt(3, psm.getAaLoc());
@@ -169,8 +173,12 @@ public class ParseXML extends DefaultHandler{
 			for(String hgvs : snp.getHgvs()){
 				
 				String split[] = hgvs.split(":");
-				if(split.length != 2)
-					throw new RuntimeException("Split size " +split.length +" instead of 2");
+				if(split.length != 2){
+                    System.out.println("Split size " +split.length +" instead of 2 for '" +hgvs +"'");
+                    System.out.println("rs" +snp.getRsId());
+                    continue;
+				//	throw new RuntimeException("Split size " +split.length +" instead of 2 for '" +hgvs +"'");
+                }
 
 				if(split[1].length() >= 256)	//Exclude  this HGVS entry
 					continue;
