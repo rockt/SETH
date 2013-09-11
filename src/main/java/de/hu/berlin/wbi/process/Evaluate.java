@@ -95,9 +95,10 @@ public class Evaluate {
 					
 					final List<dbSNP> potentialSNPs = dbSNP.getSNP(gene.getGeneID());
 					final List<UniprotFeature> features = UniprotFeature.getFeatures(gene.getGeneID());
-                    mutation.normalizeSNP(potentialSNPs, features, false); //Normalization
-					normalized.addAll(mutation.getNormalized());	//Normalisation happens here
+                    mutation.normalizeSNP(potentialSNPs, features, true); //Normalization happens here
 				}
+                if(mutation.getNormalized() != null)
+                    normalized.addAll(mutation.getNormalized());
 
 				Set<Integer> ids = new HashSet<Integer>(); //Contains the rsID's found by the normalisation procedure 
 				for(dbSNPNormalized dbSNPNorm:normalized){
