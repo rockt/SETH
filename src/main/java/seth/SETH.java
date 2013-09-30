@@ -153,10 +153,10 @@ public class SETH {
     //Minimal example to apply both tools
     public static void main(String[] args)throws SQLException, IOException {
         //String text = "p.A123T and Val158Met";
-        String text = "2X-4 46,xx 5-y 1x-y 46 X-X";
+        String text = "c.2970-2972 delAAT c.861insG";
 
         /** Part1: Recognition of mutation mentions */
-        SETH seth = new SETH("resources/mutations.txt", false, true);
+        SETH seth = new SETH("resources/mutations.txt", true, true);
         List<MutationMention> mutations = seth.findMutations(text);
         try{
             for(MutationMention mutation : mutations){

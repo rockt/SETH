@@ -695,7 +695,7 @@ class SingleTest extends FunSuite {
   test("CNVs") {
     val debug = true
     //short forms
-    assert(SETH.isValid("47,xx,+21", SETH.CNV, debug) === true) //down syndrome or trisomy 21; mosaic down syndrome: 46,XX/47,XX,+21
+    assert(SETH.isValid("47,xx,+21", SETH.CNV, debug) === true)
     assert(SETH.isValid("45,xx,-15", SETH.CNV, debug) === true)
     assert(SETH.isValid("46,xx,del(5)(p14)", SETH.CNV, debug) === true)
     assert(SETH.isValid("46,xx,t(2;3)(q31;p21)", SETH.CNV, debug) === true)
