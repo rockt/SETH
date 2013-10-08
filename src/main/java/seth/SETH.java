@@ -108,14 +108,14 @@ public class SETH {
             boolean contained = false;
             loop:for(MutationMention m : result){
 
-                //This variable is needed to check weather two mutations are identical. (Important as MF finds overlapping ,mutations Trp-64 to Phe or Tyr)
+                //This variable is needed to check  whether two mutations are identical. (Important as MF finds overlapping ,mutations Trp-64 to Phe or Tyr)
                 boolean equal = false;
                 try{
                     equal =  mm.getPosition().equals(m.getPosition()) && mm.getMutResidue().equals(m.getMutResidue()) && mm.getWtResidue().equals(m.getWtResidue());
-                }catch(NullPointerException npe){}
+                }catch(NullPointerException npe){}      //Some mutations fave no residues
 
 
-                //In case the two recognized mutation mentions are equally long Tool.DBSNP wins over Tool.SETH  (both tools find rs123:A>T)
+                //In case the two recognized mutation mentions are equally long Tool.DBSNP wins over Tool.SETH  (both tools find mentions like rs123:A>T)
                 if(mm.getStart() == m.getStart() && mm.getEnd() == m.getEnd()){
 
                     if(mm.getTool() == MutationMention.Tool.SETH && m.getTool() == MutationMention.Tool.DBSNP){
@@ -129,13 +129,13 @@ public class SETH {
                     //else we do return two mutations!!
                 }
 
-                //If the new mention is smaller than the mention contained in the result, do nothing
+                //If the new mention is smaller than the mention contained in the result, ignore the smaller one
                 else if(mm.getStart() >= m.getStart() && mm.getEnd() <= m.getEnd() && equal){
                     contained = true;
                     break loop;
                 }
 
-                //If the new mention is longer, remove the old mention and add the new one
+                //If the new mention is longer, remove the old (smaller) mention and add the new one
                 else if(m.getStart() >= mm.getStart() && m.getEnd() <= mm.getEnd()  && equal){
                     result.remove(m);
                     break loop;
