@@ -107,8 +107,8 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
   //optional whitespace
   lazy val ws:P                 = if (strictNomenclature) "".r else " ".r.*
   lazy val gt:P                 = if (strictNomenclature) ">" else (">" | "->" | "-->" | "=>")
-  lazy val com:P                = if (strictNomenclature) "," else ("," | "." | ";")
-  lazy val com2:P               = if (strictNomenclature) "," else ("," | "" | "" | "." | ";")
+  //lazy val com:P                = if (strictNomenclature) "," else ("," | "." | ";")
+  //lazy val com2:P               = if (strictNomenclature) "," else ("," | "" | "." | ";")
 
   //represents chars outside of a mutation mention
   val any = """.|\w|\n|\r""".r
@@ -291,7 +291,9 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
   lazy val ChY:P                = "y" | "Y"
   lazy val ChX:P                = "x" | "X"
   lazy val SexChrom:P           = ChX | ChY
-  lazy val Autosome:P           = Num
+  //lazy val Autosome:P           = Num
+  lazy val Autosome:P           = ("[1-3][0-9]".r |"4[0-8]".r | "[1-9]".r) //restrict chromosome number/name to maximum possible number of chromosomes in humans (46), with structural variations up to 49
+  lazy val ChromosomeSet:P      = "4[5-9]".r //possible non lethal size of complete chromosome set in humans ranges from 45 to 49
   lazy val AnyChrom:P           = SexChrom | Autosome
   //fixed: added pter and qter
   lazy val Arm:P                = ("p" ~ "ter".?) | ("q" ~ "ter".?)
@@ -325,17 +327,19 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
   lazy val NumericAbnorm:P      = "+" ~ "?".? ~ AnyChrom ~ Sign.? | "-" ~ "?".? ~ AnyChrom | "+".? ~ ChPartOfDiffLength
 
   lazy val Abnorm:P             = StructuralAbnorm | NumericAbnorm
-  lazy val AbnormList:P         = Abnorm ~ (com ~ AbnormList).?
-  lazy val YList:P              = ChY ~ YList.?
-  lazy val XList:P              = ChX ~ XList.?
+  //lazy val AbnormList:P         = Abnorm ~ (com ~ AbnormList).?
+  lazy val AbnormList:P         = Abnorm ~ ((","|";").? ~AbnormList).?
+  lazy val YList:P              = ChY ~ (YList).?
+  lazy val XList:P              = ChX ~ (XList).?
   lazy val SexList:P            = XList ~ YList | XList | YList
   //fixed: we are only interested in abnormalities
-  lazy val ShortForm:P          = Num ~ com ~ (SexList ~ com2 ~ AbnormList) |
-                                  "[1-4][0-9]".r ~ (com | " ") ~ (SexList ~ com2 ~ AbnormList)
-
+  //lazy val ShortForm:P          = Autosome ~ (com | " ") ~ (SexList ~ com ~ AbnormList)   //|
+                                  //"[1-4][0-9]".r ~ (com | " ") ~ (SexList ~ com2 ~ AbnormList)
+  lazy val ShortForm:P          = (ChromosomeSet ~ (","|";"|" ").? ~ SexList ~ (","|";").? ~ AbnormList)
   //Long form grammar
   //Terminals
-  lazy val Ch:P                 = Num | ChY | ChX
+  //lazy val Ch:P                 = Num | ChY | ChX
+  lazy val Ch:P                 = Autosome | ChY | ChX
   lazy val Centromere:P         = "cen"
   lazy val LFRegion:P           = Ch ~ Arm ~ Num
   lazy val LFBand:P             = LFRegion ~ "." ~ Num
@@ -357,9 +361,7 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
   //fixed: added single Translocation to account for der(Y)t(Y;1)(q12:q21) (PMID: 20684010)
   //Copy-Number Variations
   lazy val CNV:P                = (Translocation | ChrList | ShortForm | LongForm | Chr).+
-
   //debugging using log, e.g.: log(ShortForm | LongForm)("CNV")
-
   /**
    * Parses the input string and extracts all mutation mentions
    * @param input The string from which mutation mentions should be extracted
