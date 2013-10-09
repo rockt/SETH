@@ -364,8 +364,7 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
   lazy val StructAbnorm:P       = (Translocation | ChrList | ShortForm | LongForm | Chr).+
   //debugging using log, e.g.: log(ShortForm | LongForm)("StructAbnorm")
 
-  lazy val CNVKeywords          = ("CNV" | "copy number variation" | "amplification" | ("CNV ".? ~ "polymorphism") |
-                                  "increased copy number" | "duplication" | "deletion")
+  lazy val CNVKeywords          = (("CNV ".? ~ "polymorphism") | "CNV" | "copy number variation" | "amplification" | "increased copy number" | "duplication" | "deletion")
 
   // CNVKeyword and affected gene/region are mentioned in direct connection (with preposition between CNVKeyword and gene)
   // example sentence: "Copy number variation of the gene NCF1 is associated with Rheumatoid Arthritis"
