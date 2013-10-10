@@ -89,6 +89,7 @@ case class InvString(override val parse: Any) extends ParsedString(parse) with M
 case class ConString(override val parse: Any) extends ParsedString(parse) with MutationType
 case class TransLocString(override val parse: Any) extends ParsedString(parse) with MutationType
 case class FrameShiftString(override val parse: Any) extends ParsedString(parse) with MutationType
+case class StructAbnormString(override val parse: Any) extends ParsedString(parse) with MutationType
 case class CNVString(override val parse: Any) extends ParsedString(parse) with MutationType
 case class VariableShortSequenceRepeatString(override val parse: Any) extends ParsedString(parse) with MutationType
 
@@ -124,7 +125,7 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
   //finds mutations by parsing the sentence
   lazy val expr                 = rep(sequence) <~ rest
   //a mutation either refers to the nucleotide or the protein sequence
-  lazy val mutation:P           = Var | ProteinVar | (CNV ^^ { CNVString })
+  lazy val mutation:P           = Var | ProteinVar | (StructAbnorm ^^ { StructAbnormString }) | (CNV ^^ { CNVString })
 
   //EBNF akin to Laros et al. (2011)
   //DNA and RNA variant nomenclature
@@ -360,8 +361,25 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
 
   //fixed: added single Translocation to account for der(Y)t(Y;1)(q12:q21) (PMID: 20684010)
   //Copy-Number Variations
-  lazy val CNV:P                = (Translocation | ChrList | ShortForm | LongForm | Chr).+
-  //debugging using log, e.g.: log(ShortForm | LongForm)("CNV")
+  lazy val StructAbnorm:P       = (Translocation | ChrList | ShortForm | LongForm | Chr).+
+  //debugging using log, e.g.: log(ShortForm | LongForm)("StructAbnorm")
+
+  lazy val CNVKeywords          = (("CNV ".? ~ "polymorphism") | "CNV" | "copy number variation" | "amplification" | "increased copy number" | "duplication" | "deletion")
+
+  // CNVKeyword and affected gene/region are mentioned in direct connection (with preposition between CNVKeyword and gene)
+  // example sentence: "Copy number variation of the gene NCF1 is associated with Rheumatoid Arthritis"
+  // some PMIDs: 21728841, 23874324, 19895225
+  lazy val CNVDirect:P          = CNVKeywords ~ "s".? ~ " " ~ ("of" | "on" | "in")
+  lazy val CNV:P                = CNVDirect
+
+  // CNVKeyword and affected gene/region are mentioned without preposition
+  // these mentions are left out for now
+  // example sentence: "TOP2A amplifications are predictive markers for ... breast cancer"
+  // some PMIDs: 18465341, 23449795
+  // lazy val CNVIndirect:P        = CNVKeywords ~ "s".?
+  // lazy val CNV:P                = CNVDirect | CNVIndirect
+
+
   /**
    * Parses the input string and extracts all mutation mentions
    * @param input The string from which mutation mentions should be extracted
@@ -510,6 +528,7 @@ trait FlattenToMutation extends FlattenToString {
       case typ:FrameShiftString => mutation.typ = FRAMESHIFT
       case typ:SilentString => mutation.typ = SILENT
       case typ:VariableShortSequenceRepeatString => mutation.typ = SHORT_SEQUENCE_REPEAT
+      case typ:StructAbnormString => mutation.typ = STRUCTURAL_ABNORMALITY
       case typ:CNVString => mutation.typ = COPY_NUMBER_VARIATION
       case typ:MutationType => mutation.typ = OTHER //TODO: add more types
     }

@@ -692,77 +692,84 @@ class SingleTest extends FunSuite {
     assert(SETH.isValid("c.164insA", SETH.mutation) === true)
   }
 
-  test("CNVs") {
+  test("Structural Abnormalities") {
     val debug = false
     //short forms
-    assert(SETH.isValid("47,xx,+21", SETH.CNV, debug) === true)
-    assert(SETH.isValid("45,xx,-15", SETH.CNV, debug) === true)
-    assert(SETH.isValid("46,xx,del(5)(p14)", SETH.CNV, debug) === true)
-    assert(SETH.isValid("46,xx,t(2;3)(q31;p21)", SETH.CNV, debug) === true)
-    assert(SETH.isValid("47,xx,+2,t(2;3)(q31;p21),del(5)(p14)", SETH.CNV, debug) === true)
+    assert(SETH.isValid("47,xx,+21", SETH.StructAbnorm, debug) === true)
+    assert(SETH.isValid("45,xx,-15", SETH.StructAbnorm, debug) === true)
+    assert(SETH.isValid("46,xx,del(5)(p14)", SETH.StructAbnorm, debug) === true)
+    assert(SETH.isValid("46,xx,t(2;3)(q31;p21)", SETH.StructAbnorm, debug) === true)
+    assert(SETH.isValid("47,xx,+2,t(2;3)(q31;p21),del(5)(p14)", SETH.StructAbnorm, debug) === true)
 
     //long froms
-    assert(SETH.isValid("46,xx,del(1)(pter->q21)", SETH.CNV, debug) === true)
-    assert(SETH.isValid("46,xx,del(1)(pter->q21::q31->qter)", SETH.CNV, debug) === true)
-    assert(SETH.isValid("chr11:125,940..155,000", SETH.CNV, debug) === true)
-    assert(SETH.isValid("chr5:70,060,034-70,481,083", SETH.CNV) === true)
+    assert(SETH.isValid("46,xx,del(1)(pter->q21)", SETH.StructAbnorm, debug) === true)
+    assert(SETH.isValid("46,xx,del(1)(pter->q21::q31->qter)", SETH.StructAbnorm, debug) === true)
+    assert(SETH.isValid("chr11:125,940..155,000", SETH.StructAbnorm, debug) === true)
+    assert(SETH.isValid("chr5:70,060,034-70,481,083", SETH.StructAbnorm) === true)
     //hard cases
-    assert(SETH.isValid("47,XY+21", SETH.CNV, debug) === true)
-    assert(SETH.isValid("46,X,t(X;16)(p11.23;p12.3)", SETH.CNV, debug) === true)
-    assert(SETH.isValid("46,X,der(X)t(X;6)(q22;p23)", SETH.CNV, debug) === true)
-    assert(SETH.isValid("46,X,del(Y)", SETH.CNV, debug) === true)
-    assert(SETH.isValid("46,X,del(Y)(p11.31)", SETH.CNV, debug) === true)
-    assert(SETH.isValid("46,X,idic(Y)(p11.31)", SETH.CNV, debug) === true)
+    assert(SETH.isValid("47,XY+21", SETH.StructAbnorm, debug) === true)
+    assert(SETH.isValid("46,X,t(X;16)(p11.23;p12.3)", SETH.StructAbnorm, debug) === true)
+    assert(SETH.isValid("46,X,der(X)t(X;6)(q22;p23)", SETH.StructAbnorm, debug) === true)
+    assert(SETH.isValid("46,X,del(Y)", SETH.StructAbnorm, debug) === true)
+    assert(SETH.isValid("46,X,del(Y)(p11.31)", SETH.StructAbnorm, debug) === true)
+    assert(SETH.isValid("46,X,idic(Y)(p11.31)", SETH.StructAbnorm, debug) === true)
 
-    assert(SETH.isValid("der(Y)t(Y;1)(q12:q21)", SETH.CNV, debug) === true)
-    assert(SETH.isValid("46,X,der(X)(pter->q21.1::p11.4->pter)", SETH.CNV, debug) === true)
-    assert(SETH.isValid("46,X,der(X)(pter->q21.1::p11.4-->pter)", SETH.CNV, debug) === true)
-    assert(SETH.isValid("46,X,del(X)(p11.23)", SETH.CNV, debug) === true)
-    //assert(SETH.isValid("der(X)del(X)(p11.23)dup(X)(p11.21p11.22)", SETH.CNV, debug) === true) //this one is really tricky
+    assert(SETH.isValid("der(Y)t(Y;1)(q12:q21)", SETH.StructAbnorm, debug) === true)
+    assert(SETH.isValid("46,X,der(X)(pter->q21.1::p11.4->pter)", SETH.StructAbnorm, debug) === true)
+    assert(SETH.isValid("46,X,der(X)(pter->q21.1::p11.4-->pter)", SETH.StructAbnorm, debug) === true)
+    assert(SETH.isValid("46,X,del(X)(p11.23)", SETH.StructAbnorm, debug) === true)
+    //assert(SETH.isValid("der(X)del(X)(p11.23)dup(X)(p11.21p11.22)", SETH.StructAbnorm, debug) === true) //this one is really tricky
     //too unspecific
-    assert(SETH.isValid("cen", SETH.CNV, debug) === false)
-    assert(SETH.isValid("5-y", SETH.CNV, debug) === false)
-    assert(SETH.isValid("1-14", SETH.CNV, debug) === false)
-    assert(SETH.isValid("p30", SETH.CNV, debug) === false)
-    assert(SETH.isValid("133X", SETH.CNV, debug) === false)
-    assert(SETH.isValid("45,X", SETH.CNV, debug) === false)
-    assert(SETH.isValid("5178Y", SETH.CNV, debug) === false)
-    assert(SETH.isValid("8p12–q12.1", SETH.CNV, debug) === false)
-    assert(SETH.isValid("15q11-q13", SETH.CNV, debug) === false)
-    assert(SETH.isValid("15q11.2", SETH.CNV, debug) === false)
-    assert(SETH.isValid("15q12", SETH.CNV, debug) === false)
-    assert(SETH.isValid("Xp22", SETH.CNV, debug) === false)
-    assert(SETH.isValid("Xq28", SETH.CNV, debug) === false)
-    assert(SETH.isValid("15q26-qter", SETH.CNV, debug) === false)
-    assert(SETH.isValid("17p11.2", SETH.CNV, debug) === false)
-    assert(SETH.isValid("46,xx", SETH.CNV, debug) === false)
-    assert(SETH.isValid("15q11-q13", SETH.CNV, debug) === false)
-    assert(SETH.isValid("1x-y", SETH.CNV, debug) === false)
-    assert(SETH.isValid("2X-4", SETH.CNV, debug) === false)
-    assert(SETH.isValid("4X-8", SETH.CNV, debug) === false)
+    assert(SETH.isValid("cen", SETH.StructAbnorm, debug) === false)
+    assert(SETH.isValid("5-y", SETH.StructAbnorm, debug) === false)
+    assert(SETH.isValid("1-14", SETH.StructAbnorm, debug) === false)
+    assert(SETH.isValid("p30", SETH.StructAbnorm, debug) === false)
+    assert(SETH.isValid("133X", SETH.StructAbnorm, debug) === false)
+    assert(SETH.isValid("45,X", SETH.StructAbnorm, debug) === false)
+    assert(SETH.isValid("5178Y", SETH.StructAbnorm, debug) === false)
+    assert(SETH.isValid("8p12–q12.1", SETH.StructAbnorm, debug) === false)
+    assert(SETH.isValid("15q11-q13", SETH.StructAbnorm, debug) === false)
+    assert(SETH.isValid("15q11.2", SETH.StructAbnorm, debug) === false)
+    assert(SETH.isValid("15q12", SETH.StructAbnorm, debug) === false)
+    assert(SETH.isValid("Xp22", SETH.StructAbnorm, debug) === false)
+    assert(SETH.isValid("Xq28", SETH.StructAbnorm, debug) === false)
+    assert(SETH.isValid("15q26-qter", SETH.StructAbnorm, debug) === false)
+    assert(SETH.isValid("17p11.2", SETH.StructAbnorm, debug) === false)
+    assert(SETH.isValid("46,xx", SETH.StructAbnorm, debug) === false)
+    assert(SETH.isValid("15q11-q13", SETH.StructAbnorm, debug) === false)
+    assert(SETH.isValid("1x-y", SETH.StructAbnorm, debug) === false)
+    assert(SETH.isValid("2X-4", SETH.StructAbnorm, debug) === false)
+    assert(SETH.isValid("4X-8", SETH.StructAbnorm, debug) === false)
 
 
-    assert(SETH.isValid("1.03 x -29", SETH.CNV, debug) === false)
-    assert(SETH.isValid("1.03 x -29", SETH.CNV, debug) === false)
-    assert(SETH.isValid("0.81x+0.13", SETH.CNV, debug) === false)
+    assert(SETH.isValid("1.03 x -29", SETH.StructAbnorm, debug) === false)
+    assert(SETH.isValid("1.03 x -29", SETH.StructAbnorm, debug) === false)
+    assert(SETH.isValid("0.81x+0.13", SETH.StructAbnorm, debug) === false)
 
     //open bugs
-    assert(SETH.isValid("47 XY+21", SETH.CNV, debug) === true)
-    assert(SETH.isValid("46 X-X", SETH.CNV, debug) === true)
-    assert(SETH.isValid("10.10 x +10", SETH.CNV, debug) === false)
-    assert(SETH.isValid("1 X-4", SETH.CNV, debug) === false)
-    assert(SETH.isValid("2.67 x +2.59", SETH.CNV, debug) === false)
-    assert(SETH.isValid("47 x -7.2", SETH.CNV, debug) === false)
-    assert(SETH.isValid("7 X -1", SETH.CNV, debug) === false)
-    assert(SETH.isValid("3.7 x-1", SETH.CNV, debug) === false)
-    assert(SETH.isValid("3 x -29", SETH.CNV, debug) === false)
-    assert(SETH.isValid("10 X -1.32", SETH.CNV, debug) === false)
-    assert(SETH.isValid("815 X-2", SETH.CNV, debug) === false)
+    assert(SETH.isValid("47 XY+21", SETH.StructAbnorm, debug) === true)
+    assert(SETH.isValid("46 X-X", SETH.StructAbnorm, debug) === true)
+    assert(SETH.isValid("10.10 x +10", SETH.StructAbnorm, debug) === false)
+    assert(SETH.isValid("1 X-4", SETH.StructAbnorm, debug) === false)
+    assert(SETH.isValid("2.67 x +2.59", SETH.StructAbnorm, debug) === false)
+    assert(SETH.isValid("47 x -7.2", SETH.StructAbnorm, debug) === false)
+    assert(SETH.isValid("7 X -1", SETH.StructAbnorm, debug) === false)
+    assert(SETH.isValid("3.7 x-1", SETH.StructAbnorm, debug) === false)
+    assert(SETH.isValid("3 x -29", SETH.StructAbnorm, debug) === false)
+    assert(SETH.isValid("10 X -1.32", SETH.StructAbnorm, debug) === false)
+    assert(SETH.isValid("815 X-2", SETH.StructAbnorm, debug) === false)
     //unsure
     //assert(SETH.isValid("4,x-8", SETH.CNV, debug) === false)
   }
 
-  test("FPs found by Lennart") {
+  test("CNVs") {
+    val debug = true
+    assert(SETH.isValid("CNV polymorphisms in", SETH.CNV, debug) === true)
+    assert(SETH.isValid("CNVs on", SETH.CNV, debug) === true)
+    assert(SETH.isValid("increased copy number of", SETH.CNV, debug) === true)
+  }
+
+    test("FPs found by Lennart") {
     "Using the S49 T-cell lymphoma system for the study of immunodeficiency diseases, we characterized several variants in purine salvage"
     //MutationFinder extracts: MutationMention [span=10-15, mutResidue=T, location=49, wtResidue=S, text=S49 T, type=SUBSTITUTION, tool=MUTATIONFINDER]
   }
