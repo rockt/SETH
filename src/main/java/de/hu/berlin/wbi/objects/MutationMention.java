@@ -73,7 +73,7 @@ public class MutationMention {
 
     /** Refers to which tool has been used for extraction */
     public enum Tool{
-        MUTATIONFINDER, SETH, REGEX, DBSNP
+        MUTATIONFINDER, SETH, REGEX, DBSNP, CNVETH
     }
 
     /** Pattern is used to extract wildtype-location-residue from a string e.g. A123T  */
