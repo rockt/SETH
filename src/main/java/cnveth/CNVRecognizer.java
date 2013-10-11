@@ -10,17 +10,15 @@ import seth.ner.wrapper.Type;
 
 public class CNVRecognizer {
 
-    final private static String prefix = "(^|[\\.\\s\\(\\[\\'\"/,\\-])";
+    final private static String prefix = "(^|[\\.\\s\\(\\['\"/,\\-])";
     final private static String cnvKeywords = "(copy number variation|CNV|amplification|polymorphism|increased copy number)";
     final private static String preposition = "(of|on|in)";
-    final private static String suffix = "([\\s\\(\\[\\'\"]|$)";
-    final private static Pattern cnv = Pattern.compile(prefix + cnvKeywords + "s?" + " " + preposition + suffix, Pattern.CASE_INSENSITIVE);
+    final private static Pattern cnv = Pattern.compile(prefix + cnvKeywords + "s?" + " " + preposition + " ", Pattern.CASE_INSENSITIVE);
 
     public List<MutationMention> extractMutations(String text) {
-        List<MutationMention> result = new ArrayList<MutationMention>();
+        List<MutationMention> result = new ArrayList<>();
 
         Matcher matcher = cnv.matcher(text);
-        System.out.println("TEXT: "+text);
         while (matcher.find()){
 
             int begin = matcher.start(2);
