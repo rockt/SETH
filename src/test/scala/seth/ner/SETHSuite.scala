@@ -762,13 +762,6 @@ class SingleTest extends FunSuite {
     //assert(SETH.isValid("4,x-8", SETH.CNV, debug) === false)
   }
 
-  test("CNVs") {
-    val debug = true
-    assert(SETH.isValid("CNV polymorphisms in", SETH.CNV, debug) === true)
-    assert(SETH.isValid("CNVs on", SETH.CNV, debug) === true)
-    assert(SETH.isValid("increased copy number of", SETH.CNV, debug) === true)
-  }
-
     test("FPs found by Lennart") {
     "Using the S49 T-cell lymphoma system for the study of immunodeficiency diseases, we characterized several variants in purine salvage"
     //MutationFinder extracts: MutationMention [span=10-15, mutResidue=T, location=49, wtResidue=S, text=S49 T, type=SUBSTITUTION, tool=MUTATIONFINDER]
