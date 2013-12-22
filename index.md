@@ -10,6 +10,12 @@ To get hold of mentions not following the nomenclature, SETH integrates Mutation
 Extracted SNP mentions are linked to [dbSNP](http://www.ncbi.nlm.nih.gov/SNP/),
 a process referred to as named entity normalization (NEN).
 
+# Building SETH (seth.jar)
+```
+git clone https://github.com/rockt/SETH.git
+mvn compile test package
+mv ./target/seth-1.0-SNAPSHOT.jar seth.jar
+```
 
 # NER
 ## Command-line Usage
