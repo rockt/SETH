@@ -11,13 +11,10 @@ Extracted SNP mentions are linked to [dbSNP](http://www.ncbi.nlm.nih.gov/SNP/),
 a process referred to as named entity normalization (NEN).
 
 # Building SETH (seth.jar)
-
-```bash
-git clone https://github.com/rockt/SETH.git
-cd SETH
-mvn clean compile assembly:single
-mv ./target/seth-1.0-SNAPSHOT.jar seth.jar
-```
+	git clone https://github.com/rockt/SETH.git
+	cd SETH
+	mvn clean compile assembly:single
+	mv ./target/seth-1.0-SNAPSHOT.jar seth.jar
 
 # NER
 ## Command-line Usage
