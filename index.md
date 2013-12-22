@@ -14,7 +14,7 @@ a process referred to as named entity normalization (NEN).
 	git clone https://github.com/rockt/SETH.git
 	cd SETH
 	mvn clean compile assembly:single
-	mv ./target/seth-1.0-SNAPSHOT.jar seth.jar
+	mv ./target/seth-1.0-SNAPSHOT-jar-with-dependencies.jar seth.jar
 
 # NER
 ## Command-line Usage
