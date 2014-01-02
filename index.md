@@ -45,7 +45,7 @@ that handles the connection to the Derby database.
 Subsequently, you can provide a TSV file (with PubMed ID, mutation mention, start and end position) 
 containing a list of mutations that SETH should link to dbSNP (*i.e.* rs numbers).
 
-    java -cp lib/mysql-connector-java-5.0.3-bin.jar:lib/snp-normalizer.jar de.hu.berlin.wbi.process.Normalize resources/property.xml resources/snpExample.txt
+    java -cp seth.jar de.hu.berlin.wbi.process.Normalize resources/property.xml resources/snpExample.txt
 
 	Normalising mutations from 'resources/snpExample.txt' and properties from 'resources/property.xml'
 	16 mutations for normalisation loaded
@@ -193,7 +193,7 @@ We would be happy to get feedback about using SETH with other databases.
 	mysql <dbName> -h <hostname> -u <username> -p<password> data/table.sql
 ## Import the data files needed for normalization
 ### Parse dbSNP-XML dump
-	time java -cp lib/snp-normalizer.jar:lib/mysql-connector-java-5.0.3-bin.jar de.hu.berlin.wbi.stuff.xml.ParseXML property.xml /path/with/dbSNP-XML/files/...
+	time java -cp seth.jar de.hu.berlin.wbi.stuff.xml.ParseXML property.xml /path/with/dbSNP-XML/files/...
 ### Parse UniProt-XML for protein-sequence mutations (PSM) and post-translational modifications (*e.g.* signaling peptides)
 Using Scala:
 
