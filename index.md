@@ -7,6 +7,8 @@ number variations (CNVs) from natural language texts. SETH's NER component is ba
 By implementing an EBNF grammar proposed by Laros *et al.* (2011), 
 these parsers are able to identify mentions of mutations that obey the [HGVS nomenclature](http://www.hgvs.org/mutnomen/) (den Dunnen and Antonarakis, 2000).
 To get hold of mentions not following the nomenclature, SETH integrates MutationFinder (Caporaso *et al.*, 2007).
+SETH modifies MutationFinder's original capabilities in order to match a wider scope of mutations (DNA mutations, nonsense mutations, and ambiguous mutations) not following the HGVS nomenclature. 
+This is done by modifying the original MutationFinder implementation together with additional and modified regular expressions.
 Extracted SNP mentions are linked to [dbSNP](http://www.ncbi.nlm.nih.gov/SNP/),
 a process referred to as named entity normalization (NEN).
 
