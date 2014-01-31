@@ -213,6 +213,17 @@ Updated results are available on the GeneView web site (http://bc3.informatik.hu
 Finally, we converted the mySQL database into XML using Apache [ddlUtils](http://db.apache.org/ddlutils/) 
 and subsequently used this XML to compile an embedded Derby database.
 
+# Cite
+## BibTeX
+	@misc{thomas2013seth,
+	  title={SETH: SNP Extraction Tool for Human Variations},
+	  author={Thomas, Philippe and Rockt{\"a}schel, Tim and Mayer, Yvonne and Leser, Ulf},
+	  howpublished = {\url{http://rockt.github.io/SETH/}},
+	  year = {2014}
+	}
+## Plain
+Thomas, P., Rocktäschel, T., Mayer, Y., and Leser, U. (2014). Seth: Snp extraction tool for human variations. http://rockt.github.io/SETH/.
+
 # Contact
 For questions, remarks or bug-reports please contact Philippe Thomas:
 
