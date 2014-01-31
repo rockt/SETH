@@ -214,14 +214,16 @@ Finally, we converted the mySQL database into XML using Apache [ddlUtils](http:/
 and subsequently used this XML to compile an embedded Derby database.
 
 # Cite
+### BibTeX
 	@misc{thomas2013seth,
 	  title={SETH: SNP Extraction Tool for Human Variations},
 	  author={Thomas, Philippe and Rockt{\"a}schel, Tim and Mayer, Yvonne and Leser, Ulf},
 	  howpublished = {\url{http://rockt.github.io/SETH/}},
 	  year = {2014}
 	}
-	
-Thomas, P., Rocktäschel, T., Mayer, Y., and Leser, U. (2014). SETH: SNP Extraction Tool for Human Variations. http://rockt.github.io/SETH/.
+### Text	
+	Thomas, P., Rocktäschel, T., Mayer, Y., and Leser, U. (2014). SETH: SNP Extraction Tool for Human Variations.
+	http://rockt.github.io/SETH/.
 
 # Contact
 For questions, remarks or bug-reports please contact Philippe Thomas:
