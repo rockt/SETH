@@ -216,7 +216,7 @@ and subsequently used this XML to compile an embedded Derby database.
 # Cite
 ### BibTeX
 	@misc{thomas2013seth,
-	  title={\{SETH: SNP Extraction Tool for Human Variations\}},
+	  title={ {SETH: SNP Extraction Tool for Human Variations} },
 	  author={Thomas, Philippe and Rockt{\"a}schel, Tim and Mayer, Yvonne and Leser, Ulf},
 	  howpublished = {\url{http://rockt.github.io/SETH/}},
 	  year = {2014}
