@@ -18,6 +18,8 @@ import java.util.regex.Pattern;
 
 public class RegionRecognizer{
 
+    private String file = "resources/regions/chromosomalRegions.txt";
+
     final private static String prefix = "(^|[\\.\\s\\(\\['\"/,\\-])";
     // region description starts with a number between 1 and 22 or with the letters Y or X (all possible chromosomes)
     final private static String startLetters = "([YX][pq][1-9\\.\\-]+[A-Za-z0-9\\.\\-]+|[1-9][pq][1-9\\.\\-]+[A-Za-z0-9\\.\\-]+|1[0-9][pq][1-9\\.\\-]+[A-Za-z0-9\\.\\-]+|2[0-2][pq][1-9\\.\\-]+[A-Za-z0-9\\.\\-]+)";
@@ -29,13 +31,19 @@ public class RegionRecognizer{
         region2genes = this.readRegions();
     }
 
+    public RegionRecognizer(String file) throws IOException{
+        this.file = file;
+        region2genes = this.readRegions();
+    }
+
+
     /** function to read chromosomal regions and associated genes into a hash */
     public HashMap<String, ArrayList<String>> readRegions() throws IOException{
 
         /** store chromosomal locations (as key) with all associated genes (list of entrez IDs as value) */
         HashMap<String, ArrayList<String>> locations = new HashMap<String, ArrayList<String>>();
 
-        BufferedReader regionFile = new BufferedReader(new FileReader("resources/regions/chromosomalRegions.txt"));
+        BufferedReader regionFile = new BufferedReader(new FileReader(file));
         regionFile.readLine(); /** skip header line */
 
         String regionLine;
