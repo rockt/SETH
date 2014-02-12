@@ -25,6 +25,22 @@ public class RegionMention {
 
     }
 
+    public String getRegion() {
+        return region;
+    }
+
+    public int getBegin() {
+        return begin;
+    }
+
+    public int getEnd() {
+        return end;
+    }
+
+    public ArrayList<String> getGenes() {
+        return genes;
+    }
+
     @Override
     public String toString() {
         return "RegionMention [span=" + begin +"-" + end + ", region=" + region + ", genes=" + genes + "]";
