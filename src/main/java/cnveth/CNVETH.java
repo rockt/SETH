@@ -24,7 +24,7 @@ public class CNVETH {
     }
 
     public static void main(String[] args){
-        String text = "CNV of geneX,copy number Variation in geneX. Amplifications of z! And increased copy number on region V";
+        String text = "CNV of geneX,copy number Variation in geneX. Amplifications of z! And increased copy number on region V copy number gains of gene x and copy number losses on w";
 
         CNVETH cnveth = new CNVETH();
         Set<MutationMention> mutations = cnveth.findMutations(text);

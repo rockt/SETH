@@ -11,9 +11,10 @@ import seth.ner.wrapper.Type;
 public class CNVRecognizer {
 
     final private static String prefix = "(^|[\\.\\s\\(\\['\"/,\\-])";
-    final private static String cnvKeywords = "(copy number variation|CNV|amplification|polymorphism|increased copy number)";
+    final private static String cnvKeywords = "(copy number variation|CNV|amplification|polymorphism|increased copy number|copy number gain|copy number loss|copy number alteration|copy number aberration|deletion)";
     final private static String preposition = "(of|on|in)";
-    final private static Pattern cnv = Pattern.compile(prefix + cnvKeywords + "s?" + " " + preposition + " ", Pattern.CASE_INSENSITIVE);
+    final private static String plural = "(s?|es?)";
+    final private static Pattern cnv = Pattern.compile(prefix + cnvKeywords + plural + " " + preposition + " ", Pattern.CASE_INSENSITIVE);
 
     public List<MutationMention> extractMutations(String text) {
         List<MutationMention> result = new ArrayList<>();
