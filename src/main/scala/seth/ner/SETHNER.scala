@@ -251,7 +251,7 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
 
   //Locations
   lazy val AALoc:P              = (AAPtLoc ~ ("_" ~ AAPtLoc).?) ^^ { LocString(_) } //| AARange
-  lazy val AAPtLoc:P            = (AA ^^ { WildString(_) }) ~ (ProteinPtLoc ^^ { LocString(_) })
+  lazy val AAPtLoc:P            = "(".? ~ (AA ^^ { WildString(_) }) ~ (ProteinPtLoc ^^ { LocString(_) }) ~ ")".?
   lazy val ProteinPtLoc:P       = ("-"|"*").? ~ Number | Number ~ ("+" | "-") ~ Number
 
   //Reference sequences
@@ -271,8 +271,9 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
   lazy val ProteinEq:P          = AALoc ~ ("=" ^^ { SilentString(_) })
   lazy val ProteinVarSSR:P      = AALoc ~ "(" ~ Number ~ "_" ~ Number ~ ")"
   lazy val ProteinIns:P         = AALoc ~ ("ins" ^^ { InsString(_) }) ~ ((AA.+) ^^ { MutatedString(_) } | Number)
-  lazy val ProteinIndel:P       = AALoc ~ ("delins" ^^ { InsDelString(_) }) ~ ((AA.+ ^^ { MutatedString(_) }) | Number)
+  lazy val ProteinIndel:P       = AALoc ~ (("delins"|"insdel"|">") ^^ { InsDelString(_) }) ~ ((AA.+ ^^ { MutatedString(_) }) | Number)
   lazy val ProteinFrameShift:P  = LongFS | ShortFS | SubstFS
+  //lazy val ShortFS:P            = (AAPtLoc ^^ { LocString(_) })~ ("fs" ^^ { FrameShiftString(_) })
   lazy val ShortFS:P            = (AAPtLoc ^^ { LocString(_) })~ ("fs" ^^ { FrameShiftString(_) })
   //FIXED: added "*" and RangeLoc
   lazy val LongFS:P             = ((AAPtLoc ~ AA.?) ^^ { LocString(_) }) ~ ("fs" ^^ { FrameShiftString(_) }) ~ ("X" | "*") ~ Number
