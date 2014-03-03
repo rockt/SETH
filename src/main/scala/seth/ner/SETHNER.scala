@@ -217,7 +217,7 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
   lazy val AbrSSR:P             = (PtLoc ^^ { LocString(_) }) ~ (Nt.+ ^^ { MutatedString(_) }) ~ "(" ~ Number ~ "_" ~ Number ~ ")"
   lazy val VarSSR:P             = ((PtLoc ^^ { LocString(_) }) ~ (Nt.+ ^^ { MutatedString(_) }) ~ "[" ~ Number ~ "]") |
     (RangeLoc ~ "[" ~ Number ~ "]") | AbrSSR
-  lazy val Ins:P                = (NoPointLoc ^^ { LocString(_) }) ~ ("ins" ^^ { InsString(_) }) ~
+  lazy val Ins:P                = (NoPointLoc ^^ { LocString(_) }) ~ (("ins"|">") ^^ { InsString(_) }) ~
     (Nt.+ ^^ { MutatedString(_) } | Number | RangeLoc | FarLoc) //~ Nest.?
   lazy val Indel:P              = (NoPointLoc ^^ { LocString(_) }) ~ "del" ~ (Nt.+ ^^ { WildString(_) } | Number).? ~
     ("ins" ^^ { InsDelString(_) }) ~ ((Nt.+ ^^ { MutatedString(_) }) | Number | RangeLoc | FarLoc) //~ Nest.?
@@ -247,11 +247,11 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
   lazy val Name:P               = "[a-zA-Z0-9_\\.]".r.+
 
   //Top-level Rule
-  lazy val ProteinVar:P         = ProteinSingleVar
+  lazy val ProteinVar:P         = ProteinSingleVar | InitCodon
 
   //Locations
-  lazy val AALoc:P              = (AAPtLoc ~ ("_" ~ AAPtLoc).?) ^^ { LocString(_) } //| AARange
-  lazy val AAPtLoc:P            = "(".? ~ (AA ^^ { WildString(_) }) ~ (ProteinPtLoc ^^ { LocString(_) }) ~ ")".?
+  lazy val AALoc:P              = (AAPtLoc ~ ("_" ~ AAPtLoc).?) ^^ { LocString(_) } //| AARange, e.g. E289_A290
+  lazy val AAPtLoc:P            =  "(".? ~ (AA ^^ { WildString(_) }) ~ (ProteinPtLoc ^^ { LocString(_) }) ~ ")".?
   lazy val ProteinPtLoc:P       = ("-"|"*").? ~ Number | Number ~ ("+" | "-") ~ Number
 
   //Reference sequences
@@ -271,7 +271,7 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
   lazy val ProteinEq:P          = AALoc ~ ("=" ^^ { SilentString(_) })
   lazy val ProteinVarSSR:P      = AALoc ~ "(" ~ Number ~ "_" ~ Number ~ ")"
   lazy val ProteinIns:P         = AALoc ~ ("ins" ^^ { InsString(_) }) ~ ((AA.+) ^^ { MutatedString(_) } | Number)
-  lazy val ProteinIndel:P       = AALoc ~ (("delins"|"insdel"|">") ^^ { InsDelString(_) }) ~ ((AA.+ ^^ { MutatedString(_) }) | Number)
+  lazy val ProteinIndel:P       = AALoc ~ (if(strictNomenclature)("delins"|"insdel") else ("delins"|"insdel"|">") ^^ { InsDelString(_) }) ~ ((AA.+ ^^ { MutatedString(_) }) | Number)
   lazy val ProteinFrameShift:P  = LongFS | ShortFS | SubstFS
   //lazy val ShortFS:P            = (AAPtLoc ^^ { LocString(_) })~ ("fs" ^^ { FrameShiftString(_) })
   lazy val ShortFS:P            = (AAPtLoc ^^ { LocString(_) })~ ("fs" ^^ { FrameShiftString(_) })
@@ -281,7 +281,9 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
   lazy val SubstFS:P            = ((AA ^^ { WildString(_) }) ~ (Number ^^ { LocString(_) }) ~ "ext" ~ "*".? ~
     ((AA.+ ~ ("-" ~ AA.+).?) ^^ { MutatedString(_) })) ~
     ("fs" ^^ { FrameShiftString(_) })
-
+  // mutations at initiation codon: p.0 (no protein product), p.0? or p.Met1? (effect unknown)
+  //lazy val InitCodon:P          = ("p." ~ ("0"|"Met1") ~ "?".?) ^^ { SubstString(_) }
+  lazy val InitCodon:P          = ("p." ~ ("0"|"Met1") ~ "?".?) ^^ { SubstString(_) }
 
   //EBNF akin to PhD thesis of Craig Larman
   //Short form grammar
