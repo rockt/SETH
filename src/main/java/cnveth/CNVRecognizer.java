@@ -12,7 +12,7 @@ public class CNVRecognizer {
 
     final private static String prefix = "(^|[\\.\\s\\(\\['\"/,\\-])";
     final private static String cnvKeywords = "(copy number variation|CNV|amplification|polymorphism|increased copy number|copy number gain|copy number loss|copy number alteration|copy number aberration|deletion)";
-    final private static String preposition = "(of|on|in)";
+    final private static String preposition = "(of|on|in|at)";
     final private static String plural = "(s?|es?)";
     final private static Pattern cnv = Pattern.compile(prefix + cnvKeywords + plural + " " + preposition + " ", Pattern.CASE_INSENSITIVE);
 
