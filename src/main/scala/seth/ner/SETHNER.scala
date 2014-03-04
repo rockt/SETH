@@ -218,7 +218,7 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
   lazy val VarSSR:P             = ((PtLoc ^^ { LocString(_) }) ~ (Nt.+ ^^ { MutatedString(_) }) ~ "[" ~ Number ~ "]") |
     (RangeLoc ~ "[" ~ Number ~ "]") | AbrSSR
   lazy val Ins:P                = (NoPointLoc ^^ { LocString(_) }) ~ (("ins"|">") ^^ { InsString(_) }) ~
-    (Nt.+ ^^ { MutatedString(_) } | Number | RangeLoc | FarLoc) //~ Nest.?
+    (Nt.+ ^^ { MutatedString(_) } | Number | RangeLoc | FarLoc | "?") //~ Nest.?
   lazy val Indel:P              = (NoPointLoc ^^ { LocString(_) }) ~ "del" ~ (Nt.+ ^^ { WildString(_) } | Number).? ~
     ("ins" ^^ { InsDelString(_) }) ~ ((Nt.+ ^^ { MutatedString(_) }) | Number | RangeLoc | FarLoc) //~ Nest.?
   lazy val Inv:P                = (NoPointLoc ^^ { LocString(_) }) ~ ("inv" ^^ { InvString(_) }) ~ (Nt.+ ^^ { WildString(_) } | Number).? //~ Nest.?

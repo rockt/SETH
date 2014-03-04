@@ -934,20 +934,14 @@ class SingleTest extends FunSuite {
     assert(SETH.isValid("p.0?", SETH.mutation, debug) === true)
     assert(SETH.isValid("p.0", SETH.mutation, debug) === true)
     assert(SETH.isValid("p.Met1?", SETH.mutation, debug) === true) // not from verspoor paper
-    assert(SETH.isValid("c.157_158insK", SETH.mutation, debug) === true) // remove from test cases
     assert(SETH.isValid("c.157_158ins?", SETH.mutation, debug) === true)
-
-    //TODO: check nomenclature and if applicable extend grammar
-    assert(SETH.isValid("c.1072_1073CC>11", SETH.mutation, debug) === true)
     assert(SETH.isValid("c.281_282ins?", SETH.mutation, debug) === true)
     assert(SETH.isValid("c.528_529ins?", SETH.mutation, debug) === true)
     assert(SETH.isValid("c.481_482ins?", SETH.mutation, debug) === true)
-    assert(SETH.isValid("c.713+8insAGT", SETH.mutation, debug) === true)
     assert(SETH.isValid("c.405_406ins?", SETH.mutation, debug) === true)
     assert(SETH.isValid("c.252_253ins?", SETH.mutation, debug) === true)
     assert(SETH.isValid("c.461_462ins?", SETH.mutation, debug) === true)
     assert(SETH.isValid("c.457_458ins?", SETH.mutation, debug) === true)
-    assert(SETH.isValid("c.3999+2insT", SETH.mutation, debug) === true)
     assert(SETH.isValid("c.184_185ins?", SETH.mutation, debug) === true)
     assert(SETH.isValid("c.182_183ins?", SETH.mutation, debug) === true)
 
@@ -964,7 +958,7 @@ class SingleTest extends FunSuite {
     assert(SETH.isValid("p.fs*?", SETH.mutation, debug) === false)
     assert(SETH.isValid("p.fs?", SETH.mutation, debug) === false)
     assert(SETH.isValid("p.?fs*?", SETH.mutation, debug) === false)
-    assert(SETH.isValid("p.??ins?", SETH.mutation, debug) === true)
+    assert(SETH.isValid("p.??ins?", SETH.mutation, debug) === false)
     assert(SETH.isValid("c.?ins?", SETH.mutation, debug) === false)
     assert(SETH.isValid("c.??ins?", SETH.mutation, debug) === false)
     assert(SETH.isValid("c.?", SETH.mutation, debug) === false)
@@ -973,7 +967,10 @@ class SingleTest extends FunSuite {
     assert(SETH.isValid("c.4191+-4delCTGAGGTATTAATTATATATA", SETH.mutation, debug) === false)
     assert(SETH.isValid("c.4455+-25delGCCAGCAAGGTGAACCGGGTCCAAAGG", SETH.mutation, debug) === false)
     assert(SETH.isValid("c.522+-155delTCAGATTGTGGTGGAGGAAG", SETH.mutation, debug) === false)
-
+    // wrong nomenclature
+    assert(SETH.isValid("c.1072_1073CC>11", SETH.mutation, debug) === false)
+    assert(SETH.isValid("c.713+8insAGT", SETH.mutation, debug) === false) // correct nomenclature: c.713+8_713+9insAGT
+    assert(SETH.isValid("c.3999+2insT", SETH.mutation, debug) === false)
   }
 
     test("FPs found by Lennart") {
