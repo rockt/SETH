@@ -137,7 +137,7 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
 
   //Top-level Rule
   //FIXED: we do not want to extract mentions like r.0? and r.spl?
-  lazy val Var:P                = SingleVar //| UnkEffectVar | NoRNAVar | SplicingVar //| MultiVar | MultiTranscriptVar
+  lazy val Var:P                = SingleVar | noDNA //| UnkEffectVar | NoRNAVar | SplicingVar //| MultiVar | MultiTranscriptVar
 
   //Locations
   lazy val Loc:P                = (UncertainLoc | RangeLoc | PtLoc) ^^ { LocString(_) }
@@ -230,7 +230,7 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
   lazy val UnkEffectVar:P       = Ref ~ ("(=)" | "?")
   lazy val SplicingVar:P        = Ref ~ ("spl?" | "(spl?)")
   lazy val NoRNAVar:P           = Ref ~ "0" ~ "?".?
-
+  lazy val noDNA:P              = "c.0" ~ "?".?  ^^ { SubstString(_) }
 
 
   //Protein variant nomenclature

@@ -944,6 +944,7 @@ class SingleTest extends FunSuite {
     assert(SETH.isValid("c.457_458ins?", SETH.mutation, debug) === true)
     assert(SETH.isValid("c.184_185ins?", SETH.mutation, debug) === true)
     assert(SETH.isValid("c.182_183ins?", SETH.mutation, debug) === true)
+    assert(SETH.isValid("c.0?", SETH.mutation, debug) === true)
 
     // Questionable cases:
     //missing amino acids
