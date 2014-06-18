@@ -533,6 +533,7 @@ public class MutationMention {
                 this.position = matcher.group(2);
             this.wtResidue = matcher.group(1);
             this.mutResidue = matcher.group(3);
+            this.text = mutation;
         }
 
     }
