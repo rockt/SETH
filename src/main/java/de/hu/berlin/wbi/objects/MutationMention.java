@@ -18,6 +18,7 @@ package de.hu.berlin.wbi.objects;
  along with snp-normalizer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import de.hu.berlin.wbi.stuff.xml.PSM;
 import seth.ner.wrapper.Type;
 
 import java.io.BufferedReader;
@@ -84,7 +85,9 @@ public class MutationMention {
     public void normalizeSNP(int id){
         dbSNP snp = new dbSNP();
         snp.setRsID(id);
-        normalized.add(new dbSNPNormalized(snp, true, false, false, null, true));
+        EnumSet<MatchOptions> match =
+            EnumSet.of(MatchOptions.RESIDUES, MatchOptions.LOC);
+        normalized.add(new dbSNPNormalized(snp, match, null));
     }
 
     /**
@@ -112,23 +115,46 @@ public class MutationMention {
 
             //Normalize candidate using information in 'hgvs' table
             if(candidate.getHgvs() != null){
-
                 //Normalize PSM using the 'hgvs' information from dbSNP..
-                if(normalizePSMSimpleHGVS(candidate))
-                    normalized.add(new dbSNPNormalized(candidate, true, false, true, null, true));
+                if(normalizePSMSimpleHGVS(candidate)) {
+                    EnumSet<MatchOptions> match = EnumSet.of(
+                        MatchOptions.RESIDUES, MatchOptions.LOC, MatchOptions.PSM
+                    );
+                    // boolean exactMatch, boolean methioneMatch, boolean psm, boolean alleleOrder)
+                    // true, false, true, null, true));
+                    normalized.add(new dbSNPNormalized(candidate, match, null));
+                }
 
-                if(normalizePSMSimpleHGVSSwap(candidate))
-                    normalized.add(new dbSNPNormalized(candidate, true, false, true, null, false));
+                if(normalizePSMSimpleHGVSSwap(candidate)) {
+                    EnumSet<MatchOptions> match = EnumSet.of(
+                        MatchOptions.RESIDUES, MatchOptions.LOC, MatchOptions.PSM, MatchOptions.SWAPPED
+                    );
+                    normalized.add(new dbSNPNormalized(candidate, match, null));
+                }
 
-                if(normalizePSMMethionineHGVS(candidate))
-                    normalized.add(new dbSNPNormalized(candidate, false, true, true, null, true));
+                if(normalizePSMMethionineHGVS(candidate)) {
+                    EnumSet<MatchOptions> match = EnumSet.of(
+                        MatchOptions.RESIDUES, MatchOptions.METHIONE, MatchOptions.PSM);
+                    normalized.add(new dbSNPNormalized(candidate, match, null));
+                }
 
-                if(normalizePSMMethionineSwapHGVS(candidate))
-                    normalized.add(new dbSNPNormalized(candidate, false, true, true, null, false));
+                if(normalizePSMMethionineSwapHGVS(candidate)) {
+                    EnumSet<MatchOptions> match = EnumSet.of(MatchOptions.METHIONE, MatchOptions.PSM, MatchOptions.SWAPPED);
+                    normalized.add(new dbSNPNormalized(candidate, match, null));
+                }
 
                 //Now we try to normalize to DNA using HGVS information
-                if (forwardNSMSimple(candidate) || reverseNSMSimple(candidate))
-                    normalized.add(new dbSNPNormalized(candidate, true, false, false, null, true));
+                if (forwardNSMSimple(candidate)) {
+                    EnumSet<MatchOptions> match = EnumSet.of(
+                        MatchOptions.LOC, MatchOptions.RESIDUES
+                    );
+                    normalized.add(new dbSNPNormalized(candidate, match, null));
+                } else if (reverseNSMSimple(candidate)) {
+                    EnumSet<MatchOptions> match = EnumSet.of(
+                        MatchOptions.LOC, MatchOptions.SWAPPED
+                    );
+                    normalized.add(new dbSNPNormalized(candidate, match, null));
+                }
             }
 
             //Normalize candidate using information in 'PSM' table
@@ -139,15 +165,39 @@ public class MutationMention {
 
                 if (forward || reverse){
 
-                    if (normalizePSMSimple(candidate) ) //Exact match?
-                        normalized.add(new dbSNPNormalized(candidate, true, false, true, null, forward));
+                    if (normalizePSMSimple(candidate) ) { //Exact match?
+                        EnumSet<MatchOptions> match = EnumSet.of(
+                            MatchOptions.LOC, MatchOptions.PSM
+                        );
+                        if (forward) {
+                            match.add(MatchOptions.RESIDUES);
+                        } else {
+                            match.add(MatchOptions.SWAPPED);
+                        }
+                        normalized.add(new dbSNPNormalized(candidate, match, null));
+                    }
 
-                    if(normalizePSMMethionine(candidate)) //Methionine Offset of 1?
-                        normalized.add(new dbSNPNormalized(candidate, false, true, true, null, forward));
+                    if(normalizePSMMethionine(candidate)) { //Methionine Offset of 1?
+                        EnumSet<MatchOptions> match = EnumSet.of(
+                            MatchOptions.METHIONE, MatchOptions.PSM
+                        );
+                        if (forward) {
+                            match.add(MatchOptions.RESIDUES);
+                        } else {
+                            match.add(MatchOptions.SWAPPED);
+                        }
+                        normalized.add(new dbSNPNormalized(candidate, match, null));
+                    }
 
                     UniprotFeature feature = normalizePSMVariableOffset(candidate, features);	//match using UniProt features
-                    if(feature != null){
-                        normalized.add(new dbSNPNormalized(candidate, false, false, true, feature, forward));
+                    if(feature != null) {
+                        EnumSet<MatchOptions> match = EnumSet.of(MatchOptions.PSM);
+                        if (forward) {
+                            match.add(MatchOptions.RESIDUES);
+                        } else {
+                            match.add(MatchOptions.SWAPPED);
+                        }
+                        normalized.add(new dbSNPNormalized(candidate, match, feature));
                     }
                 }
             }
@@ -420,7 +470,7 @@ public class MutationMention {
      *
      *
      * @param candidate     dbSNP candidate
-     * @return @return true if the mutation mention can be normalized to a NSM and the gene is in bwd direction
+     * @return return true if the mutation mention can be normalized to a NSM and the gene is in bwd direction
      */
     private boolean reverseNSMSimple(dbSNP candidate) {
         for (HGVS hgvs : candidate.getHgvs()) {
@@ -429,7 +479,7 @@ public class MutationMention {
                     || hgvs.getLocation() == null)
                 continue;
 
-            if (hgvs.getType() != 'g' && hgvs.getType() != 'c') // NOrmalize
+            if (hgvs.getType() != 'g' && hgvs.getType() != 'c') // Normalize
                 continue;
 
             if (hgvs.getMutation().equals(wtResidue) == false) // Check Wildtype

@@ -18,6 +18,8 @@ package de.hu.berlin.wbi.objects;
  along with snp-normalizer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import java.util.EnumSet;
+
 /**
  * Represents a {@link MutationMention} mention which has been successfully
  * normalized to a {@link dbSNP} . Therefore it extends {@link dbSNP}.
@@ -27,58 +29,43 @@ package de.hu.berlin.wbi.objects;
  */
 public class dbSNPNormalized extends dbSNP implements Comparable<dbSNPNormalized>{
 
-	
-	/** Flag if the mutation has been normalized to protein-sequence, false if nucleotide-sequence*/
-	private boolean psm = false;
-	
-	/**
-	 * True if normalization was exact. That is, when residues and position between {@link dbSNP} entry and
-	 * variation mention are equal.
-	 */
-	private boolean exactMatch = false;
-	
-	/**
-	 * Residues are correct but {@link MutationMention} mention is derived one position after
-	 * leading methionine.
-	 */
-	private boolean methioneMatch = false;
-
-	/**
-	 * Residues are correct but {@link MutationMention} mention is derived using a specific uniprotfeature
+    /**
+	 * {@link MutationMention} mention is derived using a specific uniprotfeature
 	 */
 	private UniprotFeature feature = null;
 		
-	/** Indicates if wildtype and mutated allele is swapped (e.g. Ala123Tyr -> Tyr123Ala)  **/
-	private boolean alleleOrder = false;
-	
-	/** Indicator for overall confidence**/
-	private int confidence = -1;
+    private EnumSet<MatchOptions> matchType;
+
+    public EnumSet<MatchOptions> getMatchType() { return matchType; }
 
 	/**
 	 * @param dbsnp          dbSNP Object
-	 * @param exactMatch     normalization was exact?
-	 * @param methioneMatch  Indicates normalization offset of 1
-	 * @param psm            PSM or NSM
 	 * @param feature        UniProt feature used for normalization
-	 * @param alleleOrder    Reverse alleleOrder?
+     * @param matchType      EnumSet of MatchOptions enum values
 	 */
-	public dbSNPNormalized(dbSNP dbsnp, boolean exactMatch,
-			boolean methioneMatch, boolean psm, UniprotFeature feature, boolean alleleOrder) {
+	public dbSNPNormalized(dbSNP dbsnp, EnumSet<MatchOptions> matchType, UniprotFeature feature)
+    {
 		super();
 		this.rsID = dbsnp.getRsID();
 		this.geneID = dbsnp.getGeneID();
 		this.residues = dbsnp.getResidues();
 		this.aaPosition = dbsnp.getAaPosition();
 		this.hgvs = dbsnp.getHgvs();
+        this.matchType = matchType;
 
-		this.exactMatch = exactMatch;
-		this.methioneMatch = methioneMatch;
-		this.psm = psm;
-		this.feature = feature;
-		this.alleleOrder = alleleOrder;
-		
-		this.confidence = (psm ? 5 : 4) +(exactMatch ? 4 : 0);
 	}
+
+    /**
+     * @return confidence for Normalization
+     */
+    public int getConfidence() {
+        int conf = 0;
+
+        conf += isPsm() ? 3 : 2;
+        conf += isExactMatch() ? 2 : 0;
+
+        return conf;
+    }
 
 	/**
 	 * (non-Javadoc)
@@ -97,21 +84,23 @@ public class dbSNPNormalized extends dbSNP implements Comparable<dbSNPNormalized
 	 * Returns true if Alleles are in the same order in dbSNP as in the text mention
 	 */
 	public boolean isAlleleOrder() {
-		return alleleOrder;
+		return (!matchType.contains(MatchOptions.SWAPPED));
 	}
 
 	/**
 	 * @return true if the normalization required no heuristics 
 	 */
 	public boolean isExactMatch() {
-		return exactMatch;
+		return (matchType.contains(MatchOptions.LOC)
+            && matchType.contains(MatchOptions.RESIDUES));
 	}
 
 	/**
-	 * @return true if position has an offset of +/-1
+	 * @return true if position has an offset of +/-1 but otherwise there's a match
 	 */
 	public boolean isMethioneMatch() {
-		return methioneMatch;
+		return (matchType.contains(MatchOptions.METHIONE)
+            && matchType.contains(MatchOptions.RESIDUES));
 	}
 	
 	public boolean isFeatureMatch(){
@@ -122,19 +111,11 @@ public class dbSNPNormalized extends dbSNP implements Comparable<dbSNPNormalized
 	 * @return true if snp is a protein sequence mutation
 	 */
 	public boolean isPsm() {
-		return psm;
+		return matchType.contains(MatchOptions.PSM);
 	}
 	
-	/**
-	 * @return confidence for Normalization
-	 */
-	public int getConfidence() {
-		return confidence;
-	}
-
 	@Override
 	public int compareTo(dbSNPNormalized that) {
-
-		return that.confidence - this.confidence;
-	}
+		return that.getConfidence() - this.getConfidence();
+    }
 }

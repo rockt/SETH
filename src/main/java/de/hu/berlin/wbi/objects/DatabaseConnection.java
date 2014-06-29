@@ -65,14 +65,12 @@ public class DatabaseConnection {
 		try {
 			stmt = conn.createStatement();
 		} catch (SQLException e) {
-			e.printStackTrace();
-			System.exit(1);
+            throw new IllegalArgumentException("Cannot create statement for query: '" + query + "'", e);
 		}
 		try {
 			rs = stmt.executeQuery(query);
-		} catch (SQLException e) {			
-			e.printStackTrace();
-			System.exit(1);
+		} catch (SQLException e) {
+            throw new IllegalArgumentException("Cannot execute query: '" + query + "'", e);
 		}
 	}
 
@@ -88,8 +86,7 @@ public class DatabaseConnection {
 		try {
 			stmt.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
-			System.exit(1);
+            throw new IllegalStateException(e);
 		}
 	}
 
@@ -97,47 +94,34 @@ public class DatabaseConnection {
 	 * Connects with database
 	 */
 	public void connect() {
-		try {
-			Class.forName(driver).newInstance();
-		} catch (InstantiationException e) {
-			System.err.println("Problem during Instantiation of mySQL");
-			e.printStackTrace();
-			System.exit(1);
-		} catch (IllegalAccessException e) {
-			System.err.println("Illegal Access");
-			e.printStackTrace();
-			System.exit(1);
-		} catch (ClassNotFoundException e) {
-			System.err.println("Class not found");
-			e.printStackTrace();
-			System.exit(1);
-		}
-		try {
-			String connectionString = host +database;
+        try {
+            Class.forName(driver).newInstance();
+        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+            throw new IllegalStateException("Cannot instantiate instance of driver: " + driver, e);
+        }
 
-			if(driver.contains("mysql"))
-                connectionString+="?connectTimeout=30000&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;autoReconnect=true&amp;failOverReadOnly=false&amp;maxReconnects=10";
-				//connectionString+="?characterEncoding=UTF8";
+        String connectionString = host +database;
+        if(driver.contains("mysql"))
+            connectionString+="?connectTimeout=30000&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;autoReconnect=true&amp;failOverReadOnly=false&amp;maxReconnects=10";
+        //connectionString+="?characterEncoding=UTF8";
 
-			conn =DriverManager.getConnection(connectionString, user, password);
-		} catch (SQLException e) {
-			System.err.println("SQL-Exception");
-			e.printStackTrace();
-			System.exit(1);
-		}		
-	}
+        try {
+            conn = DriverManager.getConnection(connectionString, user, password);
+        } catch (SQLException e) {
+            throw new IllegalStateException(e);
+        }
+    }
 
 	/**
 	 * Disconnects from database
 	 */
 	public void disconnect() {
-		try {
-			conn.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-			System.exit(1);
-		}
-	}
+        try {
+            conn.close();
+        } catch (SQLException e) {
+            throw new IllegalStateException(e);
+        }
+    }
 
 	public ResultSet getRs() {
 		return rs;

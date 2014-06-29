@@ -72,7 +72,7 @@ public class OldNomenclature {
         }
         m = protDeletionPatternLong.matcher(text);
         while(m.find()){
-            Map<String, String> map = MutationFinder.populateAminoAcidThreeToOneLookupMap();
+            Map<String, String> map = MutationFinder.populateAminoAcidThreeToOneLookupMap;
             int start = m.start(2);
             int end   = m.start(2)+m.group("group").length();//m.end(m.groupCount());
             MutationMention mm = new MutationMention(start, end, text.substring(start, end), "p.", m.group("pos"),  map.get(m.group("wt").toUpperCase()), null, Type.DELETION, MutationMention.Tool.REGEX);
@@ -89,7 +89,7 @@ public class OldNomenclature {
 
         m = codonDeletionPattern2.matcher(text);  //TODO
         while(m.find()){
-            Map<String, String> map = MutationFinder.populateAminoAcidThreeToOneLookupMap();
+            Map<String, String> map = MutationFinder.populateAminoAcidThreeToOneLookupMap;
             int start = m.start(2);
             int end   = m.start(2)+m.group("group").length();//m.end(m.groupCount());
             MutationMention mm = new MutationMention(start, end, text.substring(start, end), "p.", m.group("pos"),  map.get(m.group("wt").toUpperCase()), null, Type.DELETION, MutationMention.Tool.REGEX);

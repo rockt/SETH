@@ -1,5 +1,6 @@
 package edu.uchsc.ccp.nlp.ei.mutation;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -25,39 +26,39 @@ public abstract class MutationExtractor {
      * 
      * @return a mapping from three-letter code to one-letter code
      */
-    public static Map<String, String> populateAminoAcidThreeToOneLookupMap() {
+    public static Map<String, String> populateAminoAcidThreeToOneLookupMap = null;
+    static {
+        HashMap<String, String> tmpMap = new HashMap<>();
         /* populate the three-letter to one-letter lookup map */
-        Map<String, String> amino_acid_three_to_one_map = new HashMap<String, String>();
-        amino_acid_three_to_one_map = new HashMap<String, String>();
-        amino_acid_three_to_one_map.put("ALA", "A");
-        amino_acid_three_to_one_map.put("GLY", "G");
-        amino_acid_three_to_one_map.put("LEU", "L");
-        amino_acid_three_to_one_map.put("MET", "M");
-        amino_acid_three_to_one_map.put("PHE", "F");
-        amino_acid_three_to_one_map.put("TRP", "W");
-        amino_acid_three_to_one_map.put("LYS", "K");
-        amino_acid_three_to_one_map.put("GLN", "Q");
-        amino_acid_three_to_one_map.put("GLU", "E");
-        amino_acid_three_to_one_map.put("SER", "S");
-        amino_acid_three_to_one_map.put("PRO", "P");
-        amino_acid_three_to_one_map.put("VAL", "V");
-        amino_acid_three_to_one_map.put("ILE", "I");
-        amino_acid_three_to_one_map.put("CYS", "C");
-        amino_acid_three_to_one_map.put("TYR", "Y");
-        amino_acid_three_to_one_map.put("HIS", "H");
-        amino_acid_three_to_one_map.put("ARG", "R");
-        amino_acid_three_to_one_map.put("ASN", "N");
-        amino_acid_three_to_one_map.put("ASP", "D");
-        amino_acid_three_to_one_map.put("THR", "T");
+        tmpMap.put("ALA", "A");
+        tmpMap.put("GLY", "G");
+        tmpMap.put("LEU", "L");
+        tmpMap.put("MET", "M");
+        tmpMap.put("PHE", "F");
+        tmpMap.put("TRP", "W");
+        tmpMap.put("LYS", "K");
+        tmpMap.put("GLN", "Q");
+        tmpMap.put("GLU", "E");
+        tmpMap.put("SER", "S");
+        tmpMap.put("PRO", "P");
+        tmpMap.put("VAL", "V");
+        tmpMap.put("ILE", "I");
+        tmpMap.put("CYS", "C");
+        tmpMap.put("TYR", "Y");
+        tmpMap.put("HIS", "H");
+        tmpMap.put("ARG", "R");
+        tmpMap.put("ASN", "N");
+        tmpMap.put("ASP", "D");
+        tmpMap.put("THR", "T");
         
 //http://en.wikipedia.org/wiki/Amino_acid#Table_of_standard_amino_acid_abbreviations_and_side_chain_properties        
-        amino_acid_three_to_one_map.put("ASX", "B");
-        amino_acid_three_to_one_map.put("GLX", "Z");
-        amino_acid_three_to_one_map.put("XLE", "J");
-        amino_acid_three_to_one_map.put("TER", "X");	//TER and STP are often used to describe a stop codon
-        amino_acid_three_to_one_map.put("STP", "X");
- 
-        return amino_acid_three_to_one_map;
+        tmpMap.put("ASX", "B");
+        tmpMap.put("GLX", "Z");
+        tmpMap.put("XLE", "J");
+        tmpMap.put("TER", "X");	//TER and STP are often used to describe a stop codon
+        tmpMap.put("STP", "X");
+
+        populateAminoAcidThreeToOneLookupMap = Collections.unmodifiableMap(tmpMap);
     }
 
     /**
@@ -65,44 +66,43 @@ public abstract class MutationExtractor {
      * 
      * @return a mapping from amino acid full name to one-letter code
      */
-    public static Map<String, String> populateAminoAcidNameToOneLookupMap() {
+    public static Map<String, String> populateAminoAcidNameToOneLookupMap = null;
+    static {
         /* populate the amino acid name to one-letter lookup map */
-        Map<String, String> amino_acid_name_to_one_map = new HashMap<String, String>();
-        amino_acid_name_to_one_map = new HashMap<String, String>();
-        amino_acid_name_to_one_map.put("ALANINE", "A");
-        amino_acid_name_to_one_map.put("GLYCINE", "G");
-        amino_acid_name_to_one_map.put("LEUCINE", "L");
-        amino_acid_name_to_one_map.put("METHIONINE", "M");
-        amino_acid_name_to_one_map.put("PHENYLALANINE", "F");
-        amino_acid_name_to_one_map.put("TRYPTOPHAN", "W");
-        amino_acid_name_to_one_map.put("LYSINE", "K");
-        amino_acid_name_to_one_map.put("GLUTAMINE", "Q");
-        amino_acid_name_to_one_map.put("GLUTAMIC ACID", "E");
-        amino_acid_name_to_one_map.put("GLUTAMATE", "E");
-        amino_acid_name_to_one_map.put("ASPARTATE", "D");
-        amino_acid_name_to_one_map.put("SERINE", "S");
-        amino_acid_name_to_one_map.put("PROLINE", "P");
-        amino_acid_name_to_one_map.put("VALINE", "V");
-        amino_acid_name_to_one_map.put("ISOLEUCINE", "I");
-        amino_acid_name_to_one_map.put("CYSTEINE", "C");
-        amino_acid_name_to_one_map.put("TYROSINE", "Y");
-        amino_acid_name_to_one_map.put("HISTIDINE", "H");
-        amino_acid_name_to_one_map.put("ARGININE", "R");
-        amino_acid_name_to_one_map.put("ASPARAGINE", "N");
-        amino_acid_name_to_one_map.put("ASPARTIC ACID", "D");
-        amino_acid_name_to_one_map.put("THREONINE", "T");
+        HashMap<String, String> tmpMap = new HashMap<>();
+        tmpMap.put("ALANINE", "A");
+        tmpMap.put("GLYCINE", "G");
+        tmpMap.put("LEUCINE", "L");
+        tmpMap.put("METHIONINE", "M");
+        tmpMap.put("PHENYLALANINE", "F");
+        tmpMap.put("TRYPTOPHAN", "W");
+        tmpMap.put("LYSINE", "K");
+        tmpMap.put("GLUTAMINE", "Q");
+        tmpMap.put("GLUTAMIC ACID", "E");
+        tmpMap.put("GLUTAMATE", "E");
+        tmpMap.put("ASPARTATE", "D");
+        tmpMap.put("SERINE", "S");
+        tmpMap.put("PROLINE", "P");
+        tmpMap.put("VALINE", "V");
+        tmpMap.put("ISOLEUCINE", "I");
+        tmpMap.put("CYSTEINE", "C");
+        tmpMap.put("TYROSINE", "Y");
+        tmpMap.put("HISTIDINE", "H");
+        tmpMap.put("ARGININE", "R");
+        tmpMap.put("ASPARAGINE", "N");
+        tmpMap.put("ASPARTIC ACID", "D");
+        tmpMap.put("THREONINE", "T");
         
-        amino_acid_name_to_one_map.put("TERM", "X");
-        amino_acid_name_to_one_map.put("STOP", "X");
-        amino_acid_name_to_one_map.put("AMBER", "X");
-        amino_acid_name_to_one_map.put("UMBER", "X");
-        amino_acid_name_to_one_map.put("OCHRE", "X");
-        amino_acid_name_to_one_map.put("OPAL", "X");
+        tmpMap.put("TERM", "X");
+        tmpMap.put("STOP", "X");
+        tmpMap.put("AMBER", "X");
+        tmpMap.put("UMBER", "X");
+        tmpMap.put("OCHRE", "X");
+        tmpMap.put("OPAL", "X");
 
-        return amino_acid_name_to_one_map;
+        populateAminoAcidNameToOneLookupMap = Collections.unmodifiableMap(tmpMap);
     }
 
-    
     /**
      * Extract point mutations mentions from raw_text and return them in a map.
      * 

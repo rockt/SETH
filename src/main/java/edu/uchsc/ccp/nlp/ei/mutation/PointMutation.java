@@ -37,8 +37,8 @@ public class PointMutation extends Mutation {
 
     private void initialize(String wtResidue, String mutResidue) throws MutationException {
         abbreviationLookup = populateAminoAcidOneToOneLookupMap();
-        updateMapping(abbreviationLookup, MutationFinder.populateAminoAcidThreeToOneLookupMap());
-        updateMapping(abbreviationLookup, MutationFinder.populateAminoAcidNameToOneLookupMap());
+        updateMapping(abbreviationLookup, MutationFinder.populateAminoAcidThreeToOneLookupMap);
+        updateMapping(abbreviationLookup, MutationFinder.populateAminoAcidNameToOneLookupMap);
 
         this.wtResidue = normalizeResidueIdentity(wtResidue);
         this.mutResidue = normalizeResidueIdentity(mutResidue);

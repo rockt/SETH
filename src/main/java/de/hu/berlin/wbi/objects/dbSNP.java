@@ -345,7 +345,7 @@ public class dbSNP {
 	@Override
 	public String toString() {
 		return "dbSNP [aaPosition=" + aaPosition + ", wildtype=" + wildtype  + ", residues=" + residues 
-		+ ", rsID="+", geneID=" + geneID
+		+ ", rsID="+ rsID + ", geneID=" + geneID
 		+ rsID  + ", hgvs=" + hgvs + "]";
 	}	
 }

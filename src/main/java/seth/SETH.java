@@ -85,6 +85,7 @@ public class SETH {
                for(int [] location : map.get(mutation)){
                    String originalMatch =  text.substring(location[0], location[1]);
 
+                   // MutationFinder only returns protein matches
                    MutationMention tmpMutation =    new MutationMention(location[0], location[1], originalMatch, null, pm.getPosition(),
                            String.valueOf(pm.getWtResidue()), String.valueOf(pm.getMutResidue()),
                            Type.SUBSTITUTION, MutationMention.Tool.MUTATIONFINDER);

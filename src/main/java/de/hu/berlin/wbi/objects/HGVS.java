@@ -47,8 +47,9 @@ public class HGVS {
 
 	/**  */
 	private static final Pattern locationPattern  = Pattern.compile("[A-Za-z]");
+    private static final Pattern mutationMattern = Pattern.compile("([A-Za-z]+)([1-9][0-9]*)([A-Za-z]+|=)");
 
-	/**
+    /**
 	 * Construct a HGVS object based on a HGVS string (e.g. "NM_123c.234A>T")
 	 * 
 	 * @param string  HGVS mention
@@ -72,39 +73,51 @@ public class HGVS {
 				if(s.contains(">")){
 					this.wildtype = s.substring(0,s.indexOf(">"));
 					this.mutation = s.substring(s.indexOf(">")+1);
-				}
-				else if(s.startsWith("ins") || s.startsWith("del") || s.startsWith("dup")){
-					this.wildtype = s.substring(0,3);
-					this.mutation = s.substring(3);
-				}
-				else{
+				} else if (s.startsWith("ins") || s.startsWith("dup")) {
+                    this.wildtype = "";
+                    this.mutation = s.substring(3);
+                } else if (s.startsWith("del")) {
+                    this.wildtype = s.substring(3);
+                    this.mutation = "";
+                } else {
 					throw new Exception("Unknown HGVS string '" +string +"'");	//In case we observe a new type of variation
 				}
 			}
 			else  if (type =='p'){				//Protein-mentions are extracted from dbSNP directly, but sometimes the XML/database information is incomplete (e.g. rs4684677 contains not the wildtype amino acid)
-				Map<String, String> map = MutationFinder.populateAminoAcidThreeToOneLookupMap();
+				Map<String, String> map = MutationFinder.populateAminoAcidThreeToOneLookupMap;
 				String s = string.substring(2);	//String contains a substring of s (minus reference sequence at beginning)
 				this.type = 'p';	
-				Pattern mutationMattern = Pattern.compile("([A-Za-z]+)([1-9][0-9]*)([A-Za-z]+|=)");
 				Matcher m = mutationMattern.matcher(s);
 				if(m.find()){
-													
 					this.location = m.group(2);
-					this.wildtype = map.get(m.group(1).toUpperCase());
-					if(m.group(3).equals("="))
+                    try {
+                        this.wildtype = map.get(m.group(1).toUpperCase().substring(0,3));
+                    } catch (IndexOutOfBoundsException e) {
+                        this.wildtype = null;
+                    }
+                    if (this.wildtype == null)
+                        this.wildtype = m.group(1).toUpperCase();
+                    if(m.group(3).equals("="))
 						this.mutation = this.wildtype;
-					else
-						this.mutation = map.get(m.group(3).toUpperCase());
+					else {
+                        try {
+                            this.mutation = map.get(m.group(3).toUpperCase().substring(0,3));
+                        } catch (IndexOutOfBoundsException e) {
+                            this.mutation = null;
+                        }
+                        if (this.mutation == null)
+                            this.mutation = m.group(3).toUpperCase();
+                    }
 				}
 			}
 			else if (type == 'n' || type == 'm'){
 				//Currently [non-coding RNA reference sequence (gene producing an RNA transcript but not a protein)] are ignored.
 				//Also mRNA is ignored
-			}
-			else
-				System.err.println("Type " +type +" not covered");			
+			} else {
+				System.err.println("Type " +type +" not covered");
+            }
 		}
-		catch(Exception exception){
+		catch(Exception exception) {
 			this.type = '-';
 			this.location = null;
 			this.wildtype = null;
@@ -169,11 +182,36 @@ public class HGVS {
 	 */
 	@Override
 	public String toString() {
-		if(type == 'c' || type =='g')
-			return type +"." +location +wildtype +">" +mutation;
-		else
-			return type +"." +wildtype +location +mutation;
-	}
+
+        String swildtype = wildtype;
+        String smutation = mutation;
+        boolean insDel = true;
+
+        if(type == 'c' || type =='g') {
+            if (wildtype.equals("")) {
+                swildtype = "ins";
+                smutation = mutation;
+                insDel = true;
+            } else if (mutation.equals("")) {
+                swildtype = "del";
+                smutation = wildtype;
+                insDel = true;
+            }
+
+            if (wildtype == null || mutation == null) {
+                swildtype = (wildtype == null) ? "" : wildtype;
+                smutation = (mutation == null) ? "" : mutation;
+            }
+
+            return type + "." + location + swildtype + ((insDel) ? "" : ">") + smutation;
+        } else {
+            if (wildtype == null || mutation == null) {
+                swildtype = (wildtype == null) ? "" : wildtype;
+                smutation = (mutation == null) ? "" : mutation;
+            }
+            return type + "." + swildtype + location + smutation;
+        }
+    }
 
 	/**
 	 * Gets the mutation type (e.g. c., p.,  or g.)
