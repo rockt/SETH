@@ -77,10 +77,10 @@ containing a list of mutations that SETH should link to dbSNP (*i.e.* rs numbers
 
 # Code Examples
 ## NER
-### Java (including MutationFinder) [seth.ner.wrapper.SETHNERAppMut](https://github.com/rockt/SETH/blob/master/src/main/java/seth/ner/wrapper/SETHNERAppMut.java#L14-L25)
-### Java (excluding MutationFinder) [seth.ner.wrapper.SETHNERApp](https://github.com/rockt/SETH/blob/master/src/main/java/seth/ner/wrapper/SETHNERApp.java#L13-L24)
 ### Scala [EBNF for HGVS mutation nomenclature mplemented as parser combinators](https://github.com/rockt/SETH/blob/master/src/main/scala/seth/ner/SETHNER.scala#L128-L356)
 ### Scala (excluding MutationFinder) [seth.ner.SETHNERApp](https://github.com/rockt/SETH/blob/master/src/main/scala/seth/ner/SETHNER.scala#L18-L28)
+### Java (excluding MutationFinder) [seth.ner.wrapper.SETHNERApp](https://github.com/rockt/SETH/blob/master/src/main/java/seth/ner/wrapper/SETHNERApp.java#L13-L24)
+### Java (including MutationFinder) [seth.ner.wrapper.SETHNERAppMut](https://github.com/rockt/SETH/blob/master/src/main/java/seth/ner/wrapper/SETHNERAppMut.java#L14-L25)
 ## NEN
 ### Java [de.hu.berlin.wbi.process.MinimalExample](https://github.com/rockt/SETH/blob/master/src/main/java/de/hu/berlin/wbi/process/MinimalExample.java#L50-L71)
 ## NER and NEN
@@ -89,6 +89,22 @@ containing a list of mutations that SETH should link to dbSNP (*i.e.* rs numbers
 # Reproducing our results
 
 ## Evaluate NER
+
+<!---
+#### Human Mutation corpus I (210 abstracts)
+    java -cp seth.jar seth.seth.eval.ApplyNER resources/humu/corpus.txt resources/mutations.txt false resources/humu.seth
+    java -cp seth.jar seth.seth.eval.EvaluteNaER resources/humu.seth resources/humu/yearMapping.txt  resources/humu/annotations/
+Precision 0.98
+Recall    0.84
+F₁        0.90
+
+#### Human Mutation corpus II (420 abstracts)
+    java -cp seth.jar seth.seth.eval.ApplyNER resources/american/corpus.txt resources/mutations.txt false resources/american.seth
+    java -cp seth.jar seth.seth.eval.EvaluateNER resources/american.seth resources/american/yearMapping.txt resources/american/annotations/
+Precision 0.88
+Recall    0.82
+F₁        0.85
+-->
 
 #### SETH corpus (630 abstracts)
     java -cp seth.jar seth.seth.eval.ApplyNER resources/SETH-corpus/corpus.txt resources/mutations.txt false resources/SETH-corpus.seth
