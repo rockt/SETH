@@ -96,21 +96,7 @@ containing a list of mutations that SETH should link to dbSNP (*i.e.* rs numbers
 Precision 0.98
 Recall    0.86
 F₁        0.91
-<!--
-#### Human Mutation corpus I (210 abstracts)
-    java -cp seth.jar seth.seth.eval.ApplyNER resources/humu/corpus.txt resources/mutations.txt false resources/humu.seth
-    java -cp seth.jar seth.seth.eval.EvaluteNaER resources/humu.seth resources/humu/yearMapping.txt  resources/humu/annotations/
-Precision 0.98
-Recall    0.84
-F₁        0.90
 
-#### Human Mutation corpus II (420 abstracts)
-    java -cp seth.jar seth.seth.eval.ApplyNER resources/american/corpus.txt resources/mutations.txt false resources/american.seth
-    java -cp seth.jar seth.seth.eval.EvaluateNER resources/american.seth resources/american/yearMapping.txt resources/american/annotations/
-Precision 0.88
-Recall    0.82
-F₁        0.85
--->
 
 #### MutationFinder-development  corpus using original MutationFinder evaluation scripts (Caporaso *et al.*, 2007) 
     java -cp seth.jar seth.seth.eval.ApplyNER resources/mutationfinder/corpus/devo_text.txt resources/mutations.txt true resources/devo_text.seth
