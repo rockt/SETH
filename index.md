@@ -77,10 +77,10 @@ containing a list of mutations that SETH should link to dbSNP (*i.e.* rs numbers
 
 # Code Examples
 ## NER
-### Scala [EBNF implemented as parser combinators](https://github.com/rockt/SETH/blob/master/src/main/scala/seth/ner/SETHNER.scala#L128-L356)
-### Scala (excluding MutationFinder) [seth.ner.SETHNERApp](https://github.com/rockt/SETH/blob/master/src/main/scala/seth/ner/SETHNER.scala#L18-L28)
-### Java (excluding MutationFinder) [seth.ner.wrapper.SETHNERApp](https://github.com/rockt/SETH/blob/master/src/main/java/seth/ner/wrapper/SETHNERApp.java#L13-L24)
 ### Java (including MutationFinder) [seth.ner.wrapper.SETHNERAppMut](https://github.com/rockt/SETH/blob/master/src/main/java/seth/ner/wrapper/SETHNERAppMut.java#L14-L25)
+### Java (excluding MutationFinder) [seth.ner.wrapper.SETHNERApp](https://github.com/rockt/SETH/blob/master/src/main/java/seth/ner/wrapper/SETHNERApp.java#L13-L24)
+### Scala [EBNF for HGVS mutation nomenclature mplemented as parser combinators](https://github.com/rockt/SETH/blob/master/src/main/scala/seth/ner/SETHNER.scala#L128-L356)
+### Scala (excluding MutationFinder) [seth.ner.SETHNERApp](https://github.com/rockt/SETH/blob/master/src/main/scala/seth/ner/SETHNER.scala#L18-L28)
 ## NEN
 ### Java [de.hu.berlin.wbi.process.MinimalExample](https://github.com/rockt/SETH/blob/master/src/main/java/de/hu/berlin/wbi/process/MinimalExample.java#L50-L71)
 ## NER and NEN
@@ -90,9 +90,16 @@ containing a list of mutations that SETH should link to dbSNP (*i.e.* rs numbers
 
 ## Evaluate NER
 
+#### SETH corpus (630 abstracts)
+    java -cp seth.jar seth.seth.eval.ApplyNER resources/SETH-corpus/corpus.txt resources/mutations.txt false resources/SETH-corpus.seth
+    java -cp seth.jar seth.seth.eval.EvaluateNER resources/SETH-corpus.seth resources/SETH-corpus/yearMapping.txt  resources/SETH-corpus/annotations/
+Precision 0.98
+Recall    0.86
+F₁        0.91
+<!--
 #### Human Mutation corpus I (210 abstracts)
     java -cp seth.jar seth.seth.eval.ApplyNER resources/humu/corpus.txt resources/mutations.txt false resources/humu.seth
-    java -cp seth.jar seth.seth.eval.EvaluateNER resources/humu.seth resources/humu/yearMapping.txt  resources/humu/annotations/
+    java -cp seth.jar seth.seth.eval.EvaluteNaER resources/humu.seth resources/humu/yearMapping.txt  resources/humu/annotations/
 Precision 0.98
 Recall    0.84
 F₁        0.90
@@ -103,15 +110,17 @@ F₁        0.90
 Precision 0.88
 Recall    0.82
 F₁        0.85
+-->
 
-#### MutationFinder corpus using original MutationFinder scripts (Caporaso *et al.*, 2007)
+#### MutationFinder-development  corpus using original MutationFinder evaluation scripts (Caporaso *et al.*, 2007) 
     java -cp seth.jar seth.seth.eval.ApplyNER resources/mutationfinder/corpus/devo_text.txt resources/mutations.txt true resources/devo_text.seth
-    java -cp seth.jar seth.seth.eval.ApplyNER resources/mutationfinder/corpus/test_text.txt resources/mutations.txt true resources/test_text.seth
     python resources/mutationfinder/origDist/performance.py resources/devo_text.seth  resources/mutationfinder/corpus/devo_gold_std.txt
 Precision 0.97
 Recall    0.83
 F₁        0.89
 
+#### MutationFinder-test  corpus using original MutationFinder evaluation scripts (Caporaso *et al.*, 2007) 
+    java -cp seth.jar seth.seth.eval.ApplyNER resources/mutationfinder/corpus/test_text.txt resources/mutations.txt true resources/test_text.seth
     python resources/mutationfinder/origDist/performance.py resources/test_text.seth  resources/mutationfinder/corpus/test_gold_std.txt
 Precision 0.97
 Recall    0.81
@@ -121,13 +130,13 @@ F₁        0.88
     java -cp seth.jar seth.seth.eval.ApplyNERToWei resources/Wei2013/train.txt  resources/mutations.txt  resources/Wei2013.seth
     java -cp seth.jar seth.seth.eval.EvaluateWei resources/Wei2013/train.txt resources/Wei2013.seth
 Precision 0.94
-Recall    0.81
+Recall    0.80
 F₁        0.87
 
 #### Corpus of Verspoor *et al.* (2013)
     java -cp seth.jar seth.seth.eval.ApplyNerToVerspoor resources/Verspoor2013/corpus/ resources/mutations.txt resources/Verspoor2013.seth
     java -cp seth.jar seth.seth.eval.EvaluateVerspoor resources/Verspoor2013/annotations/ resources/Verspoor2013.seth
-Precision 0.86
+Precision 0.87
 Recall    0.14
 F₁        0.24
 
@@ -135,14 +144,14 @@ F₁        0.24
 
 #### Corpus of Thomas *et al.* (2011)
     java -cp seth.jar de.hu.berlin.wbi.process.Evaluate myProperty.xml resources/thomas2011/corpus.txt
-Precision 0.95
+Precision 0.96
 Recall    0.58
 F₁        0.72
 
 #### Corpus of OSIRIS (Furlong *et al.*, 2008)
     java -cp seth.jar de.hu.berlin.wbi.process.osiris.EvaluateOsiris myProperty.xml resources/OSIRIS/corpus.xml
-Precision 0.98
-Recall    0.85
+Precision 0.96
+Recall    0.86
 F₁        0.91
 
 # References
