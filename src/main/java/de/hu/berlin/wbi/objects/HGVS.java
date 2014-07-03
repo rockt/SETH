@@ -28,6 +28,8 @@ import java.util.regex.Pattern;
 
 /**
  * Represents a <a href="http://www.hgvs.org/">HGVS</a> reference, like <tt>NR_027062.1:c.157+25766C>T</tt>.
+ * This class is only used for normalization issues.
+ *
  * @author Philippe Thomas
  *
  */
@@ -51,6 +53,7 @@ public class HGVS {
     /**  */
     private static final Pattern locationPattern  = Pattern.compile("[A-Za-z]");
     private static final Pattern mutationMattern = Pattern.compile("([A-Za-z]+)([1-9][0-9]*)([A-Za-z]+|=)");
+
     /**
      * Construct a HGVS object based on a HGVS string (e.g. "NM_123c.234A>T")
      *

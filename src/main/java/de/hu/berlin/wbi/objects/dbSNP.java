@@ -129,12 +129,12 @@ public class dbSNP {
 			throw new RuntimeException(e);
 		}
 
-		//Retrieves information about SNP's which have an impact on nucleotide level from second table (hgvs)
+		//Retrieves information about SNP's which have an impact on nucleotide level from another table (hgvs)
 		try {
 			hgvsQuery.setInt(1, geneID);
 			if (hgvsQuery.execute()) {
 				final ResultSet resultSet = hgvsQuery.getResultSet();
-				final Map<Integer, Set<HGVS>> tmp = new HashMap<Integer, Set<HGVS>>();
+				final Map<Integer, Set<HGVS>> tmp = new HashMap<Integer, Set<HGVS>>();   //Mapping from dbSNP to different HGVS representations
 				while (resultSet.next()) {		//Iterate over all HGVS-Strings for a specific gene
 					int rsId = resultSet.getInt("snp_id");
 
@@ -148,7 +148,7 @@ public class dbSNP {
 				}
 				resultSet.close();
 
-				//Now associate all (PSM)-SNPs retrieved in Query1 with the associated HGBS information 
+				//Now associate all (PSM)-SNPs retrieved in Query1 with the associated HGVS information
 				for (dbSNP snp : result) {
 					snp.setHgvs(tmp.get(snp.getRsID()));	//Set the HGVS information for all dbSNP objects found in query "snpQuery"
 				}
