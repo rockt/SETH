@@ -32,7 +32,10 @@ public class dbSNPRecognizer {
             int end = matcher.group(3) == null ? matcher.end(2) : matcher.end(3);
 
             MutationMention mm = new MutationMention(begin, end, text.substring(begin, end), null, null, null, null, Type.DBSNP_MENTION, MutationMention.Tool.DBSNP);
-            //int rsId = Integer.parseInt(matcher.group(2).substring(2));
+            try{
+                int rsId = Integer.parseInt(matcher.group(2).substring(2));
+                mm.normalizeSNP(rsId);
+            }catch(NumberFormatException nfe){}
             result.add(mm);
         }
 
