@@ -38,8 +38,8 @@ public class DatabaseConnection {
 	private final String driver;
 	private ResultSet rs;
 
-	private Connection conn;
-	private Statement stmt;
+	protected Connection conn;
+    protected Statement stmt;
 
 	/**
 	 * Set up a database connection, by using a java-property object
