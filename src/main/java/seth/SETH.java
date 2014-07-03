@@ -90,6 +90,12 @@ public class SETH {
                            String.valueOf(pm.getWtResidue()), String.valueOf(pm.getMutResidue()),
                            Type.SUBSTITUTION, MutationMention.Tool.MUTATIONFINDER);
                    tmpMutation.setPatternId(pm.getId());
+                   if(pm.isMatchesLongForm()){
+                       tmpMutation.setPsm(true);
+                       tmpMutation.setAmbiguous(false);
+                       tmpMutation.setNsm(false);
+                   }
+
                    mutations.add(tmpMutation);
                }
            }

@@ -60,6 +60,10 @@ public class OldNomenclature {
             int start = m.start(2);
             int end   = m.start(2)+m.group("group").length();//m.end(m.groupCount());
             MutationMention mm = new MutationMention(start, end, text.substring(start, end), "c.", m.group("pos"),  m.group("wt"), null, Type.DELETION, MutationMention.Tool.REGEX);
+
+            mm.setPsm(false);
+            mm.setNsm(true);
+            mm.setAmbiguous(false);
             result.add(mm);
         }
 
@@ -68,6 +72,10 @@ public class OldNomenclature {
             int start = m.start(2);
             int end   = m.start(2)+m.group("group").length();//m.end(m.groupCount());
             MutationMention mm = new MutationMention(start, end, text.substring(start, end), "p.", m.group("pos"),  m.group("wt"), null, Type.DELETION, MutationMention.Tool.REGEX);
+
+            mm.setPsm(true);
+            mm.setNsm(false);
+            mm.setAmbiguous(false);
             result.add(mm);
         }
         m = protDeletionPatternLong.matcher(text);
@@ -76,6 +84,10 @@ public class OldNomenclature {
             int start = m.start(2);
             int end   = m.start(2)+m.group("group").length();//m.end(m.groupCount());
             MutationMention mm = new MutationMention(start, end, text.substring(start, end), "p.", m.group("pos"),  map.get(m.group("wt").toUpperCase()), null, Type.DELETION, MutationMention.Tool.REGEX);
+
+            mm.setPsm(true);
+            mm.setNsm(false);
+            mm.setAmbiguous(false);
             result.add(mm);
         }
 
@@ -84,6 +96,10 @@ public class OldNomenclature {
             int start = m.start(2);
             int end   = m.start(2)+m.group("group").length();//m.end(m.groupCount());
             MutationMention mm = new MutationMention(start, end, text.substring(start, end), "p.", m.group("pos"),  m.group("wt"), null, Type.DELETION, MutationMention.Tool.REGEX);
+
+            mm.setPsm(true);
+            mm.setNsm(false);
+            mm.setAmbiguous(false);
             result.add(mm);
         }
 
@@ -93,6 +109,10 @@ public class OldNomenclature {
             int start = m.start(2);
             int end   = m.start(2)+m.group("group").length();//m.end(m.groupCount());
             MutationMention mm = new MutationMention(start, end, text.substring(start, end), "p.", m.group("pos"),  map.get(m.group("wt").toUpperCase()), null, Type.DELETION, MutationMention.Tool.REGEX);
+
+            mm.setPsm(true);
+            mm.setNsm(false);
+            mm.setAmbiguous(false);
             result.add(mm);
         }
 
@@ -101,7 +121,11 @@ public class OldNomenclature {
         while(m.find()){
             int start = m.start(2);
             int end   = m.start(2)+m.group("group").length();//m.end(m.groupCount());
-            MutationMention mm = new MutationMention(start, end, text.substring(start, end), "p.", m.group("pos"),  m.group("wt"), m.group("mut"), Type.SUBSTITUTION, MutationMention.Tool.REGEX);
+            MutationMention mm = new MutationMention(start, end, text.substring(start, end), "c.", m.group("pos"),  m.group("wt"), m.group("mut"), Type.SUBSTITUTION, MutationMention.Tool.REGEX);
+
+            mm.setPsm(false);
+            mm.setNsm(true);
+            mm.setAmbiguous(false);
             result.add(mm);
         }
 
@@ -111,6 +135,10 @@ public class OldNomenclature {
             int start = m.start(2);
             int end   = m.start(2)+m.group("group").length();//m.end(m.groupCount());
             MutationMention mm = new MutationMention(start, end, text.substring(start, end), "c.", m.group("pos"),  null, m.group("mut"), Type.INSERTION, MutationMention.Tool.REGEX);
+
+            mm.setPsm(false);
+            mm.setNsm(true);
+            mm.setAmbiguous(false);
             result.add(mm);
         }
 
@@ -118,7 +146,7 @@ public class OldNomenclature {
         while(m.find()){
             int start = m.start(2);
             int end   = m.start(2)+m.group("group").length();//m.end(m.groupCount());
-            MutationMention mm = new MutationMention(start, end, text.substring(start, end), "c.", m.group("pos"),  m.group("wt"), m.group("mut"), Type.FRAMESHIFT, MutationMention.Tool.REGEX);
+            MutationMention mm = new MutationMention(start, end, text.substring(start, end), null, m.group("pos"),  m.group("wt"), m.group("mut"), Type.FRAMESHIFT, MutationMention.Tool.REGEX);
             result.add(mm);
         }
 
