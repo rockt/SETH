@@ -29,10 +29,15 @@ public class PointMutation extends Mutation {
 
     private char mutResidue;
 
+    private boolean matchesLongForm;
+
 
     public PointMutation(String position, String wtResidue, String mutResidue) throws MutationException {
         super(position);
         initialize(wtResidue, mutResidue);
+
+        if(wtResidue.length() > 1 || mutResidue.length() > 1 )
+            this.matchesLongForm = true;
     }
 
     private void initialize(String wtResidue, String mutResidue) throws MutationException {
@@ -151,6 +156,15 @@ public class PointMutation extends Mutation {
      */
     public char getWtResidue() {
         return wtResidue;
+    }
+
+    /**
+     * Return if the originally matched wildtype or mutated allele matched a long form
+     * (e.g., Lysine -> true, L -> false)
+     * @return
+     */
+    public boolean isMatchesLongForm() {
+        return matchesLongForm;
     }
 
     /**
