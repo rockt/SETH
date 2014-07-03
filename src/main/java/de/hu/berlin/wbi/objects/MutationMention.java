@@ -19,6 +19,7 @@ package de.hu.berlin.wbi.objects;
  */
 
 import de.hu.berlin.wbi.stuff.xml.PSM;
+import edu.uchsc.ccp.nlp.ei.mutation.MutationFinder;
 import seth.ner.wrapper.Type;
 
 import java.io.BufferedReader;
@@ -39,16 +40,21 @@ import java.util.zip.GZIPInputStream;
  */
 public class MutationMention {
 
-    /** Type of Mutation (e.g. substitution, insertion, ...) */
+    /** Type of Mutation (e.g., substitution, insertion, ...) */
     protected Type type;
 
-    /** Refers to which tool has been used for extraction */
+    /** Refers to which tool has been used for extraction (e.g., MutationFinder, SETH, ...) */
     protected Tool tool;
+
+    /** Enumeration of all tools */
+    public enum Tool{
+        MUTATIONFINDER, SETH, REGEX, DBSNP, CNVETH
+    }
 
     /** Location in the text. */
     protected EntityOffset location;
 
-    /** Text mention. */
+    /** Text mention in the text. */
     protected String text;
 
     /** Used reference sequence (e.g. c., g., ...) */
@@ -63,30 +69,40 @@ public class MutationMention {
     /** Location of the mutation wrt residue or nucleotides*/
     protected String position;
 
-    /** Flag indicating if this SNP is possibly a NSM. */
+    /** Flag indicating if this SNP is a nucleotide sequence mutation (NSM). */
     protected boolean nsm;
 
-    /** List with normalized SNPs*/
-    protected List<dbSNPNormalized> normalized;
+    /** Flag indicating if this SNP is a protein sequence mutation (PSM). */
+    protected boolean psm;
+
+    /** Flag indicating if this SNP is ambiguous.
+     *  I.e., it can be a PSM or NSM*/
+    protected boolean ambiguous;
 
     /** Which regular expression has been used to extract this SNP from text (MutationFinder only)*/
     protected int patternId;
 
-    /** Refers to which tool has been used for extraction */
-    public enum Tool{
-        MUTATIONFINDER, SETH, REGEX, DBSNP, CNVETH
-    }
-
     /** Pattern is used to extract wildtype-location-residue from a string e.g. A123T  */
     private static final Pattern pattern = Pattern.compile("^([A-Z])([\\-\\+\\*]?[1-9][0-9]*[\\-\\+]?[0-9]*)([A-Z])$");
 
+    /** Contains all ambigious characters used for nucleotides as well as amino acids */
+    private static final ArrayList<String> atgc = new ArrayList(Arrays.asList("A", "T", "G", "C"));
+
+    /** List with normalized SNPs*/
+    protected List<dbSNPNormalized> normalized;
 
 
+    /**
+     * Method allows us to "manually" normalize a mutation mention to a dbSNP ID
+     * Method is currently not invoked, but might be called for the dbSNPRecognized
+     * @param id  dbSNP ID we want to normalize to
+     */
     public void normalizeSNP(int id){
+        normalized = new ArrayList<dbSNPNormalized>(1);
+
         dbSNP snp = new dbSNP();
         snp.setRsID(id);
-        EnumSet<MatchOptions> match =
-            EnumSet.of(MatchOptions.RESIDUES, MatchOptions.LOC);
+        EnumSet<MatchOptions> match = EnumSet.of(MatchOptions.RESIDUES, MatchOptions.LOC);
         normalized.add(new dbSNPNormalized(snp, match, null));
     }
 
@@ -584,6 +600,8 @@ public class MutationMention {
             this.wtResidue = matcher.group(1);
             this.mutResidue = matcher.group(3);
             this.text = mutation;
+
+            setMutationLocation();
         }
 
     }
@@ -612,6 +630,8 @@ public class MutationMention {
 
             this.wtResidue = matcher.group(1);
             this.mutResidue = matcher.group(3);
+
+            setMutationLocation();
         }
     }
 
@@ -625,6 +645,8 @@ public class MutationMention {
         this.mutResidue = mutated;
         this.type = type;
         this.tool = tool;
+
+        setMutationLocation();
     }
 
 
@@ -720,48 +742,38 @@ public class MutationMention {
         this.position = position;
     }
 
-    /**
-     * (non-Javadoc)
-     *
-     * @see Object#toString()
-     */
-    @Override
-    public String toString() {
-        return "MutationMention [span=" + location.getStart() +"-" +location.getStop()
-                + ", mutResidue=" + mutResidue + ", location=" +position + ", wtResidue=" + wtResidue +", text=" +text
-                + ", type=" + getType() + ", tool=" + getTool() + "]";
-    }
 
     /**
-     * @return SNP-description following the <wt><aa><mt> nomenclature
-     */
-    public String toNormalized() {
-
-        if(this.getTool().equals(Tool.MUTATIONFINDER)){
-           return wtResidue + position + mutResidue;
-        }
-
-        else if(this.getTool().equals(Tool.REGEX)){
-            //This is a special case, as deletions can have several different abbreviations (e.g., delta, del, or Δ)
-            if(this.getType().equals(Type.DELETION))
-                return  wtResidue+position +"del";
-
-            else
-                return text;
-        }
-
-
-        else
-            return text;
-    }
-
-    /**
-     * Checks if is flag indicating if this SNP is possibly a NSM.
-     *
-     * @return the flag indicating if this SNP is possibly a NSM
+     * @return the flag indicating if this SNP is a NSM
      */
     public boolean isNsm() {
         return nsm;
+    }
+
+    public void setNsm(boolean nsm) {
+        this.nsm = nsm;
+    }
+
+    /**
+     * @return the flag indicating if this SNP is a PSM
+     */
+    public boolean isPsm(){
+        return psm;
+    }
+
+    public void setPsm(boolean psm) {
+        this.psm = psm;
+    }
+
+    /**
+     * @return the flag indicating if this SNP is ambiguous
+     */
+    public boolean isAmbiguous() {
+        return ambiguous;
+    }
+
+    public void setAmbiguous(boolean ambiguous) {
+        this.ambiguous = ambiguous;
     }
 
     /**
@@ -828,6 +840,8 @@ public class MutationMention {
         MutationMention that = (MutationMention) o;
 
         if (nsm != that.nsm) return false;
+        if (psm != that.psm) return false;
+        if (ambiguous != that.ambiguous) return false;
         if (location != null ? !location.equals(that.location) : that.location != null) return false;
         if (mutResidue != null ? !mutResidue.equals(that.mutResidue) : that.mutResidue != null) return false;
         if (normalized != null ? !normalized.equals(that.normalized) : that.normalized != null) return false;
@@ -852,7 +866,201 @@ public class MutationMention {
         result = 31 * result + (mutResidue != null ? mutResidue.hashCode() : 0);
         result = 31 * result + (position != null ? position.hashCode() : 0);
         result = 31 * result + (nsm ? 1 : 0);
+        result = 31 * result + (psm ? 1 : 0);
+        result = 31 * result + (ambiguous ? 1 : 0);
         result = 31 * result + (normalized != null ? normalized.hashCode() : 0);
         return result;
+    }
+
+
+    /**
+     * Generates a human genome variation nomenclature
+     * compliant representation of the mutation mention
+     *
+     * @return a mutation mention in HGVS
+     */
+    public String toHGVS(){
+
+        //Mentions recognized by SETH are already in HGVS
+        if(tool.equals(Tool.SETH) || tool.equals(Tool.DBSNP)){
+            return this.text;
+        }
+
+        switch (type){
+            case SUBSTITUTION:
+                if(psm)
+                    return "p." +wtResidue +position +mutResidue;
+
+                if(nsm)
+                    return "c." +position +wtResidue +">" +mutResidue;
+
+                if(ambiguous)
+                    return "?." +position +wtResidue +">" +mutResidue;
+                break;
+
+            case  DELETION:
+                if(psm)
+                    return "p." +(wtResidue == null ? "" : wtResidue) +position +"del" +(mutResidue == null ? "" : mutResidue);
+                if(nsm)
+                    return "c." +(mutResidue == null ? "" : mutResidue) +position +"del" +(wtResidue == null ? "" : wtResidue);
+                if(ambiguous)
+                    return "?." +(mutResidue == null ? "" : mutResidue) +position +"del" +(wtResidue == null ? "" : wtResidue);
+                break;
+
+            case  INSERTION:
+                if(psm)
+                    return "p." +(mutResidue == null ? "" : mutResidue) +position +"ins" +(wtResidue == null ? "" : wtResidue);
+                if(nsm)
+                    return "c." +(wtResidue == null ? "" : wtResidue) +position +"ins" +(mutResidue == null ? "" : mutResidue);
+                if(ambiguous)
+                    return "?." +(wtResidue == null ? "" : wtResidue) +position +"ins" +(mutResidue == null ? "" : mutResidue);
+                break;
+
+            case  FRAMESHIFT:
+                if(psm)
+                    return "p." +(wtResidue == null ? "" : wtResidue) +position +"fs" +(mutResidue == null ? "" : mutResidue);
+                if(nsm)
+                    return "c." +(wtResidue == null ? "" : wtResidue) +position +"fs" +(mutResidue == null ? "" : mutResidue);
+                if(ambiguous)
+                    return "?." +(wtResidue == null ? "" : wtResidue) +position +"fs" +(mutResidue == null ? "" : mutResidue);
+                break;
+
+            default:
+                break;
+        }
+
+        return "??"; //In case we don't know
+    }
+
+    /**
+     * Checks if the mutation mention is a PSM
+     * @return
+     */
+    private boolean isAminoAcid() {
+
+        if(this.tool.equals(Tool.SETH)){
+            return (this.text.contains("p."));
+        }
+
+        switch (type){
+            case SUBSTITUTION:
+                if (!atgc.contains(this.wtResidue) || !atgc.contains(this.mutResidue))
+                    return true;
+                else
+                    return false;
+
+            case INSERTION:
+                return !atgc.contains(this.mutResidue);
+
+            case DELETION:
+                return !atgc.contains(this.mutResidue);
+
+            case DELETION_INSERTION:
+                return !atgc.contains(this.mutResidue);
+
+            case DUPLICATION:
+                return !atgc.contains(this.mutResidue);
+
+            default:
+                return false;
+        }
+    }
+
+    /**
+     *  Checks if the mutation mention is a NSM
+     * @return
+     */
+    private boolean isNucleotide() {
+        if (!this.isAminoAcid()) {
+
+            if(this.position == null)
+                return false;
+
+            if (this.position.contains("*") || this.position.contains("+") || this.position.contains("-"))
+                return true;
+
+            try{
+                int position = Integer.parseInt(this.position);
+                // Mutations in locations above this cutoff have to be nucleotides as Titin (33,000 AA) is the currently longest known protein
+                if(position > 35000)
+                    return true;
+            }catch(NumberFormatException nfe){
+                return true; //Protein mutations should always have integers as position
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if mutation is ambigious
+     * @return
+     */
+    private boolean isAmgib() {
+
+        if(this.tool.equals(Tool.SETH)){
+            return false;
+        }
+
+        if(this.tool.equals(Tool.DBSNP)){
+            return true;
+        }
+
+        if(this.position == null)
+            return true;
+
+        if (this.isAminoAcid())
+            return false;
+
+        if (this.isNucleotide())
+            return false;
+
+        return true;
+
+    }
+
+    /**
+     * This method sets the three boolean flags nsm, psm, and ambiguous
+     * Types can be changes using the set.. Methods
+     */
+    private void setMutationLocation(){
+        this.nsm = isNucleotide();
+        this.psm = isAminoAcid();
+        this.ambiguous = isAmgib();
+    }
+
+
+    /**
+     * (non-Javadoc)
+     *
+     * @see Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "MutationMention [span=" + location.getStart() +"-" +location.getStop()
+                + ", mutResidue=" + mutResidue + ", location=" +position + ", wtResidue=" + wtResidue +", text=" +text
+                + ", type=" + getType() + ", tool=" + getTool() + "]";
+    }
+
+    /**
+     * @return SNP-description following the <wt><aa><mt> nomenclature
+     */
+    public String toNormalized() {
+
+        if(this.getTool().equals(Tool.MUTATIONFINDER)){
+            return wtResidue + position + mutResidue;
+        }
+
+        else if(this.getTool().equals(Tool.REGEX)){
+            //This is a special case, as deletions can have several different abbreviations (e.g., delta, del, or Δ)
+            if(this.getType().equals(Type.DELETION))
+                return  wtResidue+position +"del";
+
+            else
+                return text;
+        }
+
+        else
+            return text;
     }
 }
