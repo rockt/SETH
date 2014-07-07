@@ -48,7 +48,7 @@ public class MutationMention {
 
     /** Enumeration of all tools */
     public enum Tool{
-        MUTATIONFINDER, SETH, REGEX, DBSNP, CNVETH
+        MUTATIONFINDER, SETH, REGEX, DBSNP, CNVETH, UNKNOWN
     }
 
     /** Location in the text. */
@@ -601,6 +601,9 @@ public class MutationMention {
             this.mutResidue = matcher.group(3);
             this.text = mutation;
 
+            this.tool = Tool.UNKNOWN;
+            this.type = Type.SUBSTITUTION;
+
             setMutationLocation();
         }
 
@@ -630,6 +633,9 @@ public class MutationMention {
 
             this.wtResidue = matcher.group(1);
             this.mutResidue = matcher.group(3);
+
+            this.tool = Tool.UNKNOWN;
+            this.type = Type.SUBSTITUTION;
 
             setMutationLocation();
         }
