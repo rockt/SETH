@@ -92,15 +92,14 @@ public class dbSNPNormalized extends dbSNP implements Comparable<dbSNPNormalized
 	 */
 	public boolean isExactMatch() {
 		return (matchType.contains(MatchOptions.LOC)
-            && matchType.contains(MatchOptions.RESIDUES));
+            && !matchType.contains(MatchOptions.SWAPPED));
 	}
 
 	/**
 	 * @return true if position has an offset of +/-1 but otherwise there's a match
 	 */
 	public boolean isMethioneMatch() {
-		return (matchType.contains(MatchOptions.METHIONE)
-            && matchType.contains(MatchOptions.RESIDUES));
+		return (matchType.contains(MatchOptions.METHIONE));
 	}
 	
 	public boolean isFeatureMatch(){
