@@ -18,8 +18,6 @@ package de.hu.berlin.wbi.objects;
  along with snp-normalizer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import de.hu.berlin.wbi.stuff.xml.PSM;
-import edu.uchsc.ccp.nlp.ei.mutation.MutationFinder;
 import seth.ner.wrapper.Type;
 
 import java.io.BufferedReader;
@@ -32,7 +30,7 @@ import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
 
 /**
- * Class to represent a mutation mention found by an NER tool like 
+ * Class to represent a mutation mention found by an NER tool like
  * MutationFinder or SETH
  *
  * @author Philippe Thomas
@@ -91,6 +89,62 @@ public class MutationMention {
     /** List with normalized SNPs*/
     protected List<dbSNPNormalized> normalized;
 
+    /** Set of transcripts with which we successfully associated this Element*/
+    protected Set<TranscriptNormalized> transcripts;
+
+
+    /**
+     * This method evaluates if some of the {@link Transcript} provided in <b>candidateTranscripts</b>
+     * equals the text-mined {@link MutationMention}. In difference to {@link #normalizeSNP(java.util.List, java.util.List, boolean)}
+     * this method tries to normalize to sequence-ID and not to dbSNP-IDs
+     *
+     * @param candidateTranscripts List of dbSNP-entries which might actually describe this SNP
+     * @param features List of associated uniprot features
+     * @param append Sometimes normalization has to be invoked several times (for several genes) Flag indicates if the result is appended or not
+     *
+     *
+     * @return normalized transcripts
+     */
+    public void normalizeSequences(Set<Transcript> candidateTranscripts, List<UniprotFeature> features, boolean append){
+
+        if(append == false || transcripts == null)
+            transcripts = new HashSet<TranscriptNormalized>();
+
+        for(Transcript transcript : candidateTranscripts){
+
+            try{
+                int loc = Integer.parseInt(this.position);
+
+                if(this.wtResidue.equals(transcript.getProtein_sequence().charAt(loc)))  {
+                    EnumSet<MatchOptions> match = EnumSet.of(MatchOptions.PSM, MatchOptions.LOC);
+                    transcripts.add(new TranscriptNormalized(transcript, match, null));
+                }
+                else if(this.wtResidue.equals(transcript.getProtein_sequence().charAt(loc+1))){
+                    EnumSet<MatchOptions> match = EnumSet.of(MatchOptions.PSM, MatchOptions.METHIONE);
+                    transcripts.add(new TranscriptNormalized(transcript, match, null));
+                }
+
+                if(this.wtResidue.equals(transcript.getCDC_sequence().charAt(loc)))  {
+                    EnumSet<MatchOptions> match = EnumSet.of(MatchOptions.LOC);
+                    transcripts.add(new TranscriptNormalized(transcript, match, null));
+                }
+
+                loop:for(UniprotFeature feature : features){
+                    if(feature.getGeneId() != transcript.getEntrez())
+                        continue;
+
+                    if(this.wtResidue.equals(transcript.getProtein_sequence().charAt(loc- feature.getEndLoc() +feature.getStartLoc() -1)))  {
+                        EnumSet<MatchOptions> match = EnumSet.of(MatchOptions.PSM);
+                        transcripts.add(new TranscriptNormalized(transcript, match, feature));
+                        break loop;
+                    }
+                }
+            }
+            catch(Exception e){ //Several Exceptions can happen (e.g. NumberFormatException, StringIndexOutOfBounds...
+                continue;
+            }
+        }
+    }
 
     /**
      * Method allows us to "manually" normalize a mutation mention to a dbSNP ID
@@ -102,7 +156,7 @@ public class MutationMention {
 
         dbSNP snp = new dbSNP();
         snp.setRsID(id);
-        EnumSet<MatchOptions> match = EnumSet.of(MatchOptions.RESIDUES, MatchOptions.LOC);
+        EnumSet<MatchOptions> match = EnumSet.of(MatchOptions.LOC);
         normalized.add(new dbSNPNormalized(snp, match, null));
     }
 
@@ -134,7 +188,7 @@ public class MutationMention {
                 //Normalize PSM using the 'hgvs' information from dbSNP..
                 if(normalizePSMSimpleHGVS(candidate)) {
                     EnumSet<MatchOptions> match = EnumSet.of(
-                        MatchOptions.RESIDUES, MatchOptions.LOC, MatchOptions.PSM
+                        MatchOptions.LOC, MatchOptions.PSM
                     );
                     // boolean exactMatch, boolean methioneMatch, boolean psm, boolean alleleOrder)
                     // true, false, true, null, true));
@@ -143,14 +197,14 @@ public class MutationMention {
 
                 if(normalizePSMSimpleHGVSSwap(candidate)) {
                     EnumSet<MatchOptions> match = EnumSet.of(
-                        MatchOptions.RESIDUES, MatchOptions.LOC, MatchOptions.PSM, MatchOptions.SWAPPED
+                       MatchOptions.LOC, MatchOptions.PSM, MatchOptions.SWAPPED
                     );
                     normalized.add(new dbSNPNormalized(candidate, match, null));
                 }
 
                 if(normalizePSMMethionineHGVS(candidate)) {
                     EnumSet<MatchOptions> match = EnumSet.of(
-                        MatchOptions.RESIDUES, MatchOptions.METHIONE, MatchOptions.PSM);
+                        MatchOptions.METHIONE, MatchOptions.PSM);
                     normalized.add(new dbSNPNormalized(candidate, match, null));
                 }
 
@@ -161,9 +215,7 @@ public class MutationMention {
 
                 //Now we try to normalize to DNA using HGVS information
                 if (forwardNSMSimple(candidate)) {
-                    EnumSet<MatchOptions> match = EnumSet.of(
-                        MatchOptions.LOC, MatchOptions.RESIDUES
-                    );
+                    EnumSet<MatchOptions> match = EnumSet.of(MatchOptions.LOC);
                     normalized.add(new dbSNPNormalized(candidate, match, null));
                 } else if (reverseNSMSimple(candidate)) {
                     EnumSet<MatchOptions> match = EnumSet.of(
@@ -185,9 +237,7 @@ public class MutationMention {
                         EnumSet<MatchOptions> match = EnumSet.of(
                             MatchOptions.LOC, MatchOptions.PSM
                         );
-                        if (forward) {
-                            match.add(MatchOptions.RESIDUES);
-                        } else {
+                        if (!forward) {
                             match.add(MatchOptions.SWAPPED);
                         }
                         normalized.add(new dbSNPNormalized(candidate, match, null));
@@ -197,9 +247,7 @@ public class MutationMention {
                         EnumSet<MatchOptions> match = EnumSet.of(
                             MatchOptions.METHIONE, MatchOptions.PSM
                         );
-                        if (forward) {
-                            match.add(MatchOptions.RESIDUES);
-                        } else {
+                        if (!forward) {
                             match.add(MatchOptions.SWAPPED);
                         }
                         normalized.add(new dbSNPNormalized(candidate, match, null));
@@ -208,9 +256,7 @@ public class MutationMention {
                     UniprotFeature feature = normalizePSMVariableOffset(candidate, features);	//match using UniProt features
                     if(feature != null) {
                         EnumSet<MatchOptions> match = EnumSet.of(MatchOptions.PSM);
-                        if (forward) {
-                            match.add(MatchOptions.RESIDUES);
-                        } else {
+                        if (!forward) {
                             match.add(MatchOptions.SWAPPED);
                         }
                         normalized.add(new dbSNPNormalized(candidate, match, feature));
@@ -820,6 +866,14 @@ public class MutationMention {
      */
     public List<dbSNPNormalized> getNormalized() {
         return normalized;
+    }
+
+    /**
+     * Returns all Transcripts covering this SNP
+     * @return Transcripts
+     */
+    public Set<TranscriptNormalized> getTranscripts() {
+        return transcripts;
     }
 
     /**
