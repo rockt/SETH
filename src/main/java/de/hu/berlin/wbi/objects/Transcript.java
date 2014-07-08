@@ -55,6 +55,7 @@ public class Transcript {
 
             while (rs.next()) {
                 Transcript sequence = new Transcript(entrez, rs.getString("uniprot_acc"), rs.getString("ENST"), rs.getString("protein_sequence"), rs.getString("coding_sequence"));
+                sequences.add(sequence);
             }
 
         }catch (SQLException e) {
@@ -82,10 +83,11 @@ public class Transcript {
         Transcript that = (Transcript) o;
 
         if (entrez != that.entrez) return false;
-        if (!CDC_sequence.equals(that.CDC_sequence)) return false;
-        if (!enst.equals(that.enst)) return false;
-        if (!protein_sequence.equals(that.protein_sequence)) return false;
-        if (!uniprot.equals(that.uniprot)) return false;
+        if (CDC_sequence != null ? !CDC_sequence.equals(that.CDC_sequence) : that.CDC_sequence != null) return false;
+        if (enst != null ? !enst.equals(that.enst) : that.enst != null) return false;
+        if (protein_sequence != null ? !protein_sequence.equals(that.protein_sequence) : that.protein_sequence != null)
+            return false;
+        if (uniprot != null ? !uniprot.equals(that.uniprot) : that.uniprot != null) return false;
 
         return true;
     }
@@ -93,10 +95,10 @@ public class Transcript {
     @Override
     public int hashCode() {
         int result = entrez;
-        result = 31 * result + uniprot.hashCode();
-        result = 31 * result + enst.hashCode();
-        result = 31 * result + protein_sequence.hashCode();
-        result = 31 * result + CDC_sequence.hashCode();
+        result = 31 * result + (uniprot != null ? uniprot.hashCode() : 0);
+        result = 31 * result + (enst != null ? enst.hashCode() : 0);
+        result = 31 * result + (protein_sequence != null ? protein_sequence.hashCode() : 0);
+        result = 31 * result + (CDC_sequence != null ? CDC_sequence.hashCode() : 0);
         return result;
     }
 

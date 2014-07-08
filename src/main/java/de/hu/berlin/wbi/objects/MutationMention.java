@@ -113,18 +113,26 @@ public class MutationMention {
         for(Transcript transcript : candidateTranscripts){
 
             try{
-                int loc = Integer.parseInt(this.position);
+                int loc = Integer.parseInt(this.position) -1;
+//                System.out.println("loc '" +loc +"'");
+//                System.out.println("wt '" +this.wtResidue+"'");
+//                System.out.println("mut '" +transcript.getProtein_sequence().charAt(loc) +"'");
+//                System.out.println(this.wtResidue.charAt(0) == transcript.getProtein_sequence().charAt(loc));
+//                  System.out.println(this.wtResidue.equals(String.valueOf(transcript.getProtein_sequence().charAt(loc))));
+//                System.out.println(transcript.getUniprot());
+//                System.out.println("-----------------");
 
-                if(this.wtResidue.equals(transcript.getProtein_sequence().charAt(loc)))  {
+
+                if(this.wtResidue.equals(String.valueOf(transcript.getProtein_sequence().charAt(loc))))  {
                     EnumSet<MatchOptions> match = EnumSet.of(MatchOptions.PSM, MatchOptions.LOC);
                     transcripts.add(new TranscriptNormalized(transcript, match, null));
                 }
-                else if(this.wtResidue.equals(transcript.getProtein_sequence().charAt(loc+1))){
+                else if(this.wtResidue.equals(String.valueOf(transcript.getProtein_sequence().charAt(loc+1)))){
                     EnumSet<MatchOptions> match = EnumSet.of(MatchOptions.PSM, MatchOptions.METHIONE);
                     transcripts.add(new TranscriptNormalized(transcript, match, null));
                 }
 
-                if(this.wtResidue.equals(transcript.getCDC_sequence().charAt(loc)))  {
+                if(this.wtResidue.equals(String.valueOf(transcript.getCDC_sequence().charAt(loc))))  {
                     EnumSet<MatchOptions> match = EnumSet.of(MatchOptions.LOC);
                     transcripts.add(new TranscriptNormalized(transcript, match, null));
                 }
@@ -133,7 +141,7 @@ public class MutationMention {
                     if(feature.getGeneId() != transcript.getEntrez())
                         continue;
 
-                    if(this.wtResidue.equals(transcript.getProtein_sequence().charAt(loc- feature.getEndLoc() +feature.getStartLoc() -1)))  {
+                    if(this.wtResidue.equals(String.valueOf(transcript.getProtein_sequence().charAt(loc- feature.getEndLoc() +feature.getStartLoc() -1))))  {
                         EnumSet<MatchOptions> match = EnumSet.of(MatchOptions.PSM);
                         transcripts.add(new TranscriptNormalized(transcript, match, feature));
                         break loop;
