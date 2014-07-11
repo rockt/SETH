@@ -41,8 +41,8 @@ public class Transcript {
      * @param connection   Database connection
      * @throws SQLException
      */
-    public static void init(DatabaseConnection connection)throws SQLException {
-        Transcript.sequenceQuery = connection.getConn().prepareStatement("SELECT entrez_id, uniprot_acc, ensembl_sequences.ENST,  protein_sequence, coding_sequence FROM var_reference.ensembl_genes JOIN var_reference.ensembl_sequences ON ensembl_genes.ENST = ensembl_sequences.ENST  WHERE uniprot_acc != \"\" AND entrez_id = ?" );
+    public static void init(DatabaseConnection connection, String table)throws SQLException {
+        Transcript.sequenceQuery = connection.getConn().prepareStatement("SELECT entrez_id, uniprot_acc, ENST,  protein_sequence, coding_sequence FROM " +table +" WHERE entrez_id = ?" );
     }
 
     public static Set<Transcript> getTranscripts(int entrez) {
