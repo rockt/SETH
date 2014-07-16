@@ -166,7 +166,8 @@ public class dbSNP {
 					if(!contained){	//If we did not find the corresponding dbSNP entry, we add a new one without PSM mutations
 						dbSNP tmpSNP = new dbSNP();
 						tmpSNP.setRsID(rs);
-						tmpSNP.setHgvs(tmp.get(rs));
+                        tmpSNP.setGeneID(geneID);
+                        tmpSNP.setHgvs(tmp.get(rs));
 						result.add(tmpSNP);
 					}
 				}
@@ -346,6 +347,6 @@ public class dbSNP {
 	public String toString() {
 		return "dbSNP [aaPosition=" + aaPosition + ", wildtype=" + wildtype  + ", residues=" + residues 
 		+ ", rsID="+ rsID + ", geneID=" + geneID
-		+ rsID  + ", hgvs=" + hgvs + "]";
+		+ ", hgvs=" + hgvs + "]";
 	}	
 }
