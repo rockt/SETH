@@ -16,9 +16,11 @@ public class TranscriptNormalized extends Transcript{
         super();
         this.entrez = transcript.getEntrez();
         this.uniprot = transcript.getUniprot();
+        this.ensg = transcript.getEnsg();
         this.enst     = transcript.getEnst();
-        this.protein_sequence = this.getProtein_sequence();
-        this.CDC_sequence   = this.getCDC_sequence();
+        this.ensp = transcript.getEnsp();
+        this.protein_sequence = transcript.getProtein_sequence();
+        this.CDC_sequence   = transcript.getCDC_sequence();
 
         this.matchType = matchType;
         this.feature = feature;
