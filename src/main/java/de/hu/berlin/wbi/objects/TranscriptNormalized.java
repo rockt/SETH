@@ -3,7 +3,7 @@ package de.hu.berlin.wbi.objects;
 
 import java.util.EnumSet;
 
-public class TranscriptNormalized extends Transcript{
+public class TranscriptNormalized extends Transcript implements Comparable<TranscriptNormalized>{
 
     private UniprotFeature feature = null;
 
@@ -26,4 +26,34 @@ public class TranscriptNormalized extends Transcript{
         this.feature = feature;
     }
 
+    public boolean isFeatureMatch(){
+        return feature != null;
+    }
+
+    public UniprotFeature getFeature() {
+        return feature;
+    }
+
+    @Override
+    public int compareTo(TranscriptNormalized that) {
+        return that.getConfidence() - this.getConfidence();
+    }
+
+    public int getConfidence() {
+        int conf = 0;
+
+        conf += isPsm() ? 3 : 2;
+        conf += isExactMatch() ? 2 : 0;
+
+        return conf;
+    }
+
+    public boolean isPsm() {
+        return matchType.contains(MatchOptions.PSM);
+    }
+
+    public boolean isExactMatch() {
+        return (matchType.contains(MatchOptions.LOC)
+                && !matchType.contains(MatchOptions.SWAPPED));
+    }
 }
