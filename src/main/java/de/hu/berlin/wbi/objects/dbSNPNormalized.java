@@ -106,7 +106,11 @@ public class dbSNPNormalized extends dbSNP implements Comparable<dbSNPNormalized
 		return feature != null;
 	}
 
-	/**
+    public UniprotFeature getFeature() {
+        return feature;
+    }
+
+    /**
 	 * @return true if snp is a protein sequence mutation
 	 */
 	public boolean isPsm() {
