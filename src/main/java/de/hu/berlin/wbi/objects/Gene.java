@@ -227,7 +227,7 @@ public class Gene {
 			Gene.geneQuery =  null;			
 		
 		if(gene2Pubmed != null && !gene2Pubmed.equals(""))
-			Gene.gene2pubmedQuery = connection.getConn().prepareStatement("SELECT geneId, pmid FROM " +gene2Pubmed +" WHERE pmid = ?");
+			Gene.gene2pubmedQuery = connection.getConn().prepareStatement("SELECT geneId, pmid FROM " +gene2Pubmed +" WHERE pmid = ? AND taxId = 9606");
 		else
 			Gene.gene2pubmedQuery = null;
 		
@@ -275,7 +275,8 @@ public class Gene {
 				final ResultSet rs2 = gene2pubmedQuery.getResultSet();
 				while (rs2.next()) {
 					final Gene tmp = new Gene(pmid, rs2.getInt("geneId"),
-							1, 9606,
+							1,
+                            rs2.getInt("taxId"),
 							null,
 							null);
 
