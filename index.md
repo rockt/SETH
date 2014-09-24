@@ -42,7 +42,7 @@ the normalization process.
 For user convenience, we provide a [dump as embedded Derby database](https://docs.google.com/file/d/0B9uTfq0OyHAsdDNMQzNxWDRhZVE/edit?usp=sharing) (~2GB).
 
 ## Command-line Usage
-To use SETH's NEN component from the command line, you need to provida a [XML property file](https://github.com/rockt/SETH/blob/master/resources/propery.xml) 
+To use SETH's NEN component from the command line, you need to provida a [XML property file](https://github.com/rockt/SETH/blob/master/resources/seth_properties.xml) 
 that handles the connection to the Derby database. 
 Subsequently, you can provide a TSV file (with PubMed ID, mutation mention, start and end position) 
 containing a list of mutations that SETH should link to dbSNP (*i.e.* rs numbers).
