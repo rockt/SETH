@@ -108,13 +108,13 @@ int gene = 1312;	//Entrez Gene ID associated with the mutation mention A123T and
 final List<dbSNP> potentialSNPs = dbSNP.getSNP(gene);	//Get a list of dbSNPs which could potentially represent the mutation mention
 final List<UniprotFeature> features = UniprotFeature.getFeatures(gene); //Get all associated UniProt features
 for(MutationMention mutation : mutations){
-System.out.println(mutation);
-mutation.normalizeSNP(potentialSNPs, features, false);
-List<dbSNPNormalized> normalized = mutation.getNormalized();	//Get list of all dbSNP entries with which I could successfully associate the mutation
-// Print information
-for(dbSNPNormalized snp : normalized){
-System.out.println(mutation +" --- rs" +snp.getRsID());
-}
+	System.out.println(mutation);
+	mutation.normalizeSNP(potentialSNPs, features, false);
+	List<dbSNPNormalized> normalized = mutation.getNormalized();	//Get list of all dbSNP entries with which I could successfully associate the mutation
+	// Print information
+	for(dbSNPNormalized snp : normalized){
+		System.out.println(mutation +" --- rs" +snp.getRsID());
+	}
 }
 
 ```
