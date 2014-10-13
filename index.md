@@ -75,7 +75,14 @@ containing a list of mutations that SETH should link to dbSNP (*i.e.* rs numbers
 	
 	Normalization possible for 14/20 mentions
 
-# Code Examples
+# Code Example
+##A full example performing Named Entity Recognition and Normalization (using all components) can be found here:
+Java [seth.SETH](https://github.com/rockt/SETH/blob/master/src/main/java/seth/SETH.java#L160-L205)
+ List<MutationMention> result = seth.findMutations(args[0]);
+## Example using obly the backus naur grammar in Scala [EBNF for HGVS mutation nomenclature implemented as parser ombinators](https://github.com/rockt/SETH/blob/master/src/main/scala/seth/ner/SETHNER.scala#L128-L356)
+
+
+<!---
 ## NER
 ### Scala [EBNF for HGVS mutation nomenclature mplemented as parser combinators](https://github.com/rockt/SETH/blob/master/src/main/scala/seth/ner/SETHNER.scala#L128-L356)
 ### Scala (excluding MutationFinder) [seth.ner.SETHNERApp](https://github.com/rockt/SETH/blob/master/src/main/scala/seth/ner/SETHNER.scala#L18-L28)
@@ -85,7 +92,7 @@ containing a list of mutations that SETH should link to dbSNP (*i.e.* rs numbers
 ### Java [de.hu.berlin.wbi.process.MinimalExample](https://github.com/rockt/SETH/blob/master/src/main/java/de/hu/berlin/wbi/process/MinimalExample.java#L50-L71)
 ## NER and NEN
 ### Java [seth.SETH](https://github.com/rockt/SETH/blob/master/src/main/java/seth/SETH.java#L104-L149)
-
+-->
 # Reproducing our results
 
 ## Evaluate NER
