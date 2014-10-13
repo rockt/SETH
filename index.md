@@ -14,7 +14,7 @@ SETH modifies MutationFinder's original capabilities in order to match a wider s
 
 4.) Mutations described as dbSNP-identifiers are recongized using the last component.
 
-Results from the four different components are collected and represented in the Java as [MutationMention](https://github.com/rockt/SETH/blob/master/src/main/java/de/hu/berlin/wbi/objects/MutationValidation.java).
+Results from the four different components are collected and represented in the Java as  [MutationMention](https://github.com/rockt/SETH/blob/master/src/main/java/de/hu/berlin/wbi/objects/MutationValidation.java).
 The general NER-workflow is also depicted in the following figure.
 ![Workflow](https://github.com/rockt/SETH/blob/ad7b9fbccd976a6775a03daf332b08ee52a08a0f/images/dataflow.png "NER-Workflow")
 
