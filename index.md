@@ -22,7 +22,7 @@ If possible, extracted SNP mentions are linked to [dbSNP](http://www.ncbi.nlm.ni
 Alternatively, we recomend the use of NCBI's gene2pubmed [database](ftp://ftp.ncbi.nlm.nih.gov/gene/DATA/gene2pubmed.gz).
 
 # Get SETH
-
+.
 ## Download ready-to-use [seth.jar](https://www.informatik.hu-berlin.de/forschung/gebiete/wbi/resources/chemspot/seth.jar)
 
 ## Build SETH on your own
