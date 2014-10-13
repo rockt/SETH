@@ -78,8 +78,48 @@ containing a list of mutations that SETH should link to dbSNP (*i.e.* rs numbers
 # Code Example
 ##A full example performing Named Entity Recognition and Normalization (using all components) can be found here:
 Java [seth.SETH](https://github.com/rockt/SETH/blob/master/src/main/java/seth/SETH.java#L160-L205)
+``` java
 
-## Example using obly the backus naur grammar in Scala [EBNF for HGVS mutation nomenclature implemented as parser ombinators](https://github.com/rockt/SETH/blob/master/src/main/scala/seth/ner/SETHNER.scala#L128-L356)
+/** Part 1:Named Entity Recognition */
+
+//Initiate SETH using our modified MutationFinder regular expressions, exact Backus Naur grammar, and regular expressions for deprecated mutation mentions
+SETH seth = new SETH("resources/mutations.txt", true, true);
+List<MutationMention> mutations = seth.findMutations("p.A123T and Val158Met"); //Perform NER for submitted string
+
+for(MutationMention mutation : mutations){ //Print result of NER to stdout
+	System.out.println(mutation.toNormalized());
+} 
+
+
+/** Part 2: Normalization of mutation mentions to dbSNP
+* This part communicates with a locally installed SQL database
+*/
+//Load database properties
+final Properties property = new Properties();
+property.loadFromXML(new FileInputStream(new File("myProperty.xml"))); 
+final DatabaseConnection mysql = new DatabaseConnection(property);
+
+//Initialize database settings
+mysql.connect(); //Connect with local derby Database
+dbSNP.init(mysql, property.getProperty("database.PSM"), property.getProperty("database.hgvs_view"));
+UniprotFeature.init(mysql, property.getProperty("database.uniprot"));
+
+int gene = 1312;	//Entrez Gene ID associated with the mutation mention A123T and Val158Met
+final List<dbSNP> potentialSNPs = dbSNP.getSNP(gene);	//Get a list of dbSNPs which could potentially represent the mutation mention
+final List<UniprotFeature> features = UniprotFeature.getFeatures(gene); //Get all associated UniProt features
+for(MutationMention mutation : mutations){
+System.out.println(mutation);
+mutation.normalizeSNP(potentialSNPs, features, false);
+List<dbSNPNormalized> normalized = mutation.getNormalized();	//Get list of all dbSNP entries with which I could successfully associate the mutation
+// Print information
+for(dbSNPNormalized snp : normalized){
+System.out.println(mutation +" --- rs" +snp.getRsID());
+}
+}
+
+```
+
+## Example using only the backus naur grammar in Scala [EBNF for HGVS mutation nomenclature implemented as parser ombinators](https://github.com/rockt/SETH/blob/master/src/main/scala/seth/ner/SETHNER.scala#L128-L356)
 
 
 <!---
