@@ -14,14 +14,14 @@ SETH modifies MutationFinder's original capabilities in order to match a wider s
 
 4.) Mutations described as dbSNP-identifiers are recongized using the last component.
 
-Results from the four different components are collected and represented in the Java as [MutationMention](https://github.com/rockt/SETH/blob/master/src/main/java/de/hu/berlin/wbi/objects/MutationValidation.java).
-The general NER-workflow is also depicted in the following figure.
-![Workflow](https://github.com/rockt/SETH/blob/ad7b9fbccd976a6775a03daf332b08ee52a08a0f/images/dataflow.png "NER-Workflow")
+Results from the four different components are collected and represented in the Java as  [MutationMention](https://github.com/rockt/SETH/blob/master/src/main/java/de/hu/berlin/wbi/objects/MutationValidation.java).
+The general NER-workflow is also depicted in the following ![figure](https://github.com/rockt/SETH/blob/ad7b9fbccd976a6775a03daf332b08ee52a08a0f/images/dataflow.png).
 
 If possible, extracted SNP mentions are linked to [dbSNP](http://www.ncbi.nlm.nih.gov/SNP/). This process  is referred to as named entity normalization (NEN). For normalization SETH requires a list of potential entrez gene identifiers. Gene names may either come from dedicated gene name recognition and normaluzation tools, such as [GNAT](http://gnat.sourceforge.net/).
 Alternatively, we recomend the use of NCBI's gene2pubmed [database](ftp://ftp.ncbi.nlm.nih.gov/gene/DATA/gene2pubmed.gz).
 
 # Get SETH
+
 ## Download ready-to-use [seth.jar](https://www.informatik.hu-berlin.de/forschung/gebiete/wbi/resources/chemspot/seth.jar)
 
 ## Build SETH on your own
@@ -31,6 +31,7 @@ Alternatively, we recomend the use of NCBI's gene2pubmed [database](ftp://ftp.nc
 	mv ./target/seth-1.0-SNAPSHOT-jar-with-dependencies.jar seth.jar
 
 # NER
+
 ## Command-line Usage
 
     java -cp seth.jar seth.ner.wrapper.SETHNERAppMut "Causative GJB2 mutations were identified in 31 (15.2%) patients, and two common mutations, c.35delG and L90P (c.269T>C), accounted for 72.1% and 9.8% of GJB2 disease alleles."
@@ -85,8 +86,10 @@ containing a list of mutations that SETH should link to dbSNP (*i.e.* rs numbers
 	Normalization possible for 14/20 mentions
 
 # Code Example
+
 ##A full example performing Named Entity Recognition and Normalization (using all components) can be found here:
 Java [seth.SETH](https://github.com/rockt/SETH/blob/master/src/main/java/seth/SETH.java#L160-L205)
+
 ``` java
 
 /** Part 1:Named Entity Recognition */
@@ -142,6 +145,7 @@ for(MutationMention mutation : mutations){
 ## NER and NEN
 ### Java [seth.SETH](https://github.com/rockt/SETH/blob/master/src/main/java/seth/SETH.java#L104-L149)
 -->
+
 # Reproducing our results
 
 ## Evaluate NER
@@ -256,31 +260,39 @@ However, in this case you have to adopt the following description to your databa
 We would be happy to get feedback about using SETH with other databases.
 
 ## Download the necessary dbSNP files (we used dbSNP version 137)
+
 ### Download XML dump from dbSNP
 	wget ftp://ftp.ncbi.nih.gov/snp/organisms/human_9606/XML/ds\*.gz
+	
 ### Download gene2pubmed links from Entrez gene
 	wget ftp://ftp.ncbi.nih.gov/gene/DATA/gene2pubmed.gz
 	gunzip gene2pubmed.gz
+	
 ### Download UniProt
 	wget ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.xml.gz
+	
 ### Download UniProt mapping
 	wget ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping/idmapping.dat.gz
 
 ## Set up the database with the tables "b134_SNPContigLocusId_37_2", ...,  and "genes"
 	CREATE DATABASE dbSNP137 CHARACTER SET latin1;
 	mysql <dbName> -h <hostname> -u <username> -p<password> data/table.sql
+	
 ## Import the data files needed for normalization
+
 ### Parse dbSNP-XML dump
 	time java -cp seth.jar de.hu.berlin.wbi.stuff.xml.ParseXML property.xml /path/with/dbSNP-XML/files/...
+	
 ### Parse UniProt-XML for protein-sequence mutations (PSM) and post-translational modifications (*e.g.* signaling peptides)
-Using Scala:
 
+Using Scala:
 	scala Uniprot2Tab.scala uniprot_sprot.xml.gz idmapping.dat.gz uniprot.dat PSM.dat
 	
 Using Java:
-
 	java -cp seth.jar seth.Uniprot2Tab uniprot_sprot.xml.gz idmapping.dat.gz uniprot.dat PSM.dat
+	
 ### Import gene2pubmed, UniProt and PSM
+
 	mysqlimport  --fields-terminated-by='\t' --delete --local --verbose --host <hostname> --user=<username> --password=<password> <dbName> gene2pubmed
 	mysqlimport  --fields-terminated-by='\t' --delete --local --verbose --host <hostname> --user=<username> --password=<password> <dbName> uniprot.dat
 	mysqlimport  --fields-terminated-by='\t' --local --verbose --host <hostname> --user=<username> --password=<password> <dbName> PSM.dat
@@ -292,6 +304,7 @@ Finally, we converted the mySQL database into XML using Apache [ddlUtils](http:/
 and subsequently used this XML to compile an embedded Derby database.
 
 # Cite
+
 ### BibTeX
 	@misc{thomas2013seth,
 	  title={ {SETH: SNP Extraction Tool for Human Variations} },
@@ -299,6 +312,7 @@ and subsequently used this XML to compile an embedded Derby database.
 	  howpublished = {\url{http://rockt.github.io/SETH/}},
 	  year = {2014}
 	}
+	
 ### Text	
 	Thomas, P., Rocktäschel, T., Mayer, Y., and Leser, U. (2014). SETH: SNP Extraction Tool for Human Variations.
 	http://rockt.github.io/SETH/.
