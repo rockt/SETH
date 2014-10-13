@@ -32,6 +32,7 @@ Alternatively, we recomend the use of NCBI's gene2pubmed [database](ftp://ftp.nc
 	mv ./target/seth-1.0-SNAPSHOT-jar-with-dependencies.jar seth.jar
 
 # NER
+
 ## Command-line Usage
 
     java -cp seth.jar seth.ner.wrapper.SETHNERAppMut "Causative GJB2 mutations were identified in 31 (15.2%) patients, and two common mutations, c.35delG and L90P (c.269T>C), accounted for 72.1% and 9.8% of GJB2 disease alleles."
@@ -86,6 +87,7 @@ containing a list of mutations that SETH should link to dbSNP (*i.e.* rs numbers
 	Normalization possible for 14/20 mentions
 
 # Code Example
+
 ##A full example performing Named Entity Recognition and Normalization (using all components) can be found here:
 Java [seth.SETH](https://github.com/rockt/SETH/blob/master/src/main/java/seth/SETH.java#L160-L205)
 ``` java
@@ -143,6 +145,7 @@ for(MutationMention mutation : mutations){
 ## NER and NEN
 ### Java [seth.SETH](https://github.com/rockt/SETH/blob/master/src/main/java/seth/SETH.java#L104-L149)
 -->
+
 # Reproducing our results
 
 ## Evaluate NER
