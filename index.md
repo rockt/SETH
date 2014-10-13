@@ -93,6 +93,7 @@ containing a list of mutations that SETH should link to dbSNP (*i.e.* rs numbers
 ##A full example performing Named Entity Recognition and Normalization (using all components) can be found here:
 Java [seth.SETH](https://github.com/rockt/SETH/blob/master/src/main/java/seth/SETH.java#L160-L205)
 
+<!-- For some reason this gets not correctly visualized
 ``` java
 /** Part 1:Named Entity Recognition */
 
@@ -132,6 +133,7 @@ for(MutationMention mutation : mutations){
 }
 
 ```
+-->
 
 ## Example using only the backus naur grammar in Scala [EBNF for HGVS mutation nomenclature implemented as parser ombinators](https://github.com/rockt/SETH/blob/master/src/main/scala/seth/ner/SETHNER.scala#L128-L356)
 
