@@ -3,22 +3,20 @@ layout: default
 ---
 
 SETH is a software that performs named entity recognition (NER) of single nucleotide polymorphisms (SNPs) and copy
-number variations (CNVs) from natural language texts. For NER SETH builds on four components:
-<ol>
-SETH's NER component is based on Scala parser combinatiors.
-By implementing an EBNF grammar proposed by Laros *et al.* (2011), 
-these parsers are able to identify mentions of mutations that obey the [HGVS nomenclature](http://www.hgvs.org/mutnomen/) (den Dunnen and Antonarakis, 2000).
+number variations (CNVs) from natural language texts. For NER SETH builds on four individual components:
 
-To get hold of mentions not following the nomenclature, SETH integrates MutationFinder (Caporaso *et al.*, 2007).
-SETH modifies MutationFinder's original capabilities in order to match a wider scope of mutations (DNA mutations, nonsense mutations, and ambiguous mutations) not following the HGVS nomenclature. 
-This is done by modifying the original MutationFinder implementation together with additional and modified regular expressions.
+1.) Mutations following the [HGVS nomenclature](http://www.hgvs.org/mutnomen/) (den Dunnen and Antonarakis, 2000) are recognized by implementing an Extended Backus–Naur (EBNF) grammar proposed by Laros *et al.* (2011) using Scala combinators.
 
+2.)To get hold of substitutions not following the nomenclature, SETH integrates MutationFinder (Caporaso *et al.*, 2007).
+SETH modifies MutationFinder's original capabilities in order to match a wider scope of substitutions (DNA substitutions, nonsense mutations, and ambiguous mutations) not following the HGVS nomenclature. This is done by modifying the original MutationFinder implementation together with additional and modified regular expressions.
 
-</ol>
+3.) Mutations not following the nomenclature are recognized using a separate set of regular expressions.
 
+4.) Mutations described as dbSNP-identifiers are recongized using the last component.
 
-Extracted SNP mentions are linked to [dbSNP](http://www.ncbi.nlm.nih.gov/SNP/),
-a process referred to as named entity normalization (NEN).
+Results from the four different components are collected and represented in the Java as [MutationMention](https://github.com/rockt/SETH/blob/master/src/main/java/de/hu/berlin/wbi/objects/MutationValidation.java)
+If possible, extracted SNP mentions are linked to [dbSNP](http://www.ncbi.nlm.nih.gov/SNP/). This process  is referred to as named entity normalization (NEN). For normalization SETH requires a list of potential entrez gene identifiers. Gene names may either come from dedicated gene name recognition and normaluzation tools, such as [GNAT](http://gnat.sourceforge.net/).
+Alternatively, we recomend the use of NCBI's gene2pubmed [database](ftp://ftp.ncbi.nlm.nih.gov/gene/DATA/gene2pubmed.gz).
 
 # Get SETH
 ## Download ready-to-use [seth.jar](https://www.informatik.hu-berlin.de/forschung/gebiete/wbi/resources/chemspot/seth.jar)
