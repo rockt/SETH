@@ -260,31 +260,39 @@ However, in this case you have to adopt the following description to your databa
 We would be happy to get feedback about using SETH with other databases.
 
 ## Download the necessary dbSNP files (we used dbSNP version 137)
+
 ### Download XML dump from dbSNP
 	wget ftp://ftp.ncbi.nih.gov/snp/organisms/human_9606/XML/ds\*.gz
+	
 ### Download gene2pubmed links from Entrez gene
 	wget ftp://ftp.ncbi.nih.gov/gene/DATA/gene2pubmed.gz
 	gunzip gene2pubmed.gz
+	
 ### Download UniProt
 	wget ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.xml.gz
+	
 ### Download UniProt mapping
 	wget ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping/idmapping.dat.gz
 
 ## Set up the database with the tables "b134_SNPContigLocusId_37_2", ...,  and "genes"
 	CREATE DATABASE dbSNP137 CHARACTER SET latin1;
 	mysql <dbName> -h <hostname> -u <username> -p<password> data/table.sql
+	
 ## Import the data files needed for normalization
+
 ### Parse dbSNP-XML dump
 	time java -cp seth.jar de.hu.berlin.wbi.stuff.xml.ParseXML property.xml /path/with/dbSNP-XML/files/...
+	
 ### Parse UniProt-XML for protein-sequence mutations (PSM) and post-translational modifications (*e.g.* signaling peptides)
-Using Scala:
 
+Using Scala:
 	scala Uniprot2Tab.scala uniprot_sprot.xml.gz idmapping.dat.gz uniprot.dat PSM.dat
 	
 Using Java:
-
 	java -cp seth.jar seth.Uniprot2Tab uniprot_sprot.xml.gz idmapping.dat.gz uniprot.dat PSM.dat
+	
 ### Import gene2pubmed, UniProt and PSM
+
 	mysqlimport  --fields-terminated-by='\t' --delete --local --verbose --host <hostname> --user=<username> --password=<password> <dbName> gene2pubmed
 	mysqlimport  --fields-terminated-by='\t' --delete --local --verbose --host <hostname> --user=<username> --password=<password> <dbName> uniprot.dat
 	mysqlimport  --fields-terminated-by='\t' --local --verbose --host <hostname> --user=<username> --password=<password> <dbName> PSM.dat
@@ -296,6 +304,7 @@ Finally, we converted the mySQL database into XML using Apache [ddlUtils](http:/
 and subsequently used this XML to compile an embedded Derby database.
 
 # Cite
+
 ### BibTeX
 	@misc{thomas2013seth,
 	  title={ {SETH: SNP Extraction Tool for Human Variations} },
@@ -303,6 +312,7 @@ and subsequently used this XML to compile an embedded Derby database.
 	  howpublished = {\url{http://rockt.github.io/SETH/}},
 	  year = {2014}
 	}
+	
 ### Text	
 	Thomas, P., Rocktäschel, T., Mayer, Y., and Leser, U. (2014). SETH: SNP Extraction Tool for Human Variations.
 	http://rockt.github.io/SETH/.
