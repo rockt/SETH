@@ -17,7 +17,7 @@ SETH modifies MutationFinder's original capabilities in order to match a wider s
 Results from the four different components are collected and represented in the Java as  [MutationMention](https://github.com/rockt/SETH/blob/master/src/main/java/de/hu/berlin/wbi/objects/MutationValidation.java).
 The general NER-workflow is also depicted in the following figure.
 
-![Workflow](https://github.com/rockt/SETH/blob/ad7b9fbccd976a6775a03daf332b08ee52a08a0f/images/dataflow.png "NER-Workflow")
+[Workflow](https://github.com/rockt/SETH/blob/ad7b9fbccd976a6775a03daf332b08ee52a08a0f/images/dataflow.png)
 
 If possible, extracted SNP mentions are linked to [dbSNP](http://www.ncbi.nlm.nih.gov/SNP/). This process  is referred to as named entity normalization (NEN). For normalization SETH requires a list of potential entrez gene identifiers. Gene names may either come from dedicated gene name recognition and normaluzation tools, such as [GNAT](http://gnat.sourceforge.net/).
 Alternatively, we recomend the use of NCBI's gene2pubmed [database](ftp://ftp.ncbi.nlm.nih.gov/gene/DATA/gene2pubmed.gz).
