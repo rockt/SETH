@@ -88,17 +88,12 @@ containing a list of mutations that SETH should link to dbSNP (*i.e.* rs numbers
 
 # Code Example
 
-``` ruby
-def index
-puts "hello world"
-end
-```
+
 
 ##A full example performing Named Entity Recognition and Normalization (using all components) can be found here:
 Java [seth.SETH](https://github.com/rockt/SETH/blob/master/src/main/java/seth/SETH.java#L160-L205)
 
 ``` java
-
 /** Part 1:Named Entity Recognition */
 
 //Initiate SETH using our modified MutationFinder regular expressions, exact Backus Naur grammar, and regular expressions for deprecated mutation mentions
