@@ -94,15 +94,6 @@ containing a list of mutations that SETH should link to dbSNP (*i.e.* rs numbers
 ##A full example performing Named Entity Recognition and Normalization (using all components) can be found here:
 Java [seth.SETH](https://github.com/rockt/SETH/blob/master/src/main/java/seth/SETH.java#L160-L205)
 
-``` java
-expressions for deprecated mutation mentions
-SETH seth = new SETH("resources/mutations.txt", true, true);
-List<MutationMention> mutations = seth.findMutations("p.A123T and Val158Met"); //Perform NER for submitted string
-
-for(MutationMention mutation : mutations){ //Print result of NER to stdout
-	System.out.println(mutation.toNormalized());
-} 
-```
 
 <!-- For some reason this gets not correctly visualized
 ``` java
