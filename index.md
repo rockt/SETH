@@ -243,9 +243,9 @@ F₁        0.91
 
 | Data set | Tool (setting) | Predictions | Matched | Without gene |
 |----------|----------------|-------------|---------|--------------|
-|          |                |             |         |              |
-|          |                |             |         |              |
-|          |                |             |         |              |
+|table     | SETH-NER       |   704       |    179  | 207          |
+|table     | MutationFinder |    ---      | 462     | 564          |
+|table     | MF++           |             |         |              |
 
 # References
 - Caporaso, J. G. *et al.* (2007). 
