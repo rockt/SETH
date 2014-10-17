@@ -184,6 +184,7 @@ F₁        0.91
 #### MutationFinder-development  corpus using original MutationFinder evaluation scripts (Caporaso *et al.*, 2007) 
     java -cp seth.jar seth.seth.eval.ApplyNER resources/mutationfinder/corpus/devo_text.txt resources/mutations.txt true resources/devo_text.seth
     python resources/mutationfinder/origDist/performance.py resources/devo_text.seth  resources/mutationfinder/corpus/devo_gold_std.txt
+    
 Precision 0.97
 Recall    0.83
 F₁        0.89
@@ -191,6 +192,7 @@ F₁        0.89
 #### MutationFinder-test  corpus using original MutationFinder evaluation scripts (Caporaso *et al.*, 2007) 
     java -cp seth.jar seth.seth.eval.ApplyNER resources/mutationfinder/corpus/test_text.txt resources/mutations.txt true resources/test_text.seth
     python resources/mutationfinder/origDist/performance.py resources/test_text.seth  resources/mutationfinder/corpus/test_gold_std.txt
+    
 Precision 0.97
 Recall    0.81
 F₁        0.88
@@ -198,6 +200,7 @@ F₁        0.88
 #### Corpus of Wei *et al.* (2013)
     java -cp seth.jar seth.seth.eval.ApplyNERToWei resources/Wei2013/train.txt  resources/mutations.txt  resources/Wei2013.seth
     java -cp seth.jar seth.seth.eval.EvaluateWei resources/Wei2013/train.txt resources/Wei2013.seth
+    
 Precision 0.94
 Recall    0.80
 F₁        0.86
@@ -205,6 +208,7 @@ F₁        0.86
 #### Corpus of Wei *et al.* (2013); test
     java -cp seth.jar seth.seth.eval.ApplyNERToWei resources/Wei2013/test.txt  resources/mutations.txt  resources/Wei2013.seth
     java -cp seth.jar seth.seth.eval.EvaluateWei resources/Wei2013/test.txt resources/Wei2013.seth
+    
 Precision 0.95
 Recall    0.77
 F₁        0.85
@@ -214,6 +218,7 @@ F₁        0.85
 #### Corpus of Verspoor *et al.* (2013)
     java -cp seth.jar seth.seth.eval.ApplyNerToVerspoor resources/Verspoor2013/corpus/ resources/mutations.txt resources/Verspoor2013.seth
     java -cp seth.jar seth.seth.eval.EvaluateVerspoor resources/Verspoor2013/annotations/ resources/Verspoor2013.seth
+    
 Precision 0.87
 Recall    0.14
 F₁        0.24
@@ -222,12 +227,14 @@ F₁        0.24
 
 #### Corpus of Thomas *et al.* (2011)
     java -cp seth.jar de.hu.berlin.wbi.process.Evaluate myProperty.xml resources/thomas2011/corpus.txt
+    
 Precision 0.96
 Recall    0.58
 F₁        0.72
 
 #### Corpus of OSIRIS (Furlong *et al.*, 2008)
     java -cp seth.jar de.hu.berlin.wbi.process.osiris.EvaluateOsiris myProperty.xml resources/OSIRIS/corpus.xml
+    
 Precision 0.96
 Recall    0.86
 F₁        0.91
@@ -257,6 +264,9 @@ Database (Oxford).
 - Wei, C.-H. *et al.* (2013). 
 **tmvar: a text mining approach for extracting sequence variants in biomedical literature.** 
 Bioinformatics, 29(11), 1433–1439.
+- Yepes, A. J. and Verspoor, K. 
+**Mutation extraction tools can be combined for robust recognition of genetic variants in the literature**
+F1000Research 2014, 3:18 
 
 # Rebuilding the database used for SNP normalization
 **WARNING:** We provide a stand-alone (embedded) [Derby database](https://docs.google.com/file/d/0B9uTfq0OyHAsdDNMQzNxWDRhZVE/edit?usp=sharing). 
