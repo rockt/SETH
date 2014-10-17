@@ -241,14 +241,11 @@ F₁        0.91
 
 #### Cosmic corpus as introduced in Yepes and Verspoor (2014)
 
-| Data set        | Tool (and setting)  | Matched  | Matched (without gene) | named entities | 
-| --------------- | ------------------- | -------- | ---------------------- | -------------  | 
-
-
-Markdown | Less | Pretty
---- | --- | ---
-*Still* | `renders` | **nicely**
-1 | 2 | 3
+| Tables        | Are           | Cool  |
+| ------------- |:-------------:| -----:|
+| col 3 is      | right-aligned | $1600 |
+| col 2 is      | centered      |   $12 |
+| zebra stripes | are neat      |    $1 |
 
 # References
 - Caporaso, J. G. *et al.* (2007). 
