@@ -244,6 +244,12 @@ F₁        0.91
 | Data set        | Tool (and setting)  | Matched  | Matched (without gene) | named entities | 
 | --------------- | ------------------- | -------- | ---------------------- | -------------  | 
 
+
+Markdown | Less | Pretty
+--- | --- | ---
+*Still* | `renders` | **nicely**
+1 | 2 | 3
+
 # References
 - Caporaso, J. G. *et al.* (2007). 
 **MutationFinder: a high-performance system for extracting point mutation mentions from text.** 
