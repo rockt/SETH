@@ -175,6 +175,7 @@ F₁        0.85
 #### SETH corpus (630 abstracts)
     java -cp seth.jar seth.seth.eval.ApplyNER resources/SETH-corpus/corpus.txt resources/mutations.txt false resources/SETH-corpus.seth
     java -cp seth.jar seth.seth.eval.EvaluateNER resources/SETH-corpus.seth resources/SETH-corpus/yearMapping.txt  resources/SETH-corpus/annotations/
+    
 Precision 0.98
 Recall    0.86
 F₁        0.91
