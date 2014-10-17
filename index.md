@@ -239,6 +239,11 @@ Precision 0.96
 Recall    0.86
 F₁        0.91
 
+#### Cosmic corpus as introduced in Yepes and Verspoor (2014)
+
+| Data set        | Tool (and setting)  | Matched  | Matched (without gene) | named entities | 
+| --------------- | ------------------- | -------- | ---------------------- | -------------  | 
+
 # References
 - Caporaso, J. G. *et al.* (2007). 
 **MutationFinder: a high-performance system for extracting point mutation mentions from text.** 
