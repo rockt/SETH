@@ -241,11 +241,22 @@ F₁        0.91
 
 #### Cosmic corpus as introduced in Yepes and Verspoor (2014)
 
+
+| Data set | Tool (setting) | Predictions | Matched | Without gene |
+|:---------|:---------------|------------:|--------:|-------------:|
+|table     | SETH-NER       | 704         | 179     | 207          |
+|table     | MutationFinder | ---         | 462     | 564          |
+|table     | MF++           | 1304        | 481     | 578          |
+|table     | Regex          | 107         | 14      | 14           |
+|table     | Full-SETH      | 2102        | 646     | 771          |
+
+
 | Data set | Tool (setting) | Predictions | Matched | Without gene |
 |----------|----------------|-------------|---------|--------------|
-|table     | SETH-NER       |   704       |    179  | 207          |
-|table     | MutationFinder |    ---      | 462     | 564          |
-|table     | MF++           |             |         |              |
+|          |                |             |         |              |
+|          |                |             |         |              |
+|          |                |             |         |              |
+
 
 # References
 - Caporaso, J. G. *et al.* (2007). 
