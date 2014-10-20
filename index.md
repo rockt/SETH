@@ -250,7 +250,8 @@ F₁        0.91
 |table     | Regex          | 107         | 14      | 14           |
 |table     | Full-SETH      | 2102        | 646     | 771          |
 
-|pdf.all   | SETH-NER       | 704         | 179     | 207          |
+|pdf.all   | SETH-NER       | 1539        | 149     | 237          |
+|pdf.all   | MF++           | 2434        | 697     | 978          |
 
 
 
