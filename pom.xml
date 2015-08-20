@@ -6,7 +6,61 @@
 
     <groupId>rockt</groupId>
     <artifactId>seth</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.1.1</version>
+    <packaging>jar</packaging>
+
+    <name>SETH: SNP Extraction Tool for Human Variations</name>
+    <description>SETH is a software that performs named entity recognition (NER) of single nucleotide polymorphisms (SNPs) and copy number variations (CNVs) from natural language texts</description>
+    <url>http://rockt.github.io/SETH/</url>
+
+    <licenses>
+      <license>
+	<name>The Apache License, Version 2.0</name>
+	<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+	<comments>SETH-core is published under Apache Licence Version 2.0. The original MutationFinder has been published by the University of Colorado under a MIT License.</comments>
+      </license>
+    </licenses>
+
+    <developers>
+      <developer>
+	<name>Philippe Thomas</name>
+	<email></email>
+	<organization>Humboldt Universitaet zu Berlin</organization>
+	<organizationUrl>https://www.informatik.hu-berlin.de/de/forschung/gebiete/wbi</organizationUrl>
+      </developer>
+
+      <developer>
+	<name>Tim Rocktaeschel</name>
+	<email></email>
+	<organization>Humboldt Universitaet zu Berlin</organization>
+	<organizationUrl>https://www.informatik.hu-berlin.de/de/forschung/gebiete/wbi</organizationUrl>
+      </developer>
+    </developers>
+
+    <contributors>
+      <contributor>
+	<name>Yvonne Mayer</name>
+	<email></email>
+	<organization>Humboldt Universitaet zu Berlin</organization>
+	<organizationUrl>https://www.informatik.hu-berlin.de/de/forschung/gebiete/wbi</organizationUrl>
+      </contributor>
+
+      <contributor>
+	<name>Eugene Brevdo</name>
+	<email></email>
+	<url>https://github.com/ebrevdo</url>
+	<organization>Department of Electrical Engineering at Princeton University</organization>
+	<organizationUrl>http://ee.princeton.edu/</organizationUrl>
+      </contributor>
+    </contributors>
+    
+
+    <scm>
+      <connection>scm:git:git@github.com:rockt/SETH.git</connection>
+      <developerConnection>scm:git:git@github.com:rockt/SETH.git</developerConnection>
+      <url>git@github.com:rockt/SETH.git</url>
+    </scm>
+
 
     <dependencies>
         <dependency>
@@ -39,6 +93,7 @@
             <version>1.2</version>
         </dependency>
 
+<!--
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
@@ -50,6 +105,7 @@
             <artifactId>derby</artifactId>
             <version>10.9.1.0</version>
         </dependency>
+-->
         <dependency>
             <groupId>oro</groupId>
             <artifactId>oro</artifactId>
@@ -62,7 +118,12 @@
             <resource>
                 <targetPath>${basedir}/target/classes/resources</targetPath>
                 <directory>${basedir}/resources</directory>
+		<filtering>true</filtering>
+		<includes>
+		 <include>mutations.txt</include>
+		</includes>
             </resource>
+
             <resource>
                 <targetPath>${basedir}/target/classes/desc</targetPath>
                 <directory>${basedir}/desc</directory>
