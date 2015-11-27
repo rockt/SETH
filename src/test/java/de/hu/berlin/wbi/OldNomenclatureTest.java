@@ -27,25 +27,35 @@ public class OldNomenclatureTest extends TestCase {
 
     @Before
     public void setUp() {
-        seth = new SETH("resources/mutations.txt", false, true);
+        seth = new SETH("resources/mutations.txt", false, true); //Initializes SETH
     }
 
+    /**
+     * Wrapper function to test if a mutation mention is correctly identified within a string
+     * E.g., assertSingleMutation("vanilla text p.Ala123Ter mutation", "p.Ala123Ter");
+     *  tests if SETH recognizes the correct range
+     * @param text Long string with mutation mention
+     * @param mutation Substring contained in the original text, which should be identified as mutation
+     */
     private void assertSingleMutation(String text, String mutation){
         List<MutationMention> mutationMentions = seth.findMutations(text);
 
-        assertEquals(1, mutationMentions.size());
-        assertEquals(mutation,mutationMentions.get(0).getText());
+        assertTrue(text.contains(mutation)); //Is the string contained in the provided text?
+        assertEquals(1, mutationMentions.size()); //We support only texts with one mutation
+        assertEquals(mutation,mutationMentions.get(0).getText()); //Is the substring identified?
     }
 
+    /**
+     * Wrapper function, testing that we identify the provided string as a mutation
+     * @param text
+     */
     private void assertSingleMutation(String text) {
 
         List<MutationMention> mutationMentions = seth.findMutations(text);
 
         assertEquals(1, mutationMentions.size());
-        System.out.println(text +" '" +mutationMentions.get(0).getText() +"'");
         assertEquals(text,mutationMentions.get(0).getText());
     }
-
 
 
     /**
@@ -56,13 +66,12 @@ public class OldNomenclatureTest extends TestCase {
     @Test
     public void testBeaudet1993() throws Exception {
 
-
-
+        //Insertions (one string one mutation)
         assertSingleMutation("435insA");
         assertSingleMutation("1154insTC");
         assertSingleMutation("1154ins12");
 
-        //Deletions
+        //Deletions (one string one mutation)
         assertSingleMutation("441delA");
         assertSingleMutation("241delAT");
         assertSingleMutation("deltaF508");
@@ -70,24 +79,22 @@ public class OldNomenclatureTest extends TestCase {
         assertSingleMutation("241delAT");
         assertSingleMutation("852del22");
 
+        //Deletions (with some allowed prefix characters)
         assertSingleMutation("(441delA", "441delA");
         assertSingleMutation(",441delA ", "441delA");
         assertSingleMutation("(241delAT)", "241delAT");
         assertSingleMutation(" deltaF508,", "deltaF508");
-        assertSingleMutation("c [ΔF508 ", "ΔF508");
-        assertSingleMutation("d 241delAT ", "241delAT");
-        assertSingleMutation("e 852del22 ", "852del22");
+        assertSingleMutation("abcd [ΔF508 ", "ΔF508");
+        assertSingleMutation("Abcd 241delAT ", "241delAT");
+        assertSingleMutation("--> 852del22 ", "852del22");
 
-
-
-        //Substititions
+        //Substititions (one string one mutation)
         assertSingleMutation("G85A");
         assertSingleMutation("D44G");
         assertSingleMutation("A455E");
         assertSingleMutation("S549R");
         assertSingleMutation("Gly to Ala substitution at codon 86");
         assertSingleMutation("Tyr to stop at codon 76");
-
         assertSingleMutation("G85A, ", "G85A");
         assertSingleMutation(" D44G; ", "D44G");
         assertSingleMutation("(A455E)", "A455E");
@@ -95,7 +102,7 @@ public class OldNomenclatureTest extends TestCase {
         assertSingleMutation(" Gly to Ala substitution at codon 86", "Gly to Ala substitution at codon 86");
         assertSingleMutation("Tyr to stop at codon 76 ", "Tyr to stop at codon 76");
 
-        //Intronic substitions
+        //Intronic DNA-substitions
         assertSingleMutation("621+1G->T");
         assertSingleMutation("621+1G→T");
         assertSingleMutation("622-2A->C");
@@ -106,7 +113,7 @@ public class OldNomenclatureTest extends TestCase {
         assertSingleMutation("622-2A →C");
         assertSingleMutation("622-2A → C");
 
-        //Protein vs. DNA Alleles
+        //Protein-substitutions and DNA-alleles
         assertSingleMutation("M/V470");
         assertSingleMutation("M/V 470");
         assertSingleMutation("Met/Val470");
@@ -116,7 +123,7 @@ public class OldNomenclatureTest extends TestCase {
         assertSingleMutation("125G/C");
         assertSingleMutation("125 G/C");
 
-
+        //DNA and protein substitutions using "->"
         assertSingleMutation("A->G at 263");
         assertSingleMutation("C->A at 1496");
         assertSingleMutation("Asp->Gly at 44");
@@ -124,7 +131,7 @@ public class OldNomenclatureTest extends TestCase {
         assertSingleMutation("Ser->Arg at 549");
         assertSingleMutation("Gln->Stop at 39");
 
-        //Free text deletion insertion currently not supported
+        //TODO Free text deletion insertion currently not supported
         //assertSingleMutation("Deletion of AT at 241");
         //assertSingleMutation("Deletion of 22 bp from 852");
         //assertSingleMutation("Insertion of TC after 1154");
@@ -132,20 +139,19 @@ public class OldNomenclatureTest extends TestCase {
 
     }
 
-
-
     /**
-     *   JUnit test classes generated from the Publication:
+     *   JUnit test classes generated from the publication:
      *   Antonarakis SE, McKusick VA: Discussion on mutation nomenclature. Hum Mutat 4(2):166, 1994.
      *   http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=7981723&dopt=Abstract
      */
     @Test
-    public void testBla() throws Exception{
+    public void Antonarakis1994() throws Exception{
 
-        assertSingleMutation("G54C");
+        //Substitutions with termination codon (nonsense mutations)
         assertSingleMutation("Arg250Ter");
         assertSingleMutation("R250X");
 
+        //Deletions
         assertSingleMutation("Phe508del");
         assertSingleMutation("Phe508del, ", "Phe508del");
 
@@ -157,20 +163,31 @@ public class OldNomenclatureTest extends TestCase {
      *   http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=8889576&dopt=Abstract
      */
     @Test
-    public void testFoo() throws  Exception{
+    public void NomenclatureCommitee1996() throws  Exception{
 
+        //Substitutions (also using →)
         assertSingleMutation("G54C");
         assertSingleMutation("54G→C");
         assertSingleMutation("ΔF508");
+        assertSingleMutation("2472G→T");
+        assertSingleMutation("2472G-->T");
+        assertSingleMutation("Y76X");
+
+        //Deletions (also using Δ)
         assertSingleMutation("F508del");
         assertSingleMutation("T702del");
+        assertSingleMutation("411delA");
+        assertSingleMutation("241delAT");
+        assertSingleMutation("852del22");
 
-        assertSingleMutation("G54C ", "G54C");
-        assertSingleMutation("54G→C,", "54G→C");
         assertSingleMutation("(ΔF508)", "ΔF508");
         assertSingleMutation(" F508del ", "F508del");
         assertSingleMutation(" T702del ", "T702del");
 
+        assertSingleMutation("435insA");
+        assertSingleMutation("3320ins5");
+
+        //Intronic variations
         assertSingleMutation("IVS4+1G>T");
         assertSingleMutation("IVS4+1G->T");
         assertSingleMutation("IVS4+1G-->T");
@@ -186,22 +203,11 @@ public class OldNomenclatureTest extends TestCase {
         assertSingleMutation("IVS3-2A-->T");
         assertSingleMutation("IVS3-2A→T");
 
+        //TODO Currently not supported
         //assertSingleMutation("1271IVS+1G>T");
         //assertSingleMutation("1271IVS+1G->T");
         //assertSingleMutation("1271IVS+1G-->T");
         //assertSingleMutation("1271IVS+1G→T");
-
-
-        assertSingleMutation("2472G→T");
-        assertSingleMutation("2472G-->T");
-
-        assertSingleMutation("Y76X");
-        assertSingleMutation("411delA");
-        assertSingleMutation("241delAT");
-        assertSingleMutation("852del22");
-
-        assertSingleMutation("435insA");
-        assertSingleMutation("3320ins5");
     }
 
 
@@ -211,15 +217,19 @@ public class OldNomenclatureTest extends TestCase {
      *   http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=8889577&dopt=Abstract
      */
     @Test
-    public void testBar() throws  Exception{
+    public void Beutler1996() throws  Exception{
 
+        //Skipped by mutationfinder, otherwise false-positives increase tremendously
         //assertSingleMutation("E6V");
-        assertSingleMutation("R408W");
-        assertSingleMutation("1347 C->T");
+
+        //Skipped, because we define a mutation to contain at least a type (deletion), position (508), and a wildtype!
 //        assertSingleMutation("Δ508");
 //        assertSingleMutation("delta508");
 //        assertSingleMutation("Delta508");
 //        assertSingleMutation("1507del");
+
+        assertSingleMutation("R408W");
+        assertSingleMutation("1347 C->T");
         assertSingleMutation("241delAT");
         assertSingleMutation("852del22");
         assertSingleMutation("1154insTC");
@@ -228,12 +238,11 @@ public class OldNomenclatureTest extends TestCase {
         assertSingleMutation("M/V470");
         assertSingleMutation("1716G/A");
 
-        /**
-         *      assertSingleMutation("pR408W");
-         *      assertSingleMutation("c1347 C->T");
-         *      assertSingleMutation("g1347 C->T");
-         */
 
+        //TODO: Currently not supported by SETH
+         //assertSingleMutation("pR408W");
+         //assertSingleMutation("c1347 C->T");
+         //assertSingleMutation("g1347 C->T");
     }
 
     /**
@@ -242,7 +251,7 @@ public class OldNomenclatureTest extends TestCase {
      *   http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=9450896&dopt=Abstract
      */
     @Test
-    public void testFooBar() throws  Exception{
+    public void Antonarakis1998() throws  Exception{
 
         assertSingleMutation("1997delT");
 //        assertSingleMutation("1997-1999del");
@@ -267,12 +276,12 @@ public class OldNomenclatureTest extends TestCase {
      *   http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=10612815&dopt=Abstract
      */
     @Test
-    public void testDenDunnen2000() throws Exception{
+    public void DenDunnen2000() throws Exception{
 
         assertSingleMutation("c.1997G>T");
         assertSingleMutation("c.1997-1999del");
         assertSingleMutation("c.1997-1999delTTC");
-//        assertSingleMutation("c.1998-1999insTG"); //@FIXME
+//        assertSingleMutation("c.1998-1999insTG"); //TODO FIXME
         assertSingleMutation("IVS4-2A>C");
         assertSingleMutation("IVS4+1G>T");
         assertSingleMutation("13_14delTT");
@@ -291,7 +300,7 @@ public class OldNomenclatureTest extends TestCase {
      *   http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=11479744&dopt=Abstract
      */
     @Test
-    public void testDenDunnen2001() throws Exception{
+    public void DenDunnen2001() throws Exception{
 
         assertSingleMutation("g.76A>T");
         assertSingleMutation("c.76A>T");
@@ -362,7 +371,7 @@ public class OldNomenclatureTest extends TestCase {
      *   http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=21309030&dopt=Abstract
      */
     @Test
-    public void testTaschner2011() throws Exception{
+    public void Taschner2011() throws Exception{
         assertSingleMutation("c.76A>C");
         assertSingleMutation("c.77T>G");
         assertSingleMutation("c.76_77delinsCG");
@@ -378,13 +387,17 @@ public class OldNomenclatureTest extends TestCase {
      *   http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3194197/
      */
     @Test
-    public void testLaros2011() throws Exception{
+    public void Laros2011() throws Exception{
         assertSingleMutation("NM_003002.2:c.274G>T");
         assertSingleMutation("c.274G>T");
         //assertSingleMutation("g.100_200inv{158A>C}");
        // assertSingleMutation("g.100_200delinsAB23456.7");
     }
 
+    /**
+     * Some unit tests, which we wrote during the development of SETH
+     * @throws Exception
+     */
     @Test
     public void testErrors() throws  Exception{
         assertSingleMutation("+2740 A>G");
@@ -398,15 +411,12 @@ public class OldNomenclatureTest extends TestCase {
         assertSingleMutation("1009delA");
         assertSingleMutation("1009 delA");
         //assertSingleMutation("IVS8+4 A>G");
-        //assertSingleMutation("delTTCA");
         //assertSingleMutation("V311fs");
         assertSingleMutation("1631delC");
         assertSingleMutation("DeltaG91");
-//        assertSingleMutation("Delta32");
         assertSingleMutation("3432delT");
         assertSingleMutation("-134delA");
         //assertSingleMutation("c2403T --> C");
 
     }
-
 }
