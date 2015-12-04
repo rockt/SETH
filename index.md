@@ -2,25 +2,31 @@
 layout: default
 ---
 
-SETH is a software that performs named entity recognition (NER) of single nucleotide polymorphisms (SNPs) and copy
-number variations (CNVs) from natural language texts. For NER SETH builds on four individual components:
+SETH is a software that performs named entity recognition (NER) of genetic variants (with an emphasis on single nucleotide polymorphisms (SNPs)) from natural language texts. 
+SETH allows to recognize the following mutation subtypes: substitution, deletion, insertion, duplication, insertion-deletion (insdel), inversion, conversion, translocation, frameshift, short-sequence repeat, and dbSNP mention.
+Recognized mutation mentions can be grounded to the Human Mutation Nomenclature (HGVS) and normalized to dbSNP identifiers or UniProt sequences.
+For NER SETH builds on four individual components:
 
 1.) Mutations following the [HGVS nomenclature](http://www.hgvs.org/mutnomen/) (den Dunnen and Antonarakis, 2000) are recognized by implementing an Extended Backus–Naur (EBNF) grammar proposed by Laros *et al.* (2011) using Scala combinators.
 
 2.)To get hold of substitutions not following the nomenclature, SETH integrates MutationFinder (Caporaso *et al.*, 2007).
 SETH modifies MutationFinder's original capabilities in order to match a wider scope of substitutions (DNA substitutions, nonsense mutations, and ambiguous mutations) not following the HGVS nomenclature. This is done by modifying the original MutationFinder implementation together with additional and modified regular expressions.
 
-3.) Mutations not following the nomenclature are recognized using a separate set of regular expressions.
+3.) Mutations (substitutions, deletions, insersions, ...) not following the nomenclature are recognized using a separate set of regular expressions.
 
-4.) Mutations described as dbSNP-identifiers are recongized using the last component.
+4.) Mutations described as dbSNP-identifiers are recongized using a regular expression.
 
-Results from the four different components are collected and represented in the Java as  [MutationMention](https://github.com/rockt/SETH/blob/master/src/main/java/de/hu/berlin/wbi/objects/MutationValidation.java).
+Results from the four different components are collected, merged,  and represented as the following object  [MutationMention](https://github.com/rockt/SETH/blob/master/src/main/java/de/hu/berlin/wbi/objects/MutationValidation.java).
 The general NER-workflow is also depicted in the following figure.
 
 ![Workflow](https://raw.githubusercontent.com/rockt/SETH/ad7b9fbccd976a6775a03daf332b08ee52a08a0f/images/dataflow.png "NER worflow of SETH").
 
-If possible, extracted SNP mentions are linked to [dbSNP](http://www.ncbi.nlm.nih.gov/SNP/). This process  is referred to as named entity normalization (NEN). For normalization SETH requires a list of potential entrez gene identifiers. Gene names may either come from dedicated gene name recognition and normaluzation tools, such as [GNAT](http://gnat.sourceforge.net/).
+If possible, extracted SNP mentions are linked to [dbSNP](http://www.ncbi.nlm.nih.gov/SNP/) or [UniProt-KB seqeuence](http://www.uniprot.org/help/uniprotkb). 
+This process  is referred to as named entity normalization (NEN). 
+For normalization SETH requires a list of potential entrez gene candidates/identifiers. 
+Gene names may either come from dedicated gene name recognition and normaluzation tools, such as [GNAT](http://gnat.sourceforge.net/).
 Alternatively, we recomend the use of NCBI's gene2pubmed [database](ftp://ftp.ncbi.nlm.nih.gov/gene/DATA/gene2pubmed.gz).
+SETH currently uses these two data-sources
 
 # Get SETH
 
@@ -32,7 +38,7 @@ Alternatively, we recomend the use of NCBI's gene2pubmed [database](ftp://ftp.nc
 	mvn clean compile assembly:single
 	mv ./target/seth-1.0-SNAPSHOT-jar-with-dependencies.jar seth.jar
 
-# NER
+# Examples for NER
 
 ## Command-line Usage
 
@@ -54,10 +60,10 @@ the normalization process.
 For user convenience, we provide a [dump as embedded Derby database](https://docs.google.com/file/d/0B9uTfq0OyHAsdDNMQzNxWDRhZVE/edit?usp=sharing) (~2GB).
 
 ## Command-line Usage
-To use SETH's NEN component from the command line, you need to provida a [XML property file](https://github.com/rockt/SETH/blob/master/resources/seth_properties.xml) 
+To use SETH's NEN component from the command line, you need to provid a [XML property file](https://github.com/rockt/SETH/blob/master/resources/seth_properties.xml) 
 that handles the connection to the Derby database. 
-Subsequently, you can provide a TSV file (with PubMed ID, mutation mention, start and end position) 
-containing a list of mutations that SETH should link to dbSNP (*i.e.* rs numbers).
+Subsequently, you can provide a tab-seperated [file](https://github.com/rockt/SETH/blob/master/resources/snpExample.txt) (with PubMed ID, mutation mention, start- and end-position) 
+SETH should normalize to dbSNP (*i.e.* rs numbers).
 
     java -cp seth.jar de.hu.berlin.wbi.process.Normalize resources/property.xml resources/snpExample.txt
 
@@ -88,69 +94,17 @@ containing a list of mutations that SETH should link to dbSNP (*i.e.* rs numbers
 	Normalization possible for 14/20 mentions
 
 # Code Example
+SETH allows simple integration into your Java-Projects. In this section we provide some examples to perform NER and NEN.
+
+
+## A complete pipeline performing all steps (NER+NEN) can be found here:
+[Java](https://github.com/rockt/SETH/blob/master/src/main/java/seth/SETH.java#L160-L205)
 
 
 
-##A full example performing Named Entity Recognition and Normalization (using all components) can be found here:
-Java [seth.SETH](https://github.com/rockt/SETH/blob/master/src/main/java/seth/SETH.java#L160-L205)
+## Example using only the backus naur grammar in Scala EBNF for HGVS mutation nomenclature implemented as parser combinators
+[Scala](https://github.com/rockt/SETH/blob/master/src/main/scala/seth/ner/SETHNER.scala#L128-L356)
 
-
-<!-- For some reason this gets not correctly visualized
-``` java
-/** Part 1:Named Entity Recognition */
-
-//Initiate SETH using our modified MutationFinder regular expressions, exact Backus Naur grammar, and regular expressions for deprecated mutation mentions
-SETH seth = new SETH("resources/mutations.txt", true, true);
-List<MutationMention> mutations = seth.findMutations("p.A123T and Val158Met"); //Perform NER for submitted string
-
-for(MutationMention mutation : mutations){ //Print result of NER to stdout
-	System.out.println(mutation.toNormalized());
-} 
-
-
-/** Part 2: Normalization of mutation mentions to dbSNP
-* This part communicates with a locally installed SQL database
-*/
-//Load database properties
-final Properties property = new Properties();
-property.loadFromXML(new FileInputStream(new File("myProperty.xml"))); 
-final DatabaseConnection mysql = new DatabaseConnection(property);
-
-//Initialize database settings
-mysql.connect(); //Connect with local derby Database
-dbSNP.init(mysql, property.getProperty("database.PSM"), property.getProperty("database.hgvs_view"));
-UniprotFeature.init(mysql, property.getProperty("database.uniprot"));
-
-int gene = 1312;	//Entrez Gene ID associated with the mutation mention A123T and Val158Met
-final List<dbSNP> potentialSNPs = dbSNP.getSNP(gene);	//Get a list of dbSNPs which could potentially represent the mutation mention
-final List<UniprotFeature> features = UniprotFeature.getFeatures(gene); //Get all associated UniProt features
-for(MutationMention mutation : mutations){
-	System.out.println(mutation);
-	mutation.normalizeSNP(potentialSNPs, features, false);
-	List<dbSNPNormalized> normalized = mutation.getNormalized();	//Get list of all dbSNP entries with which I could successfully associate the mutation
-	// Print information
-	for(dbSNPNormalized snp : normalized){
-		System.out.println(mutation +" --- rs" +snp.getRsID());
-	}
-}
-
-```
--->
-
-## Example using only the backus naur grammar in Scala [EBNF for HGVS mutation nomenclature implemented as parser ombinators](https://github.com/rockt/SETH/blob/master/src/main/scala/seth/ner/SETHNER.scala#L128-L356)
-
-
-<!---
-## NER
-### Scala [EBNF for HGVS mutation nomenclature mplemented as parser combinators](https://github.com/rockt/SETH/blob/master/src/main/scala/seth/ner/SETHNER.scala#L128-L356)
-### Scala (excluding MutationFinder) [seth.ner.SETHNERApp](https://github.com/rockt/SETH/blob/master/src/main/scala/seth/ner/SETHNER.scala#L18-L28)
-### Java (excluding MutationFinder) [seth.ner.wrapper.SETHNERApp](https://github.com/rockt/SETH/blob/master/src/main/java/seth/ner/wrapper/SETHNERApp.java#L13-L24)
-### Java (including MutationFinder) [seth.ner.wrapper.SETHNERAppMut](https://github.com/rockt/SETH/blob/master/src/main/java/seth/ner/wrapper/SETHNERAppMut.java#L14-L25)
-## NEN
-### Java [de.hu.berlin.wbi.process.MinimalExample](https://github.com/rockt/SETH/blob/master/src/main/java/de/hu/berlin/wbi/process/MinimalExample.java#L50-L71)
-## NER and NEN
-### Java [seth.SETH](https://github.com/rockt/SETH/blob/master/src/main/java/seth/SETH.java#L104-L149)
--->
 
 # Reproducing our results
 
@@ -239,6 +193,8 @@ Precision 0.96
 Recall    0.86
 F₁        0.91
 
+
+<!--
 #### Cosmic corpus as introduced in Yepes and Verspoor (2014)
 
 
@@ -252,7 +208,7 @@ F₁        0.91
 
 |pdf.all   | SETH-NER       | 1539        | 149     | 237          |
 |pdf.all   | MF++           | 2434        | 697     | 978          |
-
+-->
 
 
 # References
@@ -286,30 +242,33 @@ F1000Research 2014, 3:18
 
 # Rebuilding the database used for SNP normalization
 **WARNING:** We provide a stand-alone (embedded) [Derby database](https://docs.google.com/file/d/0B9uTfq0OyHAsdDNMQzNxWDRhZVE/edit?usp=sharing). 
-The following steps are only needed if you want to build the database for normalization from scratch.
+The following steps are only needed if you want to build the database from scratch.
+This database is **only** required for normalization to either dbSNP or UniProt...
 
-Data is stored in a local mySQL database, but any other database can be used. 
+
+The import script is tailored towards a mySQL database, but theoretically any other database can be used. 
 However, in this case you have to adopt the following description to your database type. 
 We would be happy to get feedback about using SETH with other databases.
 
-## Download the necessary dbSNP files (we used dbSNP version 137)
+## Set up the database with all necessary tables
+	CREATE DATABASE dbSNP137 CHARACTER SET latin1;
+	mysql <dbName> -h <hostname> -u <username> -p<password> data/table.sql
 
-### Download XML dump from dbSNP
+
+## Download the necessary files 
+
+### Download a XML dump from dbSNP
 	wget ftp://ftp.ncbi.nih.gov/snp/organisms/human_9606/XML/ds\*.gz
 	
-### Download gene2pubmed links from Entrez gene
+### Download gene2pubmed links from NCBI-Entrez gene
 	wget ftp://ftp.ncbi.nih.gov/gene/DATA/gene2pubmed.gz
 	gunzip gene2pubmed.gz
 	
-### Download UniProt
+### Download UniProt-KB
 	wget ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.xml.gz
 	
-### Download UniProt mapping
+### Download UniProt to Entrez gene mapping 
 	wget ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping/idmapping.dat.gz
-
-## Set up the database with the tables "b134_SNPContigLocusId_37_2", ...,  and "genes"
-	CREATE DATABASE dbSNP137 CHARACTER SET latin1;
-	mysql <dbName> -h <hostname> -u <username> -p<password> data/table.sql
 	
 ## Import the data files needed for normalization
 
@@ -324,19 +283,22 @@ Using Scala:
 Using Java:
 	java -cp seth.jar seth.Uniprot2Tab uniprot_sprot.xml.gz idmapping.dat.gz uniprot.dat PSM.dat
 	
-### Import gene2pubmed, UniProt and PSM
+### Import  gene2pubmed, UniProt and PSM into the mySQL Database
 
 	mysqlimport  --fields-terminated-by='\t' --delete --local --verbose --host <hostname> --user=<username> --password=<password> <dbName> gene2pubmed
 	mysqlimport  --fields-terminated-by='\t' --delete --local --verbose --host <hostname> --user=<username> --password=<password> <dbName> uniprot.dat
 	mysqlimport  --fields-terminated-by='\t' --local --verbose --host <hostname> --user=<username> --password=<password> <dbName> PSM.dat
 
-Additionally, we included results from the gene name recognition tool GNAT applied on all of PubMed and PubMed Central (as of 09/12/2012).
-Updated results are available on the GeneView web site (http://bc3.informatik.hu-berlin.de/download)
+Additionally, we included results from the gene name recognition tool GNAT applied on all of PubMed and PubMed Central.
+This data is only meant as a starting point, we recommend integrating other gene-NER tools.
+Updated gene-ner results are available on the GeneView web site (http://bc3.informatik.hu-berlin.de/download)
 
-Finally, we converted the mySQL database into XML using Apache [ddlUtils](http://db.apache.org/ddlutils/) 
-and subsequently used this XML to compile an embedded Derby database.
+## Database migration 
+Finally, to allow for a better portability of SETH, we converted the original mySQL database into an embedded Derby database.
+For this we used Apache [ddlUtils](http://db.apache.org/ddlutils/) 
 
-# Cite
+
+# Cite SETH
 
 ### BibTeX
 	@misc{thomas2013seth,
@@ -350,7 +312,10 @@ and subsequently used this XML to compile an embedded Derby database.
 	Thomas, P., Rocktäschel, T., Mayer, Y., and Leser, U. (2014). SETH: SNP Extraction Tool for Human Variations.
 	http://rockt.github.io/SETH/.
 
+#Bug reports
+Issues and requests can be filed [online](https://github.com/rockt/SETH/issues)
+
 # Contact
-For questions, remarks or bug-reports please contact Philippe Thomas:
+For questions and  remarks please contact Philippe Thomas:
 
 thomas \[at\] informatik \[dot\] hu-berlin \[dot\] de
