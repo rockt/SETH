@@ -2,7 +2,6 @@ package seth.ner
 
 import org.scalatest.{GivenWhenThen, FunSpec, FunSuite}
 import org.scalatest.matchers.ShouldMatchers
-import com.codahale.logula.Logging
 
 /**
  * User: rockt
@@ -10,7 +9,7 @@ import com.codahale.logula.Logging
  * Time: 9:09 AM
  */
 
-class SETHSuite extends FunSpec with ShouldMatchers with GivenWhenThen with Logging {
+class SETHSuite extends FunSpec with ShouldMatchers with GivenWhenThen{
   val SETH = new SETHNER
 
   def isValid(input: String, parser: SETH.Parser[Any]) = SETH.isValid(input, parser)
