@@ -281,7 +281,7 @@ public class OldNomenclatureTest extends TestCase {
         assertSingleMutation("c.1997G>T");
         assertSingleMutation("c.1997-1999del");
         assertSingleMutation("c.1997-1999delTTC");
-//        assertSingleMutation("c.1998-1999insTG"); //TODO FIXME
+//        assertSingleMutation("c.1998-1999insTG"); //TODO
         assertSingleMutation("IVS4-2A>C");
         assertSingleMutation("IVS4+1G>T");
         assertSingleMutation("13_14delTT");
