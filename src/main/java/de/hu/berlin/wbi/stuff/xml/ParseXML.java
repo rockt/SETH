@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
@@ -68,7 +69,9 @@ public class ParseXML extends DefaultHandler{
 		if(args.length != 1)
 			xmlFolder = args[1];
 
-		for(File file : new File(xmlFolder).listFiles()){
+		File[] files =new File(xmlFolder).listFiles();
+		Arrays.sort(files);
+		for(File file : files){
 			if(!file.getAbsolutePath().endsWith(".gz"))
 				continue;
 
@@ -152,6 +155,9 @@ public class ParseXML extends DefaultHandler{
 
                     if(psm.getMutations().length() > 128 || psm.getWildtype().length() > 128)    //These entries lead to an SQL-Exception otherwise
                        continue;
+
+		    if(psm.getMutations().equals(psm.getWildtype())) // We only want non-synonymous mutations
+			continue;
 
 					psmHGVS.setInt(1, snp.getRsId());
 					psmHGVS.setInt(2, psm.getEntrez());
