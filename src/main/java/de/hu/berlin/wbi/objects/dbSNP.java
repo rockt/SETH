@@ -206,13 +206,15 @@ public class dbSNP {
 	}
 
 	/**
-	 * @return the unique dbSNP identifier
+	 * Get dbSNP identifier (rs-id)
+     * @return the unique dbSNP identifier
 	 */
 	public int getRsID() {
 		return rsID;
 	}
 
 	/**
+     * Set the dbSNP identifier (e.g., rs334)
 	 * @param rsID   dbSNP ID
 	 */
 	public void setRsID(int rsID) {
@@ -220,6 +222,7 @@ public class dbSNP {
 	}
 
 	/**
+     * Get the associated entrez gene identifier
 	 * @return the associated entrez gene identifier
 	 */
 	public int getGeneID() {
@@ -227,6 +230,7 @@ public class dbSNP {
 	}
 
 	/**
+     * Set the associated entrez gene identifier
 	 * @param geneID    Entrez Gene ID
 	 */
 	public void setGeneID(int geneID) {
@@ -271,8 +275,6 @@ public class dbSNP {
 	}
 
 	/**
-	 * 
-	 * 
 	 * @return list of associated HGVS mutations
 	 */
 	public Set<HGVS> getHgvs() {

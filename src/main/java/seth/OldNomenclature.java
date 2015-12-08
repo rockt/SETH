@@ -13,13 +13,9 @@ import java.util.regex.Pattern;
 import static edu.uchsc.ccp.nlp.ei.mutation.MutationExtractor.populateAminoAcidThreeToOneLookupMap;
 
 /**
- * Created with IntelliJ IDEA.
- * User: philippe
- * Date: 11.04.13
- * Time: 16:01
- *
  * This class can be used to find mutation mentions (deletions, IVS-substitions, insertions, and frameshifts)
  * written in  deprecated nomenclature
+ * @author Philippe Thomas
  */
 public class OldNomenclature {
 
@@ -48,7 +44,7 @@ public class OldNomenclature {
     final private static Pattern frameshiftPattern = Pattern.compile(prefix +"(?<group>(?<wt>[CISQMNPKDTFAGHLRWVEYBZJX])(?<pos>[1-9][0-9]*)(fs)(?<mut>X[0-9]*)?)" +suffix);
 
     /**
-     * Extracts mentions of mutations from natural language text
+     * Extracts mentions of mutations from natural language text written in deprecated nomenclature
      * @param text Input natural language text
      * @return A list of {@link MutationMention} objects
      */

@@ -41,7 +41,14 @@ public class DatabaseConnection {
 	protected Connection conn;
     protected Statement stmt;
 
-
+    /**
+     * Set up a database connection by providing all reelevant connection information
+     * @param user Username
+     * @param password  Userpassword
+     * @param database database name
+     * @param host hostname
+     * @param driver JDBC-driver
+     */
     public DatabaseConnection(String user, String password, String database, String host, String driver) {
         this.user = user;
         this.password = password;
@@ -141,6 +148,10 @@ public class DatabaseConnection {
 		return conn;
 	}
 
+    /**
+     * Returns a string representation of the object
+     * @return a string representation of the object
+     */
     @Override
     public String toString() {
         return "DatabaseConnection{" +

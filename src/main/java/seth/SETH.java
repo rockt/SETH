@@ -15,9 +15,12 @@ import java.sql.SQLException;
 import java.util.*;
 
 /**
- * This class encapsulates {@link MutationFinder} and {@link SETHNER}.
- * This allows to recognize SNPs written in the latest HGVS nomenclature (e.g. p.Ala123Tyr)
- * and SNPs written in free text (e.g. Ala to Tyr substitution at position 123)
+ * This class encapsulates modified {@link MutationFinder}, {@link SETHNER}, {@link OldNomenclature}, and {@link dbSNPRecognizer}.
+ * This allows to recognize SNPs written in the latest HGVS nomenclature (e.g. p.Ala123Tyr),
+ * SNPs written in free text (e.g. Ala to Tyr substitution at position 123),
+ * SNPs written in deprecated nomenclature
+ * and dbSNP mentions
+ * @author  Philippe Thomas
  */
 public class SETH {
 
@@ -157,7 +160,13 @@ public class SETH {
         return result;
     }
 
-    //Minimal example to apply both tools
+
+    /**
+     * Minimal example to perform named entity recognition and normalization using SETH
+     * @param args
+     * @throws SQLException
+     * @throws IOException
+     */
     public static void main(String[] args)throws SQLException, IOException {
         String text = "p.A123T and Val158Met";
 

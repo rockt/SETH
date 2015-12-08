@@ -7,12 +7,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Java wrapper for actual {@link seth.ner.SETHNER} code written in Scala
+ * Java wrapper for actual {@see seth.ner.SETHNER} code written in Scala
  */
 public class SETHNER {
     private final seth.ner.SETHNER mutationExtractor ;
 
 
+    /**
+     * Constructor for SETH-NER
+     * @param exactGrammar  specifies if we allow only exact backus naur grammar (higher precision) or inexact (higher recall).
+     *                      We recommend inexact as precision is still very high
+     */
     public SETHNER(boolean exactGrammar){
         mutationExtractor = new seth.ner.SETHNER(exactGrammar);
     }

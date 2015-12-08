@@ -17,7 +17,8 @@ along with snp-normalizer.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /**
- * This package is relevant to rebuild the MySQL-Database for SNP normalization purposes
+ *
+ * Code for applying and evaluating SETH on various corpora
  * @author Philippe Thomas
  */
-package de.hu.berlin.wbi.stuff.xml;
+package seth.seth.eval;

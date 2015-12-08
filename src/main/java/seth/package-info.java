@@ -17,7 +17,7 @@ along with snp-normalizer.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /**
- * This package is relevant to rebuild the MySQL-Database for SNP normalization purposes
+ * Package contains most logic of SETH
  * @author Philippe Thomas
  */
-package de.hu.berlin.wbi.stuff.xml;
+package seth;

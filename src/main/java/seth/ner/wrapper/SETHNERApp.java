@@ -5,7 +5,7 @@ import de.hu.berlin.wbi.objects.MutationMention;
 import java.util.List;
 /**
  * Minimal example to apply {@link SETHNER} (exluding MutationFinder) on free text
- * User: rockt
+ * @author rockt
  * Date: 11/9/12
  * Time: 11:12 AM
  */

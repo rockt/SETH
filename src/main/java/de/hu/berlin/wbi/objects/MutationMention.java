@@ -45,9 +45,20 @@ public class MutationMention {
     /** Refers to which tool has been used for extraction (e.g., MutationFinder, SETH, ...) */
     protected Tool tool;
 
-    /** Enumeration of all tools */
+    /** Enumeration of all named entity recognition components */
     public enum Tool{
-        MUTATIONFINDER, SETH, REGEX, DBSNP, CNVETH, UNKNOWN
+        /** Mutations found by MutationFinder */
+        MUTATIONFINDER,
+        /** Mutations found by SETH-NER (Backus Naur grammar)*/
+        SETH,
+        /** Mutations found by our regular expressions for deprecated nomenclatures */
+        REGEX,
+        /** Mutations detected by the dbSNP recognition component*/
+        DBSNP,
+        /** Mutations found by the CNVRecognizer class*/
+        CNVETH,
+        /** Fallack for future tools*/
+        UNKNOWN
     }
 
     /** Location in the text. */

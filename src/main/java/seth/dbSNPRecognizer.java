@@ -9,11 +9,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created with IntelliJ IDEA.
- * User: philippe
- * Date: 07.05.13
- * Time: 14:57
- * Class is used to detect dnSNP mentions in text (e.g., rs 2345)
+ * Detect dnSNP mentions in text (e.g., rs2345)
+ * @author  Philippe Thomas
  */
 public class dbSNPRecognizer {
 
@@ -22,6 +19,11 @@ public class dbSNPRecognizer {
     final private static String suffix="(?=([\\.,\\s\\)\\(\\]\\'\":;\\-/]|$))";
     final private static Pattern dbSNP = Pattern.compile(prefix +"(rs[1-9][0-9]*)" +midfix +suffix);
 
+    /**
+     * FInd dbSNP mentions in a text
+     * @param text Text to perform Named Entity Recognition
+     * @return A list of dbSNP mentions found in the provided text
+     */
     public List<MutationMention> extractMutations(String text) {
         List<MutationMention> result = new ArrayList<MutationMention>();
 

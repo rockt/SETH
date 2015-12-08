@@ -17,6 +17,9 @@ along with snp-normalizer.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /**
+ * Package to evaluate performance of SETH on the osiris dataset
+ *  
  * @author Philippe Thomas
+ *
  */
-package de.hu.berlin.wbi.stuff;
+package de.hu.berlin.wbi.process.osiris;
