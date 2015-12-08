@@ -41,7 +41,16 @@ public class DatabaseConnection {
 	protected Connection conn;
     protected Statement stmt;
 
-	/**
+
+    public DatabaseConnection(String user, String password, String database, String host, String driver) {
+        this.user = user;
+        this.password = password;
+        this.database = database;
+        this.host = host;
+        this.driver = driver;
+    }
+
+    /**
 	 * Set up a database connection, by using a java-property object
 	 * @param property -- contains database properties
 	 */
@@ -94,10 +103,11 @@ public class DatabaseConnection {
 	 * Connects with database
 	 */
 	public void connect() {
+
         try {
             Class.forName(driver).newInstance();
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-            throw new IllegalStateException("Cannot instantiate instance of driver: " + driver, e);
+            throw new IllegalStateException("Cannot instantiate instance of driver: '" + this.driver +"'", e);
         }
 
         String connectionString = host +database;
@@ -130,4 +140,15 @@ public class DatabaseConnection {
 	public Connection getConn() {
 		return conn;
 	}
+
+    @Override
+    public String toString() {
+        return "DatabaseConnection{" +
+                "driver='" + driver + '\'' +
+                ", user='" + user + '\'' +
+                ", password='" + password + '\'' +
+                ", database='" + database + '\'' +
+                ", host='" + host + '\'' +
+                '}';
+    }
 }

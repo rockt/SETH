@@ -18,6 +18,7 @@ package de.hu.berlin.wbi.objects;
  along with snp-normalizer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import edu.uchsc.ccp.nlp.ei.mutation.MutationExtractor;
 import seth.ner.wrapper.Type;
 
 import java.io.BufferedReader;
@@ -949,9 +950,13 @@ public class MutationMention {
      */
     public String toHGVS(){
 
-        //Mentions recognized by SETH are already in HGVS
-        if(tool.equals(Tool.SETH) || tool.equals(Tool.DBSNP)){
+        //Mentions in DBSNP-Nomenclature
+        if(tool.equals(Tool.DBSNP)){
             return this.text;
+        }
+        //Mentions recognized by SETH are already in HGVS
+        else if(tool.equals(Tool.SETH) ){
+            cleanSETHString(this.text);
         }
 
         switch (type){
@@ -998,6 +1003,21 @@ public class MutationMention {
         }
 
         return "??"; //In case we don't know
+    }
+
+    /**
+     * Some mutation mentions recognized by SETH are not following the human mutation nomenclature.
+     * For instance SETH recognizes mutations using three letter AA-abbreviations, contains whitespaces, or parenthesis
+     *
+     * @param mutation
+     * @return
+     */
+    private static String cleanSETHString(String mutation){
+        Map<String, String> tmpMap = MutationExtractor.populateAminoAcidThreeToOneLookupMap;
+        for(String key : tmpMap.keySet())
+            mutation =mutation.replaceAll("(?i)"+key, tmpMap.get(key));
+
+        return mutation.replaceAll("[\\s\\(\\)]", "");
     }
 
     /**
