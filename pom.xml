@@ -212,6 +212,16 @@
                     </execution>
                 </executions>
             </plugin>
+
+	      <plugin>
+		<groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-javadoc-plugin</artifactId>
+		<version>2.10.3</version>
+		<configuration>
+		  <doctitle>SETH documentation</doctitle> <!-- Used by javadoc:javadoc goal -->
+		  <windowtitle>SETH documentation</windowtitle> <!-- Used by javadoc:javadoc goal -->
+		</configuration>
+	      </plugin>
         </plugins>
     </build>
 
