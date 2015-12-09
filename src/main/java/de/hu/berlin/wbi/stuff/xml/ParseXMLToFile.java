@@ -8,6 +8,9 @@ import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
+import java.io.FileOutputStream;
+
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -50,8 +53,8 @@ public class ParseXMLToFile extends DefaultHandler {
         //psHGVS = dbconn.getConn().prepareStatement("INSERT INTO " + property.getProperty("database.hgvs_view") + " (locus_id, snp_id, hgvs, refseq) VALUES (?, ?, ?, ?)");
         //psmHGVS = dbconn.getConn().prepareStatement("INSERT INTO " + property.getProperty("database.PSM") + " (snp_id, locus_id, aa_Position, residue, wildtype) VALUES (?, ?, ?, ?, ?)");
 
-        psHGVS = new BufferedWriter(new FileWriter(new File("hgvs.tsv")));
-        psmHGVS = new BufferedWriter(new FileWriter(new File("psm.tsv")));
+        psHGVS  = new BufferedWriter(new OutputStreamWriter( new GZIPOutputStream(new FileOutputStream(new File("hgvs.tsv.gz"))), "UTF-8"));
+        psmHGVS = new BufferedWriter(new OutputStreamWriter( new GZIPOutputStream(new FileOutputStream(new File("psm.tsv.gz"))), "UTF-8"));
 
         String xmlFolder = "/home/philippe/workspace/snp-normalizer/data/dat/";
         if (args.length != 1)
@@ -68,7 +71,7 @@ public class ParseXMLToFile extends DefaultHandler {
             InputStream gzipStream = new GZIPInputStream(new FileInputStream(file));
             SAXParserFactory factory = SAXParserFactory.newInstance();
             SAXParser saxParser = factory.newSAXParser();
-            DefaultHandler handler = new ParseXML();
+            DefaultHandler handler = new ParseXMLToFile();
             saxParser.parse(gzipStream, handler);
 
         }
