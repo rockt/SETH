@@ -288,6 +288,7 @@ New: Parsing to a file (faster but needs 60 GB free space)
 	sort -u -m _tmp* -o hgvs.tsv.sorted
 
 Import	
+
 	mysqlimport  --fields-terminated-by='\t' --delete --local --verbose --host <hostname> --user=<username> --password=<password> <dbName> PSM.tsv
 	mysqlimport  --fields-terminated-by='\t' --delete --local --verbose --host <hostname> --user=<username> --password=<password> <dbName> hgvs.tsv.sorted
 
