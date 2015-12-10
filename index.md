@@ -273,14 +273,32 @@ We would be happy to get feedback about using SETH with other databases.
 ## Import the data files needed for normalization
 
 ### Parse dbSNP-XML dump
+This takes some compute resources and disk-space. Older versions of dbSNP were smaller so we changed the workflow:
+
+Original: Parsing the result directly to the database (this is slow for larger dumps):
+
 	time java -cp seth.jar de.hu.berlin.wbi.stuff.xml.ParseXML property.xml /path/with/dbSNP-XML/files/...
+
+New: Parsing to a file (faster but needs 60 GB free space)
+	time java -cp seth.jar de.hu.berlin.wbi.stuff.xml.ParseXML property.xml /path/with/dbSNP-XML/files/...
+	cat hgvs.tsv | cut -f 1-3 > hgvs2.tsv
+	split -l100000000 hgvs2.tsv '_tmp';
+	ls -1 _tmp* | while read FILE; do echo $FILE; sort $FILE -o $FILE ; done;
+	sort -u -m _tmp* -o hgvs.tsv.sorted
+
+Import	
+	mysqlimport  --fields-terminated-by='\t' --delete --local --verbose --host <hostname> --user=<username> --password=<password> <dbName> PSM.tsv
+	mysqlimport  --fields-terminated-by='\t' --delete --local --verbose --host <hostname> --user=<username> --password=<password> <dbName> hgvs.tsv.sorted
+
 	
 ### Parse UniProt-XML for protein-sequence mutations (PSM) and post-translational modifications (*e.g.* signaling peptides)
 
 Using Scala:
+
 	scala Uniprot2Tab.scala uniprot_sprot.xml.gz idmapping.dat.gz uniprot.dat PSM.dat
 	
 Using Java:
+
 	java -cp seth.jar seth.Uniprot2Tab uniprot_sprot.xml.gz idmapping.dat.gz uniprot.dat PSM.dat
 	
 ### Import  gene2pubmed, UniProt and PSM into the mySQL Database
