@@ -1,0 +1,24 @@
+-classpath
+'/home/philippe/.m2/repository/org/scalaj/scalaj-collection_2.11/1.6/scalaj-collection_2.11-1.6.jar:/home/philippe/.m2/repository/org/scala-lang/scala-library/2.11.7/scala-library-2.11.7.jar:/home/philippe/.m2/repository/oro/oro/2.0.8/oro-2.0.8.jar:/home/philippe/.m2/repository/junit/junit/4.8.1/junit-4.8.1.jar:/home/philippe/.m2/repository/org/scala-lang/modules/scala-parser-combinators_2.11/1.0.3/scala-parser-combinators_2.11-1.0.3.jar'
+-encoding
+'UTF-8'
+-protected
+-sourcepath
+'/home/philippe/workspace/SETH/src/main/java'
+-author
+-bottom
+'Copyright &#169; 2015. All rights reserved.'
+-charset
+'UTF-8'
+-d
+'/home/philippe/workspace/SETH/target/site/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'SETH documentation'
+-linkoffline
+'http://docs.oracle.com/javase/7/docs/api' '/home/philippe/workspace/SETH/target/javadoc-bundle-options'
+-use
+-version
+-windowtitle
+'SETH documentation'
