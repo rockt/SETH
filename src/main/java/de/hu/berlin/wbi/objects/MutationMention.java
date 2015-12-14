@@ -889,6 +889,34 @@ public class MutationMention {
     }
 
     /**
+     * Returns the best dbSNP entries associated with this mutation mention
+     * The result is based on the ranking of dbSNPNormalized
+     * @return dbSNP entries
+     */
+    public List<dbSNPNormalized> getBestNormalized(){
+
+        if(normalized == null || normalized.size() <= 1)
+            return normalized;
+
+        Collections.sort(normalized);
+        List<dbSNPNormalized> result = new ArrayList<dbSNPNormalized>();
+
+        int bestConfidence = normalized.get(0).getConfidence();
+        loop:for(dbSNPNormalized snp : normalized){
+            if(snp.getConfidence() < bestConfidence)
+                break loop;
+
+            result.add(snp);
+        }
+
+        if(result.size() == 0)
+            throw new RuntimeException("Invalid resultsize");
+
+        return result;
+    }
+
+
+    /**
      * Returns all Transcripts covering this SNP
      * @return Transcripts
      */
