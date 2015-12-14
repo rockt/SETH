@@ -298,11 +298,11 @@ Import
 Requires as input the UniProt-KB dump (uniprot_sprot.xml.gz) and the mapping from Entrez to UniProt (idmapping.dat.gz).
 Produces uniprot.dat and PSM.dat files
 
-Using Java (recomended):
+Using Java:
 
 	java -cp seth.jar seth.Uniprot2Tab uniprot_sprot.xml.gz idmapping.dat.gz uniprot.dat PSM.dat
 
-Using Scala (deprecated and shown for historic reasons):
+Using Scala:
 
 	scala Uniprot2Tab.scala uniprot_sprot.xml.gz idmapping.dat.gz uniprot.dat PSM.dat
 
