@@ -98,7 +98,7 @@ public class Evaluate {
                     mutation.normalizeSNP(potentialSNPs, features, true); //Normalization happens here
 				}
                 if(mutation.getNormalized() != null)
-                    normalized.addAll(mutation.getNormalized());
+                    normalized.addAll(mutation.getBestNormalized());
 
 				Set<Integer> ids = new HashSet<Integer>(); //Contains the rsID's found by the normalisation procedure 
 				for(dbSNPNormalized dbSNPNorm:normalized){

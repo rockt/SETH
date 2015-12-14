@@ -61,8 +61,11 @@ public class dbSNPNormalized extends dbSNP implements Comparable<dbSNPNormalized
     public int getConfidence() {
         int conf = 0;
 
-        conf += isPsm() ? 3 : 2;
-        conf += isExactMatch() ? 2 : 0;
+        conf += isPsm() ? 1 : 0; //Rank PSMs higher than NSM
+        conf += isAlleleOrder() ? 1 : 0; //Allele order has not been changed
+
+        conf += isExactMatch() ? 2 : 0;  //Exact position match
+        conf += isMethioneMatch() ? 1:0; //Methionine match is still better than an arbitrary feature
 
         return conf;
     }
@@ -119,6 +122,10 @@ public class dbSNPNormalized extends dbSNP implements Comparable<dbSNPNormalized
 	
 	@Override
 	public int compareTo(dbSNPNormalized that) {
-		return that.getConfidence() - this.getConfidence();
+
+        if(that.getConfidence() != this.getConfidence())
+		    return that.getConfidence() - this.getConfidence();
+
+        return that.getRsID() - this.getRsID();   //Enforce a allways the same ranking
     }
 }
