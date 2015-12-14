@@ -91,14 +91,16 @@ object Uniprot2Tab extends App {
   var features = List[Feature]()
   var typ = ""
   var pos = ""
-  var lastFeature: Feature = _
+  var lastFeature: Feature = Feature("") //Avoid Nullpointer exception
   while (line != null) {
     counter ++;
     line = line.trim
     if (line.startsWith("<accession>")) ids = line.substring(11, line.length-12) :: ids
-    else if (line.startsWith("<feature type")) {
-      val splits = line.split("\"")
-      lastFeature = if (splits.size > 5) Feature(splits(1), splits(5)) else Feature(splits(1))
+    else if (line.startsWith("<feature") && line.contains("type=")) {
+      val typ = line.split("type=\"")(1).split("\"")(0)
+      val desc = line.split("description=\"").lift(1).map(_.split("\"")(0)).getOrElse("")
+      
+      lastFeature = Feature(typ, desc)
     }
     else if (line.startsWith("<original>")) lastFeature.wildtype = line.substring(10, line.length-11)
     else if (line.startsWith("<variation>")) lastFeature.residue = line.substring(11, line.length-12)
