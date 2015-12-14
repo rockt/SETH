@@ -276,7 +276,7 @@ public class Gene {
 				while (rs2.next()) {
 					final Gene tmp = new Gene(pmid, rs2.getInt("geneId"),
 							1,
-                            rs2.getInt("taxId"),
+							9606,
 							null,
 							null);
 
