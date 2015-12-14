@@ -293,15 +293,19 @@ Import
 	mysqlimport  --fields-terminated-by='\t' --delete --local --verbose --host <hostname> --user=<username> --password=<password> <dbName> hgvs.tsv.sorted
 
 	
-### Parse UniProt-XML for protein-sequence mutations (PSM) and post-translational modifications (*e.g.* signaling peptides)
-
-Using Scala:
-
-	scala Uniprot2Tab.scala uniprot_sprot.xml.gz idmapping.dat.gz uniprot.dat PSM.dat
+### Parse UniProt-XML for protein-sequence mutations (PSM) and post-translational modifications (*e.g.* signaling peptides) 
 	
-Using Java:
+Requires as input the UniProt-KB dump (uniprot_sprot.xml.gz) and the mapping from Entrez to UniProt (idmapping.dat.gz).
+Produces uniprot.dat and PSM.dat files
+
+Using Java (recomended):
 
 	java -cp seth.jar seth.Uniprot2Tab uniprot_sprot.xml.gz idmapping.dat.gz uniprot.dat PSM.dat
+
+Using Scala (deprecated and shown for historic reasons):
+
+	scala Uniprot2Tab.scala uniprot_sprot.xml.gz idmapping.dat.gz uniprot.dat PSM.dat
+
 	
 ### Import  gene2pubmed, UniProt and PSM into the mySQL Database
 
