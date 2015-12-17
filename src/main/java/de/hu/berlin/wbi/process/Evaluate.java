@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.lang.StringBuilder;
 
 import de.hu.berlin.wbi.objects.DatabaseConnection;
 import de.hu.berlin.wbi.objects.Gene;
@@ -114,8 +115,17 @@ public class Evaluate {
 				}
 								
 				fp+=ids.size();			//All remaining ids are false positives	
-				for(int id:ids)
-					System.err.println("FP" +"\t" +pmid +"\t" +id +" for " +mutation.getDbSNP() +" " +mutation.toString());
+				//				for(int id:ids)
+				//					System.err.println("FP" +"\t" +pmid +"\t" +id +" for " +mutation.getDbSNP() +" " +mutation.toString());
+
+				if(ids.size() != 0){
+
+				    StringBuilder sb = new StringBuilder("FP" +"\t" +pmid +"\t" +mutation.toString() +"\t" +mutation.getDbSNP() +"\t");
+				    for(dbSNPNormalized dbSNPNorm:normalized){
+					sb.append(dbSNPNorm.getRsID() +"/" + dbSNPNorm.getConfidence() +"/" +dbSNPNorm.getMatchType() +" ");
+				    }
+				    System.out.println(sb);
+				}
 			}
 		}
 		
