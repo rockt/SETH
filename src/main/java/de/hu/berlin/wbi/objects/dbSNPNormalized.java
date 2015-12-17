@@ -61,11 +61,13 @@ public class dbSNPNormalized extends dbSNP implements Comparable<dbSNPNormalized
     public int getConfidence() {
         int conf = 0;
 
-        conf += isPsm() ? 1 : 0; //Rank PSMs higher than NSM
-        conf += isAlleleOrder() ? 1 : 0; //Allele order has not been changed
+        conf += isPsm() ? 2 : 0; //Rank PSMs higher than NSM
 
-        conf += isExactMatch() ? 2 : 0;  //Exact position match
-        conf += isMethioneMatch() ? 1:0; //Methionine match is still better than an arbitrary feature
+        conf += isAlleleOrder() ? 1 : 0; //Allele order has not been changed (e.g., A->T stays A->T)
+
+        conf += isExactPosition() ? 3 : 0;  //Exact position match
+
+	conf += isMethioneMatch() ? 1:0; //Methionine match is still better than an arbitrary feature
 
         return conf;
     }
@@ -91,11 +93,10 @@ public class dbSNPNormalized extends dbSNP implements Comparable<dbSNPNormalized
 	}
 
 	/**
-	 * @return true if the normalization required no heuristics 
+	 * @return true if the location of the mutation is exact
 	 */
-	public boolean isExactMatch() {
-		return (matchType.contains(MatchOptions.LOC)
-            && !matchType.contains(MatchOptions.SWAPPED));
+	public boolean isExactPosition() {
+		return (matchType.contains(MatchOptions.LOC));
 	}
 
 	/**
