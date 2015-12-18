@@ -53,8 +53,8 @@ public class ParseXMLToFile extends DefaultHandler {
         //psHGVS = dbconn.getConn().prepareStatement("INSERT INTO " + property.getProperty("database.hgvs_view") + " (locus_id, snp_id, hgvs, refseq) VALUES (?, ?, ?, ?)");
         //psmHGVS = dbconn.getConn().prepareStatement("INSERT INTO " + property.getProperty("database.PSM") + " (snp_id, locus_id, aa_Position, residue, wildtype) VALUES (?, ?, ?, ?, ?)");
 
-        psHGVS  = new BufferedWriter(new OutputStreamWriter( new GZIPOutputStream(new FileOutputStream(new File("hgvs.tsv.gz"))), "UTF-8"));
-        psmHGVS = new BufferedWriter(new OutputStreamWriter( new GZIPOutputStream(new FileOutputStream(new File("psm.tsv.gz"))), "UTF-8"));
+        psHGVS  = new BufferedWriter(new OutputStreamWriter( new GZIPOutputStream(new FileOutputStream(new File("HGVS.tsv.gz"))), "UTF-8"));
+        psmHGVS = new BufferedWriter(new OutputStreamWriter( new GZIPOutputStream(new FileOutputStream(new File("PSM.tsv.gz"))), "UTF-8"));
 
         String xmlFolder = "/home/philippe/workspace/snp-normalizer/data/dat/";
         if (args.length != 1)
@@ -171,6 +171,12 @@ public class ParseXMLToFile extends DefaultHandler {
 
                 if (split[1].length() >= 256)    //Exclude  this HGVS entry
                     continue;
+
+		//See http://www.ncbi.nlm.nih.gov/books/NBK21091/table/ch18.T.refseq_accession_numbers_and_mole/?report=objectonly
+		//Skip XM, XR, and XP, which are are automatically derived annotation pipelines 
+		//NC_ NM_ NG_ NR_ NP_ NT_ NW_
+		if(split[0].startsWith("XM_") || split[0].startsWith("XR_") || split[0].startsWith("XP_") || split[0].startsWith("GPC_") ||split[0].startsWith("YP_"))  
+		    continue;
 
                 try {
                     for (Integer gene : genes) {
