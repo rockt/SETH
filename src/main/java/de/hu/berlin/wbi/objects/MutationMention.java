@@ -714,8 +714,8 @@ public class MutationMention {
         this.text = text;
         this.ref = ref;
         this.position = location;
-        this.wtResidue = wild;
-        this.mutResidue = mutated;
+        this.wtResidue = (wild == null || wild.equals("")) ? null : wild;           //SETH saves empty wild-types as '', while others save it as null --> Unify
+        this.mutResidue = (mutated == null || mutated.equals("")) ? null : mutated;
         this.type = type;
         this.tool = tool;
 
