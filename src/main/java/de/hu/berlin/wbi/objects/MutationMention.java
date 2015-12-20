@@ -205,6 +205,7 @@ public class MutationMention {
 
             //Normalize candidate using information in 'hgvs' table
             if(candidate.getHgvs() != null){
+
                 //Normalize PSM using the 'hgvs' information from dbSNP..
                 if(normalizePSMSimpleHGVS(candidate)) {
                     EnumSet<MatchOptions> match = EnumSet.of(
@@ -292,7 +293,7 @@ public class MutationMention {
      * Sometimes one SNP mention can be normalized to the same dbSNP identifier
      * several times. As some information is stored redundant.
      * Therefore we have to remove some duplicates from the list and
-     * also we return only the results with highest association score (no impact for evaluation)
+     * also we return only the results with highest score (no impact for evaluation)
      * @param snpList   List of SNPs to be cleansed
      * @return Cleansed SNP list
      */
@@ -1001,7 +1002,7 @@ public class MutationMention {
         switch (type){
             case SUBSTITUTION:
                 if(psm)
-                    return "p." +wtResidue +position +mutResidue;
+                    return "p." +AminoAcidHelper.getThreeLetter(wtResidue) +position +AminoAcidHelper.getThreeLetter(mutResidue);
 
                 if(nsm)
                     return "c." +position +wtResidue +">" +mutResidue;
@@ -1012,7 +1013,7 @@ public class MutationMention {
 
             case  DELETION:
                 if(psm)
-                    return "p." +(wtResidue == null ? "" : wtResidue) +position +"del" +(mutResidue == null ? "" : mutResidue);
+                    return "p." +(wtResidue == null ? "" : AminoAcidHelper.getThreeLetter(wtResidue)) +position +"del" +(mutResidue == null ? "" : AminoAcidHelper.getThreeLetter(mutResidue));
                 if(nsm)
                     return "c." +(mutResidue == null ? "" : mutResidue) +position +"del" +(wtResidue == null ? "" : wtResidue);
                 if(ambiguous)
@@ -1021,7 +1022,7 @@ public class MutationMention {
 
             case  INSERTION:
                 if(psm)
-                    return "p." +(mutResidue == null ? "" : mutResidue) +position +"ins" +(wtResidue == null ? "" : wtResidue);
+                    return "p." +(mutResidue == null ? "" : AminoAcidHelper.getThreeLetter(mutResidue)) +position +"ins" +(wtResidue == null ? "" : AminoAcidHelper.getThreeLetter(wtResidue));
                 if(nsm)
                     return "c." +(wtResidue == null ? "" : wtResidue) +position +"ins" +(mutResidue == null ? "" : mutResidue);
                 if(ambiguous)
@@ -1030,7 +1031,7 @@ public class MutationMention {
 
             case  FRAMESHIFT:
                 if(psm)
-                    return "p." +(wtResidue == null ? "" : wtResidue) +position +"fs" +(mutResidue == null ? "" : mutResidue);
+                    return "p." +(wtResidue == null ? "" : AminoAcidHelper.getThreeLetter(wtResidue)) +position +"fs" +(mutResidue == null ? "" : AminoAcidHelper.getThreeLetter(mutResidue));
                 if(nsm)
                     return "c." +(wtResidue == null ? "" : wtResidue) +position +"fs" +(mutResidue == null ? "" : mutResidue);
                 if(ambiguous)
