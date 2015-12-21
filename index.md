@@ -281,11 +281,11 @@ Original: Parsing the result directly to the database (this is slow for larger d
 
 New: Parsing to a file (faster but needs 60 GB free space)
 
-	time java -cp seth.jar de.hu.berlin.wbi.stuff.xml.ParseXML property.xml /path/with/dbSNP-XML/files/...
-	cat hgvs.tsv | cut -f 1-3 > hgvs2.tsv
-	split -l100000000 hgvs2.tsv '_tmp';
-	ls -1 _tmp* | while read FILE; do echo $FILE; sort $FILE -o $FILE ; done;
-	sort -u -m _tmp* -o hgvs.tsv.sorted
+	time java -cp seth.jar de.hu.berlin.wbi.stuff.xml.ParseXML property.xml /path/with/dbSNP-XML/files/... #Parse file
+	zcat HGVS.tsv.gz | cut -f 1-3 > hgvs2.tsv #Remove refseq information for derby-DB (gets too large otherwise)
+	split -l100000000 hgvs2.tsv '_tmp'; 
+	ls -1 _tmp* | while read FILE; do echo $FILE; sort $FILE -o $FILE ; done; #Individual sort
+	sort -u -m _tmp* -o hgvs.tsv.sorted #Merge sort
 
 Import	
 
