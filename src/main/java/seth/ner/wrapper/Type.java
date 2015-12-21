@@ -41,6 +41,8 @@ public enum Type {
     CONVERSION,
 
     TRANSLOCATION,
+
+    /** Introduced by the "cnv" module to find CNVs of genes. (currently not used; for details check "package cnveth").*/
     COPY_NUMBER_VARIATION,
 
     /**Fall back mutation-type */
