@@ -127,6 +127,8 @@ public class dbSNPNormalized extends dbSNP implements Comparable<dbSNPNormalized
         if(that.getConfidence() != this.getConfidence())
 		    return that.getConfidence() - this.getConfidence();
 
-        return that.getRsID() - this.getRsID();   //Enforce a allways the same ranking
+	//Enforces an implicit ranking 
+	//It is important to know that older dbSNP entries have a smaller ID
+        return this.getRsID() - that.getRsID();   
     }
 }

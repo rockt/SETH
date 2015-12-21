@@ -120,9 +120,9 @@ public class Evaluate {
 
 				if(ids.size() != 0){
 
-				    StringBuilder sb = new StringBuilder("FP" +"\t" +pmid +"\t" +mutation.toString() +"\t" +mutation.getDbSNP() +"\t");
+				    StringBuilder sb = new StringBuilder("FP" +"\t" +pmid +"\t" +mutation.toString() +"\t" +mutation.getDbSNP() +"\t found: ");
 				    for(dbSNPNormalized dbSNPNorm:normalized){
-					sb.append(dbSNPNorm.getRsID() +"/" + dbSNPNorm.getConfidence() +"/" +dbSNPNorm.getMatchType() +" ");
+					sb.append("'" +dbSNPNorm.getRsID() +"'/" + dbSNPNorm.getConfidence() +"/" +dbSNPNorm.getMatchType() +" ");
 				    }
 				    System.out.println(sb);
 				}
