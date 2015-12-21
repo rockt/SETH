@@ -252,7 +252,7 @@ We would be happy to get feedback about using SETH with other databases.
 
 ## Set up the database with all necessary tables
 	CREATE DATABASE dbSNP137 CHARACTER SET latin1;
-	mysql <dbName> -h <hostname> -u <username> -p<password> data/table.sql
+	mysql <dbName> -h <hostname> -u <username> -p<password> resources/table.sql
 
 
 ## Download the necessary files 
@@ -273,13 +273,7 @@ We would be happy to get feedback about using SETH with other databases.
 ## Import the data files needed for normalization
 
 ### Parse dbSNP-XML dump
-This takes some compute resources and disk-space. Older versions of dbSNP were smaller so we changed the workflow:
-
-Original: Parsing the result directly to the database (this is slow for larger dumps):
-
-	time java -cp seth.jar de.hu.berlin.wbi.stuff.xml.ParseXML property.xml /path/with/dbSNP-XML/files/...
-
-New: Parsing to a file (faster but needs 60 GB free space)
+This takes some compute resources and disk-space. 
 
 	time java -cp seth.jar de.hu.berlin.wbi.stuff.xml.ParseXML property.xml /path/with/dbSNP-XML/files/... #Parse file
 	zcat HGVS.tsv.gz | cut -f 1-3 > hgvs2.tsv #Remove refseq information for derby-DB (gets too large otherwise)
