@@ -4,8 +4,7 @@ layout: default
 
 SETH is a software that performs named entity recognition (NER) of genetic variants (with an emphasis on single nucleotide polymorphisms (SNPs)) from natural language texts. 
 SETH allows to recognize the following mutation subtypes: substitution, deletion, insertion, duplication, insertion-deletion (insdel), inversion, conversion, translocation, frameshift, short-sequence repeat, and dbSNP mention.
-Recognized mutation mentions can be grounded to the Human Mutation Nomenclature (HGVS) and normalized to dbSNP identifiers or UniProt sequences.
-For NER SETH builds on four individual components:
+Recognized mutation mentions can be grounded to the Human Mutation Nomenclature (HGVS) and normalized to dbSNP identifiers or UniProt sequences.For NER SETH builds on four individual components:
 
 1.) Mutations following the [HGVS nomenclature](http://www.hgvs.org/mutnomen/) (den Dunnen and Antonarakis, 2000) are recognized by implementing an Extended Backus–Naur (EBNF) grammar proposed by Laros *et al.* (2011) using Scala combinators.
 
@@ -58,6 +57,8 @@ together with the gene2pubmed information from NCBI.
 Parts of the [dbSNP database](http://www.ncbi.nlm.nih.gov/projects/SNP/) have to be locally installed for speeding up
 the normalization process.
 For user convenience, we provide a [dump as embedded Derby database](https://docs.google.com/file/d/0B9uTfq0OyHAsdDNMQzNxWDRhZVE/edit?usp=sharing) (~2GB).
+Please note that SETH comes only with results for human databases (UniProt, dbSNP, GNAT, gene2Pubmed), otherwise the resulting database becomes too large.
+At the end of this readme we describe the process to build the database. This process can be adapted for other species...
 
 ## Command-line Usage
 To use SETH's NEN component from the command line, you need to provid a [XML property file](https://github.com/rockt/SETH/blob/master/resources/seth_properties.xml) 
@@ -331,7 +332,7 @@ For this we used Apache [ddlUtils](http://db.apache.org/ddlutils/)
 	http://rockt.github.io/SETH/.
 
 #Bug reports
-Issues and requests can be filed [online](https://github.com/rockt/SETH/issues)
+Issues and feature requests can be filed [online](https://github.com/rockt/SETH/issues)
 
 # Contact
 For questions and  remarks please contact Philippe Thomas:
