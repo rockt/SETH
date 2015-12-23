@@ -1,25 +1,32 @@
 package cnveth;
-// this class allows to detect possible mentions of copy number variations
+
 
 import de.hu.berlin.wbi.objects.MutationMention;
 import java.util.*;
 
+/**
+ * this class allows to detect possible mentions of copy number variations
+ */
 public class CNVETH {
 
-    // CNVETH object to detect possible mentions of CNV keywords
+    /**
+     * CNVETH object to detect possible mentions of CNV keywords
+     */
     private final CNVRecognizer cnveth;
 
     public CNVETH(){
-
         this.cnveth = new CNVRecognizer();
-
     }
 
+    /**
+     * Extract mentions of CNV keywords and assigns Type CNV
+     * @param text Text to find CNV's
+     * @return detected CNV's
+     */
     public Set<MutationMention> findMutations(String text){
         HashSet<MutationMention> mutations = new HashSet<>();
-        //Extract mentions of CNV keywords
-        mutations.addAll(cnveth.extractMutations(text));
 
+        mutations.addAll(cnveth.extractMutations(text));
         return mutations;
     }
 
