@@ -35,7 +35,7 @@ SETH currently uses these two data-sources but can easily extended with other ge
 	git clone https://github.com/rockt/SETH.git
 	cd SETH
 	mvn clean compile assembly:single
-	mv ./target/seth-1.1-SNAPSHOT-jar-with-dependencies.jar seth.jar
+	mv ./target/seth-1.2-Snapshot-jar-with-dependencies.jar seth.jar
 
 # Examples for NER
 
