@@ -2,18 +2,18 @@
 layout: default
 ---
 
-SETH is a software that performs named entity recognition (NER) of genetic variants (with an emphasis on single nucleotide polymorphisms (SNPs)) from natural language texts. 
-SETH allows to recognize the following mutation subtypes: substitution, deletion, insertion, duplication, insertion-deletion (insdel), inversion, conversion, translocation, frameshift, short-sequence repeat, and dbSNP mention.
-Recognized mutation mentions can be grounded to the Human Mutation Nomenclature (HGVS) and normalized to dbSNP identifiers or UniProt sequences.For NER SETH builds on four individual components:
+SETH is a software that performs named entity recognition (NER) of genetic variants (with an emphasis on single nucleotide polymorphisms (SNPs) and other short sequence variations) from natural language texts. 
+SETH allows to recognize the following mutation subtypes: substitution, deletion, insertion, duplication, insertion-deletion (insdel), inversion, conversion, translocation, frameshift, short-sequence repeat, and literal dbSNP mention.
+Recognized mutation mentions can be grounded to the Human Mutation Nomenclature (HGVS) and normalized to dbSNP identifiers or UniProt sequences. For NER SETH builds on four individual components:
 
-1.) Mutations following the [HGVS nomenclature](http://www.hgvs.org/mutnomen/) (den Dunnen and Antonarakis, 2000) are recognized by implementing an Extended Backus–Naur (EBNF) grammar proposed by Laros *et al.* (2011) using Scala combinators.
+1.) Mutations following the [HGVS nomenclature](http://www.hgvs.org/mutnomen/) (den Dunnen and Antonarakis, 2000) are recognized by implementing an Extended Backus–Naur (EBNF) grammar proposed by Laros *et al.* (2011) using Scala combinators. We modified this grammar to allow to detect frequently observed deviations from the nomenclature 
 
 2.)To get hold of substitutions not following the nomenclature, SETH integrates MutationFinder (Caporaso *et al.*, 2007).
 SETH modifies MutationFinder's original capabilities in order to match a wider scope of substitutions (DNA substitutions, nonsense mutations, and ambiguous mutations) not following the HGVS nomenclature. This is done by modifying the original MutationFinder implementation together with additional and modified regular expressions.
 
-3.) Mutations (substitutions, deletions, insersions, ...) not following the nomenclature are recognized using a separate set of regular expressions.
+3.) Mutations (substitutions, deletions, insersions, frameshifts, ...) not following the HGVS nomenclature, but earlier proposals for a nomenclature,  are recognized using a separate set of regular expressions.
 
-4.) Mutations described as dbSNP-identifiers are recongized using a regular expression.
+4.) Mutations described as literal dbSNP-identifiers are recongized using a regular expression.
 
 Results from the four different components are collected, merged,  and represented as the following object  [MutationMention](https://github.com/rockt/SETH/blob/master/src/main/java/de/hu/berlin/wbi/objects/MutationValidation.java).
 The general NER-workflow is also depicted in the following figure.
@@ -22,10 +22,10 @@ The general NER-workflow is also depicted in the following figure.
 
 If possible, extracted SNP mentions are linked to [dbSNP](http://www.ncbi.nlm.nih.gov/SNP/) or [UniProt-KB seqeuence](http://www.uniprot.org/help/uniprotkb). 
 This process  is referred to as named entity normalization (NEN). 
-For normalization SETH requires a list of potential entrez gene candidates/identifiers. 
+For normalization SETH requires a list of potential entrez gene candidates/identifiers as well as a local dbSNP or UniProt database. 
 Gene names may either come from dedicated gene name recognition and normaluzation tools, such as [GNAT](http://gnat.sourceforge.net/).
 Alternatively, we recomend the use of NCBI's gene2pubmed [database](ftp://ftp.ncbi.nlm.nih.gov/gene/DATA/gene2pubmed.gz).
-SETH currently uses these two data-sources
+SETH currently uses these two data-sources but can easily applied to other tools.
 
 # Get SETH
 
@@ -35,7 +35,7 @@ SETH currently uses these two data-sources
 	git clone https://github.com/rockt/SETH.git
 	cd SETH
 	mvn clean compile assembly:single
-	mv ./target/seth-1.0-SNAPSHOT-jar-with-dependencies.jar seth.jar
+	mv ./target/seth-1.1-SNAPSHOT-jar-with-dependencies.jar seth.jar
 
 # Examples for NER
 
