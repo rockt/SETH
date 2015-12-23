@@ -29,7 +29,7 @@ SETH currently uses these two data-sources but can easily extended with other ge
 
 # Get SETH
 
-## Download ready-to-use [seth.jar](https://www.informatik.hu-berlin.de/forschung/gebiete/wbi/resources/chemspot/seth.jar)
+## Download ready-to-use version 1.2 (released 23.12.2015) [seth.jar](https://github.com/rockt/SETH/releases/tag/1.2)
 
 ## Build SETH on your own
 	git clone https://github.com/rockt/SETH.git
