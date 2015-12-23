@@ -25,7 +25,7 @@ This process  is referred to as named entity normalization (NEN).
 For normalization SETH requires a list of potential entrez gene candidates/identifiers as well as a local dbSNP or UniProt database. 
 Gene names may either come from dedicated gene name recognition and normaluzation tools, such as [GNAT](http://gnat.sourceforge.net/).
 Alternatively, we recomend the use of NCBI's gene2pubmed [database](ftp://ftp.ncbi.nlm.nih.gov/gene/DATA/gene2pubmed.gz).
-SETH currently uses these two data-sources but can easily applied to other tools.
+SETH currently uses these two data-sources but can easily extended with other gene-NER tools.
 
 # Get SETH
 
@@ -57,8 +57,10 @@ together with the gene2pubmed information from NCBI.
 Parts of the [dbSNP database](http://www.ncbi.nlm.nih.gov/projects/SNP/) have to be locally installed for speeding up
 the normalization process.
 For user convenience, we provide a [dump as embedded Derby database](https://docs.google.com/file/d/0B9uTfq0OyHAsdDNMQzNxWDRhZVE/edit?usp=sharing) (~2GB).
-Please note that SETH comes only with results for human databases (UniProt, dbSNP, GNAT, gene2Pubmed), otherwise the resulting database becomes too large.
-At the end of this readme we describe the process to build the database. This process can be adapted for other species...
+Please note, that this derby database dump contains onlyhuman results for human databases (UniProt, dbSNP, GNAT, gene2Pubmed). Otherwise the resulting derby database becomes too large for distribution.
+At the end of this readme we describe the process to build the database. 
+This process can be adapted for other species...
+Feel free to contact us if you observe any problems, or if you would like to host database dumps for other species or database systems.
 
 ## Command-line Usage
 To use SETH's NEN component from the command line, you need to provid a [XML property file](https://github.com/rockt/SETH/blob/master/resources/seth_properties.xml) 
@@ -99,7 +101,7 @@ SETH allows simple integration into your Java-Projects. In this section we provi
 
 
 ## A complete pipeline performing all steps (NER+NEN) can be found here:
-[Java](https://github.com/rockt/SETH/blob/master/src/main/java/seth/SETH.java#L160-L205)
+[Java](https://github.com/rockt/SETH/blob/master/src/main/java/seth/SETH.java#L1190-L230)
 
 
 
