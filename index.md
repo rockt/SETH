@@ -101,7 +101,7 @@ SETH allows simple integration into your Java-Projects. In this section we provi
 
 
 ## A complete pipeline performing all steps (NER+NEN) can be found here:
-[Java](https://github.com/rockt/SETH/blob/master/src/main/java/seth/SETH.java#L1190-L230)
+[Java](https://github.com/rockt/SETH/blob/master/src/main/java/seth/SETH.java#L203-L246)
 
 
 
