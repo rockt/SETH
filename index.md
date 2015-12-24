@@ -29,7 +29,7 @@ SETH currently uses these two data-sources but can easily extended with other ge
 
 # Get SETH
 
-## Download ready-to-use version 1.2 (released 23.12.2015) [seth.jar](https://github.com/rockt/SETH/releases/tag/1.2)
+## Download ready-to-use version 1.2.1 (released 24.12.2015) [seth.jar](https://github.com/rockt/SETH/releases/tag/1.2.1)
 
 ## Build SETH on your own
 	git clone https://github.com/rockt/SETH.git
