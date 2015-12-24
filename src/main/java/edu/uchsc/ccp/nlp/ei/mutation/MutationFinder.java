@@ -1,15 +1,6 @@
 package edu.uchsc.ccp.nlp.ei.mutation;
 
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -67,6 +58,16 @@ public class MutationFinder extends MutationExtractor {
      * MUT_RES, WT_RES, or POS, and the Integer represents its parenthetical group.
      */
     private Map<MyPattern, Map<String, Integer>> regular_expressions;
+
+    /**
+     * Initialization of MutationFinder requires a set of regular expressions that will be used to detect mutations.
+     * This constructor loads the regular expressions from the attached Java Archive at resources/mutations.txt.<br>
+     * <br>
+     */
+    public MutationFinder() {
+        loadRegularExpressionsFromJar("/resources/mutations.txt");
+        initializeAmbiguousMentions();
+    }
 
     /**
      * Initialization of MutationFinder requires a set of regular expressions that will be used to detect mutations. This constructor loads the
@@ -145,30 +146,76 @@ public class MutationFinder extends MutationExtractor {
      * manner should be followed by the string '[CASE_SENSITIVE]', with no spaces between it and the regular expression.
      */
     private void loadRegularExpressionsFromFile(File file) {
-        /* initialize the regular_expressions set */
-        regular_expressions = new HashMap<MyPattern, Map<String, Integer>>();
-        BufferedReader br = null;
-        int count = 0;
-        try {
-            FileReader fr = new FileReader(file);
-            br = new BufferedReader(fr);
-            String line; int lineNumber=0;
-            while ((line = br.readLine()) != null) {
-            	lineNumber++;
-                if (!line.startsWith("#")) {
-                    processPythonRegex(line,lineNumber);
-                    count++;
 
-                    if (count % 100 == 0) {
-                        System.err.println("Loading regex's: " + count);
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new FileReader(file));
+        } catch (FileNotFoundException fnfe) {
+            error("The file containing regular expressions could not be found: " + file.getAbsolutePath() + File.separator + file.getName());
+            //fnfe.printStackTrace();
+            loadRegularExpressionsFromJar("/resources/mutations.txt");
+        }
+        finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (Exception e) {
+                    // ignore exception
+                }
+            }
+        }
+   }
+
+
+    /*
+    * Loads regular_expressions from Java-Archive. Each line in the file is a single regular expression. Those that should be performed in a case sensitive
+    * manner should be followed by the string '[CASE_SENSITIVE]', with no spaces between it and the regular expression.
+    */
+    private void loadRegularExpressionsFromJar(String file) {
+        System.out.println("Loading regular expressions from Java Archive at location '" +file +"'");
+        InputStream is = this.getClass().getResourceAsStream(file);
+        BufferedReader br = new BufferedReader(new InputStreamReader(is));
+        try{
+            loadRegularExpressionsFromStream(br);
+        }catch(Exception ex){
+         error("Error in fallback code for reading mutation-finder file from Java Archive");
+         ex.printStackTrace();
+        }
+        finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (Exception e) {
+                    // ignore exception
+                }
+            }
+        }
+    }
+
+
+    /**
+     * Helper method which loads a set of regular expressions from a BufferedReader
+     * This method is used for loading regex from a file or the java-archive
+     * @param br
+     */
+    private void loadRegularExpressionsFromStream(BufferedReader br) {
+
+        regular_expressions = new HashMap<MyPattern, Map<String, Integer>>();
+        String line;
+        int lineNumber = 0;
+        try {
+            while ((line = br.readLine()) != null) {
+                lineNumber++;
+                if (!line.startsWith("#")) {
+                    processPythonRegex(line, lineNumber);
+
+                    if (lineNumber % 100 == 0) {
+                        System.err.println("Loading regex's: " + lineNumber);
                     }
                 }
             }
-        } catch (FileNotFoundException fnfe) {
-            error("The file containing regular expressions could not be found: " + file.getAbsolutePath() + File.separator + file.getName());
-            fnfe.printStackTrace();
         } catch (IOException ioe) {
-            error("IO Exception while processing regular expression file.");
+            error("IO Exception while processing regular expression.");
             ioe.printStackTrace();
         } finally {
             if (br != null) {

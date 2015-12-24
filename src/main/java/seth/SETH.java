@@ -47,6 +47,20 @@ public class SETH {
     private final dbSNPRecognizer snpRecognizer;
 
     /**
+     * Parameter free constructor for SETH. This constructor initializes SETH with reasonable default settings.
+     * The constructor {@link SETH#SETH(String, boolean, boolean)} provides more flexibility for advanced configuration
+     * MutationFinder is initialized using the regular expressions contained in Java-Archive 'resources/mutations.txt'
+     * SETH-NER (HGVS) is initialized with fuzzy match-option
+     */
+    public SETH(){
+        super();
+        this.mf = new MutationFinder();
+        this.seth = new SETHNER(false);
+        this.snpRecognizer = new dbSNPRecognizer();
+        this.bl = new OldNomenclature();
+    }
+
+    /**
      * Initializes {@link MutationFinder} and {@link SETHNER}.
      * Requires a file with regular expressions for MutationFinder
      *
@@ -191,6 +205,7 @@ public class SETH {
 
         /** Part1: Recognition of mutation mentions */
         SETH seth = new SETH("resources/mutations.txt", true, true);
+        //SETH seth = new SETH();
         List<MutationMention> mutations = seth.findMutations(text);
         try {
             for (MutationMention mutation : mutations) {
