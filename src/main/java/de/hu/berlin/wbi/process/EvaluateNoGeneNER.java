@@ -83,7 +83,6 @@ public class EvaluateNoGeneNER {
 
                 //Retrieves gene associated with a dbSNP entry
                 //This allows us to 1.) ignore the impact of gene-NER and 2.) indirectly checks if we know the dbSNP ID at all
-                //mysql.query("SELECT DISTINCT locus_id FROM hgvs WHERE snp_id = " +mutation.getDbSNP());
                 mysql.query("SELECT DISTINCT locus_id FROM PSM WHERE snp_id = " +mutation.getDbSNP()  +" UNION SELECT  locus_id FROM hgvs WHERE snp_id = " +mutation.getDbSNP());
                 ResultSet rs = mysql.getRs();
                 Set<Gene> genes = new HashSet<Gene>();
