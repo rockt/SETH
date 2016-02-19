@@ -41,25 +41,16 @@ public class ParseXMLToFile extends DefaultHandler {
     //private static PreparedStatement psmHGVS;
 
     public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, SQLException {
-        Properties property = new Properties();
-        try {
-            property.loadFromXML(new FileInputStream(new File(args[0])));
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
-        DatabaseConnection dbconn = new DatabaseConnection(property);
-        dbconn.connect();
-        //psHGVS = dbconn.getConn().prepareStatement("INSERT INTO " + property.getProperty("database.hgvs_view") + " (locus_id, snp_id, hgvs, refseq) VALUES (?, ?, ?, ?)");
-        //psmHGVS = dbconn.getConn().prepareStatement("INSERT INTO " + property.getProperty("database.PSM") + " (snp_id, locus_id, aa_Position, residue, wildtype) VALUES (?, ?, ?, ?, ?)");
 
         psHGVS  = new BufferedWriter(new OutputStreamWriter( new GZIPOutputStream(new FileOutputStream(new File("HGVS.tsv.gz"))), "UTF-8"));
         psmHGVS = new BufferedWriter(new OutputStreamWriter( new GZIPOutputStream(new FileOutputStream(new File("PSM.tsv.gz"))), "UTF-8"));
 
         String xmlFolder = "/home/philippe/workspace/snp-normalizer/data/dat/";
-        if (args.length != 1)
-            xmlFolder = args[1];
+        if (args.length == 1)
+            xmlFolder = args[0];
 
+        System.err.println("Extracting data from the following file/folder '" +xmlFolder +"'");
+        
         File[] files = new File(xmlFolder).listFiles();
         Arrays.sort(files);
         for (File file : files) {
