@@ -4,4 +4,4 @@
  * Currently, this package is not used by SETH
  *
  */
-package cnv;
+package cnveth;
