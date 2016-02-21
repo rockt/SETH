@@ -221,13 +221,21 @@ public class SETH {
          */
         final Properties property = new Properties();
         property.loadFromXML(new FileInputStream(new File("myProperty.xml"))); //Load property file
-        final DatabaseConnection mysql = new DatabaseConnection(property);
+        final DatabaseConnection dbConnection = new DatabaseConnection(property);
 
-        mysql.connect(); //Connect with local derby Database
-        dbSNP.init(mysql, property.getProperty("database.PSM"), property.getProperty("database.hgvs_view"));
-        UniprotFeature.init(mysql, property.getProperty("database.uniprot"));
+        //Connect with local derby database and initialize prepared statements
+        dbConnection.connect();
+        dbSNP.init(dbConnection, property.getProperty("database.PSM"), property.getProperty("database.hgvs_view"));
+        UniprotFeature.init(dbConnection, property.getProperty("database.uniprot"));
+        Gene.init(dbConnection, property.getProperty("database.geneTable"), property.getProperty("gene2Pubmed"));
 
-        int gene = 1312;    //Entrez Gene ID associated with the current sentence
+        /**
+         * For mutation normalization, SETH requires target gene(s) to normalize the mutation
+         * For simpler use, SETH ships with a set of precomputed NER results from GNAT and gene2Pubmed
+         * but in practise an arbitrary gene name recognition tool can be used. As long it normalizes to Entrez-Gene IDs
+         */
+        //Set<Gene> recognizedGenes = Gene.queryGenesForArticle(1572656); //Retrieve all found genes from the database
+        int gene = 1312;    //Entrez Gene ID associated with the current mutation
         final List<dbSNP> potentialSNPs = dbSNP.getSNP(gene);    //Get a list of dbSNPs which could potentially represent the mutation mention
         final List<UniprotFeature> features = UniprotFeature.getFeatures(gene);    //Get all associated UniProt features
 
