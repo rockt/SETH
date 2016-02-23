@@ -31,162 +31,166 @@ import de.hu.berlin.wbi.objects.DatabaseConnection;
  */
 public class ParseXMLToFile extends DefaultHandler {
 
-    private StringBuilder hgvs = null;
-    private SNP snp;
+	private StringBuilder hgvs = null;
+	private SNP snp;
 
-    private static BufferedWriter psHGVS;
-    private static BufferedWriter psmHGVS;
+	private static BufferedWriter psHGVS;
+	private static BufferedWriter psmHGVS;
 
-    //private static PreparedStatement psHGVS;
-    //private static PreparedStatement psmHGVS;
+	//private static PreparedStatement psHGVS;
+	//private static PreparedStatement psmHGVS;
 
-    public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, SQLException {
+	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, SQLException {
 
-        psHGVS  = new BufferedWriter(new OutputStreamWriter( new GZIPOutputStream(new FileOutputStream(new File("HGVS.tsv.gz"))), "UTF-8"));
-        psmHGVS = new BufferedWriter(new OutputStreamWriter( new GZIPOutputStream(new FileOutputStream(new File("PSM.tsv.gz"))), "UTF-8"));
+		psHGVS  = new BufferedWriter(new OutputStreamWriter( new GZIPOutputStream(new FileOutputStream(new File("HGVS.tsv.gz"))), "UTF-8"));
+		psmHGVS = new BufferedWriter(new OutputStreamWriter( new GZIPOutputStream(new FileOutputStream(new File("PSM.tsv.gz"))), "UTF-8"));
 
-        String xmlFolder = "/home/philippe/workspace/snp-normalizer/data/dat/";
-        if (args.length == 1)
-            xmlFolder = args[0];
+		String xmlFolder = "/home/philippe/workspace/snp-normalizer/data/dat/";
+		if (args.length == 1)
+			xmlFolder = args[0];
 
-        System.err.println("Extracting data from the following file/folder '" +xmlFolder +"'");
-        
-        File[] files = new File(xmlFolder).listFiles();
-        Arrays.sort(files);
-        for (File file : files) {
-            if (!file.getAbsolutePath().endsWith(".gz"))
-                continue;
+		System.err.println("Extracting data from the following file/folder '" +xmlFolder +"'");
 
-            System.out.println("Parsing " + file.getAbsolutePath());
+		File[] files = new File(xmlFolder).listFiles();
+		Arrays.sort(files);
+		for (File file : files) {
+			if (!file.getAbsolutePath().endsWith(".gz"))
+				continue;
 
-            InputStream gzipStream = new GZIPInputStream(new FileInputStream(file));
-            SAXParserFactory factory = SAXParserFactory.newInstance();
-            SAXParser saxParser = factory.newSAXParser();
-            DefaultHandler handler = new ParseXMLToFile();
-            saxParser.parse(gzipStream, handler);
+			System.out.println("Parsing " + file.getAbsolutePath());
 
-        }
-        psHGVS.close();
-        psmHGVS.close();
-    }
+			InputStream gzipStream = new GZIPInputStream(new FileInputStream(file));
+			SAXParserFactory factory = SAXParserFactory.newInstance();
+			SAXParser saxParser = factory.newSAXParser();
+			DefaultHandler handler = new ParseXMLToFile();
+			saxParser.parse(gzipStream, handler);
 
-    @Override
-    public void startElement(String namespaceURI, String localName,
-                             String qName, Attributes atts) {
+		}
+		psHGVS.close();
+		psmHGVS.close();
+	}
 
-        if (qName.equals("Rs")) {
-            snp = new SNP(Integer.parseInt(atts.getValue("rsId")));
-        }
+	@Override
+	public void startElement(String namespaceURI, String localName,
+			String qName, Attributes atts) {
 
-        if (qName.equals("FxnSet")) {
+		if (qName.equals("Rs")) {
+			snp = new SNP(Integer.parseInt(atts.getValue("rsId")));
+		}
 
-            String geneId = atts.getValue("geneId");
-            String aaPos = atts.getValue("aaPosition");
-            String type = atts.getValue("fxnClass");
-            String residue = atts.getValue("residue");
-//			String symbol = atts.getValue("symbol");			//Gene symbol name (Currently not used)
-//				String mrnaAccession = atts.getValue("mrnaAcc");	//mRNA accession number  (Currently not used)
-//				String protAccession = atts.getValue("protAcc");	//protein accession number  (Currently not used)
-//				String allele = atts.getValue("allele");			//allele (Currently not used)
+		if (qName.equals("FxnSet")) {
 
-            if (aaPos != null && geneId != null && !geneId.equals("null") && residue != null) {
+			String geneId = atts.getValue("geneId");
+			String aaPos = atts.getValue("aaPosition");
+			String type = atts.getValue("fxnClass");
+			String residue = atts.getValue("residue");
+			String protAccession = atts.getValue("protAcc");	//protein accession number  (Currently not used)			
+			//String symbol = atts.getValue("symbol");			//Gene symbol name (Currently not used)
+			//String mrnaAccession = atts.getValue("mrnaAcc");	//mRNA accession number  (Currently not used)
+			//String allele = atts.getValue("allele");			//allele (Currently not used)
+			
+			//We require some basic properties for a PSM
+			if (aaPos != null && geneId != null && residue != null && !geneId.equals("null") ) {
 
-                if (type.equals("reference"))
-                    snp.addPSM(new PSM(Integer.parseInt(geneId), 1+Integer.parseInt(aaPos), residue, null));
-                else if (type.equals("missense")
-                        || type.equals("frameshift-variant")
-                        || type.equals("stop-gained")
-                        || type.equals("stop-lost")
-                        || type.equals("intron-variant")) {
-                    snp.addPSM(new PSM(Integer.parseInt(geneId), 1+Integer.parseInt(aaPos), null, residue));
-                } else if (type.equals("cds-indel") || type.equals("utr-variant-5-prime") || type.equals("nc-transcript-variant") || type.equals("splice-acceptor-variant") || type.equals("utr-variant-3-prime")) {
-                }    //Currently we can't handle insdels on AA level and intron-variant
-                else if (type.equals("synonymous-codon")) {
-                    snp.addPSM(new PSM(Integer.parseInt(geneId), 1+Integer.parseInt(aaPos), residue, residue));
-                } else
-                    throw new RuntimeException("Can't handle type " + type + " '" + residue + "' for rs" + snp.getRsId());
-            } else if (geneId != null && !geneId.equals("null")) {
-                snp.addPSM(new PSM(Integer.parseInt(geneId), 0, null, null));
-            }
-        }
+				//Skip all PSM's which have been derived from an artificial RefSeq
+				if(! (protAccession.startsWith("XM_") || protAccession.startsWith("XR_") || protAccession.startsWith("XP_") || protAccession.startsWith("GPC_") || protAccession.startsWith("YP_")) ){
 
-        if (qName.equals("hgvs")) {
-            hgvs = new StringBuilder();
-        }
-    }
+					if (type.equals("reference")){
+						snp.addPSM(new PSM(Integer.parseInt(geneId), 1+Integer.parseInt(aaPos), residue, null));
+					}
+						
+					else if (type.equals("missense") || type.equals("frameshift-variant") || type.equals("stop-gained") || type.equals("stop-lost") || type.equals("intron-variant")) {
+						snp.addPSM(new PSM(Integer.parseInt(geneId), 1+Integer.parseInt(aaPos), null, residue));
+					}
+					//Currently we can't handle insdels on AA level and intron-variant
+					else if (type.equals("cds-indel") || type.equals("utr-variant-5-prime") || type.equals("nc-transcript-variant") || type.equals("splice-acceptor-variant") || type.equals("utr-variant-3-prime")) {}    
+					else if (type.equals("synonymous-codon")) {
+						snp.addPSM(new PSM(Integer.parseInt(geneId), 1+Integer.parseInt(aaPos), residue, residue));
+					} else
+						throw new RuntimeException("Can't handle type " + type + " '" + residue + "' for rs" + snp.getRsId());
+				}
+			} else if (geneId != null && !geneId.equals("null")) {
+//				snp.addPSM(new PSM(Integer.parseInt(geneId), 0, null, null));
+			}
+		}
 
-    @Override
-    public void endElement(String uri, String localName, String qName) {
+		if (qName.equals("hgvs")) {
+			hgvs = new StringBuilder();
+		}
+	}
 
-        if (qName.equals("hgvs")) {
-            snp.addHgvs(hgvs.toString());
-            hgvs = null;
-        }
+	@Override
+	public void endElement(String uri, String localName, String qName) {
 
-        if (qName.equals("Rs")) {
+		if (qName.equals("hgvs")) {
+			snp.addHgvs(hgvs.toString());
+			hgvs = null;
+		}
 
-            Set<Integer> genes = new HashSet<Integer>();
-            for (PSM psm : snp.getPsms()) {//snp_id, locus_id, aa_Position, residue, wildtype
-                genes.add(psm.getEntrez());
+		if (qName.equals("Rs")) {
 
-                if (!psm.isValid())
-                    continue;
+			Set<Integer> genes = new HashSet<Integer>();
+			for (PSM psm : snp.getPsms()) {//snp_id, locus_id, aa_Position, residue, wildtype
+				genes.add(psm.getEntrez());
 
-                try {
+				if (!psm.isValid())
+					continue;
 
-                    if (psm.getMutations().length() > 128 || psm.getWildtype().length() > 128)    //These entries lead to an SQL-Exception otherwise
-                        continue;
+				try {
 
-                    if (psm.getMutations().equals(psm.getWildtype())) // We only want non-synonymous mutations
-                        continue;
+					if (psm.getMutations().length() > 128 || psm.getWildtype().length() > 128)    //These entries lead to an SQL-Exception otherwise
+						continue;
+
+					if (psm.getMutations().equals(psm.getWildtype())) // We only want non-synonymous mutations
+						continue;
 
 
-                    psmHGVS.append(snp.getRsId() +"\t" +psm.getEntrez() +"\t" +psm.getAaLoc() +"\t"
-                    +psm.getMutations() +"\t" +psm.getWildtype());
-                    psmHGVS.append("\n");
-                } catch (IOException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                    System.exit(1);
-                }
-            }
+					psmHGVS.append(snp.getRsId() +"\t" +psm.getEntrez() +"\t" +psm.getAaLoc() +"\t"
+							+psm.getMutations() +"\t" +psm.getWildtype());
+					psmHGVS.append("\n");
+				} catch (IOException e) {
+					e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+					System.exit(1);
+				}
+			}
 
-            for (String hgvs : snp.getHgvs()) {
+			for (String hgvs : snp.getHgvs()) {
 
-                String split[] = hgvs.split(":");
-                if (split.length != 2) {
-                    System.out.println("Split size " + split.length + " instead of 2 for '" + hgvs + "'");
-                    System.out.println("rs" + snp.getRsId());
-                    continue;
-//	throw new RuntimeException("Split size " +split.length +" instead of 2 for '" +hgvs +"'");
-                }
+				String split[] = hgvs.split(":");
+				if (split.length != 2) {
+					System.out.println("Split size " + split.length + " instead of 2 for '" + hgvs + "'");
+					System.out.println("rs" + snp.getRsId());
+					continue;
+					//	throw new RuntimeException("Split size " +split.length +" instead of 2 for '" +hgvs +"'");
+				}
 
-                if (split[1].length() >= 256)    //Exclude  this HGVS entry
-                    continue;
+				if (split[1].length() >= 256)    //Exclude  this HGVS entry
+					continue;
 
-		//See http://www.ncbi.nlm.nih.gov/books/NBK21091/table/ch18.T.refseq_accession_numbers_and_mole/?report=objectonly
-		//Skip XM, XR, and XP, which are are automatically derived annotation pipelines 
-		//NC_ NM_ NG_ NR_ NP_ NT_ NW_
-		if(split[0].startsWith("XM_") || split[0].startsWith("XR_") || split[0].startsWith("XP_") || split[0].startsWith("GPC_") ||split[0].startsWith("YP_"))  
-		    continue;
+				//See http://www.ncbi.nlm.nih.gov/books/NBK21091/table/ch18.T.refseq_accession_numbers_and_mole/?report=objectonly
+				//Skip XM, XR, and XP, which are are automatically derived annotation pipelines 
+				//NC_ NM_ NG_ NR_ NP_ NT_ NW_
+				if(split[0].startsWith("XM_") || split[0].startsWith("XR_") || split[0].startsWith("XP_") || split[0].startsWith("GPC_") ||split[0].startsWith("YP_"))  
+					continue;
 
-                try {
-                    for (Integer gene : genes) {
-                        psHGVS.append(gene +"\t" +snp.getRsId() +"\t" +split[1] +"\t" +split[0]);
-                        psHGVS.append("\n");
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                    System.exit(1);
-                }
-            }
-        }
-    }
+				try {
+					for (Integer gene : genes) {
+						psHGVS.append(gene +"\t" +snp.getRsId() +"\t" +split[1] +"\t" +split[0]);
+						psHGVS.append("\n");
+					}
+				} catch (IOException e) {
+					e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+					System.exit(1);
+				}
+			}
+		}
+	}
 
-    @Override
-    public void characters(char ch[], int start, int length) {
-        if (hgvs != null) {
-            hgvs.append(new String(ch, start, length));
-        }
-    }
+	@Override
+	public void characters(char ch[], int start, int length) {
+		if (hgvs != null) {
+			hgvs.append(new String(ch, start, length));
+		}
+	}
 }
 
