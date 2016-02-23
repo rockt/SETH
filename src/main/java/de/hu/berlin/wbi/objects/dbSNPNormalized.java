@@ -49,9 +49,11 @@ public class dbSNPNormalized extends dbSNP implements Comparable<dbSNPNormalized
 		this.rsID = dbsnp.getRsID();
 		this.geneID = dbsnp.getGeneID();
 		this.residues = dbsnp.getResidues();
+		this.wildtype = dbsnp.getWildtype();
 		this.aaPosition = dbsnp.getAaPosition();
 		this.hgvs = dbsnp.getHgvs();
         this.matchType = matchType;
+        this.feature = feature;
 
 	}
 
@@ -67,7 +69,7 @@ public class dbSNPNormalized extends dbSNP implements Comparable<dbSNPNormalized
 
         conf += isExactPosition() ? 3 : 0;  //Exact position match
 
-	conf += isMethioneMatch() ? 1:0; //Methionine match is still better than an arbitrary feature
+        conf += isMethioneMatch() ? 1:0; //Methionine match is still better than an arbitrary feature
 
         return conf;
     }
@@ -79,9 +81,14 @@ public class dbSNPNormalized extends dbSNP implements Comparable<dbSNPNormalized
 	 */
 	@Override
 	public String toString() {
-		return "dbSNPNormalized [rsID=" + rsID + ", Contig="
+		return "dbSNPNormalized ["
+				+ "rsID=" + rsID 
 				+ " ,GeneID " + geneID 
-				+ ", residues=" + residues + " ,aaPosition=" + aaPosition + "]";
+				+ ", residues=" + residues
+				+ ", wildtype=" +wildtype
+				+ " ,aaPosition=" + aaPosition
+				+ " ,matchType=" +matchType
+				+ "]";
 
 	}
 	
