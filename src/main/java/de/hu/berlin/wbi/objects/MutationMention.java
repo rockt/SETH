@@ -458,7 +458,7 @@ public class MutationMention {
             if(hgvs.getType() != 'p')
                 continue;
 
-            if (wtResidue.equals(hgvs.getMutation()) == false || mutResidue.equals(hgvs.getWildtype()) == false)
+            if (wtResidue.equals(hgvs.getWildtype()) == false || mutResidue.equals(hgvs.getMutation()) == false)
                 continue;
 
             if(Integer.toString(loc - 1).equals(hgvs.getLocation()) == false && Integer.toString(loc + 1).equals(hgvs.getLocation()) == false)
@@ -493,8 +493,8 @@ public class MutationMention {
             if(hgvs.getType() != 'p')
                 continue;
 
-            if (wtResidue.equals(hgvs.getWildtype()) == false || mutResidue.equals(hgvs.getMutation()) == false)
-                continue;
+            if (wtResidue.equals(hgvs.getMutation()) == false || mutResidue.equals(hgvs.getWildtype()) == false)
+                continue;           
 
             if(Integer.toString(loc - 1).equals(hgvs.getLocation()) == false && Integer.toString(loc + 1).equals(hgvs.getLocation()) == false)
                 continue;
@@ -553,13 +553,12 @@ public class MutationMention {
      *
      *
      * @param candidate     dbSNP candidate
-     * @return return true if the mutation mention can be normalized to a NSM and the gene is in bwd direction
+     * @return return true if the mutation mention can be normalized to a NSM and the gene is in fwd direction
      */
     private boolean reverseNSMSimple(dbSNP candidate) {
         for (HGVS hgvs : candidate.getHgvs()) {
 
-            if (hgvs.getMutation() == null || hgvs.getWildtype() == null
-                    || hgvs.getLocation() == null)
+            if (hgvs.getMutation() == null || hgvs.getWildtype() == null || hgvs.getLocation() == null)
                 continue;
 
             if (hgvs.getType() != 'g' && hgvs.getType() != 'c') // Normalize
