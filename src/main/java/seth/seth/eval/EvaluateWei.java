@@ -17,99 +17,108 @@ import java.util.regex.Pattern;
  */
 public class EvaluateWei {
 
-    public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException {
 
-        if(args.length != 2)
-            printErrorMessage();
+		if(args.length != 2)
+			printErrorMessage();
 
-        String goldstandardFile = args[0];
-        String predictFile = args[1];
-
-
-       Map<Integer, List<Entity>> predictMap = EvaluateNER.readPredictions(predictFile);
-       Map<Integer, List<Entity>> goldstandardMap =  readGoldStandard(goldstandardFile);
-
-        Set<Integer> allPmids = new HashSet<Integer>(goldstandardMap.keySet());
-        for(int i : goldstandardMap.keySet())
-            allPmids.add(i);
-
-        Performance performance = new Performance();
-        for(int pmid : allPmids){
-            List<Entity> predicted = predictMap.get(pmid);
-            List<Entity> goldstandard = goldstandardMap.get(pmid);
-
-            if(predicted != null){
-                for(Entity entity : predicted){
-                    if(goldstandard.contains(entity)){
-                        performance.addTP();
-                        goldstandard.remove(entity);
-                    }
-
-                    else{
-                        performance.addFP();
-                        System.out.println("FP" +pmid +" " +entity);
-                    }
-                }       // FN19276632
-            }
-            performance.addFN(goldstandard.size());
-            for(Entity entity : goldstandard){
-                System.out.println("FN" +pmid +" " +entity);
-            }
-        }
-
-        performance.calculate();
-        DecimalFormat df = new DecimalFormat( "0.000" );
-        System.err.println("TP = " +performance.getTP() +"; FP=" +performance.getFP() +"; FN=" +performance.getFN());
-        System.err.println("Precision " +df.format(performance.getPrecision()));
-        System.err.println("Recall " +df.format(performance.getRecall()));
-        System.err.println("F1 " +df.format(performance.getF1()));
-    }
-
-    /**
-     * Loads goldstandard annotations
-     * @return  Goldstandard entities
-     * @throws IOException
-     */
-    public static Map<Integer, List<Entity>> readGoldStandard(String goldFolder) throws IOException {
-        System.out.println("Reading goldstandard annotations from " +goldFolder);
-        Map<Integer, List<Entity>> entityMap = new HashMap<Integer, List<Entity>>();
-
-        Pattern p = Pattern.compile("[1-9][0-9]+\t");
-
-        BufferedReader br = new BufferedReader(new FileReader(goldFolder));
-        while(br.ready()){
-            String line = br.readLine();
-            Matcher m = p.matcher(line);
-
-            if(m.find()){
-
-                int pmid = Integer.parseInt(m.group().trim());
-                String [] array = line.split("\t");
-                if(array.length != 6)
-                    throw new RuntimeException("larifari");
-
-                Entity entity = new Entity("IDx", "SNP", Integer.parseInt(array[1]), Integer.parseInt(array[2]), array[3], "goldstandard");
+		String goldstandardFile = args[0];
+		String predictFile = args[1];
 
 
-                if(entityMap.containsKey(pmid))
-                    entityMap.get(pmid).add(entity);
+		Map<Integer, List<Entity>> predictMap = EvaluateNER.readPredictions(predictFile);
+		Map<Integer, List<Entity>> goldstandardMap =  readGoldStandard(goldstandardFile);
 
-                else{
-                    List<Entity> tmpList = new ArrayList<Entity>();
-                    tmpList.add(entity);
-                    entityMap.put(pmid, tmpList);
-                }
+		System.err.println("Corpus description: " +goldstandardFile);
+		System.err.println(goldstandardMap.keySet().size() +" documents");
+		int sum = 0;
+		for(int pmid : goldstandardMap.keySet()){
+			sum+=goldstandardMap.get(pmid).size();
+		}
+		System.err.println(sum +" entities");
 
-            }
-        }
+		Set<Integer> allPmids = new HashSet<Integer>(goldstandardMap.keySet());
+		for(int i : goldstandardMap.keySet())
+			allPmids.add(i);
+
+		Performance performance = new Performance();
+		for(int pmid : allPmids){
+			List<Entity> predicted = predictMap.get(pmid);
+			List<Entity> goldstandard = goldstandardMap.get(pmid);
+
+			if(predicted != null){
+				for(Entity entity : predicted){
+					if(goldstandard.contains(entity)){
+						performance.addTP();
+						goldstandard.remove(entity);
+					}
+
+					else{
+						performance.addFP();
+						System.out.println("FP" +pmid +" " +entity);
+					}
+				}       // FN19276632
+			}
+			performance.addFN(goldstandard.size());
+			for(Entity entity : goldstandard){
+				System.out.println("FN" +pmid +" " +entity);
+			}
+		}
 
 
-        return  entityMap;
-    }
+		performance.calculate();
+		DecimalFormat df = new DecimalFormat( "0.000" );
+		System.err.println("TP = " +performance.getTP() +"; FP=" +performance.getFP() +"; FN=" +performance.getFN());
+		System.err.println("Precision " +df.format(performance.getPrecision()));
+		System.err.println("Recall " +df.format(performance.getRecall()));
+		System.err.println("F1 " +df.format(performance.getF1()));
+	}
 
-    private static void printErrorMessage(){
-        System.err.println("ERROR: Invalid number of input parameters. Execution requires two input parameters.");
-        System.err.println("PARAMETERS:  goldstandard SETH-prediction");
-        System.exit(1);
-    }
+	/**
+	 * Loads goldstandard annotations
+	 * @return  Goldstandard entities
+	 * @throws IOException
+	 */
+	public static Map<Integer, List<Entity>> readGoldStandard(String goldFolder) throws IOException {
+		System.out.println("Reading goldstandard annotations from " +goldFolder);
+		Map<Integer, List<Entity>> entityMap = new HashMap<Integer, List<Entity>>();
+
+		Pattern p = Pattern.compile("[1-9][0-9]+\t");
+
+		BufferedReader br = new BufferedReader(new FileReader(goldFolder));
+		while(br.ready()){
+			String line = br.readLine();
+			Matcher m = p.matcher(line);
+
+			if(m.find()){
+
+				int pmid = Integer.parseInt(m.group().trim());
+				String [] array = line.split("\t");
+				if(array.length != 6)
+					throw new RuntimeException("larifari");
+
+				Entity entity = new Entity("IDx", "SNP", Integer.parseInt(array[1]), Integer.parseInt(array[2]), array[3], "goldstandard");
+
+
+				if(entityMap.containsKey(pmid))
+					entityMap.get(pmid).add(entity);
+
+				else{
+					List<Entity> tmpList = new ArrayList<Entity>();
+					tmpList.add(entity);
+					entityMap.put(pmid, tmpList);
+				}
+			}
+		}
+		br.close();
+
+
+		return  entityMap;
+	}
+
+	private static void printErrorMessage(){
+		System.err.println("ERROR: Invalid number of input parameters. Execution requires two input parameters.");
+		System.err.println("PARAMETERS:  goldstandard SETH-prediction");
+		System.exit(1);
+	}
 }

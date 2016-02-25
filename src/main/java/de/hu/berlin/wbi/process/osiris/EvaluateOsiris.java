@@ -135,6 +135,14 @@ public class EvaluateOsiris {
 					mutationVariation.put(correctId, tmpSet);
 				}	
 			}
+			
+	        System.err.println("Corpus description: " +osirisCorpus);
+	        System.err.println(mutationVariation.keySet().size() +" documents");
+	        int sum = 0;
+	        for(int pmid1 : mutationVariation.keySet()){
+	        	sum+=mutationVariation.get(pmid1).size();
+	        }
+	        System.err.println(sum +" entities");
 
 			//Perform normalization (grouped by rs-id)
 			for(int rs : mutationVariation.keySet()){

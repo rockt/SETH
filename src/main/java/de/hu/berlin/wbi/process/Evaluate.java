@@ -80,6 +80,14 @@ public class Evaluate {
 			throw new RuntimeException(e);
 		}
 		
+        System.err.println("Corpus description: " +mutationsFile);
+        System.err.println(mutations.keySet().size() +" documents");
+        int sum = 0;
+        for(int pmid : mutations.keySet()){
+        	sum+=mutations.get(pmid).size();
+        }
+        System.err.println(sum +" entities");
+
 		
 		//Perform the actual validation..
 		int tp=0; int fp=0; int fn=0;

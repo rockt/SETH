@@ -26,6 +26,14 @@ public class EvaluateNER {
         Map<Integer, List<Entity>> predictMap = readPredictions(predictFile);
         Map<Integer, Integer>   yearMap  =   readYearFile(yearFile);
         Map<Integer, List<Entity>> goldstandardMap =  readGoldStandard(goldFolder);
+        
+        System.err.println("Corpus description: " +goldFolder);
+        System.err.println(goldstandardMap.keySet().size() +" documents");
+        int sum = 0;
+        for(int pmid : goldstandardMap.keySet()){
+            sum+= goldstandardMap.get(pmid).size();
+        }
+        System.err.println(sum +" entities");
 
 
         Map<Integer, Performance> mfPerformance = new HashMap<Integer, Performance>(21);
@@ -86,6 +94,7 @@ public class EvaluateNER {
                 System.out.println("FN" +pmid +" " +entity);
             }
         }
+        
 
         performance.calculate();
         DecimalFormat df = new DecimalFormat( "0.000" );
@@ -129,6 +138,7 @@ public class EvaluateNER {
 
             result.put(pmid, year);
         }
+        br.close();
 
         System.out.println(result.size() +" year mappings loaded");
 
@@ -158,8 +168,8 @@ public class EvaluateNER {
                 tmpList.add(entity);
                 entityMap.put(pmid, tmpList);
             }
-
         }
+        br.close();
 
         int sum=0;
         for(int pmid : entityMap.keySet()){

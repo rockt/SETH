@@ -30,6 +30,15 @@ public class EvaluateVerspoor {
 
         Map<String, List<Entity>> predictMap = readPredictions(predictFile);
         Map<String, List<Entity>> goldstandardMap =  readGoldStandard(goldstandardFile);
+        
+        System.err.println("Corpus description: " +goldstandardFile);
+        System.err.println(goldstandardMap.keySet().size() +" documents");
+        int sum = 0;
+        for(String pmid : goldstandardMap.keySet()){
+        	sum+=goldstandardMap.get(pmid).size();
+        }
+        System.err.println(sum +" entities");
+
 
         Performance performance = new Performance();
         for(String pmid : goldstandardMap.keySet()){
@@ -56,7 +65,7 @@ public class EvaluateVerspoor {
             }
 
         }
-
+        
         performance.calculate();
         DecimalFormat df = new DecimalFormat( "0.000" );
         System.err.println("Precision " +df.format(performance.getPrecision()));
