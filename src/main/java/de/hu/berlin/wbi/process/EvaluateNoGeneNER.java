@@ -88,7 +88,7 @@ public class EvaluateNoGeneNER {
                 Set<Gene> genes = new HashSet<Gene>();
                 while(rs.next()){
                     int geneId = rs.getInt("locus_id");
-                    genes.add(new Gene(pmid, geneId, 1, 9606, null, null));
+                    genes.add(new Gene(pmid, geneId, 9606));
                 }
                 rs.close();
 

@@ -57,9 +57,9 @@ public class Gene {
 	/** String in the text. (Only for NER) */
     private String entity;
 
-    private static String beginColumnName = null;
+//    private static String beginColumnName = null;
 
-    private static String endColumnName = null;
+//    private static String endColumnName = null;
 
 	/**
      * Empty constructor
@@ -75,15 +75,11 @@ public class Gene {
 	 * @param location     Position in text
 	 * @param entity       Entity mention
 	 */
-	public Gene(int pmid, int geneID, int confidence, int species,
-			EntityOffset location, String entity) {
+	public Gene(int pmid, int geneID, int species) {
 		super();
 		this.pmid = pmid;
 		this.geneID = geneID;
-		this.confidence = confidence;
 		this.species = species;
-		this.location = location;
-		this.entity = entity;
 	}
 
 	/**
@@ -221,7 +217,7 @@ public class Gene {
 			throws SQLException {
 		if (geneTable != null && !geneTable.equals(""))                                                                                      {
 			Gene.geneQuery = connection.getConn().prepareStatement("SELECT * " + "FROM " + geneTable + " WHERE pmid = ? AND species = 9606");
-            checkDatabase();
+//            checkDatabase();
         }
 		else
 			Gene.geneQuery =  null;			
@@ -255,10 +251,13 @@ public class Gene {
 				final ResultSet rs = geneQuery.getResultSet();
 
 				while (rs.next()) {
-					final Gene tmp = new Gene(pmid, rs.getInt("id"),
-							rs.getInt("confidence"), rs.getInt("species"),
-							new EntityOffset(rs.getInt(beginColumnName), rs.getInt(endColumnName)),
-							rs.getString("entity"));
+					final Gene tmp = new Gene(
+							pmid, rs.getInt("id"),
+//							rs.getInt("confidence"), 
+							rs.getInt("species")
+//							new EntityOffset(rs.getInt(beginColumnName), rs.getInt(endColumnName)),
+//							rs.getString("entity")
+							);
 
 					if (entrezs.add(tmp.getGeneID())) {
 						genes.add(tmp);
@@ -275,10 +274,11 @@ public class Gene {
 				final ResultSet rs2 = gene2pubmedQuery.getResultSet();
 				while (rs2.next()) {
 					final Gene tmp = new Gene(pmid, rs2.getInt("geneId"),
-							1,
-							9606,
-							null,
-							null);
+//							1,
+							9606
+//							null,
+//							null
+							);
 
 					if (entrezs.add(tmp.getGeneID())) {
 						genes.add(tmp);
@@ -300,24 +300,24 @@ public class Gene {
      * Invoked only once
      * @throws SQLException
      */
-    private static void checkDatabase() throws SQLException {
-
-        geneQuery.setInt(1, 25000000);
-        geneQuery.execute();
-        final ResultSet rs = geneQuery.getResultSet();
-
-        ResultSetMetaData meta = rs.getMetaData();
-        int numCol = meta.getColumnCount();
-        for (int i = 1; i < numCol+1; i++){
-            if(meta.getColumnName(i).equals("beginGene"))
-            {   rs.close();
-                beginColumnName = "beginGene";
-                endColumnName = "endGene";
-                return;
-            }
-        }
-        beginColumnName = "begin";
-        endColumnName = "end";
-        rs.close();;
-    }
+//    private static void checkDatabase() throws SQLException {
+//
+//        geneQuery.setInt(1, 25000000);
+//        geneQuery.execute();
+//        final ResultSet rs = geneQuery.getResultSet();
+//
+//        ResultSetMetaData meta = rs.getMetaData();
+//        int numCol = meta.getColumnCount();
+//        for (int i = 1; i < numCol+1; i++){
+//            if(meta.getColumnName(i).equals("beginGene"))
+//            {   rs.close();
+//                beginColumnName = "beginGene";
+//                endColumnName = "endGene";
+//                return;
+//            }
+//        }
+//        beginColumnName = "begin";
+//        endColumnName = "end";
+//        rs.close();;
+//    }
 }

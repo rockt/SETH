@@ -32,12 +32,8 @@ CREATE TABLE uniprot(
 CREATE TABLE genes (
        pmid INT NOT NULL, 
        id INT NOT NULL, 
-       confidence INT NOT NULL, 
        species INT NOT NULL, 
-       beginGene INT NOT NULL, 
-       endGene INT NOT NULL, 
-       entity VARCHAR(100) NOT NULL,  
-       UNIQUE(pmid, id, confidence, species, beginGene, endGene, entity)
+       UNIQUE(pmid, id, species)
 );
 
 CREATE INDEX pmid_genes  ON genes (pmid);
