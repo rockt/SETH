@@ -118,13 +118,12 @@ public class Evaluate {
 					tp++;			
 					ids.remove(mutation.getDbSNP());
 				}			
-				else{										//Otherwise we have a false negative
+				else{										//Otherwise we have a false negative					
 					fn++;
+//					System.out.println("FN" +"\t" +pmid +"\t" +mutation.toString() +"\t" +mutation.getDbSNP());
 				}
 								
 				fp+=ids.size();			//All remaining ids are false positives	
-				//				for(int id:ids)
-				//					System.err.println("FP" +"\t" +pmid +"\t" +id +" for " +mutation.getDbSNP() +" " +mutation.toString());
 
 				if(ids.size() != 0){
 

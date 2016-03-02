@@ -88,6 +88,7 @@ public class dbSNPNormalized extends dbSNP implements Comparable<dbSNPNormalized
 				+ ", wildtype=" +wildtype
 				+ " ,aaPosition=" + aaPosition
 				+ " ,matchType=" +matchType
+				+ " ,feature=" +feature
 				+ "]";
 
 	}

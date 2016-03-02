@@ -118,7 +118,7 @@ public class dbSNP {
 							new HashSet<String>(
 									Arrays.asList(pattern.split(rs
 											.getString("residue")))),
-											rs.getInt("aa_Position") + 1,
+											rs.getInt("aa_Position"),
 											rs.getString("wildtype"));
 
 					result.add(dbSNP);

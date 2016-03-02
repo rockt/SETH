@@ -96,7 +96,7 @@ public class MutationMention {
     private static final Pattern pattern = Pattern.compile("^([A-Z])([\\-\\+\\*]?[1-9][0-9]*[\\-\\+]?[0-9]*)([A-Z])$");
 
     /** Contains all ambigious characters used for nucleotides as well as amino acids */
-    private static final ArrayList<String> atgc = new ArrayList(Arrays.asList("A", "T", "G", "C"));
+    private static final ArrayList<String> atgc = new ArrayList<String>(Arrays.asList("A", "T", "G", "C"));
 
     /** List with normalized SNPs*/
     protected List<dbSNPNormalized> normalized;
@@ -153,7 +153,7 @@ public class MutationMention {
                     if(feature.getGeneId() != transcript.getEntrez())
                         continue;
 
-                    if(this.wtResidue.equals(String.valueOf(transcript.getProtein_sequence().charAt(loc- feature.getEndLoc() +feature.getStartLoc() -2))))  {
+                    if(this.wtResidue.equals(String.valueOf(transcript.getProtein_sequence().charAt(loc- feature.getEndLoc() +feature.getStartLoc() -1))))  {
                         EnumSet<MatchOptions> match = EnumSet.of(MatchOptions.PSM);
                         transcripts.add(new TranscriptNormalized(transcript, match, feature));
                         break loop;
@@ -210,9 +210,7 @@ public class MutationMention {
                 if(normalizePSMSimpleHGVS(candidate)) {
                     EnumSet<MatchOptions> match = EnumSet.of(
                         MatchOptions.LOC, MatchOptions.PSM
-                    );
-                    // boolean exactMatch, boolean methioneMatch, boolean psm, boolean alleleOrder)
-                    // true, false, true, null, true));
+                    );                    
                     normalized.add(new dbSNPNormalized(candidate, match, null));
                 }
 
@@ -229,7 +227,7 @@ public class MutationMention {
                     normalized.add(new dbSNPNormalized(candidate, match, null));
                 }
 
-                if(normalizePSMMethionineSwapHGVS(candidate)) {
+                if(normalizePSMMethionineSwapHGVS(candidate)) {                    
                     EnumSet<MatchOptions> match = EnumSet.of(MatchOptions.METHIONE, MatchOptions.PSM, MatchOptions.SWAPPED);
                     normalized.add(new dbSNPNormalized(candidate, match, null));
                 }
@@ -375,7 +373,7 @@ public class MutationMention {
             if(feature.getGeneId() != candidate.getGeneID())
                 continue;
 
-            if(Integer.toString(candidate.getAaPosition() - feature.getEndLoc() +feature.getStartLoc() -2).equals(position))
+            if(Integer.toString(candidate.getAaPosition() - feature.getEndLoc() +feature.getStartLoc() -1).equals(position))
                 return feature;
         }
 
