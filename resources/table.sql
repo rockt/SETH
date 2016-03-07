@@ -44,11 +44,21 @@ CREATE TABLE gene2pubmed(
        taxId INT UNSIGNED NOT NULL,
        geneId INT UNSIGNED NOT NULL,
        pmid INT UNSIGNED NOT NULL,
-       UNIQUE(taxId, geneId, pmid))
-       ENGINE = InnoDB
-       DEFAULT CHARACTER SET = utf8
-       COLLATE = utf8_bin
-;
+       UNIQUE(taxId, geneId, pmid)
+);
 CREATE INDEX id_gene2pubmed  ON gene2pubmed (geneId);
 CREATE INDEX pmid_gene2pubmed  ON gene2pubmed (pmid);
+
+
+-- Transcript information, for normalization to UniProt-KB
+CREATE TABLE seth_transcripts (
+       entrez_id INT DEFAULT NULL,
+       uniprot_acc varchar(9) DEFAULT NULL,
+       ENSG varchar(15)  NOT NULL,
+       ENST varchar(15)  NOT NULL,
+       ENSP varchar(15) DEFAULT NULL,
+       protein_sequence text,
+       coding_sequence TEXT);
+
+CREATE INDEX entrez_transcript  ON seth_transcripts(entrez_id);
 
