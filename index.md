@@ -186,15 +186,18 @@ F₁        0.24
     java -cp seth.jar de.hu.berlin.wbi.process.Evaluate myProperty.xml resources/thomas2011/corpus.txt
     
 Precision 0.96
-Recall    0.58
+Recall    0.57
 F₁        0.72
+Details: TP 303; FP 14; FN 224
+
 
 #### Corpus of OSIRIS (Furlong *et al.*, 2008)
     java -cp seth.jar de.hu.berlin.wbi.process.osiris.EvaluateOsiris myProperty.xml resources/OSIRIS/corpus.xml
     
-Precision 0.96
-Recall    0.86
+Precision 0.98
+Recall    0.85
 F₁        0.91
+Details: TP 95; FP 2; FN 17
 
 
 <!--
