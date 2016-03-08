@@ -57,8 +57,8 @@ CREATE TABLE seth_transcripts (
        ENSG varchar(15)  NOT NULL,
        ENST varchar(15)  NOT NULL,
        ENSP varchar(15) DEFAULT NULL,
-       protein_sequence text,
-       coding_sequence TEXT);
+       protein_sequence CLOB,
+       coding_sequence CLOB);
 
 CREATE INDEX entrez_transcript  ON seth_transcripts(entrez_id);
 
