@@ -319,7 +319,7 @@ Updated gene-ner results are available on the GeneView web site (http://bc3.info
 
 ## Database migration 
 Finally, to allow for a better portability of SETH, we converted the original mySQL database into an embedded Derby database.
-For this we used Apache [ddlUtils](http://db.apache.org/ddlutils/) 
+For this we used Apache [ddlUtils](http://db.apache.org/ddlutils/). For large databases we observed a high memory requirement using ddlutils. Therefore, we implemented a rather simple migration "script", which exports the MySQL database to CSV and bulk imports the CSV files to a local Derby database. This script is only added for documentation purposes and should not be executed on the command shell. The script can be found [here](https://github.com/rockt/SETH/blob/master/resources/migrate/migrate.sh).
 
 
 # Cite SETH
