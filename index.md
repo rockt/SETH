@@ -188,6 +188,7 @@ F₁        0.24
 Precision 0.96
 Recall    0.57
 F₁        0.72
+
 Details: TP 303; FP 14; FN 224
 
 
