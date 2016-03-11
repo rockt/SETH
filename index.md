@@ -158,7 +158,7 @@ F₁        0.88
     java -cp seth.jar seth.seth.eval.ApplyNERToWei resources/Wei2013/train.txt  resources/mutations.txt  resources/Wei2013.seth
     java -cp seth.jar seth.seth.eval.EvaluateWei resources/Wei2013/train.txt resources/Wei2013.seth
     
-Precision 0.94
+Precision 0.93
 Recall    0.80
 F₁        0.86
 
@@ -166,7 +166,7 @@ F₁        0.86
     java -cp seth.jar seth.seth.eval.ApplyNERToWei resources/Wei2013/test.txt  resources/mutations.txt  resources/Wei2013.seth
     java -cp seth.jar seth.seth.eval.EvaluateWei resources/Wei2013/test.txt resources/Wei2013.seth
     
-Precision 0.95
+Precision 0.94
 Recall    0.77
 F₁        0.85
 
