@@ -46,6 +46,7 @@ public class EvaluateWei {
 			List<Entity> predicted = predictMap.get(pmid);
 			List<Entity> goldstandard = goldstandardMap.get(pmid);
 
+			boolean linebreak=false;
 			if(predicted != null){
 				for(Entity entity : predicted){
 					if(goldstandard.contains(entity)){
@@ -56,13 +57,17 @@ public class EvaluateWei {
 					else{
 						performance.addFP();
 						System.out.println("FP" +pmid +" " +entity);
+						linebreak = true;
 					}
 				}       // FN19276632
 			}
 			performance.addFN(goldstandard.size());
 			for(Entity entity : goldstandard){
 				System.out.println("FN" +pmid +" " +entity);
+				linebreak = true;
 			}
+			if(linebreak)
+				System.out.println("------------------------");
 		}
 
 
