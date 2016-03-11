@@ -83,31 +83,28 @@ public class EvaluateWei {
 		System.out.println("Reading goldstandard annotations from " +goldFolder);
 		Map<Integer, List<Entity>> entityMap = new HashMap<Integer, List<Entity>>();
 
-		Pattern p = Pattern.compile("[1-9][0-9]+\t");
+		Pattern p = Pattern.compile("^[1-9][0-9]+");
 
 		BufferedReader br = new BufferedReader(new FileReader(goldFolder));
-		while(br.ready()){
+		loop:while(br.ready()){
 			String line = br.readLine();
 			Matcher m = p.matcher(line);
 
-			if(m.find()){
-
+			if(m.find()){				
 				int pmid = Integer.parseInt(m.group().trim());
-				String [] array = line.split("\t");
-				if(array.length != 6)
-					throw new RuntimeException("larifari");
-
-				Entity entity = new Entity("IDx", "SNP", Integer.parseInt(array[1]), Integer.parseInt(array[2]), array[3], "goldstandard");
-
-
-				if(entityMap.containsKey(pmid))
-					entityMap.get(pmid).add(entity);
-
-				else{
-					List<Entity> tmpList = new ArrayList<Entity>();
-					tmpList.add(entity);
-					entityMap.put(pmid, tmpList);
+				
+				if(line.charAt(m.end()) == '|'){
+					entityMap.put(pmid, new ArrayList<Entity>());
 				}
+				else{
+					String [] array = line.split("\t");
+				
+					if(array.length != 6)
+						throw new RuntimeException("Unexpected number of arrays!");
+
+					Entity entity = new Entity("IDx", "SNP", Integer.parseInt(array[1]), Integer.parseInt(array[2]), array[3], "goldstandard");
+					entityMap.get(pmid).add(entity);	
+				}				
 			}
 		}
 		br.close();
