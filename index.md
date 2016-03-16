@@ -196,9 +196,9 @@ Details: TP 303; FP 14; FN 224
     java -cp seth.jar de.hu.berlin.wbi.process.osiris.EvaluateOsiris myProperty.xml resources/OSIRIS/corpus.xml
     
 Precision 0.98
-Recall    0.85
-F₁        0.91
-Details: TP 95; FP 2; FN 17
+Recall    0.70
+F₁        0.82
+Details: TP 101; FP 2; FN 43
 
 
 <!--
