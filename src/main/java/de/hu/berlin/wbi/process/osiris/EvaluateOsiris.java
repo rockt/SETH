@@ -88,10 +88,10 @@ public class EvaluateOsiris {
 		Pattern p = Pattern.compile("^-?[1-9]+[0-9]*");
 		int tp=0; int fp=0; int fn=0;
 
-		for (int i =0; i < documents.getLength(); i++) {	//Iterate documents in OSIRIS corpus
+		//Iterate single documents in OSIRIS corpus
+		for (int i =0; i < documents.getLength(); i++) {	
 			Node doc = documents.item(i);
 
-			HashMap<Integer, Set<String>> mutationVariation = new HashMap<Integer, Set<String>>();
 
 			//Extract current PubMed identifier
 			NodeList pmidNode = (NodeList) pmidExp.evaluate(doc, XPathConstants.NODESET);
@@ -99,7 +99,7 @@ public class EvaluateOsiris {
 				throw new RuntimeException("Found " +pmidNode.getLength() +" PMID nodes");
 			int pmid = Integer.parseInt(pmidNode.item(0).getTextContent());
 
-			//Extract Entrez-Genes in this article
+			//Extract all Entrez-Genes in this article
 			List<Integer> genes = new ArrayList<Integer>();
 			NodeList geneNode = (NodeList) geneExp.evaluate(doc, XPathConstants.NODESET);
 			for(int j =0; j < geneNode.getLength(); j++){
@@ -111,83 +111,88 @@ public class EvaluateOsiris {
 				genes.add(Integer.parseInt(gene.getAttributes().getNamedItem("g_id").getTextContent()));
 			}			
 
-			//Exctract mutations			
+			//Exctract all normalized mutation mentions in this article (rs-ID to different string-mentions)
+			//mutationVariation: (e.g. rs1805126 -> [D1819D, C5457T])
+			HashMap<Integer, Set<String>> mutationVariation = new HashMap<Integer, Set<String>>();
 			NodeList variantNode = (NodeList) variantExp.evaluate(doc, XPathConstants.NODESET);
 			for(int j =0; j < variantNode.getLength(); j++){
 				Node variant = variantNode.item(j);
 
 				String rsId = variant.getAttributes().getNamedItem("v_id").getTextContent();
+				//Skip mutations which are not normalized to a dbSNP identifier
 				if(rsId.equals("No"))
 					continue;
 
-				int correctId = Integer.parseInt(rsId);
+				int correctRsId = Integer.parseInt(rsId);
 				String mutationString = variant.getAttributes().getNamedItem("v_norm").getTextContent();
-
+				
+				//Convert allele mentions into synonymous substitutions (e.g., 196R -> R196R)
 				Matcher m = p.matcher(mutationString);
-				if(m.find())
+				if(m.find()){
 					mutationString = mutationString.charAt(mutationString.length()-1) +mutationString;
+				}
 
-				if(mutationVariation.containsKey(correctId))
-					mutationVariation.get(correctId).add(mutationString);
+				if(mutationVariation.containsKey(correctRsId)){
+					mutationVariation.get(correctRsId).add(mutationString);
+				}
 				else{
 					Set<String> tmpSet = new HashSet<String>();
 					tmpSet.add(mutationString);
-					mutationVariation.put(correctId, tmpSet);
+					mutationVariation.put(correctRsId, tmpSet);
 				}	
 			}
-			
-	        System.err.println("Corpus description: " +osirisCorpus);
-	        System.err.println(mutationVariation.keySet().size() +" documents");
-	        int sum = 0;
-	        for(int pmid1 : mutationVariation.keySet()){
-	        	sum+=mutationVariation.get(pmid1).size();
-	        }
-	        System.err.println(sum +" entities");
 
-			//Perform normalization (grouped by rs-id)
+			//Perform normalization with the same strategy as thomas2011
 			for(int rs : mutationVariation.keySet()){
-				Set<Integer> rsNorm = new HashSet<Integer>();
+				
+				Set<Integer> normalized_rsIDs = new HashSet<Integer>();
+				for(String mutationString : mutationVariation.get(rs)){		//For each mutation string:
 
-				for(String mutationString : mutationVariation.get(rs)){
 					if(mutationString.equals("rs" +rs)){
-						rsNorm.add(rs);
-						continue;
-					}				
+						normalized_rsIDs.add(rs);
+					}			
+					
+					else{
+						MutationMention mutation = new MutationMention(mutationString); //Build a SNP representation, which we will try to normalize
+						//Perform nornalization  for all genes in the article
+						for(int gene :  genes){ 
+							final List<dbSNP> potentialSNPs = dbSNP.getSNP(gene);	
+							final List<UniprotFeature> features = UniprotFeature.getFeatures(gene);                        
+							mutation.normalizeSNP(potentialSNPs, features, false);
 
-					MutationMention mutation = new MutationMention(mutationString); //This is the SNP we want to normalize
-					for(int gene :  genes){
-						final List<dbSNP> potentialSNPs = dbSNP.getSNP(gene);	//Get a list of dbSNPs which could potentially represent the SNP from (mutation)
-						final List<UniprotFeature> features = UniprotFeature.getFeatures(gene);
-                        mutation.normalizeSNP(potentialSNPs, features, false);
-						List<dbSNPNormalized> normalized = mutation.getNormalized();	//And here we have  a list of all dbSNPs with which I could successfully associate the mutation
-						for(dbSNPNormalized norm : normalized)
-							rsNorm.add(norm.getRsID());
-					}					
-				}
-				if(rsNorm.contains(rs)){		//Check if found rsID's  is correct
-					tp++;			
-					rsNorm.remove(rs);
-				}			
-				else{										//Otherwise we have a false negative
-					fn++;
-					System.out.println(pmid  +" " +mutationVariation.get(rs).toString() +" gene=" +genes.toString() +" rs" +rs);
-				}
+							//And here we have  a list of all dbSNPs with which I could successfully associate the mutation
+							final List<dbSNPNormalized> normalized = mutation.getNormalized();	
+							for(dbSNPNormalized norm : normalized)
+								normalized_rsIDs.add(norm.getRsID());
+						}	
+					}
+					
+					//Evaluation
+					if(normalized_rsIDs.contains(rs)){		//Check if found rsID's  is correct
+						tp++;			
+						normalized_rsIDs.remove(rs);
+					}			
+					else{					//Otherwise we have a false negative
+						fn++;
+						System.out.println("False negative in: " +pmid  +" " +mutationVariation.get(rs).toString() +" gene=" +genes.toString() +" rs" +rs);
+					}
 
-				fp+=rsNorm.size();			//All remaining ids are false positives	
+					fp+=normalized_rsIDs.size();			//All remaining ids are false positives											
+				}
 			}
-
 		}
-        double recall = (double) tp/(tp+fn);
-        double precision = (double) tp/(tp+fp);
-        double f1 = 2*(precision*recall)/(precision+recall);
 
-        DecimalFormat df = new DecimalFormat( "0.00" );
-        System.err.println("TP " +tp);
-        System.err.println("FP " +fp);
-        System.err.println("FN " +fn);
-        System.err.println("Precision " +df.format(precision));
-        System.err.println("Recall " +df.format(recall));
-        System.err.println("F1 " +df.format(f1));
+		double recall = (double) tp/(tp+fn);
+		double precision = (double) tp/(tp+fp);
+		double f1 = 2*(precision*recall)/(precision+recall);
+
+		DecimalFormat df = new DecimalFormat( "0.00" );
+		System.err.println("TP " +tp);
+		System.err.println("FP " +fp);
+		System.err.println("FN " +fn);
+		System.err.println("Precision " +df.format(precision));
+		System.err.println("Recall " +df.format(recall));
+		System.err.println("F1 " +df.format(f1));
 	}
 
 }
