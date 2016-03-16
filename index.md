@@ -244,28 +244,28 @@ thomas \[at\] informatik \[dot\] hu-berlin \[dot\] de
 **[MutationFinder: a high-performance system for extracting point mutation mentions from text.](http://www.ncbi.nlm.nih.gov/pubmed/17495998)** 
 Bioinformatics, 23(14), 1862–1865. 
 - den Dunnen, J. T. and Antonarakis, S. E. (2000). 
-**Mutation nomenclature extensions and suggestions to describe complex mutations: a discussion.**
+**[Mutation nomenclature extensions and suggestions to describe complex mutations: a discussion.](http://www.ncbi.nlm.nih.gov/pubmed/10612815)**
 Human Mutat, 15(1), 7–12.
 - Furlong, L. I. *et al.* (2008). 
-**Osirisv1.2: a named entity recognition system for sequence variants of genes in biomedical literature.** 
+**[Osirisv1.2: a named entity recognition system for sequence variants of genes in biomedical literature.](http://www.ncbi.nlm.nih.gov/pubmed/18251998)** 
 BMC Bioinformatics, 9, 84.
 - Hakenberg, J. *et al.* (2011). 
-**The GNAT library for local and remote gene mention normalization.** 
+**[The GNAT library for local and remote gene mention normalization.](www.ncbi.nlm.nih.gov/pubmed/21813477)** 
 Bioinformatics 27(19):2769-71
 - Laros, J. F. J. *et al.* (2011). 
-**A formalized description of the standard human variant nomenclature in Extended Backus-Naur Form.** 
+**[A formalized description of the standard human variant nomenclature in Extended Backus-Naur Form.](http://www.ncbi.nlm.nih.gov/pubmed/21992071)** 
 BMC bioinformatics, 12 Suppl 4(Suppl 4), S5.
 - Thomas, P. E. *et al.* (2011). 
-**Challenges in the association of human single nucleotide polymorphism mentions with unique database identifiers.** 
+**[Challenges in the association of human single nucleotide polymorphism mentions with unique database identifiers.](http://www.ncbi.nlm.nih.gov/pubmed/21992066)** 
 BMC Bioinformatics, 12 Suppl 4, S4.
 - Verspoor, K. *et al.* (2013). 
-**Annotating the biomedical literature for the human variome.** 
+**[Annotating the biomedical literature for the human variome.](http://www.ncbi.nlm.nih.gov/pubmed/23584833)** 
 Database (Oxford).
 - Wei, C.-H. *et al.* (2013). 
-**tmvar: a text mining approach for extracting sequence variants in biomedical literature.** 
+**[tmvar: a text mining approach for extracting sequence variants in biomedical literature.](http://www.ncbi.nlm.nih.gov/pubmed/23564842)** 
 Bioinformatics, 29(11), 1433–1439.
 - Yepes, A. J. and Verspoor, K. 
-**Mutation extraction tools can be combined for robust recognition of genetic variants in the literature**
+**[Mutation extraction tools can be combined for robust recognition of genetic variants in the literature](http://www.ncbi.nlm.nih.gov/pubmed/25285203)**
 F1000Research 2014, 3:18 
 
 # Rebuilding the database used for SNP normalization
