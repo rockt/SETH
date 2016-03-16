@@ -231,13 +231,6 @@ Details: TP 101; FP 2; FN 43
 	Thomas, P., Rocktäschel, T., Mayer, Y., and Leser, U. (2014). SETH: SNP Extraction Tool for Human Variations.
 	http://rockt.github.io/SETH/.
 
-#Bug reports
-Issues and feature requests can be filed [online](https://github.com/rockt/SETH/issues)
-
-# Contact
-For questions and  remarks please contact Philippe Thomas:
-
-thomas \[at\] informatik \[dot\] hu-berlin \[dot\] de
 
 # References
 - Caporaso, J. G. *et al.* (2007). 
@@ -343,5 +336,10 @@ Updated gene-ner results are available on the GeneView web site (http://bc3.info
 Finally, to allow for a better portability of SETH, we converted the original mySQL database into an embedded Derby database.
 For this we used Apache [ddlUtils](http://db.apache.org/ddlutils/). For large databases we observed a high memory requirement using ddlutils. Therefore, we implemented a rather simple migration "script", which exports the MySQL database to CSV and bulk imports the CSV files to a local Derby database. This script is only added for documentation purposes and should not be executed on the command shell. The script can be found [here](https://github.com/rockt/SETH/blob/master/resources/migrate/migrate.sh).
 
+#Bug reports
+Issues and feature requests can be filed [online](https://github.com/rockt/SETH/issues)
 
+# Contact
+For questions and  remarks please contact Philippe Thomas:
 
+thomas \[at\] informatik \[dot\] hu-berlin \[dot\] de
