@@ -186,11 +186,11 @@ class PerformanceCalculatorResult(object):
         """ Return a nicely formated string containing p, r, and f """
         result = ["Precision\tRecall\tF-measure"]
         try:
-            result.append('%(pre)0.4f\t%(re)0.4f\t%(fm)0.4f'\
+            result.append('%(pre)0.2f\t%(re)0.2f\t%(fm)0.2f'\
              % {'pre':self._p,'re':self._r,'fm':self._f})
         except TypeError:
             if self._p and self._r:
-                result.append(''.join(['%(pre)0.4f\t%(re)0.4f\t',str(self._f)])\
+                result.append(''.join(['%(pre)0.2f\t%(re)0.2f\t',str(self._f)])\
                  % {'pre':self._p,'re':self._r})
             else:
                 result.append('\t'.join(map(str,[self._p,self._r,self._f])))
