@@ -217,10 +217,31 @@ Details: TP 101; FP 2; FN 43
 |pdf.all   | MF++           | 2434        | 697     | 978          |
 -->
 
+# Cite SETH
+
+### BibTeX
+	@misc{thomas2013seth,
+	  title={ {SETH: SNP Extraction Tool for Human Variations} },
+	  author={Thomas, Philippe and Rockt{\"a}schel, Tim and Mayer, Yvonne and Leser, Ulf},
+	  howpublished = {\url{http://rockt.github.io/SETH/}},
+	  year = {2014}
+	}
+	
+### Text	
+	Thomas, P., Rocktäschel, T., Mayer, Y., and Leser, U. (2014). SETH: SNP Extraction Tool for Human Variations.
+	http://rockt.github.io/SETH/.
+
+#Bug reports
+Issues and feature requests can be filed [online](https://github.com/rockt/SETH/issues)
+
+# Contact
+For questions and  remarks please contact Philippe Thomas:
+
+thomas \[at\] informatik \[dot\] hu-berlin \[dot\] de
 
 # References
 - Caporaso, J. G. *et al.* (2007). 
-**MutationFinder: a high-performance system for extracting point mutation mentions from text.** 
+**[MutationFinder: a high-performance system for extracting point mutation mentions from text.](http://www.ncbi.nlm.nih.gov/pubmed/17495998)** 
 Bioinformatics, 23(14), 1862–1865. 
 - den Dunnen, J. T. and Antonarakis, S. E. (2000). 
 **Mutation nomenclature extensions and suggestions to describe complex mutations: a discussion.**
@@ -323,24 +344,4 @@ Finally, to allow for a better portability of SETH, we converted the original my
 For this we used Apache [ddlUtils](http://db.apache.org/ddlutils/). For large databases we observed a high memory requirement using ddlutils. Therefore, we implemented a rather simple migration "script", which exports the MySQL database to CSV and bulk imports the CSV files to a local Derby database. This script is only added for documentation purposes and should not be executed on the command shell. The script can be found [here](https://github.com/rockt/SETH/blob/master/resources/migrate/migrate.sh).
 
 
-# Cite SETH
 
-### BibTeX
-	@misc{thomas2013seth,
-	  title={ {SETH: SNP Extraction Tool for Human Variations} },
-	  author={Thomas, Philippe and Rockt{\"a}schel, Tim and Mayer, Yvonne and Leser, Ulf},
-	  howpublished = {\url{http://rockt.github.io/SETH/}},
-	  year = {2014}
-	}
-	
-### Text	
-	Thomas, P., Rocktäschel, T., Mayer, Y., and Leser, U. (2014). SETH: SNP Extraction Tool for Human Variations.
-	http://rockt.github.io/SETH/.
-
-#Bug reports
-Issues and feature requests can be filed [online](https://github.com/rockt/SETH/issues)
-
-# Contact
-For questions and  remarks please contact Philippe Thomas:
-
-thomas \[at\] informatik \[dot\] hu-berlin \[dot\] de
