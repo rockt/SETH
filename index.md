@@ -142,17 +142,17 @@ F₁        0.91
     java -cp seth.jar seth.seth.eval.ApplyNER resources/mutationfinder/corpus/devo_text.txt resources/mutations.txt true resources/devo_text.seth
     python resources/mutationfinder/origDist/performance.py resources/devo_text.seth  resources/mutationfinder/corpus/devo_gold_std.txt
     
-Precision 0.97
+Precision 0.98
 Recall    0.83
-F₁        0.89
+F₁        0.90
 
 #### MutationFinder-test  corpus using original MutationFinder evaluation scripts (Caporaso *et al.*, 2007) 
     java -cp seth.jar seth.seth.eval.ApplyNER resources/mutationfinder/corpus/test_text.txt resources/mutations.txt true resources/test_text.seth
     python resources/mutationfinder/origDist/performance.py resources/test_text.seth  resources/mutationfinder/corpus/test_gold_std.txt
     
-Precision 0.97
-Recall    0.81
-F₁        0.88
+Precision 0.98
+Recall    0.82
+F₁        0.89
 
 #### Corpus of Wei *et al.* (2013)
     java -cp seth.jar seth.seth.eval.ApplyNERToWei resources/Wei2013/train.txt  resources/mutations.txt  resources/Wei2013.seth
