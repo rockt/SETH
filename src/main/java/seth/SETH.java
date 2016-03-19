@@ -234,21 +234,25 @@ public class SETH {
          * For simpler use, SETH ships with a set of precomputed NER results from GNAT and gene2Pubmed
          * but in practise an arbitrary gene name recognition tool can be used. As long it normalizes to Entrez-Gene IDs
          */
-        //Set<Gene> recognizedGenes = Gene.queryGenesForArticle(1572656); //Retrieve all found genes from the database
-        int gene = 1312;    //Entrez Gene ID associated with the current mutation
-        final List<dbSNP> potentialSNPs = dbSNP.getSNP(gene);    //Get a list of dbSNPs which could potentially represent the mutation mention
-        final List<UniprotFeature> features = UniprotFeature.getFeatures(gene);    //Get all associated UniProt features
+        //Set<Gene> recognizedGenes = Gene.queryGenesForArticle(1572656); //Retrieve all genes recognized by GNAT and gene2pubmed
+        Set<Integer> genes = new HashSet<Integer>(Arrays.asList(1312));  //Manually define a list of Entrez Gene IDs, against which we want to compare; Alternatively you can include a custom gene-NER here
 
-        for (MutationMention mutation : mutations) {
-            System.out.println(mutation);
-            mutation.normalizeSNP(potentialSNPs, features, false);
-            List<dbSNPNormalized> normalized = mutation.getNormalized();    //Get list of all dbSNP entries with which I could successfully associate the mutation
+        for(int gene : genes){
+            final List<dbSNP> potentialSNPs = dbSNP.getSNP(gene);    //Get a list of dbSNPs which could potentially represent the mutation mention
+            final List<UniprotFeature> features = UniprotFeature.getFeatures(gene);    //Get all associated UniProt features
 
-            // Print information
-            for (dbSNPNormalized snp : normalized) {
-                System.out.println(mutation + " --- rs" + snp.getRsID());
+            for (MutationMention mutation : mutations) {
+                System.out.println(mutation);
+                mutation.normalizeSNP(potentialSNPs, features, false);
+                List<dbSNPNormalized> normalized = mutation.getNormalized();    //Get list of all dbSNP entries with which I could successfully associate the mutation
+
+                // Print information
+                for (dbSNPNormalized snp : normalized) {
+                    System.out.println(mutation + " --- rs" + snp.getRsID());
+                }
             }
         }
+
 
 
     }
