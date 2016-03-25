@@ -56,7 +56,7 @@ To extract gene mentions, we use the output of the tool [GNAT](http://gnat.sourc
 together with the gene2pubmed information from NCBI.
 Parts of the [dbSNP database](http://www.ncbi.nlm.nih.gov/projects/SNP/) have to be locally installed for speeding up
 the normalization process.
-For user convenience, we provide a [dump as embedded Derby database](https://docs.google.com/file/d/0B9uTfq0OyHAsdDNMQzNxWDRhZVE/edit?usp=sharing) (~2GB).
+For user convenience, we provide a [dump as embedded Derby database](https://drive.google.com/open?id=0B9uTfq0OyHAsS0hoNDFRR0ZyOUE) (~2GB).
 Please note, that this derby database dump contains onlyhuman results for human databases (UniProt, dbSNP, GNAT, gene2Pubmed). Otherwise the resulting derby database becomes too large for distribution.
 At the end of this readme we describe the process to build the database. 
 This process can be adapted for other species...
