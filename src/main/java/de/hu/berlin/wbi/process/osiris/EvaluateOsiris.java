@@ -111,9 +111,13 @@ public class EvaluateOsiris {
 				genes.add(Integer.parseInt(gene.getAttributes().getNamedItem("g_id").getTextContent()));
 			}			
 
-			//Exctract all normalized mutation mentions in this article (rs-ID to different string-mentions)
+			//Exctract all normalized mutation mentions in this article (rs-ID to string-mentions)
 			//mutationVariation: (e.g. rs1805126 -> [D1819D, C5457T])
-			HashMap<Integer, Set<String>> mutationVariation = new HashMap<Integer, Set<String>>();
+
+            //Comment: I, personally, thing it would be better to use a HashMap<Integer, Set<String>> representation
+            //Such a representation would evaluate duplicate String mentions only once (e.g., Ala12Tyr), which is less prone
+            //to frequent repeats of the same mention...
+			HashMap<Integer, List<String>> mutationVariation = new HashMap<Integer, List<String>>();
 			NodeList variantNode = (NodeList) variantExp.evaluate(doc, XPathConstants.NODESET);
 			for(int j =0; j < variantNode.getLength(); j++){
 				Node variant = variantNode.item(j);
@@ -136,7 +140,7 @@ public class EvaluateOsiris {
 					mutationVariation.get(correctRsId).add(mutationString);
 				}
 				else{
-					Set<String> tmpSet = new HashSet<String>();
+					List<String> tmpSet = new ArrayList<String>();
 					tmpSet.add(mutationString);
 					mutationVariation.put(correctRsId, tmpSet);
 				}	
