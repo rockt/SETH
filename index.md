@@ -194,10 +194,10 @@ Details: TP 303; FP 14; FN 224
 #### Corpus of OSIRIS (Furlong *et al.*, 2008)
     java -cp seth.jar de.hu.berlin.wbi.process.osiris.EvaluateOsiris myProperty.xml resources/OSIRIS/corpus.xml
     
-Precision 0.98
-Recall    0.70
-F₁        0.82
-Details: TP 101; FP 2; FN 43
+Precision 0.94
+Recall    0.69
+F₁        0.79
+Details: TP 179; FP 11; FN 79
 
 
 <!--
@@ -261,7 +261,7 @@ Bioinformatics, 29(11), 1433–1439.
 F1000Research 2014, 3:18 
 
 # Rebuilding the database used for SNP normalization
-**WARNING:** We provide a stand-alone (embedded) [Derby database](https://docs.google.com/file/d/0B9uTfq0OyHAsdDNMQzNxWDRhZVE/edit?usp=sharing). 
+**WARNING:** We provide a stand-alone (embedded) [Derby database](https://drive.google.com/file/d/0B9uTfq0OyHAsS0hoNDFRR0ZyOUE/view?usp=sharing). 
 The following steps are only needed if you want to build the database from scratch.
 This database is **only** required for normalization to either dbSNP or UniProt...
 
