@@ -154,7 +154,7 @@ Precision 0.98
 Recall    0.82
 F₁        0.89
 
-#### Corpus of Wei *et al.* (2013)
+#### Corpus of Wei *et al.* (2013); train
     java -cp seth.jar seth.seth.eval.ApplyNERToWei resources/Wei2013/train.txt  resources/mutations.txt  resources/Wei2013.seth
     java -cp seth.jar seth.seth.eval.EvaluateWei resources/Wei2013/train.txt resources/Wei2013.seth
     
@@ -166,7 +166,7 @@ F₁        0.86
     java -cp seth.jar seth.seth.eval.ApplyNERToWei resources/Wei2013/test.txt  resources/mutations.txt  resources/Wei2013.seth
     java -cp seth.jar seth.seth.eval.EvaluateWei resources/Wei2013/test.txt resources/Wei2013.seth
     
-Precision 0.94
+Precision 0.95
 Recall    0.77
 F₁        0.85
 
@@ -188,7 +188,6 @@ F₁        0.24
 Precision 0.96
 Recall    0.57
 F₁        0.72
-
 Details: TP 303; FP 14; FN 224
 
 
