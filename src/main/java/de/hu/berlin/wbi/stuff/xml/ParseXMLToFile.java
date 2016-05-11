@@ -42,8 +42,8 @@ public class ParseXMLToFile extends DefaultHandler {
 
 	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, SQLException {
 
-		psHGVS  = new BufferedWriter(new OutputStreamWriter( new GZIPOutputStream(new FileOutputStream(new File("HGVS.tsv.gz"))), "UTF-8"));
-		psmHGVS = new BufferedWriter(new OutputStreamWriter( new GZIPOutputStream(new FileOutputStream(new File("PSM.tsv.gz"))), "UTF-8"));
+		psHGVS  = new BufferedWriter(new OutputStreamWriter( new FileOutputStream(new File("hgvs.tsv")), "UTF-8"));
+		psmHGVS = new BufferedWriter(new OutputStreamWriter( new FileOutputStream(new File("PSM.tsv")), "UTF-8"));
 
 		String xmlFolder = "/home/philippe/workspace/snp-normalizer/data/dat/";
 		if (args.length == 1)
