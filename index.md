@@ -31,11 +31,30 @@ SETH currently uses these two data-sources but can easily extended with other ge
 
 ## Download ready-to-use version 1.3.0 (released 25.03.2016) [seth.jar](https://github.com/rockt/SETH/releases/tag/1.3)
 
-## Build SETH on your own
+## Or build SETH on your own:
 	git clone https://github.com/rockt/SETH.git
 	cd SETH
 	mvn clean compile assembly:single
 	mv ./target/seth-1.2-Snapshot-jar-with-dependencies.jar seth.jar
+
+# Cite SETH
+
+### BibTeX
+	@misc{thomas2013seth,
+	  title={ {SETH: SNP Extraction Tool for Human Variations} },
+	  author={Thomas, Philippe and Rockt{\"a}schel, Tim and Mayer, Yvonne and Leser, Ulf},
+	  howpublished = {\url{http://rockt.github.io/SETH/}},
+	  year = {2014}
+	}
+	
+### Text	
+	Thomas, P., Rocktäschel, T., Mayer, Y., and Leser, U. (2014). SETH: SNP Extraction Tool for Human Variations.
+	http://rockt.github.io/SETH/.
+
+# Download precomputed PubMed results
+
+	Precomputed results are available in [GeneView](http://www.ncbi.nlm.nih.gov/pubmed?term=22693219) [here](http://bc3.informatik.hu-berlin.de/annotations/mutations.tsv.gz)
+	or in [RVS](http://www.ncbi.nlm.nih.gov/pubmed/26746786) [here](https://rvs.u.hpc.mssm.edu/rest/)
 
 # Examples for NER
 
@@ -190,19 +209,7 @@ Details: TP 179; FP 11; FN 79
 |pdf.all   | MF++           | 2434        | 697     | 978          |
 -->
 
-# Cite SETH
 
-### BibTeX
-	@misc{thomas2013seth,
-	  title={ {SETH: SNP Extraction Tool for Human Variations} },
-	  author={Thomas, Philippe and Rockt{\"a}schel, Tim and Mayer, Yvonne and Leser, Ulf},
-	  howpublished = {\url{http://rockt.github.io/SETH/}},
-	  year = {2014}
-	}
-	
-### Text	
-	Thomas, P., Rocktäschel, T., Mayer, Y., and Leser, U. (2014). SETH: SNP Extraction Tool for Human Variations.
-	http://rockt.github.io/SETH/.
 
 
 # References
