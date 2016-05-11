@@ -53,8 +53,7 @@ SETH currently uses these two data-sources but can easily extended with other ge
 
 # Download precomputed PubMed results
 
-	Precomputed results are available in [GeneView](http://www.ncbi.nlm.nih.gov/pubmed?term=22693219) [here](http://bc3.informatik.hu-berlin.de/annotations/mutations.tsv.gz)
-	or in [RVS](http://www.ncbi.nlm.nih.gov/pubmed/26746786) [here](https://rvs.u.hpc.mssm.edu/rest/)
+Precomputed results are available in [GeneView](http://www.ncbi.nlm.nih.gov/pubmed/22693219)  [here](http://bc3.informatik.hu-berlin.de/annotations/mutations.tsv.gz)	or in [RVS](http://www.ncbi.nlm.nih.gov/pubmed/26746786) [here](https://rvs.u.hpc.mssm.edu/rest/)
 
 # Examples for NER
 
