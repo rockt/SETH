@@ -57,13 +57,14 @@ together with the gene2pubmed information from NCBI.
 Parts of the [dbSNP database](http://www.ncbi.nlm.nih.gov/projects/SNP/) have to be locally installed for speeding up
 the normalization process.
 For user convenience, we provide a [dump as embedded Derby database](https://drive.google.com/open?id=0B9uTfq0OyHAsS0hoNDFRR0ZyOUE) (~2GB).
-Please note, that this derby database dump contains onlyhuman results for human databases (UniProt, dbSNP, GNAT, gene2Pubmed). Otherwise the resulting derby database becomes too large for distribution.
-At the end of this readme we describe the process to build the database. 
-This process can be adapted for other species...
-Feel free to contact us if you observe any problems, or if you would like to host database dumps for other species or database systems.
+Please note, that this derby database dump contains only human data (UniProt, dbSNP, GNAT, gene2Pubmed). 
+Otherwise the resulting derby database becomes too large for distribution.
+At the end of this readme we describe the process to generate the derby database. 
+This process can be adapted for other species.
+Feel free to contact us if you observe any problems, or if you would like to host database dumps for species other than human.
 
 ## Command-line Usage
-To use SETH's NEN component from the command line, you need to provid a [XML property file](https://github.com/rockt/SETH/blob/master/resources/seth_properties.xml) 
+To use SETH's NEN component from the command line, you need to provide a [XML property file](https://github.com/rockt/SETH/blob/master/resources/seth_properties.xml) 
 that handles the connection to the Derby database. 
 Subsequently, you can provide a tab-seperated [file](https://github.com/rockt/SETH/blob/master/resources/snpExample.txt) (with PubMed ID, mutation mention, start- and end-position) 
 SETH should normalize to dbSNP (*i.e.* rs numbers).
@@ -97,37 +98,12 @@ SETH should normalize to dbSNP (*i.e.* rs numbers).
 	Normalization possible for 14/20 mentions
 
 # Code Example
-SETH allows simple integration into your Java-Projects. In this section we provide some examples to perform NER and NEN.
-
-
-## A complete pipeline performing all steps (NER+NEN) can be found here:
-[Java](https://github.com/rockt/SETH/blob/master/src/main/java/seth/SETH.java#L203-L246)
-
-
-
-## Example using only the backus naur grammar in Scala EBNF for HGVS mutation nomenclature implemented as parser combinators
-[Scala](https://github.com/rockt/SETH/blob/master/src/main/scala/seth/ner/SETHNER.scala#L128-L356)
-
+SETH allows simple integration into your Java-Projects.  A complete pipeline performing all steps (NER+NEN) can be found here:
+[Java-Code](https://github.com/rockt/SETH/blob/master/src/main/java/seth/SETH.java#L203-L254)
 
 # Reproducing our results
 
 ## Evaluate NER
-
-<!---
-#### Human Mutation corpus I (210 abstracts)
-    java -cp seth.jar seth.seth.eval.ApplyNER resources/humu/corpus.txt resources/mutations.txt false resources/humu.seth
-    java -cp seth.jar seth.seth.eval.EvaluteNaER resources/humu.seth resources/humu/yearMapping.txt  resources/humu/annotations/
-Precision 0.98
-Recall    0.84
-F₁        0.90
-
-#### Human Mutation corpus II (420 abstracts)
-    java -cp seth.jar seth.seth.eval.ApplyNER resources/american/corpus.txt resources/mutations.txt false resources/american.seth
-    java -cp seth.jar seth.seth.eval.EvaluateNER resources/american.seth resources/american/yearMapping.txt resources/american/annotations/
-Precision 0.88
-Recall    0.82
-F₁        0.85
--->
 
 #### SETH corpus (630 abstracts)
     java -cp seth.jar seth.seth.eval.ApplyNER resources/SETH-corpus/corpus.txt resources/mutations.txt false resources/SETH-corpus.seth
@@ -169,8 +145,6 @@ F₁        0.86
 Precision 0.95
 Recall    0.77
 F₁        0.85
-
-
 
 #### Corpus of Verspoor *et al.* (2013)
     java -cp seth.jar seth.seth.eval.ApplyNerToVerspoor resources/Verspoor2013/corpus/ resources/mutations.txt resources/Verspoor2013.seth
@@ -263,7 +237,7 @@ F1000Research 2014, 3:18
 # Rebuilding the database used for SNP normalization
 **WARNING:** We provide a stand-alone (embedded) [Derby database](https://drive.google.com/file/d/0B9uTfq0OyHAsS0hoNDFRR0ZyOUE/view?usp=sharing). 
 The following steps are only needed if you want to build the database from scratch.
-This database is **only** required for normalization to either dbSNP or UniProt...
+This database is **only** required for normalization to either dbSNP or UniProt.
 
 
 The import script is tailored towards a mySQL database, but theoretically any other database can be used. 
@@ -295,8 +269,9 @@ We would be happy to get feedback about using SETH with other databases.
 ### Parse dbSNP-XML dump
 This takes some compute resources and disk-space. 
 
-	time java -cp seth.jar de.hu.berlin.wbi.stuff.xml.ParseXML property.xml /path/with/dbSNP-XML/files/... #Parse file
-	zcat HGVS.tsv.gz | cut -f 1-3 > hgvs2.tsv #Remove refseq information for derby-DB (gets too large otherwise)
+	time java -cp seth.jar de.hu.berlin.wbi.stuff.xml.ParseXMLToFile  /path/with/dbSNP-XML/files/... #Parse file
+	zcat HGVS.tsv.gz | cut -f 1-3 > hgvs2.tsv #Remove refseq information for derby-DB (only necessary to reduce database size)
+	#Remove duplicated entries 
 	split -l100000000 hgvs2.tsv '_tmp'; 
 	ls -1 _tmp* | while read FILE; do echo $FILE; sort $FILE -o $FILE ; done; #Individual sort
 	sort -u -m _tmp* -o hgvs.tsv.sorted #Merge sort
