@@ -276,8 +276,11 @@ We would be happy to get feedback about using SETH with other databases.
 This takes some compute resources and disk-space. 
 
 	time java -cp seth.jar de.hu.berlin.wbi.stuff.xml.ParseXMLToFile  /path/with/dbSNP-XML/files/... #Parse dbSNP dump
-
-Import PSM and hgvs	
+	cat hgvs.tsv | cut -f 1-3 > hgvs2.tsv #Remove refseq information for derby-DB (only necessary to reduce database size)
+	#Remove duplicated entries 
+	split -l100000000 hgvs2.tsv '_tmp'; 
+	ls -1 _tmp* | while read FILE; do echo $FILE; sort $FILE -o $FILE ; done; #Individual sort
+	sort -u -m _tmp* -o hgvs.tsv.sorted #Merge sort
 
 	mysqlimport  --fields-terminated-by='\t' --delete --local --verbose --host <hostname> --user=<username> --password=<password> <dbName> PSM.tsv
 	mysqlimport  --fields-terminated-by='\t' --delete --local --verbose --host <hostname> --user=<username> --password=<password> <dbName> hgvs.tsv
