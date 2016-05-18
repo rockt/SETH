@@ -308,6 +308,21 @@ Updated gene-ner results are available on the GeneView web site (http://bc3.info
 Finally, to allow for a better portability of SETH, we converted the original mySQL database into an embedded Derby database.
 For this we used Apache [ddlUtils](http://db.apache.org/ddlutils/). For large databases we observed a high memory requirement using ddlutils. Therefore, we implemented a rather simple migration "script", which exports the MySQL database to CSV and bulk imports the CSV files to a local Derby database. This script is only added for documentation purposes and should not be executed on the command shell. The script can be found [here](https://github.com/rockt/SETH/blob/master/resources/migrate/migrate.sh).
 
+## Latest derby database (18th May 2016)
+Due to public request, we now also provide a derby database for the (currently) latest human dbSNP dump [dbSNP147](https://drive.google.com/open?id=0BxyKVvNXUobTMDJYcG81Uzdhb28). Please be warned that the download is 7.5GB compressed and requires 51 GB uncompressed space. Runtime requirements for normalization also substantially increases with this version of dbSNP in comparison to the smaller dump. For example, normalization of the 296 documents from Thomas *et al.* (2011) increases from approximately 30 seconds to 140 seconds on a commodity laptop. We highly encourage the use of an dedicated database, such as MySQL or PostgreSQL to increase runtime.  
+Performance of this model on the previously introduced normalization corpora: 
+
+|Corpus|Precision|Recall|F₁|
+| --- | --- | --- | ---| 
+| Thomas| 0.89 | 0.59 | 0.71 |
+| Osiris | 0.94 | 0.69 | 0.79 |
+
+On both corpora we observe an increase in recall, accompanied with a decrease in precision. This behaviour is expected, as the larger database contains many more SNP candidates than the smaller database. 
+For a detailed analysis, a larger normalization corpus with articles from different time periods would be required.
+
+
+
+
 # Bug reports
 Issues and feature requests can be filed [online](https://github.com/rockt/SETH/issues)
 
