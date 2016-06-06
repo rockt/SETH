@@ -59,8 +59,7 @@ SETH currently uses these two data-sources but can easily extended with other ge
 
 	
 ### Text	
-	Thomas, P., Rocktäschel, T., Mayer, Y., and Leser, U. (2014). SETH: SNP Extraction Tool for Human Variations.
-	http://rockt.github.io/SETH/.
+	Thomas, P., Rocktäschel, T., Hakenberg, J., Mayer, L., and Leser, U. (2016). SETH detects and normalizes genetic variants in text. Bioinformatics (2016)
 
 # Download precomputed PubMed results
 
