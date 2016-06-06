@@ -41,20 +41,17 @@ SETH currently uses these two data-sources but can easily extended with other ge
 [SETH detects and normalizes genetic variants in text.](http://www.ncbi.nlm.nih.gov/pubmed/?term=27256315)
 
 ### BibTeX
-@Article{Thomas2016,
-  Title                    = {SETH detects and normalizes genetic variants in text.},
-  Author                   = {Thomas, Philippe and Rockt{\"{a}}schel, Tim and Hakenberg, J{\"{o}}rg and Lichtblau, Yvonne and Leser, Ulf},
-  Journal                  = {Bioinformatics},
-  Year                     = {2016},
-  Month                    = {Jun},
-  Doi                      = {10.1093/bioinformatics/btw234},
-  Language                 = {eng},
-  Medline-pst              = {aheadofprint},
-  Owner                    = {philippe},
-  Pii                      = {btw234},
-  Pmid                     = {27256315},
-  Timestamp                = {2016.06.06},
-  Url                      = {http://dx.doi.org/10.1093/bioinformatics/btw234}
+@Article{SETH2016,
+  Title= {SETH detects and normalizes genetic variants in text.},
+  Author= {Thomas, Philippe and Rockt{\"{a}}schel, Tim and Hakenberg, J{\"{o}}rg and Lichtblau, Yvonne and Leser, Ulf},
+  Journal= {Bioinformatics},
+  Year= {2016},
+  Month= {Jun},
+  Doi= {10.1093/bioinformatics/btw234},
+  Language = {eng},
+  Medline-pst = {aheadofprint},
+  Pmid = {27256315},
+  Url = {http://dx.doi.org/10.1093/bioinformatics/btw234}
 }
 
 	
