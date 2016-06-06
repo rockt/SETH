@@ -38,14 +38,25 @@ SETH currently uses these two data-sources but can easily extended with other ge
 	mv ./target/seth-1.2-Snapshot-jar-with-dependencies.jar seth.jar
 
 # Cite SETH
+[SETH detects and normalizes genetic variants in text.](http://www.ncbi.nlm.nih.gov/pubmed/?term=27256315)
 
 ### BibTeX
-	@misc{thomas2013seth,
-	  title={ {SETH: SNP Extraction Tool for Human Variations} },
-	  author={Thomas, Philippe and Rockt{\"a}schel, Tim and Mayer, Yvonne and Leser, Ulf},
-	  howpublished = {\url{http://rockt.github.io/SETH/}},
-	  year = {2014}
-	}
+@Article{Thomas2016,
+  Title                    = {SETH detects and normalizes genetic variants in text.},
+  Author                   = {Thomas, Philippe and Rockt{\"{a}}schel, Tim and Hakenberg, J{\"{o}}rg and Lichtblau, Yvonne and Leser, Ulf},
+  Journal                  = {Bioinformatics},
+  Year                     = {2016},
+  Month                    = {Jun},
+  Doi                      = {10.1093/bioinformatics/btw234},
+  Language                 = {eng},
+  Medline-pst              = {aheadofprint},
+  Owner                    = {philippe},
+  Pii                      = {btw234},
+  Pmid                     = {27256315},
+  Timestamp                = {2016.06.06},
+  Url                      = {http://dx.doi.org/10.1093/bioinformatics/btw234}
+}
+
 	
 ### Text	
 	Thomas, P., Rocktäschel, T., Mayer, Y., and Leser, U. (2014). SETH: SNP Extraction Tool for Human Variations.
