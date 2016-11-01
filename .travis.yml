@@ -1,3 +1,9 @@
 language: java
 
-mvn test -b
+cache:
+  directories:
+  - $HOME/.m2
+
+script:
+  - mvn clean --batch-mode
+  - mvn test --batch-mode
