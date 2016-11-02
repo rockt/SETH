@@ -1,4 +1,4 @@
-package de.hu.berlin.wbi;
+package de.hu.berlin.wbi.issues;
 
 import de.hu.berlin.wbi.objects.MutationMention;
 import junit.framework.TestCase;
