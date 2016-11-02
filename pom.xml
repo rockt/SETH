@@ -95,6 +95,12 @@
             <version>2.11.7</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.scalatest</groupId>
+            <artifactId>scalatest_2.11</artifactId>
+            <version>2.2.6</version>
+        </dependency>
+
 	<!--Dependency is required due to upgrade in scala-library and scalatest -->
 	<dependency>
 	  <groupId>org.scala-lang.modules</groupId>

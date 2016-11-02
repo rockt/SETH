@@ -37,7 +37,7 @@ public class SETHTest extends TestCase {
         Assert.assertEquals(mentions.get(1).getWtResidue(), "L");
         Assert.assertEquals(mentions.get(2).getWtResidue(), "T");
 
-        Assert.assertEquals(mentions.get(0).getMutResidue(), "");
+        Assert.assertEquals(mentions.get(0).getMutResidue(), null);
         Assert.assertEquals(mentions.get(1).getMutResidue(), "P");
         Assert.assertEquals(mentions.get(2).getMutResidue(), "C");
 
