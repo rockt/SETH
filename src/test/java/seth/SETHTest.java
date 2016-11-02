@@ -3,6 +3,7 @@ package seth;
 import de.hu.berlin.wbi.objects.MutationMention;
 import junit.framework.Assert;
 import junit.framework.TestCase;
+import org.junit.Test;
 import seth.ner.wrapper.Type;
 
 import java.util.Collections;
@@ -10,6 +11,8 @@ import java.util.Comparator;
 import java.util.List;
 
 public class SETHTest extends TestCase {
+
+    @Test
     public void testFindMutations() throws Exception {
         SETH seth = new SETH(getClass().getResource("/resources/mutations.txt").getPath(), false, true);
         String sentence = "Causative GJB2 mutations were identified in 31 (15.2%) patients, and two common mutations, c.35delG and L90P (c.269T>C), accounted for 72.1% and 9.8% of GJB2 disease alleles.";

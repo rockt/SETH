@@ -2,6 +2,7 @@ package de.hu.berlin.wbi;
 
 import de.hu.berlin.wbi.objects.MutationMention;
 import junit.framework.TestCase;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -145,7 +146,7 @@ public class OldNomenclatureTest extends TestCase {
      *   http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=7981723&dopt=Abstract
      */
     @Test
-    public void Antonarakis1994() throws Exception{
+    public void testAntonarakis1994() throws Exception{
 
         //Substitutions with termination codon (nonsense mutations)
         assertSingleMutation("Arg250Ter");
@@ -163,7 +164,7 @@ public class OldNomenclatureTest extends TestCase {
      *   http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=8889576&dopt=Abstract
      */
     @Test
-    public void NomenclatureCommitee1996() throws  Exception{
+    public void testNomenclatureCommitee1996() throws  Exception{
 
         //Substitutions (also using →)
         assertSingleMutation("G54C");
@@ -217,7 +218,7 @@ public class OldNomenclatureTest extends TestCase {
      *   http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=8889577&dopt=Abstract
      */
     @Test
-    public void Beutler1996() throws  Exception{
+    public void testBeutler1996() throws  Exception{
 
         //Skipped by mutationfinder, otherwise false-positives increase tremendously
         //assertSingleMutation("E6V");
@@ -251,7 +252,7 @@ public class OldNomenclatureTest extends TestCase {
      *   http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=9450896&dopt=Abstract
      */
     @Test
-    public void Antonarakis1998() throws  Exception{
+    public void testAntonarakis1998() throws  Exception{
 
         assertSingleMutation("1997delT");
 //        assertSingleMutation("1997-1999del");
@@ -276,7 +277,7 @@ public class OldNomenclatureTest extends TestCase {
      *   http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=10612815&dopt=Abstract
      */
     @Test
-    public void DenDunnen2000() throws Exception{
+    public void testDenDunnen2000() throws Exception{
 
         assertSingleMutation("c.1997G>T");
         assertSingleMutation("c.1997-1999del");
@@ -300,7 +301,7 @@ public class OldNomenclatureTest extends TestCase {
      *   http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=11479744&dopt=Abstract
      */
     @Test
-    public void DenDunnen2001() throws Exception{
+    public void testDenDunnen2001() throws Exception{
 
         assertSingleMutation("g.76A>T");
         assertSingleMutation("c.76A>T");
@@ -371,7 +372,7 @@ public class OldNomenclatureTest extends TestCase {
      *   http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=Retrieve&db=PubMed&list_uids=21309030&dopt=Abstract
      */
     @Test
-    public void Taschner2011() throws Exception{
+    public void testTaschner2011() throws Exception{
         assertSingleMutation("c.76A>C");
         assertSingleMutation("c.77T>G");
         assertSingleMutation("c.76_77delinsCG");
@@ -387,7 +388,7 @@ public class OldNomenclatureTest extends TestCase {
      *   http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3194197/
      */
     @Test
-    public void Laros2011() throws Exception{
+    public void testLaros2011() throws Exception{
         assertSingleMutation("NM_003002.2:c.274G>T");
         assertSingleMutation("c.274G>T");
         //assertSingleMutation("g.100_200inv{158A>C}");
