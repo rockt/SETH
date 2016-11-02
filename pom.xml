@@ -250,7 +250,7 @@
 		  <windowtitle>SETH documentation</windowtitle> <!-- Used by javadoc:javadoc goal -->
 		</configuration>
 	      </plugin>
-	      
+<!--	      
 	      <plugin>
 		<groupId>org.apache.maven.plugins</groupId>
 		<artifactId>maven-gpg-plugin</artifactId>
@@ -276,7 +276,7 @@
 		  <autoReleaseAfterClose>false</autoReleaseAfterClose>
 		</configuration>
 	      </plugin>
-
+-->
         </plugins>
     </build>
 
