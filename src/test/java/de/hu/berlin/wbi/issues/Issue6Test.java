@@ -14,7 +14,6 @@ import java.util.List;
  * Created by philippe on 11/2/16.
  * Test cases for bugs reported in issue 6 https://github.com/rockt/SETH/issues/6
  */
-@Ignore("Test is ignored due to missing implementation!")
 public class Issue6Test extends TestCase {
 
 
