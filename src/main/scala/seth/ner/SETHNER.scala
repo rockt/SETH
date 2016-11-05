@@ -271,7 +271,7 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
   lazy val ProteinEq:P          = AALoc ~ ("=" ^^ { SilentString(_) })
   lazy val ProteinVarSSR:P      = AALoc ~ "(" ~ Number ~ "_" ~ Number ~ ")"
   lazy val ProteinIns:P         = AALoc ~ ("ins" ^^ { InsString(_) }) ~ ((AA.+) ^^ { MutatedString(_) } | Number)
-  lazy val ProteinIndel:P       = AALoc ~ (if(strictNomenclature)("delins"|"insdel") else ("delins"|"insdel") ^^ { InsDelString(_) }) ~ ((AA.+ ^^ { MutatedString(_) }) | Number)
+  lazy val ProteinIndel:P       = AALoc ~ (("delins"|"insdel") ^^ { InsDelString(_) }) ~ ((AA.+ ^^ { MutatedString(_) }) | Number)
   lazy val ProteinFrameShift:P  = LongFS | ShortFS | SubstFS
   //lazy val ShortFS:P            = (AAPtLoc ^^ { LocString(_) })~ ("fs" ^^ { FrameShiftString(_) })
   lazy val ShortFS:P            = (AAPtLoc ^^ { LocString(_) })~ ("fs" ^^ { FrameShiftString(_) })

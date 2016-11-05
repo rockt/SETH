@@ -18,7 +18,7 @@ public class Issue6Test extends TestCase {
 
 
     @Test
-    public void testIssue6() throws Exception {
+    public void testIssue6A() throws Exception {
         String mutationString ="p.Glu746_Thr751delinsAla";
 
 
@@ -27,10 +27,15 @@ public class Issue6Test extends TestCase {
         List<MutationMention> ms = sethInexact.findMutations(mutationString);
         assertEquals(ms.size(),1);
         assertEquals(ms.get(0).getType(),Type.DELETION_INSERTION);
+    }
+
+    @Test
+    public void testIssue6B() throws Exception {
+        String mutationString ="p.Glu746_Thr751delinsAla";
 
         //Incorrect Type
         SETH sethExact = new SETH("resources/mutations.txt", true, true);
-        ms = sethExact.findMutations(mutationString);
+        List<MutationMention> ms = sethExact.findMutations(mutationString);
         assertEquals(ms.size(),1);
         assertEquals(ms.get(0).getType(),Type.DELETION_INSERTION);
 
