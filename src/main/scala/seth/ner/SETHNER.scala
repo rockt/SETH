@@ -264,14 +264,14 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
     (ProteinSubst ^^ { SubstString(_) }) | (ProteinVarSSR ^^ { VariableShortSequenceRepeatString(_) }) |
     ProteinIns | ProteinEq
     // | "=" | "?" | "0" | "0?"
-  lazy val ProteinSubst:P       = ((AA ^^ { WildString(_) }) ~ (Number ^^ { LocString(_) }) ~ (AA ^^ { MutatedString(_) })) |
+  lazy val ProteinSubst:P       = ((AA ^^ { WildString(_) })  ~ (Number ^^ { LocString(_) }) ~ ((if(strictNomenclature)("") else (">")) ~AA ^^ { MutatedString(_) })) |
       (AAPtLoc ~ (AA  ^^ { MutatedString(_) }) ~ ("extX" ~ "*".? ~ Number).? | ("Met1" | "M1") ~ ("?" | "ext" ~ Number))
   lazy val ProteinDel:P         = AALoc ~ ("del" ^^ { DelString(_) })
   lazy val ProteinDup:P         = AALoc ~ ("dup" ^^ { DupString(_) })
   lazy val ProteinEq:P          = AALoc ~ ("=" ^^ { SilentString(_) })
   lazy val ProteinVarSSR:P      = AALoc ~ "(" ~ Number ~ "_" ~ Number ~ ")"
   lazy val ProteinIns:P         = AALoc ~ ("ins" ^^ { InsString(_) }) ~ ((AA.+) ^^ { MutatedString(_) } | Number)
-  lazy val ProteinIndel:P       = AALoc ~ (if(strictNomenclature)("delins"|"insdel") else ("delins"|"insdel"|">") ^^ { InsDelString(_) }) ~ ((AA.+ ^^ { MutatedString(_) }) | Number)
+  lazy val ProteinIndel:P       = AALoc ~ (("delins"|"insdel") ^^ { InsDelString(_) }) ~ ((AA.+ ^^ { MutatedString(_) }) | Number)
   lazy val ProteinFrameShift:P  = LongFS | ShortFS | SubstFS
   //lazy val ShortFS:P            = (AAPtLoc ^^ { LocString(_) })~ ("fs" ^^ { FrameShiftString(_) })
   lazy val ShortFS:P            = (AAPtLoc ^^ { LocString(_) })~ ("fs" ^^ { FrameShiftString(_) })
