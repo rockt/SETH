@@ -993,7 +993,7 @@ public class MutationMention {
         }
         //Mentions recognized by SETH are already in HGVS
         else if(tool.equals(Tool.SETH) ){
-            cleanSETHString(this.text);
+            return cleanSETHString(this.text);
         }
 
         switch (type){

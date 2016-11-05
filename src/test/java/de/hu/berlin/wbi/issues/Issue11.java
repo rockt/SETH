@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
  * Created by philippe on 05.11.16.
  * Test cases for bugs reported in issue 11 (see url https://github.com/rockt/SETH/issues/11)
  */
-@Ignore("Test is ignored due to missing implementation!")
 public class Issue11 extends TestCase {
 
     private SETH seth;
