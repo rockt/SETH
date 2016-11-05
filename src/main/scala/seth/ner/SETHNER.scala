@@ -240,7 +240,7 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
   lazy val AA3:P                = "Ala" | "Arg" | "Asn" | "Asp" | "Cys" | "Gln" | "Glu" | "Gly" | "His" | "Ile" |
     "Leu" | "Lys" | "Met" | "Phe" | "Pro" | "Ser" | "Thr" | "Trp" | "Tyr" | "Val" |
   //FIXED: added termination, stop codons and ambiguous amino acids
-    "Ter" | "Sec" | "Pyl" | "Asx" | "Glx" | "Xle" | "Xaa"
+    "Ter" | "Sec" | "Pyl" | "Asx" | "Glx" | "Xle" | "Xaa" | "Stop"
 
   //FIXED: added '*' and '?'
   lazy val AA:P                 = AA3 | AA1 | "X" | "*" | "?"
@@ -271,7 +271,7 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
   lazy val ProteinEq:P          = AALoc ~ ("=" ^^ { SilentString(_) })
   lazy val ProteinVarSSR:P      = AALoc ~ "(" ~ Number ~ "_" ~ Number ~ ")"
   lazy val ProteinIns:P         = AALoc ~ ("ins" ^^ { InsString(_) }) ~ ((AA.+) ^^ { MutatedString(_) } | Number)
-  lazy val ProteinIndel:P       = AALoc ~ (("delins"|"insdel") ^^ { InsDelString(_) }) ~ ((AA.+ ^^ { MutatedString(_) }) | Number)
+  lazy val ProteinIndel:P       = AALoc ~ (if(strictNomenclature)("delins"|"insdel") else ("delins"|"insdel") ^^ { InsDelString(_) }) ~ ((AA.+ ^^ { MutatedString(_) }) | Number)
   lazy val ProteinFrameShift:P  = LongFS | ShortFS | SubstFS
   //lazy val ShortFS:P            = (AAPtLoc ^^ { LocString(_) })~ ("fs" ^^ { FrameShiftString(_) })
   lazy val ShortFS:P            = (AAPtLoc ^^ { LocString(_) })~ ("fs" ^^ { FrameShiftString(_) })
@@ -547,7 +547,8 @@ trait FlattenToMutation extends FlattenToString {
     "Asx" -> "B",
     "Glx" -> "Z",
     "Xle" -> "J",
-    "Xaa" -> "X"
+    "Xaa" -> "X",
+    "Stop" -> "X"
   )
 
   private def abbreviate(aminoSeq: String): String = {
