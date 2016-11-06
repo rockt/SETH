@@ -99,11 +99,11 @@ public class ParseXMLToFile extends DefaultHandler {
 						snp.addPSM(new PSM(Integer.parseInt(geneId), 1+Integer.parseInt(aaPos), residue, null));
 					}
 						
-					else if (type.equals("missense") || type.equals("frameshift-variant") || type.equals("stop-gained") || type.equals("stop-lost") || type.equals("intron-variant")) {
+					else if (type.equals("missense") || type.equals("frameshift-variant") || type.equals("stop-gained") || type.equals("stop-lost") ) {
 						snp.addPSM(new PSM(Integer.parseInt(geneId), 1+Integer.parseInt(aaPos), null, residue));
 					}
 					//Currently we can't handle insdels on AA level and intron-variant
-					else if (type.equals("cds-indel") || type.equals("utr-variant-5-prime") || type.equals("nc-transcript-variant") || type.equals("splice-acceptor-variant") || type.equals("utr-variant-3-prime")) {}    
+					else if (type.equals("intron-variant") ||type.equals("cds-indel") || type.equals("utr-variant-5-prime") || type.equals("nc-transcript-variant") || type.equals("splice-acceptor-variant") || type.equals("utr-variant-3-prime")) {}
 					else if (type.equals("synonymous-codon")) {
 						snp.addPSM(new PSM(Integer.parseInt(geneId), 1+Integer.parseInt(aaPos), residue, residue));
 					} else
