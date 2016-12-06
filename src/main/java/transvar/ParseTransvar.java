@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import transvar.TransvarRecord.LEVEL;
+
 /**
  * TransVar is a tool developed by MDACC to map amino acid and CDS changes back to the underlying DNA change(s). Transvar code is available on Github at <a href="https://github.com/zwdzwd/transvar">github.com/zwdzwd/transvar</a> and documention at <a href="http://transvar.readthedocs.io/en/latest/">transvar.readthedocs.io/en/latest/</a>.
  * <br/><br/>
@@ -17,26 +19,30 @@ import java.io.InputStreamReader;
  */
 public class ParseTransvar {
 
+	
 	public static void main (String[] args) {
 		
 		String input = args[0];
-		boolean fromAmino = args[1].toLowerCase().matches("\\-?\\-?(aa|amino|aminoacid|aachange|fromaa|fromaminoacid|hgvsp|phgvs|p|protein)");
+		LEVEL inputLevel = LEVEL.UNKNOWN;
+		
+		if (args.length >= 2) {
+			if (args[1].toLowerCase().matches("\\-?\\-?(aa|amino|aminoacid|aachange|fromaa|fromaminoacid|hgvsp|phgvs|p|protein)"))
+				inputLevel = LEVEL.PROTEIN;
+			else if (args[1].toLowerCase().matches("\\-?\\-?(cds|fromcds|hgvsc|chgvs|c)"))
+				inputLevel = LEVEL.CDS;
+			else if (args[1].toLowerCase().matches("\\-?\\-?(genome|genomic|g|fromgenomic|fromgenome|chr|fromchr|chromosome)"))
+				inputLevel = LEVEL.GENOMIC;
+		}
 		
 		System.out.println(TransvarRecord.toTsvHeader());
 		try {
 			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(input), "UTF-8"));
 			String line;
 			while ((line = br.readLine()) != null) {
-				//
-				
-				TransvarRecord record = TransvarRecord.makeFromTsv(line);
-				record.predictedFromAminoAcidChange = fromAmino;
-			
-				//record.print();
+
+				TransvarRecord record = TransvarRecord.makeFromTsv(line, inputLevel);
 				
 				System.out.println(record.toTsv());
-				
-				//System.exit(1);
 			}
 				
 			br.close();
