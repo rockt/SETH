@@ -2,6 +2,7 @@
 layout: default
 ---
 [![Build Status](https://travis-ci.org/rockt/SETH.svg?branch=master)](https://travis-ci.org/rockt/SETH)
+[![](https://jitpack.io/v/rockt/SETH.svg)](https://jitpack.io/#rockt/SETH)
 
 SETH is a software that performs named entity recognition (NER) of genetic variants (with an emphasis on single nucleotide polymorphisms (SNPs) and other short sequence variations) from natural language texts. 
 SETH allows to recognize the following mutation subtypes: substitution, deletion, insertion, duplication, insertion-deletion (insdel), inversion, conversion, translocation, frameshift, short-sequence repeat, and literal dbSNP mention.
@@ -30,13 +31,33 @@ SETH currently uses these two data-sources but can easily extended with other ge
 
 # Get SETH
 
-## Download ready-to-use version 1.3.0 (released 25.03.2016) [seth.jar](https://github.com/rockt/SETH/releases/tag/1.3)
+## Download ready-to-use version 1.3.1 (released 12.12.2016) [from](https://github.com/rockt/SETH/releases/tag/1.3.1)
 
 ## Or build SETH on your own:
 	git clone https://github.com/rockt/SETH.git
 	cd SETH
 	mvn clean compile assembly:single
 	mv ./target/seth-1.2-Snapshot-jar-with-dependencies.jar seth.jar
+	
+## Or import in Maven from jitpack
+For maven, add a new repository pointing to jitpack.
+
+```xml
+<repository>
+    <id>jitpack.io</id>
+    <url>https://jitpack.io</url>
+</repository>
+```
+
+And add the following dependency, which uses the release 1.3.1 version
+
+```xml
+<dependency>
+	<groupId>com.github.rockt</groupId>
+	<artifactId>SETH</artifactId>
+	<version>1.3.1</version>
+</dependency>
+```
 
 # Cite SETH
 [SETH detects and normalizes genetic variants in text.](http://www.ncbi.nlm.nih.gov/pubmed/?term=27256315)
