@@ -79,8 +79,32 @@ public class SETH {
             this.bl = new OldNomenclature();
         else
             this.bl = null;
+    }
 
+    /**
+     * Initializes {@link MutationFinder} and {@link SETHNER}.
+     * Requires a file with regular expressions for MutationFinder
+     *
+     * @param regexFile       File location with regular expressions for MutationFinder
+     * @param exactGrammar    If true, SETH uses the exact EBNF grammar, otherwise matching is fuzzy
+     * @param oldNomenclature If true, SETH searches for deletions, insertions, frameshifts in old nomenclature
+     * @param backusNaur      If true, SETH uses not the backusNaur parser(not recommended); improves runtime, but SETH-performance drops considerably
+     */
+    public SETH(String regexFile, boolean exactGrammar, boolean oldNomenclature, boolean backusNaur) {
+        super();
 
+        this.mf = new MutationFinder(regexFile);
+        this.snpRecognizer = new dbSNPRecognizer();
+
+        if(backusNaur)
+            this.seth = new SETHNER(exactGrammar);
+        else
+            this.seth = null;
+
+        if (oldNomenclature)
+            this.bl = new OldNomenclature();
+        else
+            this.bl = null;
     }
 
     /**
@@ -93,10 +117,12 @@ public class SETH {
         Set<MutationMention> mutations = new HashSet<MutationMention>();
 
         //Extract variations following the latest HGVS nomenclature
-        mutations.addAll(seth.extractMutations(text));
+        if(seth != null)
+            mutations.addAll(seth.extractMutations(text));
 
         //Extract variations following dbSNP nomenclature (e.g. rs123A>T)
-        mutations.addAll(snpRecognizer.extractMutations(text));
+        if(snpRecognizer != null)
+            mutations.addAll(snpRecognizer.extractMutations(text));
 
         //Extracts variations following different Nomenclature forms
         if (bl != null)
