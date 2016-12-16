@@ -18,7 +18,7 @@ import static org.junit.Assert.assertThat;
  * Test cases for bugs reported in issue 10 (see url https://github.com/rockt/SETH/issues/10)
  */
 @Ignore("Test is ignored due to missing implementation!")
-public class Request10Test extends TestCase {
+public class Issue10Test extends TestCase {
 
     private SETH seth;
 

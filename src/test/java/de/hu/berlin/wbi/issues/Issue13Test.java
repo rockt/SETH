@@ -12,9 +12,9 @@ import java.util.stream.Collectors;
 
 /**
  * Created by philippe on 05.11.16.
- * Test cases for bugs reported in issue 11 (see url https://github.com/rockt/SETH/issues/11)
+ * Test cases for bugs reported in issue 11 (see url https://github.com/rockt/SETH/issues/13)
  */
-public class Issue11 extends TestCase {
+public class Issue13Test extends TestCase {
 
     private SETH seth;
 
