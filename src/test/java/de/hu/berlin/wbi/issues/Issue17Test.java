@@ -64,6 +64,9 @@ public class Issue17Test extends TestCase {
         List<MutationMention> mutationMentions = seth.findMutations("Patients carrying the rs123 and :rs321 mutation");
         System.out.println(mutationMentions);
         assertTrue(mutationMentions.size() > 0); //Do we actually find a mutation?
+
+        assertEquals(mutationMentions.get(0).getText(), "rs123");
+        assertEquals(mutationMentions.get(1).getText(), "rs321");
     }
 
 
