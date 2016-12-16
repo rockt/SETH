@@ -3,6 +3,7 @@ layout: default
 ---
 [![Build Status](https://travis-ci.org/rockt/SETH.svg?branch=master)](https://travis-ci.org/rockt/SETH)
 [![](https://jitpack.io/v/rockt/SETH.svg)](https://jitpack.io/#rockt/SETH)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 SETH is a software that performs named entity recognition (NER) of genetic variants (with an emphasis on single nucleotide polymorphisms (SNPs) and other short sequence variations) from natural language texts. 
 SETH allows to recognize the following mutation subtypes: substitution, deletion, insertion, duplication, insertion-deletion (insdel), inversion, conversion, translocation, frameshift, short-sequence repeat, and literal dbSNP mention.
