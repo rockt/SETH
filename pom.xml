@@ -10,68 +10,114 @@
     <packaging>jar</packaging>
 
     <name>SETH: SNP Extraction Tool for Human Variations</name>
-    <description>SETH is a software that performs named entity recognition (NER) of single nucleotide polymorphisms (SNPs) and copy number variations (CNVs) from natural language texts</description>
+    <description>SETH is a software that performs named entity recognition (NER) of single nucleotide polymorphisms
+        (SNPs) and copy number variations (CNVs) from natural language texts
+    </description>
     <url>http://rockt.github.io/SETH/</url>
 
     <licenses>
-      <license>
-	<name>The Apache License, Version 2.0</name>
-	<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-	<comments>SETH-core is published under Apache Licence Version 2.0. The original MutationFinder has been published by the University of Colorado under MIT License.</comments>
-      </license>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <comments>SETH-core is published under Apache Licence Version 2.0. The original MutationFinder has been
+                published by the University of Colorado under MIT License.
+            </comments>
+        </license>
     </licenses>
 
     <issueManagement>
-      <url>https://github.com/rockt/SETH/issues</url>
-      <system>GitHub</system>
+        <url>https://github.com/rockt/SETH/issues</url>
+        <system>GitHub</system>
     </issueManagement>
 
     <properties>
-      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <developers>
-      <developer>
-	<name>Philippe Thomas</name>
-	<email></email>
-	<organization>Humboldt Universitaet zu Berlin</organization>
-	<organizationUrl>https://www.informatik.hu-berlin.de/de/forschung/gebiete/wbi</organizationUrl>
-      </developer>
+        <developer>
+            <name>Philippe Thomas</name>
+            <email></email>
+            <organization>Humboldt Universitaet zu Berlin</organization>
+            <organizationUrl>https://www.informatik.hu-berlin.de/de/forschung/gebiete/wbi</organizationUrl>
+        </developer>
 
-      <developer>
-	<name>Tim Rocktaeschel</name>
-	<email></email>
-	<organization>Humboldt Universitaet zu Berlin</organization>
-	<organizationUrl>https://www.informatik.hu-berlin.de/de/forschung/gebiete/wbi</organizationUrl>
-      </developer>
+        <developer>
+            <name>Tim Rocktaeschel</name>
+            <email></email>
+            <organization>Humboldt Universitaet zu Berlin</organization>
+            <organizationUrl>https://www.informatik.hu-berlin.de/de/forschung/gebiete/wbi</organizationUrl>
+        </developer>
     </developers>
 
     <contributors>
-      <contributor>
-	<name>Yvonne Mayer</name>
-	<email></email>
-	<organization>Humboldt Universitaet zu Berlin</organization>
-	<organizationUrl>https://www.informatik.hu-berlin.de/de/forschung/gebiete/wbi</organizationUrl>
-      </contributor>
+        <contributor>
+            <name>Yvonne Mayer</name>
+            <email></email>
+            <organization>Humboldt Universitaet zu Berlin</organization>
+            <organizationUrl>https://www.informatik.hu-berlin.de/de/forschung/gebiete/wbi</organizationUrl>
+        </contributor>
 
-      <contributor>
-	<name>Eugene Brevdo</name>
-	<email></email>
-	<url>https://github.com/ebrevdo</url>
-	<organization>Department of Electrical Engineering at Princeton University</organization>
-	<organizationUrl>http://ee.princeton.edu/</organizationUrl>
-      </contributor>
+        <contributor>
+            <name>Eugene Brevdo</name>
+            <email></email>
+            <url>https://github.com/ebrevdo</url>
+            <organization>Department of Electrical Engineering at Princeton University</organization>
+            <organizationUrl>http://ee.princeton.edu/</organizationUrl>
+        </contributor>
     </contributors>
-    
+
 
     <scm>
-      <url>git@github.com:rockt/SETH.git</url> <!-- https://github.com/rockt/SETH/ -->
-      <connection>scm:git:git@github.com:rockt/SETH.git</connection>
-      <developerConnection>scm:git:git@github.com:rockt/SETH.git</developerConnection>
+        <url>git@github.com:rockt/SETH.git</url> <!-- https://github.com/rockt/SETH/ -->
+        <connection>scm:git:git@github.com:rockt/SETH.git</connection>
+        <developerConnection>scm:git:git@github.com:rockt/SETH.git</developerConnection>
     </scm>
 
 
     <dependencies>
+
+        <!-- Scala dependency for SETH-NER -->
+        <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-library</artifactId>
+            <version>2.11.7</version>
+        </dependency>
+
+        <!-- Required for Backus-Naur grammar -->
+        <dependency>
+            <groupId>org.scala-lang.modules</groupId>
+            <artifactId>scala-parser-combinators_2.11</artifactId>
+            <version>1.0.3</version>
+        </dependency>
+
+        <!-- A library for converting between Java and Scala collections.-->
+        <dependency>
+            <groupId>org.scalaj</groupId>
+            <artifactId>scalaj-collection_2.11</artifactId>
+            <version>1.6</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.scalatest</groupId>
+            <artifactId>scalatest_2.11</artifactId>
+            <version>2.2.6</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Perl5-compatible regex matching library apache-oro -->
+        <dependency>
+            <groupId>oro</groupId>
+            <artifactId>oro</artifactId>
+            <version>2.0.8</version>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.8.1</version>
+            <scope>test</scope>
+        </dependency>
 
         <dependency>
             <groupId>mysql</groupId>
@@ -84,47 +130,6 @@
             <artifactId>derby</artifactId>
             <version>10.12.1.1</version>
         </dependency>
-
-      
-      <!-- Higher scala version (original 2.9.1) required due to higher Java-version 
-     resolves	[ERROR] error: error while loading CharSequence, class file '/usr/lib/jvm/java-8-oracle/jre/lib/rt.jar(java/lang/CharSequence.class)' is broken
-		-->
-        <dependency>
-            <groupId>org.scala-lang</groupId>
-            <artifactId>scala-library</artifactId>
-            <version>2.11.7</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.scalatest</groupId>
-            <artifactId>scalatest_2.11</artifactId>
-            <version>2.2.6</version>
-        </dependency>
-
-	<!--Dependency is required due to upgrade in scala-library and scalatest -->
-	<dependency>
-	  <groupId>org.scala-lang.modules</groupId>
-	  <artifactId>scala-parser-combinators_2.11</artifactId>
-	  <version>1.0.3</version>
-	</dependency>
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.8.1</version>
-        </dependency>
-
-        <dependency>
-	  <groupId>org.scalaj</groupId>
-	  <artifactId>scalaj-collection_2.11</artifactId>
-	  <version>1.6</version>
-        </dependency>
-
-        <dependency>
-            <groupId>oro</groupId>
-            <artifactId>oro</artifactId>
-            <version>2.0.8</version>
-        </dependency>
     </dependencies>
 
     <build>
@@ -132,10 +137,10 @@
             <resource>
                 <targetPath>${basedir}/target/classes/resources</targetPath>
                 <directory>${basedir}/resources</directory>
-		<filtering>true</filtering>
-		<includes>
-		 <include>mutations.txt</include>
-		</includes>
+                <filtering>true</filtering>
+                <includes>
+                    <include>mutations.txt</include>
+                </includes>
             </resource>
 
             <resource>
@@ -143,7 +148,9 @@
                 <directory>${basedir}/desc</directory>
             </resource>
         </resources>
+
         <plugins>
+            <!--  creates a jar archive of the source files of the current project-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
@@ -157,11 +164,14 @@
                 </executions>
             </plugin>
 
+            <!-- execute the unit tests of an application-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.16</version>
             </plugin>
+
+            <!-- run integration tests -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
@@ -175,6 +185,8 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <!-- compiling/testing/running/documenting Scala code in Maven -->
             <plugin>
                 <groupId>org.scala-tools</groupId>
                 <artifactId>maven-scala-plugin</artifactId>
@@ -196,6 +208,8 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <!-- Used to compile the sources of your project. -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -216,13 +230,17 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <!--  contains various small independent goals to assist with the Maven build lifecycle-->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
                 <executions>
                     <execution>
                         <phase>generate-sources</phase>
-                        <goals><goal>add-source</goal></goals>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
                         <configuration>
                             <sources>
                                 <source>${basedir}/src/main/types</source>
@@ -231,6 +249,8 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <!-- aggregate the project output along with its dependencies, modules, site documentation, and other files into a single distributable archive-->
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
@@ -254,45 +274,19 @@
                 </executions>
             </plugin>
 
-	      <plugin>
-		<groupId>org.apache.maven.plugins</groupId>
-		<artifactId>maven-javadoc-plugin</artifactId>
-		<version>2.10.3</version>
-		<configuration>
-		  <doctitle>SETH documentation</doctitle> <!-- Used by javadoc:javadoc goal -->
-		  <windowtitle>SETH documentation</windowtitle> <!-- Used by javadoc:javadoc goal -->
-		</configuration>
-	      </plugin>
-<!--	      
-	      <plugin>
-		<groupId>org.apache.maven.plugins</groupId>
-		<artifactId>maven-gpg-plugin</artifactId>
-		<version>1.5</version>
-		<executions>
-		  <execution>
-		    <id>sign-artifacts</id>
-		    <phase>verify</phase>
-		    <goals>
-		      <goal>sign</goal>
-		    </goals>
-		  </execution>
-		</executions>
-	      </plugin>
-	      <plugin>
-		<groupId>org.sonatype.plugins</groupId>
-		<artifactId>nexus-staging-maven-plugin</artifactId>
-		<version>1.6.3</version>
-		<extensions>true</extensions>
-		<configuration>
-		  <serverId>ossrh</serverId>
-		  <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-		  <autoReleaseAfterClose>false</autoReleaseAfterClose>
-		</configuration>
-	      </plugin>
--->
+            <!--  generate javadocs for the specified project -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.10.3</version>
+                <configuration>
+                    <doctitle>SETH documentation</doctitle> <!-- Used by javadoc:javadoc goal -->
+                    <windowtitle>SETH documentation</windowtitle> <!-- Used by javadoc:javadoc goal -->
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
-
 
 
     <pluginRepositories>
@@ -308,32 +302,32 @@
             </snapshots>
         </pluginRepository>
 
-    <pluginRepository>
-      <id>central</id>
-      <name>Maven Plugin Repository</name>
-      <url>http://repo1.maven.org/maven2</url>
-      <layout>default</layout>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <releases>
-        <updatePolicy>never</updatePolicy>
-      </releases>
-    </pluginRepository>
+        <pluginRepository>
+            <id>central</id>
+            <name>Maven Plugin Repository</name>
+            <url>http://repo1.maven.org/maven2</url>
+            <layout>default</layout>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <updatePolicy>never</updatePolicy>
+            </releases>
+        </pluginRepository>
 
     </pluginRepositories>
 
     <repositories>
 
-    <repository>
-      <id>central</id>
-      <name>Maven Repository Switchboard</name>
-      <layout>default</layout>
-      <url>http://repo1.maven.org/maven2</url>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
+        <repository>
+            <id>central</id>
+            <name>Maven Repository Switchboard</name>
+            <layout>default</layout>
+            <url>http://repo1.maven.org/maven2</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
 
 
         <repository>
