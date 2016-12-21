@@ -42,7 +42,7 @@ public class dbSNPRecognizer {
             MutationMention mm = new MutationMention(begin, end, text.substring(begin, end), null, null, wild, mutated, Type.DBSNP_MENTION, MutationMention.Tool.DBSNP);
             try{
                 int rsId = Integer.parseInt(matcher.group(2).substring(2).replaceAll(",",""));
-                mm.normalizeSNP(rsId);
+                mm.normalizeSNP(rsId); //TODO: In general we could check if this rs-id is known in dbSNP?
             }catch(NumberFormatException nfe){}
             result.add(mm);
         }
