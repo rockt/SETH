@@ -19,8 +19,8 @@ public class dbSNPRecognizer {
     final private static String suffix="(?=([\\.,\\s\\)\\(\\]\\'\":;_\\-/]|$))";
     //(?!0) = Not starting with 0
     //(\d{1,3}(,\d{3})+) -> Matches decimals with thousand separators
-    //\d+ matches decimals without thousand separator
-    final private static Pattern dbSNP = Pattern.compile(prefix +"(rs((?!0)(\\d{1,3}(,\\d{3})+)|\\d+))" +midfix +suffix);
+    //\d{2,} matches decimals without thousand separator which are at least 2 long
+    final private static Pattern dbSNP = Pattern.compile(prefix +"(rs(?!0)((\\d{1,3}(,\\d{3})+)|\\d{2,}))" +midfix +suffix);
 
     /**
      * FInd dbSNP mentions in a text

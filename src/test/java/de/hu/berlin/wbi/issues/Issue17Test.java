@@ -93,8 +93,20 @@ public class Issue17Test {
     }
 
     @Test
-    public void shortRsNames() throws Exception {
+    public void shortRsNames() throws Exception { //dbSNP mentions of length 1 are most likely wrong
         List<MutationMention> mutationMentions = seth.findMutations("This is most likely a false positive: rs1 ");
         Assert.assertTrue(mutationMentions.size() == 0);
+    }
+
+    @Test
+    public void startingWithZero() throws Exception { //dbSNP mentions starting with a zero are wrong
+        List<MutationMention> mutationMentions = seth.findMutations("This is most likely a false positive: rs001 ");
+        Assert.assertTrue(mutationMentions.size() == 0);
+    }
+
+    @Test
+    public void notStartingWithZero() throws Exception {
+        List<MutationMention> mutationMentions = seth.findMutations("This is most likely a false positive: rs1001 ");
+        Assert.assertTrue(mutationMentions.size() == 1);
     }
 }
