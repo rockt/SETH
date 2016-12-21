@@ -18,12 +18,11 @@ import java.util.List;
 import java.util.Properties;
 
 public class ITSETHNormalization extends TestCase {
-    private Properties properties;
     private DatabaseConnection conn;
 
     @Override
     protected void setUp() throws Exception {
-        properties = new Properties();
+        Properties properties = new Properties();
         properties.loadFromXML(getClass().getResourceAsStream("/resources/seth_properties.xml"));
         // Assumption is that the database is in {{SETH_DEV_HOME}}/db/dbSNP137
         // and that you run mvn install/integration-test from there.
