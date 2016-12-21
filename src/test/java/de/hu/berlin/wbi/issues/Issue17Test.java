@@ -25,7 +25,7 @@ public class Issue17Test {
     public void testPmid17678724() throws Exception {
         List<MutationMention> mutationMentions = seth.findMutations("Polymorphism in MHC2TA gene (rs4,774,123G/C) are studied in two groups");
         System.out.println(mutationMentions);
-        Assert.assertTrue(mutationMentions.size() == 2); //Do we actually find a mutation?
+        Assert.assertEquals(mutationMentions.size(), 2); //Do we actually find a mutation?
 
         for(MutationMention mm: mutationMentions){
             if(!mm.getTool().equals(MutationMention.Tool.DBSNP))
@@ -33,7 +33,7 @@ public class Issue17Test {
 
             Assert.assertTrue(mm.getTool().equals(MutationMention.Tool.DBSNP));
             Assert.assertEquals(mm.getText(), "rs4,774,123G/C");
-            Assert.assertTrue(mm.getNormalized().size() == 1);
+            Assert.assertEquals(mm.getNormalized().size(), 1);
             Assert.assertEquals(mm.getNormalized().get(0).getRsID(), 4774123);
             Assert.assertEquals(mm.getMutResidue(), "C");
             Assert.assertEquals(mm.getWtResidue(), "G");
@@ -48,7 +48,7 @@ public class Issue17Test {
 
         Assert.assertTrue(mutationMentions.get(0).getTool().equals(MutationMention.Tool.DBSNP));
         Assert.assertEquals(mutationMentions.get(0).getText(), "rs7903146");
-        Assert.assertTrue(mutationMentions.get(0).getNormalized().size() == 1);
+        Assert.assertEquals(mutationMentions.get(0).getNormalized().size(),1);
         Assert.assertEquals(mutationMentions.get(0).getNormalized().get(0).getRsID(), 7903146);
 
     }
@@ -95,18 +95,25 @@ public class Issue17Test {
     @Test
     public void shortRsNames() throws Exception { //dbSNP mentions of length 1 are most likely wrong
         List<MutationMention> mutationMentions = seth.findMutations("This is most likely a false positive: rs1 ");
-        Assert.assertTrue(mutationMentions.size() == 0);
+        Assert.assertEquals(mutationMentions.size(), 0);
     }
 
     @Test
     public void startingWithZero() throws Exception { //dbSNP mentions starting with a zero are wrong
-        List<MutationMention> mutationMentions = seth.findMutations("This is most likely a false positive: rs001 ");
-        Assert.assertTrue(mutationMentions.size() == 0);
+        List<MutationMention> mutationMentions = seth.findMutations("This is defenitely a false positive: rs001 ");
+        Assert.assertEquals(mutationMentions.size(), 0);
     }
 
     @Test
     public void notStartingWithZero() throws Exception {
-        List<MutationMention> mutationMentions = seth.findMutations("This is most likely a false positive: rs1001 ");
-        Assert.assertTrue(mutationMentions.size() == 1);
+        List<MutationMention> mutationMentions = seth.findMutations("This is most likely correct: rs1001 ");
+        Assert.assertEquals(mutationMentions.size(), 1);
+    }
+
+
+    @Test
+    public void redundant() throws Exception {
+        List<MutationMention> mutationMentions = seth.findMutations("Mention with hyphens: (rs1001), colon :rs123, slash /rs754;  ");
+        Assert.assertEquals(mutationMentions.size(), 3);
     }
 }
