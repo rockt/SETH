@@ -10,8 +10,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static edu.uchsc.ccp.nlp.ei.mutation.MutationExtractor.populateAminoAcidThreeToOneLookupMap;
-
 /**
  * This class can be used to find mutation mentions (deletions, IVS-substitions, insertions, and frameshifts)
  * written in  deprecated nomenclature

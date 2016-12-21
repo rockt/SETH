@@ -42,7 +42,7 @@ public class ApplyNerToVerspoor {
             List<MutationMention> mentionList =seth.findMutations(sb.toString());
             for(MutationMention mm : mentionList){
                 String id = file.getName().substring(0,file.getName().indexOf("."));
-                bw.append(id +"\t" +(mm.getStart()) +"\t" +(mm.getEnd()) +"\t" +mm.getText() +"\t" +mm.getTool() +"\n");
+                bw.append(id).append("\t").append(String.valueOf(mm.getStart())).append("\t").append(String.valueOf(mm.getEnd())).append("\t").append(mm.getText()).append("\t").append(String.valueOf(mm.getTool())).append("\n");
             }
 
         }

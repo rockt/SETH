@@ -55,6 +55,7 @@ public class AminoAcidHelper {
     public static String getThreeLetter(String residue){
 
         assert(residue.length() ==1);
+        assert(oneToThreeLookupMap != null);
 
         if(oneToThreeLookupMap.containsKey(residue)){
             return toCorrectCase(oneToThreeLookupMap.get(residue));
@@ -70,12 +71,10 @@ public class AminoAcidHelper {
      * @return The same three letter string, but the first character is uppercase the others smaller case
      */
     private static String toCorrectCase(String aminoAcid){
-        final StringBuilder result = new StringBuilder(aminoAcid.length());
+        String result = String.valueOf(Character.toUpperCase(aminoAcid.charAt(0))) +
+                aminoAcid.substring(1).toLowerCase();
 
-        result.append(Character.toUpperCase(aminoAcid.charAt(0)));
-        result.append(aminoAcid.substring(1).toLowerCase());
-
-        return result.toString();
+        return result;
     }
 
 }

@@ -98,9 +98,9 @@ public class EvaluateNER {
 
         performance.calculate();
         DecimalFormat df = new DecimalFormat( "0.000" );
-        System.err.println("Precision " +df.format(performance.getPrecision()));
-        System.err.println("Recall " +df.format(performance.getRecall()));
-        System.err.println("F1 " +df.format(performance.getF1()));
+        System.err.print("Precision= " +df.format(performance.getPrecision()) +"; ");
+        System.err.print("Recall= " +df.format(performance.getRecall()) +"; ");
+        System.err.println("F1= " +df.format(performance.getF1()));
 
 
         List<Integer> years = new ArrayList<Integer>(mfPerformance.keySet()) ;
@@ -109,10 +109,10 @@ public class EvaluateNER {
 
         BufferedWriter bw = new BufferedWriter(new FileWriter(new File("result.tsv")));
         for(int year : years){
-            bw.append(year +"\t" +mfPerformance.get(year).getTP() +"\t" +"MF\n");
-            bw.append(year +"\t" +sethPerformance.get(year).getTP() +"\t" +"SETH\n");
-            bw.append(year +"\t" +regexPerformance.get(year).getTP() +"\t" +"REGEX\n");
-            bw.append(year +"\t" +dbSNPPerformance.get(year).getTP() +"\t" +"DBSNP\n");
+            bw.append(String.valueOf(year)).append("\t").append(String.valueOf(mfPerformance.get(year).getTP())).append("\t").append("MF\n");
+            bw.append(String.valueOf(year)).append("\t").append(String.valueOf(sethPerformance.get(year).getTP())).append("\t").append("SETH\n");
+            bw.append(String.valueOf(year)).append("\t").append(String.valueOf(regexPerformance.get(year).getTP())).append("\t").append("REGEX\n");
+            bw.append(String.valueOf(year)).append("\t").append(String.valueOf(dbSNPPerformance.get(year).getTP())).append("\t").append("DBSNP\n");
         }
         bw.close();
 

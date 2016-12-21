@@ -24,7 +24,7 @@ public abstract class MutationExtractor {
     /**
      * This method simple fills the two mappings between amino acid one letter code and the amino acid three letter code
      * 
-     * @return a mapping from three-letter code to one-letter code
+     * build a mapping from three-letter code to one-letter code
      */
     public static Map<String, String> populateAminoAcidThreeToOneLookupMap = null;
     static {
@@ -64,7 +64,7 @@ public abstract class MutationExtractor {
     /**
      * This method simple fills the two mappings between amino acid name and the amino acid one-letter code
      * 
-     * @return a mapping from amino acid full name to one-letter code
+     * build a mapping from amino acid full name to one-letter code
      */
     public static Map<String, String> populateAminoAcidNameToOneLookupMap = null;
     static {
@@ -118,7 +118,7 @@ public abstract class MutationExtractor {
      * 
      * @param rawText
      *            the text to be processed
-     * @return
+     * @return returns map from mutations and one or several matching locations in text
      */
     public abstract Map<Mutation, Set<int[]>> extractMutations(String rawText) throws MutationException;
     

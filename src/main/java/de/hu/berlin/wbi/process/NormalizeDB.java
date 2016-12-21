@@ -1,22 +1,5 @@
 package de.hu.berlin.wbi.process;
 
-/**
- Copyright 2010, 2011 Philippe Thomas
- This file is part of snp-normalizer.
-
- snp-normalizer is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- any later version.
-
- snp-normalizer is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with snp-normalizer.  If not, see <http://www.gnu.org/licenses/>.
- */
 import java.io.File;
 import java.io.FileInputStream;
 import java.sql.PreparedStatement;
@@ -47,7 +30,7 @@ public class NormalizeDB {
 
 	/**
 	 * @param args Path to property XML
-	 * @throws SQLException
+	 * @throws SQLException SQL-Exception accessing the database
 	 */
 	public static void main(String[] args) throws SQLException {
 
@@ -73,7 +56,7 @@ public class NormalizeDB {
 				int pmid = rs.getInt("pmid");
 				MutationMention mutation = new MutationMention(new EntityOffset(rs.getInt("begin"), rs.getInt("end")), rs.getString("normalized"));
 
-				if (mutation != null){
+				//if (mutation != null){ //Condition always true
 
 					if(mutations.containsKey(pmid)){
 						mutations.get(pmid).add(mutation);
@@ -83,7 +66,7 @@ public class NormalizeDB {
 						mutList.add(mutation);
 						mutations.put(pmid, mutList);
 					}
-				}		    
+				//}
 			}
 			mysql.closeQuery();
 		} catch (SQLException e) {

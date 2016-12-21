@@ -2,6 +2,7 @@ package de.hu.berlin.wbi;
 
 import de.hu.berlin.wbi.objects.MutationMention;
 import junit.framework.TestCase;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -14,7 +15,7 @@ import java.util.List;
  * A set of tests to improve some SETG errors
  */
 @Ignore("Test is ignored due to missing implementation!")
-public class ImproveNER extends TestCase {
+public class ImproveNER {
 
     private SETH seth;
 
@@ -31,8 +32,8 @@ public class ImproveNER extends TestCase {
 
         List<MutationMention> mutationMentions = seth.findMutations(text);
 
-        assertEquals(1, mutationMentions.size());
-        assertEquals(text,mutationMentions.get(0).getText());
+        Assert.assertEquals(1, mutationMentions.size());
+        Assert.assertEquals(text, mutationMentions.get(0).getText());
     }
 
     @Test

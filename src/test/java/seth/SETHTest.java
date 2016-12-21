@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class SETHTest extends TestCase {
+public class SETHTest {
 
     @Test
     public void testFindMutations() throws Exception {

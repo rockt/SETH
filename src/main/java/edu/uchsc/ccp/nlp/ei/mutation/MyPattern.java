@@ -6,9 +6,9 @@ import org.apache.oro.text.regex.Pattern;
  * Especially useful to enable later which regex found which entity 
  */
 public class MyPattern {
-	private Pattern pattern;	//The jakarta oro-pattern
-	private String regex;		//The pattern used to build the pattern 
-	private int id;			//The identifier (line count) of the pattern 
+	private final Pattern pattern;	//The jakarta oro-pattern
+	private final String regex;		//The pattern used to build the pattern
+	private final int id;			//The identifier (line count) of the pattern
 	
 	public MyPattern(Pattern pattern, String regex, int id) {
 		super();

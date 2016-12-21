@@ -1,21 +1,5 @@
 package de.hu.berlin.wbi.process;
-/**
-Copyright 2010, 2011 Philippe Thomas
-This file is part of snp-normalizer.
 
-snp-normalizer is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-any later version.
-
-snp-normalizer is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with snp-normalizer.  If not, see <http://www.gnu.org/licenses/>.
-*/
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -129,7 +113,7 @@ public class Evaluate {
 
 				    StringBuilder sb = new StringBuilder("FP" +"\t" +pmid +"\t" +mutation.toString() +"\t" +mutation.getDbSNP() +"\t found: ");
 				    for(dbSNPNormalized dbSNPNorm:normalized){
-				    	sb.append("'" +dbSNPNorm.getRsID() +"'/" + dbSNPNorm.getConfidence() +"/" +dbSNPNorm.getMatchType() +"/" +dbSNPNorm.getGeneID() +" '");
+				    	sb.append("'").append(dbSNPNorm.getRsID()).append("'/").append(dbSNPNorm.getConfidence()).append("/").append(dbSNPNorm.getMatchType()).append("/").append(dbSNPNorm.getGeneID()).append(" '");
 				    }
 				    System.out.println(sb);
 				}

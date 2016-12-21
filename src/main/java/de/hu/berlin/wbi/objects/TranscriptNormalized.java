@@ -25,7 +25,7 @@ public class TranscriptNormalized extends Transcript implements Comparable<Trans
      * @param matchType   EnumSet of MatchOptions enum values
      * @param feature    niProt feature used for normalization
      */
-    TranscriptNormalized(Transcript transcript, EnumSet matchType,  UniprotFeature feature){
+    TranscriptNormalized(Transcript transcript, EnumSet<MatchOptions> matchType,  UniprotFeature feature){
         super();
         this.entrez = transcript.getEntrez();
         this.uniprot = transcript.getUniprot();

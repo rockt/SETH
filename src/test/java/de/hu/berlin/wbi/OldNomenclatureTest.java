@@ -2,12 +2,10 @@ package de.hu.berlin.wbi;
 
 import de.hu.berlin.wbi.objects.MutationMention;
 import junit.framework.TestCase;
-import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import seth.SETH;
 
@@ -22,7 +20,7 @@ import static junit.framework.Assert.assertEquals;
  * JUnit tests derived from publications describing the current state of mutation nomenclature
  *
  */
-public class OldNomenclatureTest extends TestCase {
+public class OldNomenclatureTest {
 
     private SETH seth;
 
@@ -41,21 +39,21 @@ public class OldNomenclatureTest extends TestCase {
     private void assertSingleMutation(String text, String mutation){
         List<MutationMention> mutationMentions = seth.findMutations(text);
 
-        assertTrue(text.contains(mutation)); //Is the string contained in the provided text?
-        assertEquals(1, mutationMentions.size()); //We support only texts with one mutation
-        assertEquals(mutation,mutationMentions.get(0).getText()); //Is the substring identified?
+        Assert.assertTrue(text.contains(mutation)); //Is the string contained in the provided text?
+        Assert.assertEquals(1, mutationMentions.size()); //We support only texts with one mutation
+        Assert.assertEquals(mutation, mutationMentions.get(0).getText()); //Is the substring identified?
     }
 
     /**
      * Wrapper function, testing that we identify the provided string as a mutation
-     * @param text
+     * @param text String with only one mutation
      */
     private void assertSingleMutation(String text) {
 
         List<MutationMention> mutationMentions = seth.findMutations(text);
 
-        assertEquals(1, mutationMentions.size());
-        assertEquals(text,mutationMentions.get(0).getText());
+        Assert.assertEquals(1, mutationMentions.size());
+        Assert.assertEquals(text, mutationMentions.get(0).getText());
     }
 
 

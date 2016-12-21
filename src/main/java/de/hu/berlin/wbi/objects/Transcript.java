@@ -45,7 +45,7 @@ public class Transcript {
      * sequence information for one Gene
      *
      * @param connection   Database connection
-     * @throws SQLException
+     * @throws SQLException SQL-Exception accessing the database
      */
     public static void init(DatabaseConnection connection, String table)throws SQLException {
         Transcript.sequenceQuery = connection.getConn().prepareStatement("SELECT entrez_id, uniprot_acc, ENSG, ENST, ENSP,  protein_sequence, coding_sequence FROM " +table +" WHERE entrez_id = ?" );

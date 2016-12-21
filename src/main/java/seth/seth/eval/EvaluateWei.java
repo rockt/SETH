@@ -74,9 +74,10 @@ public class EvaluateWei {
 		performance.calculate();
 		DecimalFormat df = new DecimalFormat( "0.000" );
 		System.err.println("TP = " +performance.getTP() +"; FP=" +performance.getFP() +"; FN=" +performance.getFN());
-		System.err.println("Precision " +df.format(performance.getPrecision()));
-		System.err.println("Recall " +df.format(performance.getRecall()));
-		System.err.println("F1 " +df.format(performance.getF1()));
+
+		System.err.print("Precision= " +df.format(performance.getPrecision()) +"; ");
+		System.err.print("Recall= " +df.format(performance.getRecall()) +"; ");
+		System.err.println("F1= " +df.format(performance.getF1()));
 	}
 
 	/**

@@ -1,26 +1,7 @@
 package de.hu.berlin.wbi.objects;
 
-/**
- Copyright 2010, 2011 Philippe Thomas
- This file is part of snp-normalizer.
-
- snp-normalizer is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- any later version.
-
- snp-normalizer is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with snp-normalizer.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
@@ -70,10 +51,7 @@ public class Gene {
 	/**
 	 * @param pmid         PubMed-ID
 	 * @param geneID       Entrez Gene ID
-	 * @param confidence   NER/NEN confidence
 	 * @param species      Associated species
-	 * @param location     Position in text
-	 * @param entity       Entity mention
 	 */
 	public Gene(int pmid, int geneID, int species) {
 		super();
@@ -211,7 +189,7 @@ public class Gene {
 	 * @param connection   Database connection
 	 * @param geneTable   Table name for GNAT results
      * @param gene2Pubmed Table name for gene2PubMed results
-	 * @throws SQLException
+	 * @throws SQLException SQL-Exception accessing the database
 	 */
 	public static void init(DatabaseConnection connection, String geneTable, String gene2Pubmed)
 			throws SQLException {
@@ -295,12 +273,7 @@ public class Gene {
 	}
 
 
-    /**
-     * This method is used to determine if the Gene table contains the column beginGene (if not, we use begin)
-     * Invoked only once
-     * @throws SQLException
-     */
-//    private static void checkDatabase() throws SQLException {
+	//    private static void checkDatabase() throws SQLException {
 //
 //        geneQuery.setInt(1, 25000000);
 //        geneQuery.execute();

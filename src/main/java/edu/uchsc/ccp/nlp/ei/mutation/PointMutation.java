@@ -52,7 +52,7 @@ public class PointMutation extends Mutation {
     /**
      * Only Nucleotide Sequence Mutations (NSM) are allowed to have a positional offset of < 0
      * This method checks if the position of a mutation is valid;
-     * @return
+     * @return true if the detected mutation mention is potentially correct
      */
 	public boolean isValid(){
     	
@@ -61,10 +61,10 @@ public class PointMutation extends Mutation {
     		    		    		
     		if(pos <= 0){
     			
-    			Character []  nucleotides= {'A', 'T', 'G', 'C'}; 
+    			Character []  nucleotides= {'A', 'T', 'G', 'C'};  //TODO: Allow set of nucleotides
     			Set<Character> nucleotidesSet  = new HashSet<Character>(Arrays.asList(nucleotides));
 
-    			if(nucleotidesSet.contains(wtResidue) == true && nucleotidesSet.contains(mutResidue))
+    			if(nucleotidesSet.contains(wtResidue) && nucleotidesSet.contains(mutResidue))
     				return true;
     			else
     				return false;   			
@@ -75,7 +75,7 @@ public class PointMutation extends Mutation {
             Character []  nucleotides= {'A', 'T', 'G', 'C'};
             Set<Character> nucleotidesSet  = new HashSet<Character>(Arrays.asList(nucleotides));
 
-            if(nucleotidesSet.contains(wtResidue) == true && nucleotidesSet.contains(mutResidue))
+            if(nucleotidesSet.contains(wtResidue) && nucleotidesSet.contains(mutResidue))
                 return true;
             else
                 return false;
@@ -176,7 +176,7 @@ public class PointMutation extends Mutation {
     public boolean equals(Object obj) {
         if (obj instanceof PointMutation) {
             PointMutation pm = (PointMutation) obj;
-            return (this.getPosition() == pm.getPosition() && this.getWtResidue() == pm.getWtResidue() && this.getMutResidue() == pm
+            return (this.getPosition().equals(pm.getPosition()) && this.getWtResidue() == pm.getWtResidue() && this.getMutResidue() == pm
                     .getMutResidue());
         } else {
             error("Invalid comparision. Trying to compare a PointMutation with: " + obj.getClass().getName());

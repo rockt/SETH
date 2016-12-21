@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.oro.text.regex.MalformedPatternException;
 import org.apache.oro.text.regex.MatchResult;
@@ -197,7 +198,7 @@ public class MutationFinder extends MutationExtractor {
     /**
      * Helper method which loads a set of regular expressions from a BufferedReader
      * This method is used for loading regex from a file or the java-archive
-     * @param br
+     * @param br buffer to read the regex from
      */
     private void loadRegularExpressionsFromStream(BufferedReader br) {
 
@@ -339,7 +340,7 @@ public class MutationFinder extends MutationExtractor {
      * 
      * @param rawText
      *            the text to be processed
-     * @return
+     * @return returns map from mutations and one or several matching locations in text
      */
     public Map<Mutation, Set<int[]>> extractMutations(String rawText) throws MutationException {
         Map<Mutation, Set<int[]>> extractedMutations = new HashMap<Mutation, Set<int[]>>();
@@ -356,11 +357,11 @@ public class MutationFinder extends MutationExtractor {
             int pos_group = groupMappings.get(POS);
             int wtres_group = groupMappings.get(WT_RES);
             int mutres_group = groupMappings.get(MUT_RES);
-            
-            /* create a new PointMutation for each match */            
+
+            /* create a new PointMutation for each match */
             while (m.contains(input, pattern.getPattern())) {
             	int id = pattern.getId();
-            	
+
                 MatchResult result = m.getMatch();
 //                System.out.println(result.group(pos_group) +" " +result.group(wtres_group) +" " +result
 //                        .group(mutres_group));
@@ -378,7 +379,7 @@ public class MutationFinder extends MutationExtractor {
                         continue;
 
 	                pm.setId(id);
-	                
+
 	                // /*
 	                // * The span of the mutation is calculated as the min # start span of the three components and the max end span # of the three
 	                // * components -- these are then packed up as an int array of size 2.
@@ -388,7 +389,7 @@ public class MutationFinder extends MutationExtractor {
 	                span[0] = Math.min(result.beginOffset(pos_group), Math.min(result.beginOffset(wtres_group), result
 	                        .beginOffset(mutres_group)));
 	                span[1] = Math.max(result.endOffset(pos_group), Math.max(result.endOffset(wtres_group), result.endOffset(mutres_group)));
-	
+
 	                /* now store the mutation and the span */
 	                if (extractedMutations.containsKey(pm)) {
 	                    extractedMutations.get(pm).add(span);
@@ -408,6 +409,8 @@ public class MutationFinder extends MutationExtractor {
 
         return extractedMutations;
     }
+
+
 
     /**
      * The main method demonstrates the execution of MutationFinder. Three input arguments are required, the regular expression file used by

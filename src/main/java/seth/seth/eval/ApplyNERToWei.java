@@ -69,12 +69,12 @@ public class ApplyNERToWei {
 
                 //Perform named entity recognition on title
                 for(MutationMention mm : titleMutations){
-                    bw.append(pmid +"\t" +(mm.getStart()) +"\t" +(mm.getEnd()) +"\t" +mm.getText() +"\t" +mm.getTool() +"\n");
+                    bw.append(String.valueOf(pmid)).append("\t").append(String.valueOf(mm.getStart())).append("\t").append(String.valueOf(mm.getEnd())).append("\t").append(mm.getText()).append("\t").append(String.valueOf(mm.getTool())).append("\n");
                 }
 
                 //Perform named entity recognitionon abstract
                 for(MutationMention mm : abstrMutations){
-                    bw.append(pmid +"\t" +(title.length() +mm.getStart()+1) +"\t" +(title.length() +mm.getEnd()+1) +"\t" +mm.getText() +"\t" +mm.getTool() +"\n");
+                    bw.append(String.valueOf(pmid)).append("\t").append(String.valueOf(title.length() + mm.getStart() + 1)).append("\t").append(String.valueOf(title.length() + mm.getEnd() + 1)).append("\t").append(mm.getText()).append("\t").append(String.valueOf(mm.getTool())).append("\n");
                 }
 
                 title = null;

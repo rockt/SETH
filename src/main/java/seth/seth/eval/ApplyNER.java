@@ -50,22 +50,22 @@ public class ApplyNER {
             for(MutationMention mutation : mutations){
 
                 if(mutationFinderFormat){
-                    bw.append("\t" +mutation.getWtResidue() +mutation.getPosition() +mutation.getMutResidue());
+                    bw.append("\t").append(mutation.getWtResidue()).append(mutation.getPosition()).append(mutation.getMutResidue());
                 }
 
                 else{
                     if(mutation.getTool().equals(MutationMention.Tool.SETH)){
-                        bw.append(pmid +"\t" +mutation.getStart() +"\t" +mutation.getEnd() +"\t" +mutation.getText() +"\t" +"SETH");
+                        bw.append(pmid).append("\t").append(String.valueOf(mutation.getStart())).append("\t").append(String.valueOf(mutation.getEnd())).append("\t").append(mutation.getText()).append("\t").append("SETH");
                         bw.append("\n");
                     }
 
                     else if(mutation.getTool().equals(MutationMention.Tool.MUTATIONFINDER)){
-                        bw.append(pmid +"\t" +mutation.getStart() +"\t" +mutation.getEnd() +"\t" +mutation.getText() +"\t" +"MF");
+                        bw.append(pmid).append("\t").append(String.valueOf(mutation.getStart())).append("\t").append(String.valueOf(mutation.getEnd())).append("\t").append(mutation.getText()).append("\t").append("MF");
                         bw.append("\n");
                     }
 
                     else if(mutation.getTool().equals(MutationMention.Tool.REGEX)){
-                        bw.append(pmid +"\t" +mutation.getStart() +"\t" +mutation.getEnd() +"\t" +mutation.getText() +"\t" +"REGEX");
+                        bw.append(pmid).append("\t").append(String.valueOf(mutation.getStart())).append("\t").append(String.valueOf(mutation.getEnd())).append("\t").append(mutation.getText()).append("\t").append("REGEX");
                         bw.append("\n");
                     }
 

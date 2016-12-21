@@ -2,23 +2,21 @@ package de.hu.berlin.wbi.issues;
 
 import de.hu.berlin.wbi.objects.MutationMention;
 import junit.framework.TestCase;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.matchers.JUnitMatchers;
 import seth.SETH;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static org.junit.Assert.assertThat;
 
 /**
  * Created by philippe on 11/2/16.
  * Test cases for bugs reported in issue 10 (see url https://github.com/rockt/SETH/issues/10)
  */
 @Ignore("Test is ignored due to missing implementation!")
-public class Issue10Test extends TestCase {
+public class Issue10Test {
 
     private SETH seth;
 
@@ -30,16 +28,16 @@ public class Issue10Test extends TestCase {
 
     /**
      * Method checks for a specified string if we find a specific mutation
-     * @param text
-     * @param mutation
+     * @param text text for tagging
+     * @param mutation expected mutation string
      */
     private void assertFoundMutation(String text, String mutation){
         List<MutationMention> mutationMentions = seth.findMutations(text);
 
-        assertTrue(mutationMentions.size() > 0); //Do we actually find a mutation?
-        List<String> recognized = mutationMentions.stream().map(a -> a.getText()).collect(Collectors.toList());
+        Assert.assertTrue(mutationMentions.size() > 0); //Do we actually find a mutation?
+        List<String> recognized = mutationMentions.stream().map(MutationMention::getText).collect(Collectors.toList());
         System.out.println(recognized);
-        assertTrue(recognized.contains(mutation)); //Check if the mutation is correctly recognized
+        Assert.assertTrue(recognized.contains(mutation)); //Check if the mutation is correctly recognized
     }
 
 

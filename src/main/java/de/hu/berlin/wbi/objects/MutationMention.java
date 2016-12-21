@@ -1,23 +1,5 @@
 package de.hu.berlin.wbi.objects;
 
-/**
- Copyright 2010, 2011 Philippe Thomas
- This file is part of snp-normalizer.
-
- snp-normalizer is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- any later version.
-
- snp-normalizer is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with snp-normalizer.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 import edu.uchsc.ccp.nlp.ei.mutation.MutationExtractor;
 import seth.ner.wrapper.Type;
 
@@ -115,7 +97,7 @@ public class MutationMention {
      * @param append Sometimes normalization has to be invoked several times (for several genes) Flag indicates if the result is appended or not
      *
      *
-     * @return normalized transcripts
+     *
      */
     public void normalizeSequences(Set<Transcript> candidateTranscripts, List<UniprotFeature> features, boolean append){
 
@@ -188,8 +170,6 @@ public class MutationMention {
      * @param features List of associated uniprot features
      * @param append Sometimes normalization has to be invoked several times (for several genes) Should we append result or not?
      *
-     *
-     * @return normalized mutations
      */
     public void normalizeSNP(List<dbSNP> candidates, List<UniprotFeature> features, boolean append) {
 
@@ -590,8 +570,8 @@ public class MutationMention {
      *
      * @param file with mutations
      * @return Mao from pmids to all contained mutations
-     * @throws java.io.FileNotFoundException
-     * @throws java.io.IOException
+     * @throws java.io.FileNotFoundException In case the file is not found
+     * @throws java.io.IOException In case of arbitrary problems
      */
     public static Map<Integer,List<MutationMention>> readMutations(String file)
             throws IOException {
@@ -1046,8 +1026,8 @@ public class MutationMention {
      * Some mutation mentions recognized by SETH are not following the human mutation nomenclature.
      * For instance SETH recognizes mutations using three letter AA-abbreviations, contains whitespaces, or parenthesis
      *
-     * @param mutation
-     * @return
+     * @param mutation MutationMention found by SETH
+     * @return cleaned MutationMention
      */
     private static String cleanSETHString(String mutation){
         Map<String, String> tmpMap = MutationExtractor.populateAminoAcidThreeToOneLookupMap;
@@ -1059,7 +1039,7 @@ public class MutationMention {
 
     /**
      * Checks if the mutation mention is a PSM
-     * @return
+     * @return true if the mutation mention is a protein sequence mutation
      */
     private boolean isAminoAcid() {
 
@@ -1093,7 +1073,7 @@ public class MutationMention {
 
     /**
      *  Checks if the mutation mention is a NSM
-     * @return
+     * @return true if the mutation is a nucleotide sequence mutation
      */
     private boolean isNucleotide() {
         if (!this.isAminoAcid()) {
@@ -1118,8 +1098,8 @@ public class MutationMention {
     }
 
     /**
-     * Check if mutation is ambigious
-     * @return
+     * Check if mutation is ambiguous
+     * @return true if the mutation is ambiguous (NSM or PSM)
      */
     private boolean isAmgib() {
 

@@ -2,8 +2,8 @@ package de.hu.berlin.wbi.issues;
 
 import de.hu.berlin.wbi.objects.MutationMention;
 import junit.framework.TestCase;
+import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import seth.SETH;
 
@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
  * Created by philippe on 05.11.16.
  * Test cases for bugs reported in issue 11 (see url https://github.com/rockt/SETH/issues/13)
  */
-public class Issue13Test extends TestCase {
+public class Issue13Test {
 
     private SETH seth;
 
@@ -26,16 +26,16 @@ public class Issue13Test extends TestCase {
 
     /**
      * Method checks for a specified string if we find the correct HGVS representation
-     * @param text
-     * @param hgvs
+     * @param text text for tagging
+     * @param hgvs expected HGVS mention
      */
     private void assertCorrectHGVSNormalization(String text, String hgvs){
         List<MutationMention> mutationMentions = seth.findMutations(text);
 
-        assertTrue(mutationMentions.size() > 0); //Do we actually find a mutation?
+        Assert.assertTrue(mutationMentions.size() > 0); //Do we actually find a mutation?
 
-        List<String> recognized = mutationMentions.stream().map(a -> a.toHGVS()).collect(Collectors.toList());
-        assertTrue(recognized.contains(hgvs)); //Check if the mutation is correctly recognized
+        List<String> recognized = mutationMentions.stream().map(MutationMention::toHGVS).collect(Collectors.toList());
+        Assert.assertTrue(recognized.contains(hgvs)); //Check if the mutation is correctly recognized
     }
 
 

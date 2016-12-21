@@ -1,15 +1,11 @@
 package de.hu.berlin.wbi.stuff.xml;
 
 import java.io.*;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Properties;
 import java.util.Set;
 import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
-import java.io.FileOutputStream;
 
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -19,8 +15,6 @@ import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
-
-import de.hu.berlin.wbi.objects.DatabaseConnection;
 
 /**
  * Created with IntelliJ IDEA.
@@ -145,8 +139,7 @@ public class ParseXMLToFile extends DefaultHandler {
 						continue;
 
 
-					psmHGVS.append(snp.getRsId() +"\t" +psm.getEntrez() +"\t" +psm.getAaLoc() +"\t"
-							+psm.getMutations() +"\t" +psm.getWildtype());
+					psmHGVS.append(String.valueOf(snp.getRsId())).append("\t").append(String.valueOf(psm.getEntrez())).append("\t").append(String.valueOf(psm.getAaLoc())).append("\t").append(psm.getMutations()).append("\t").append(psm.getWildtype());
 					psmHGVS.append("\n");
 				} catch (IOException e) {
 					e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
@@ -175,7 +168,7 @@ public class ParseXMLToFile extends DefaultHandler {
 
 				try {
 					for (Integer gene : genes) {
-						psHGVS.append(gene +"\t" +snp.getRsId() +"\t" +split[1] +"\t" +split[0]);
+						psHGVS.append(String.valueOf(gene)).append("\t").append(String.valueOf(snp.getRsId())).append("\t").append(split[1]).append("\t").append(split[0]);
 						psHGVS.append("\n");
 					}
 				} catch (IOException e) {

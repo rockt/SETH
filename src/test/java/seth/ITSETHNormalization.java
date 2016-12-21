@@ -10,7 +10,6 @@ import junit.framework.TestCase;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.Comparator;

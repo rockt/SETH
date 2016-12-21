@@ -1,43 +1,8 @@
 package de.hu.berlin.wbi.objects;
 
-/**
-Copyright 2010, 2011 Philippe Thomas
-This file is part of snp-normalizer.
-
-snp-normalizer is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-any later version.
-
-snp-normalizer is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with snp-normalizer.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-/**
-Copyright 2010, 2011 Philippe Thomas
-This file is part of snp-normalizer.
-
-snp-normalizer is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-any later version.
-
-snp-normalizer is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with snp-normalizer.  If not, see <http://www.gnu.org/licenses/>.
- */
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,7 +47,7 @@ public class UniprotFeature{
      * like signaling peptide information
 	 * @param mysql    mySQL database
 	 * @param uniProt_Table Table name
-	 * @throws SQLException
+	 * @throws SQLException SQL-Exception accessing the database
 	 */
 	public static void init(DatabaseConnection mysql, String uniProt_Table) throws SQLException {
 		if (UniprotFeature.conn != null)

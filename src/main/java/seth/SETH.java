@@ -261,7 +261,7 @@ public class SETH {
          * but in practise an arbitrary gene name recognition tool can be used. As long it normalizes to Entrez-Gene IDs
          */
         //Set<Gene> recognizedGenes = Gene.queryGenesForArticle(1572656); //Retrieve all genes recognized by GNAT and gene2pubmed
-        Set<Integer> genes = new HashSet<Integer>(Arrays.asList(1312));  //Manually define a list of Entrez Gene IDs, against which we want to compare; Alternatively you can include a custom gene-NER here
+        Set<Integer> genes = new HashSet<Integer>(Collections.singletonList(1312));  //Manually define a list of Entrez Gene IDs, against which we want to compare; Alternatively you can include a custom gene-NER here
 
         for(int gene : genes){
             final List<dbSNP> potentialSNPs = dbSNP.getSNP(gene);    //Get a list of dbSNPs which could potentially represent the mutation mention
