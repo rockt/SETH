@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  * Created by philippe on 11/2/16.
  * Test cases for bugs reported in issue 10 (see url https://github.com/rockt/SETH/issues/10)
  */
-@Ignore("Test is ignored due to missing implementation!")
+//@Ignore("Test is ignored due to missing implementation!")
 public class Issue10Test {
 
     private SETH seth;
@@ -48,15 +48,18 @@ public class Issue10Test {
     }
 
     @Test
+    @Ignore("Test is ignored due to missing implementation!")
     public void testPmid23903049() throws Exception {
         assertFoundMutation("Two novel mutations (p.Leu317Ser and p.His33GInfsX32) are described.",
                 "p.His33GInfsX32");
     }
 
     @Test
+    @Ignore("Test is ignored due to missing implementation!")
     public void testPmid22907560() throws Exception {
         //Hys is no valid amino acid
-        assertFoundMutation("predicted to cause a p.Arg313Hys amino acid change.", "p.Arg313Hys");
+        assertFoundMutation("predicted to cause a p.Arg313Hys amino acid change.",
+                "p.Arg313Hys");
     }
 
     @Test
@@ -66,24 +69,32 @@ public class Issue10Test {
     }
 
     @Test
+    @Ignore("Test is ignored due to missing implementation!")
     public void testPmid23017188() throws Exception {
         //Del with upper case
-        assertFoundMutation("Identification of the CFTR p.Phe508Del p.Phe508Ins founder ", "p.Phe508Del");
+        assertFoundMutation("Identification of the CFTR p.Phe508Del p.Phe508Ins founder ",
+                "p.Phe508Del");
     }
 
     @Test
+    @Ignore("Test is ignored due to missing implementation!")
     public void testPmid24158885() throws Exception {
         //Amino acids with different upper/lower case
-        assertFoundMutation("p.Met694IIe", "p.Met694IIe");
+        assertFoundMutation("p.Met694IIe",
+                "p.Met694IIe");
     }
 
     @Test
+    @Ignore("Test is ignored due to missing implementation!")
     public void testPmid23856132() throws Exception {
-        assertFoundMutation("The predominant mutation in this population sample was p.F55>Lfs ", "p.F55>Lfs");
+        assertFoundMutation("The predominant mutation in this population sample was p.F55>Lfs ",
+                "p.F55>Lfs");
     }
 
     @Test
+    @Ignore("Test is ignored due to missing implementation!")
     public void testPmid18708425() throws Exception {
-        assertFoundMutation("We report an insertion of two leucines (p.L21tri also designated p.L15_L16ins2L) ", "p.L15_L16ins2L");
+        assertFoundMutation("We report an insertion of two leucines (p.L21tri also designated p.L15_L16ins2L) ",
+                "p.L15_L16ins2L");
     }
 }
