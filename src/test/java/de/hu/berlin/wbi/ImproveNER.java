@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  * Created by philippe on 11/10/16.
- * A set of tests to improve some SETG errors
+ * A set of tests to improve some SETH false negatives
  */
 @Ignore("Test is ignored due to missing implementation!")
 public class ImproveNER {
