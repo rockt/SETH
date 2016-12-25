@@ -1,6 +1,8 @@
 package de.hu.berlin.wbi.objects;
 
 import edu.uchsc.ccp.nlp.ei.mutation.MutationFinder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -96,7 +98,7 @@ public class HGVS {
                 System.err.println("Type " +type +" not covered");
         }
         catch(Exception exception){
-            logger.info("Problem with grounding '" +string +"'", exception)
+            logger.info("Problem with grounding '" +string +"'", exception);
             this.type = '-';
             this.location = null;
             this.wildtype = null;
