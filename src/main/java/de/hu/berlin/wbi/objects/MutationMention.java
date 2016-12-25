@@ -1,6 +1,8 @@
 package de.hu.berlin.wbi.objects;
 
 import edu.uchsc.ccp.nlp.ei.mutation.MutationExtractor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import seth.ner.wrapper.Type;
 
 import java.io.BufferedReader;
@@ -20,6 +22,8 @@ import java.util.zip.GZIPInputStream;
  *
  */
 public class MutationMention {
+
+    private final static Logger logger = LoggerFactory.getLogger(MutationMention.class);
 
     /** Type of Mutation (e.g., substitution, insertion, ...) */
     protected Type type;
@@ -143,6 +147,7 @@ public class MutationMention {
                 }
             }
             catch(Exception e){ //Several Exceptions can happen (e.g. NumberFormatException, StringIndexOutOfBounds...
+                logger.debug("Problem normalizing sequence",e);
                 continue;
             }
         }

@@ -1,5 +1,8 @@
 package de.hu.berlin.wbi.objects;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,6 +16,8 @@ import java.util.Set;
  * @author Philippe Thomas
  */
 public class Gene {
+
+	private final static Logger logger = LoggerFactory.getLogger(Gene.class);
 
 	/** Retrieves GNAT results for a PubMed ID  */
 	private static PreparedStatement geneQuery;
@@ -266,6 +271,7 @@ public class Gene {
 			}
 			
 		} catch (SQLException e) {
+			logger.error("Problem accessing database", e);
 			throw new RuntimeException(e);
 		}
 

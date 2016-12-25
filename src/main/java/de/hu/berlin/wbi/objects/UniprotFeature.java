@@ -1,5 +1,8 @@
 package de.hu.berlin.wbi.objects;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,6 +17,8 @@ import java.util.List;
  * @author Philippe Thomas
  */
 public class UniprotFeature{
+
+	private final static Logger logger = LoggerFactory.getLogger(UniprotFeature.class);
 
 	/** Gene identifier (Currently Entrez-Gene) */
 	private final int geneId;
@@ -99,6 +104,7 @@ public class UniprotFeature{
 			}
 
 		}catch (SQLException e) {
+			logger.error("Problem accessing database", e);
 			throw new RuntimeException(e);
 		}
 

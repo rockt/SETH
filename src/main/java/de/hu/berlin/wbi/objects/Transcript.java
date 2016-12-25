@@ -1,5 +1,8 @@
 package de.hu.berlin.wbi.objects;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,6 +18,8 @@ import java.util.Set;
  *
  */
 public class Transcript {
+
+    private final static Logger logger = LoggerFactory.getLogger(Transcript.class);
 
     /** Retrieves Sequences for an Entrez-Gene Query  */
     private static PreparedStatement sequenceQuery;
@@ -65,6 +70,7 @@ public class Transcript {
             }
 
         }catch (SQLException e) {
+            logger.error("SQL-Exception",e);
             throw new RuntimeException(e);
         }
 

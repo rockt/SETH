@@ -17,6 +17,8 @@ import java.util.regex.Pattern;
  */
 public class HGVS {
 
+    private final static Logger logger = LoggerFactory.getLogger(HGVS.class);
+
     /** Type.  (c., p., g., m.) */
     private char type;
 
@@ -94,6 +96,7 @@ public class HGVS {
                 System.err.println("Type " +type +" not covered");
         }
         catch(Exception exception){
+            logger.info("Problem with grounding '" +string +"'", exception)
             this.type = '-';
             this.location = null;
             this.wildtype = null;
