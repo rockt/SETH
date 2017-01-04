@@ -6,9 +6,49 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.commons.text.similarity.LevenshteinDistance;
 
+/**
+ * 
+ * 
+ * A typical transvar output record looks like the following. The original output is tab-delimited; I replaced those with line breaks. The column that starts
+ * with the consequence ('CQSN=') is a semi-colon delimited list of key-value pairs; everything that follows CSQN belongs to the same column:<pre>
+ABCA1:G948R
+NM_005502 (protein_coding)
+ABCA1
+-
+chr9:g.107583774C>T/c.2842G>A/p.Gly948Arg
+inside_[cds_in_exon_20]
+CSQN=Missense;
+reference_codon=GGG;
+candidate_codons=AGG,AGA,CGA,CGC,CGG,CGT;
+candidate_snv_variants=chr9:g.107583774C>G;
+candidate_mnv_variants=chr9:g.107583772_107583774delCCCinsTCT,chr9:g.107583772_107583774delCCCinsTCG,chr9:g.107583772_107583774delCCCinsGCG,chr9:g.107583772_107583774delCCCinsACG;
+dbxref=GeneID:19,HGNC:29,HPRD:02501,MIM:600046;
+aliases=NP_005493;
+source=RefSeq
+</pre>
+so we have seven columns in total in transvar's output:
+<ul>
+<li>input to transvar: geneSymbol:aaChange (or CDS change, etc.)
+<li>transcript ID identified by transvar, with transcript biotype in parentheses
+<li>strand: '+', '-', or '.'
+<li>best candidate that explain the input variant: chromosome, genomic change in HGVS g. annotation, CDS change, protein change (if applicable)
+<li>location: exonic/intronic, which exon(s)
+<li>consequence: list of key-value pairs for name of consequence (CSQN); reference codon that contains the variant;
+    all new codons that explain the input variant (one amino acid change can result from many DNA changes);
+    all SNV variants that would explain the input variant, omitting the best candidate already listed in column 4;
+    all MNV variants, omitting the one from column 4 if applicable;
+    cross-references of the gene to other DBs, such as HGNC ID;
+    source: gene model, such as RefSeq or Ensembl (input param to transvar).
+</ul>
+ * 
+ * 
+ * 
+ * @author jhakenberg
+ */
 public class TransvarRecord {
 
 	/** The gene originally provided as input to TransVar. */
@@ -23,7 +63,7 @@ public class TransvarRecord {
 	/*/*	 */
 	//public boolean predictedFromAminoAcidChange = true;
 	
-	public enum GENE_MODEL {ENSEMBL, REFSEQ, UCSC, UNKNOWN};
+	public enum GENE_MODEL {ENSEMBL, REFSEQ, CCDS, UCSC, GENCODE, UNKNOWN};
 	public GENE_MODEL geneModel = GENE_MODEL.UNKNOWN;
 	
 	/** */
@@ -41,11 +81,77 @@ public class TransvarRecord {
 	//public String cHgvs;
 	//public String pHgvs;
 	
-	public String location;
+	public String full_location;
 	public String CQSN;
 	
 	/** Consequence on protein level: missense, nonsense, ... */
-	public String consequence;
+	public enum CONSEQUENCE {
+		SYNONYMOUS("Synonymous"), MISSENSE("Missense"), NONSENSE("Nonsense"), MULTIAAMISSENSE("MultiAAMissense"), 
+		FRAMESHIFT("Frameshift"), INFRAME_DELETION("InFrameDeletion"), INFRAME_INSERTION("InFrameInsertion"), 
+		CDS_START_SNV("CdsStartSNV"), CDS_STOP_SNV("CdsStopSNV"),
+		CDS_START_DELETION("CdsStartDeletion"), CDS_STOP_DELETION("CdsStopDeletion"), 
+		CDS_START_BLOCKSUBSTITUTION("CdsStartBlockSubstitution"), CDS_STOP_BLOCKSUBSTITUTION("CdsStopBlockSubstitution"),
+		INTRONIC_SNV("IntronicSNV"), INTRONIC_DELETION("IntronicDeletion"), INTRONIC_INSERTION("IntronicInsertion"),
+		INTRONIC_BLOCKSUBSTITUTION("IntronicBlockSubstitution"),
+		INTERGENIC_SNV("IntergenicSNV"), INTERGENIC_DELETION("IntergenicDeletion"), INTERGENIC_INSERTION("IntergenicInsertion"),
+		INTERGENIC_BLOCKSUBSTITUTION("IntergenicBlockSubstitution"),
+		SPLICE_DONOR_DELETION("SpliceDonorDeletion"), SPLICE_ACCEPTOR_DELETION("SpliceAcceptorDeletion"),
+		SPLICE_DONOR_INSERTION("SpliceDonorInsertion"), SPLICE_ACCEPTOR_INSERTION("SpliceAcceptorInsertion"), 
+		SPLICE_DONOR_SNV("SpliceDonorSNV"), SPLICE_ACCEPTOR_SNV("SpliceAcceptorSNV"),
+		SPLICE_DONOR_BLOCKSUBSTITUTION("SpliceDonorBlockSubstitution"), SPLICE_ACCEPTOR_BLOCKSUBSTITUTION("SpliceAcceptorBlockSubstitution"),
+		UTR5_SNV("5-UTRSNV"), UTR3_SNV("3-UTRSNV"),
+		UTR5_BLOCKSUBSTITUTION("5-UTRBlockSubstitution"), UTR3_BLOCKSUBSTITUTION("3-UTRBlockSubstitution"),
+		UNCLASSIFIED_SNV("UnclassifiedSNV"), UNCLASSIFIED_BLOCKSUBSTITUTION("UnclassifiedBlockSubstitution"),
+		UNCLASSIFIED("Unclassified");
+		
+		private String value = "Unclassified";
+
+		CONSEQUENCE (String c) {
+			//System.err.println("#INFO parsing '" + c + "'");
+			if (c.startsWith("Multi:")) { // CSQN=Multi:SpliceDonorBlockSubstitution,CdsStartBlockSubstitution;
+				c = c.split(",")[1];      // arbitrarily pick the 2nd option
+				System.err.println("#WARN subst with " + c);
+			}
+			this.value = c;
+		}
+		
+		public String getValue() {
+	        return value;
+	    }
+		
+		@Override public String toString() {
+	        return this.getValue();
+	    }
+		
+		public static CONSEQUENCE get (String value) {
+			if (value.startsWith("Multi:")) {     // CSQN=Multi:SpliceDonorBlockSubstitution,CdsStartBlockSubstitution;
+				value = value.split(",")[1];      // arbitrarily pick the 2nd option
+				System.err.println("#WARN subst with " + value);
+			}
+	        for (CONSEQUENCE v : values())
+	            if(v.getValue().equalsIgnoreCase(value)) return v;
+	        throw new IllegalArgumentException();
+	    }
+		
+		};
+	public CONSEQUENCE consequence = CONSEQUENCE.UNCLASSIFIED;
+	
+	/**
+	 * Location(s) on the cDNA where the variant is found:<br/>
+	 * SINGLE_(EXON|INTRON): variant is limited to a single exon (intron) region;<br/>
+	 * MULTI_(EXON|INTRON): variant spans from one exon (intron) to another exon (intron)<br/>
+	 * EXON_INTRON (INTRON_EXON): variant spans from one exon (intron) to the following intron (exon)<br/>
+	 * MULTI_EXON_INTRON, MULTI_INTRON_EXON: variant spans from one exon (intron) into any subsequent intron (exon).
+	 */
+	public enum LOCATION {
+		SINGLE_EXON, SINGLE_INTRON,
+		MULTI_EXON, MULTI_INTRON, 
+		EXON_INTRON, INTRON_EXON,
+		MULTI_EXON_INTRON, MULTI_INTRON_EXON,
+		UTR5, UTR3
+	}
+	
+	public LOCATION location;
 	
 	//public String referenceCodon;
 	//public String[] candidateCodons;
@@ -63,6 +169,8 @@ public class TransvarRecord {
 	
 	public int exonStart;
 	public int exonEnd;
+	public int intronStart;
+	public int intronEnd;
 	
 	public List<Candidate> candidates = new LinkedList<Candidate>();
 	
@@ -88,6 +196,7 @@ public class TransvarRecord {
 	 * @return a TransvarRecord with fields populated according to the input line
 	 */
 	public static TransvarRecord makeFromTsv (String line, LEVEL sourceLevel) {
+		//System.err.println(line);
 		TransvarRecord r = new TransvarRecord();
 		r.transvarSource = line;
 		r.sourceLevel = sourceLevel;
@@ -97,7 +206,7 @@ public class TransvarRecord {
 		r.sourceGene = s[0];
 		r.sourceVariant = s[1];
 
-		if (cols[6].equals("no_valid_transcript_found")) {
+		if (cols[6].equals("no_valid_transcript_found") || cols[6].indexOf("invalid_reference_seq") >= 0) {
 			r.transcriptType = "no_valid_transcript_found";
 			return r;
 		}
@@ -121,35 +230,36 @@ public class TransvarRecord {
 
 		// get all other columns from the candidate_snv_variants and candidate_mnv_variants fields, see below
 
-		r.location = cols[5];
-		if (r.location.matches("inside_\\[cds_in_exon_\\d+\\]")) {
-			r.exonStart = Integer.parseInt(r.location.replaceFirst("^inside_\\[cds_in_exon_(\\d+)\\]$", "$1"));
-			r.exonEnd = r.exonStart;
-		} else if (r.location.matches("inside_\\[cds_in_exons_\\[\\d+,\\d+\\]\\]")) {
-			r.exonStart = Integer.parseInt(r.location.replaceFirst("^inside_\\[cds_in_exons_\\[(\\d+),(\\d+)\\]\\]$", "$1"));
-			r.exonEnd   = Integer.parseInt(r.location.replaceFirst("^inside_\\[cds_in_exons_\\[(\\d+),(\\d+)\\]\\]$", "$2"));
-		} 
+		//
+		r.parseLocation(cols[5]);
+
 
 		// generate a key/value map of consequence fields
 		Map<String, String> cMap = new HashMap<String, String>();
 		String[] CSQN = cols[6].split(";");
 		for (String C : CSQN) {
-			String key = C.split("=")[0];
-			String val = C.split("=")[1];
-			cMap.put(key, val);
+			if (C.indexOf("=") > 0) {
+				String key = C.split("=")[0];
+				String val = C.split("=")[1];
+				cMap.put(key, val);
+			} else {
+				System.err.println("#WARN ignored consequence field '" + C + "'");
+			}
 		}
-		if (cMap.containsKey("CSQN")) r.consequence = cMap.get("CSQN");
+		if (cMap.containsKey("CSQN")) r.consequence = //CONSEQUENCE.valueOf(cMap.get("CSQN").toUpperCase());
+				CONSEQUENCE.get(cMap.get("CSQN"));
+		// stop gained are reported by transvar as missense
+		if ( r.sourceVariant.matches("(p\\.)?[A-Z][a-z]*\\d+([X\\*]|Stop|Ter)")
+			 && !(r.sourceVariant.matches("(p\\.)?(X|\\*|Stop|Ter).+"))
+			 && r.consequence == CONSEQUENCE.MISSENSE )
+			r.consequence = CONSEQUENCE.NONSENSE;
 
-		if (cMap.containsKey("reference_codon")) {
+		if (cMap.containsKey("reference_codon"))
 			c1.referenceCodon = cMap.get("reference_codon");
-		}
-		
-		if (cMap.containsKey("candidate_codons")) {
-			//r.candidateCodons = cMap.get("candidate_codons").split(",");
-			//r.bestAltCodons = findBestCodons(c1.referenceCodon, r.candidateCodons);
+
+		if (cMap.containsKey("candidate_codons"))
 			c1.candidateCodons = cMap.get("candidate_codons").split(",");
-		}
-		
+
 		// add the suggested 'best' candidate
 		r.candidates.add(c1);
 
@@ -160,7 +270,7 @@ public class TransvarRecord {
 				Candidate c2 = Candidate.makeFromG(can);
 				c2.referenceCodon = c1.referenceCodon;
 				if (r.sourceLevel == LEVEL.PROTEIN) c2.setHgvsP(c1.getHgvsP());
-				else c2.setHgvsC(c1.getHgvsC());
+				else if (r.sourceLevel == LEVEL.CDS) c2.setHgvsC(c1.getHgvsC());
 				if (cMap.containsKey("candidate_codons")) c2.candidateCodons = cMap.get("candidate_codons").split(",");
 				r.candidates.add(c2);
 			}
@@ -171,16 +281,21 @@ public class TransvarRecord {
 				Candidate c2 = Candidate.makeFromG(can);
 				c2.referenceCodon = c1.referenceCodon;
 				if (r.sourceLevel == LEVEL.PROTEIN) c2.setHgvsP(c1.getHgvsP());
-				else c2.setHgvsC(c1.getHgvsC());
+				else if (r.sourceLevel == LEVEL.CDS) c2.setHgvsC(c1.getHgvsC());
 				if (cMap.containsKey("candidate_codons")) c2.candidateCodons = cMap.get("candidate_codons").split(",");
 				r.candidates.add(c2);
 			}
 		}
-		
+
 		// analyze all candidate to assign the correct alternate allele and codon
 		r.analyzeCandidates();
 
-		if (cMap.containsKey("source")) r.geneModel = GENE_MODEL.valueOf(cMap.get("source").toUpperCase());
+		r.geneModel = GENE_MODEL.UNKNOWN;
+		try {
+			if (cMap.containsKey("source")) r.geneModel = GENE_MODEL.valueOf(cMap.get("source").toUpperCase());
+		} catch (java.lang.IllegalArgumentException e) {
+			;//r.geneModel = GENE_MODEL.UNKNOWN;
+		}
 
 		if (cMap.containsKey("dbxref")) {
 			Map<String, String> idMap = new HashMap<String, String>();
@@ -205,6 +320,139 @@ public class TransvarRecord {
 		return r;
 	}
 
+	
+	/**
+	 * 
+	 * @param transvarLocation
+	 * @return
+	 */
+	boolean parseLocation (String transvarLocation) {
+		full_location = transvarLocation;
+		// inside_[cds_in_exon_100]
+		if (full_location.matches("inside_\\[cds_in_exon_\\d+\\]")) {
+			exonStart = Integer.parseInt(full_location.replaceFirst("^inside_\\[cds_in_exon_(\\d+)\\]$", "$1"));
+			exonEnd = exonStart;
+			location = LOCATION.SINGLE_EXON;
+		} else if (full_location.matches("inside_\\[cds_in_exons_\\[\\d+,\\d+\\]\\]")) {
+			exonStart = Integer.parseInt(full_location.replaceFirst("^inside_\\[cds_in_exons_\\[(\\d+),(\\d+)\\]\\]$", "$1"));
+			exonEnd   = Integer.parseInt(full_location.replaceFirst("^inside_\\[cds_in_exons_\\[(\\d+),(\\d+)\\]\\]$", "$2"));
+			location = LOCATION.MULTI_EXON;
+		// inside_[intron_between_exon_6_and_7]
+		} else if (full_location.matches("inside_\\[intron_between_exon_\\d+_and_\\d+\\]")) {
+			int es = Integer.parseInt(full_location.replaceFirst("^inside_\\[intron_between_exon_(\\d+)_and_(\\d+)\\]$", "$1"));
+			int ee = Integer.parseInt(full_location.replaceFirst("^inside_\\[intron_between_exon_(\\d+)_and_(\\d+)\\]$", "$2"));
+			intronStart = es;
+			intronEnd   = ee - 1;
+			location = LOCATION.SINGLE_INTRON;
+		// inside_[3-UTR;noncoding_exon_3]
+		} else if (full_location.matches("inside_\\[[35]-UTR;noncoding_exon_\\d+\\]")) {
+			if (full_location.startsWith("inside_[3-UTR")) location = LOCATION.UTR3;
+			else if (full_location.startsWith("inside_[5-UTR")) location = LOCATION.UTR5;
+			exonStart = Integer.parseInt(full_location.replaceFirst("^inside_\\[[35]-UTR;noncoding_exon_(\\d+)\\]$", "$1"));
+			exonEnd = exonStart;
+		// inside_[5-UTR;intron_between_exon_15_and_16]
+		} else if (full_location.matches("inside_\\[[35]-UTR;intron_between_exon_\\d+_and_\\d+\\]")) {
+			if (full_location.startsWith("inside_[3-UTR")) location = LOCATION.UTR3;
+			else if (full_location.startsWith("inside_[5-UTR")) location = LOCATION.UTR5;
+			int es = Integer.parseInt(full_location.replaceFirst("^inside_\\[[35]-UTR;intron_between_exon_(\\d+)_and_(\\d+)\\]$", "$1"));
+			int ee = Integer.parseInt(full_location.replaceFirst("^inside_\\[[35]-UTR;intron_between_exon_(\\d+)_and_(\\d+)\\]$", "$2"));
+			intronStart = es;
+			intronEnd   = ee - 1;
+		// inside_[noncoding_exon_10]
+		} else if (full_location.matches("inside_\\[noncoding_exon_\\d+\\]")) {
+			exonStart = Integer.parseInt(full_location.replaceFirst("^inside_\\[noncoding_exon_(\\d+)\\]$", "$1"));
+			exonEnd = exonStart;
+			location = LOCATION.SINGLE_EXON;
+		// from_[intron_between_exon_6_and_7]_to_[cds_in_exon_6]
+		// from_[intron_between_exon_10_and_11]_to_[cds_in_exon_11]
+		} else if (full_location.matches("from_\\[intron_between_exon_\\d+_and_\\d+\\]_to_\\[(?:cds_in|noncoding)_exon_\\d+\\]")) {
+			int ies = Integer.parseInt(full_location.replaceFirst("^from_\\[intron_between_exon_(\\d+)_and_(\\d+)\\]_to_\\[(?:cds_in|noncoding)_exon_(\\d+)\\]$", "$1"));
+			int iee = Integer.parseInt(full_location.replaceFirst("^from_\\[intron_between_exon_(\\d+)_and_(\\d+)\\]_to_\\[(?:cds_in|noncoding)_exon_(\\d+)\\]$", "$2"));
+			int exon = Integer.parseInt(full_location.replaceFirst("^from_\\[intron_between_exon_(\\d+)_and_(\\d+)\\]_to_\\[(?:cds_in|noncoding)_exon_(\\d+)\\]$", "$3"));
+			if (ies == exon) {
+				intronStart = ies;
+				intronEnd = intronStart;
+				exonStart = exon;
+				exonEnd = exonStart;
+				location = LOCATION.EXON_INTRON;
+			} else if (iee == exon) {
+				exonStart = exon;
+				exonEnd = exonStart;
+			}
+			location = LOCATION.EXON_INTRON;
+		// from_[noncoding_exon_2]_to_[intron_between_exon_1_and_2]'
+		} else if (full_location.matches("from_\\[(?:cds_in|noncoding)_exon_\\d+\\]_to_\\[intron_between_exon_\\d+_and_\\d+\\]")) {
+			int exon = Integer.parseInt(full_location.replaceFirst("^from_\\[(?:cds_in|noncoding)_exon_(\\d+)\\]_to_\\[intron_between_exon_(\\d+)_and_(\\d+)\\]$", "$1"));
+			exonStart = exon;
+			exonEnd = exonStart;
+			intronStart = Integer.parseInt(full_location.replaceFirst("^from_\\[(?:cds_in|noncoding)_exon_(\\d+)\\]_to_\\[intron_between_exon_(\\d+)_and_(\\d+)\\]$", "$2"));
+		// from_[noncoding_exon_2]_to_[intergenic_between_ATM(1_bp_downstream)_and_AP001925.1(5,531_bp_downstream)]
+		} else if (full_location.matches("from_\\[(?:cds_in|noncoding)_exon_\\d+\\]_to_\\[intergenic.*")) {
+			int exon = Integer.parseInt(full_location.replaceFirst("^from_\\[(?:cds_in|noncoding)_exon_(\\d+)\\]_to_\\[intergenic.*$", "$1"));
+			exonStart = exon;
+		// from_[intergenic_between_GKN1(94,628_bp_downstream)_and_ANTXR1(1_bp_upstream)]_to_[cds_in_exon_1]
+		} else if (full_location.matches("from_\\[intergenic.*\\]_to_\\[(?:cds_in|noncoding)_exon_\\d+\\]")) {
+			int exon = Integer.parseInt(full_location.replaceFirst("^from_\\[intergenic.*\\]_to_\\[(?:cds_in|noncoding)_exon_(\\d+)\\]$", "$1"));
+			exonStart = exon;
+		// from_[3-UTR;noncoding_exon_22]_to_[cds_in_exon_22]
+		} else if (full_location.matches("from_\\[[35]-UTR;(?:cds_in|noncoding)_exon_(\\d+)\\]_to_\\[cds_in_exon_(\\d+)\\]")) {
+			exonStart = Integer.parseInt(full_location.replaceFirst("^from_\\[[35]-UTR;(?:cds_in|noncoding)_exon_(\\d+)\\]_to_\\[cds_in_exon_(\\d+)\\]$", "$1"));
+			exonEnd   = Integer.parseInt(full_location.replaceFirst("^from_\\[[35]-UTR;(?:cds_in|noncoding)_exon_(\\d+)\\]_to_\\[cds_in_exon_(\\d+)\\]$", "$2"));
+		// from_[cds_in_exon_3]_to_[3-UTR;noncoding_exon_3]
+		} else if (full_location.matches("from_\\[(?:noncoding|cds_in)_exon_\\d+\\]_to_\\[[35]-UTR;noncoding_exon_\\d+\\]")) {
+			exonStart = Integer.parseInt(full_location.replaceFirst("^from_\\[(?:noncoding|cds_in)_exon_(\\d+)\\]_to_\\[[35]-UTR;noncoding_exon_(\\d+)\\]$", "$1"));
+			exonEnd   = Integer.parseInt(full_location.replaceFirst("^from_\\[(?:noncoding|cds_in)_exon_(\\d+)\\]_to_\\[[35]-UTR;noncoding_exon_(\\d+)\\]$", "$2"));
+		
+		// TODO
+		// from_[5-UTR;intron_between_exon_1_and_2]_to_[5-UTR;noncoding_exon_2]
+			
+			
+		} else {
+			System.err.println("#WARN did not parse location '" + full_location + "'");
+		}
+		 
+		return true;
+	}
+	
+	
+	/**
+	 * Transvar specific the location of a variant in terms of inside a (coding/noncoding) exon, intron, intergenic, 3/5'-UTR;
+	 * or as stretching from one such location to another. Examples:<br/>
+	 * - inside_[cds_in_exon_100]<br/>
+	 * - from_[5-UTR;intron_between_exon_1_and_2]_to_[5-UTR;noncoding_exon_2]<br/>
+	 * - from_[noncoding_exon_2]_to_[intron_between_exon_1_and_2]<br/>
+	 * @param transvarLocation
+	 * @return
+	 */
+	boolean parseTransvarLocation (String transvarLocation) {
+		
+		if (transvarLocation.startsWith("inside")) {
+			String inner = transvarLocation.replaceFirst("^inside_\\[(.+)\\]$", "$1");
+			// TODO
+		} else if (transvarLocation.startsWith("from")) {
+			String from = transvarLocation.replaceFirst("^from\\[(.+)\\]_to_\\[(.+)\\]$", "$1");
+			String to   = transvarLocation.replaceFirst("^from\\[(.+)\\]_to_\\[(.+)\\]$", "$2");
+			// TODO
+		} else {
+			System.err.println("#WARN cannot parse transvar location '" + transvarLocation + "'");
+			return false;
+		}
+			
+		return true;
+	}
+	
+	
+	/**
+	 * TODO
+	 * @param loc
+	 * @return
+	 */
+	Location parseSingleLocation (String loc) {
+		Location l = new Location();
+		return l;
+	}
+	
+	
 
 	/**
 	 * For all possible* genomic changes that explain the current variant according to TransVar,
@@ -228,9 +476,9 @@ public class TransvarRecord {
 	 */
 	void analyzeCandidates () {
 		if (candidates.size() == 0) {
-			System.err.println("#INFO found a variant with no candidate alternate.");
+			//System.err.println("#INFO found a variant with no candidate alternate.");
 		} else if (candidates.size() == 1) {
-			System.err.println("#INFO found a variant with a single candidate alternate.");
+			//System.err.println("#INFO found a variant with a single candidate alternate.");
 
 		} else if (candidates.size() >= 2) {
 			Candidate first = candidates.get(0);
@@ -249,37 +497,105 @@ public class TransvarRecord {
 					loop++;
 					//System.err.println("#INFO loop " + loop);
 					for (Candidate c : candidates) {
-						if (altcodons.size() == 1) {
-							String lastAlt = altcodons.get(0);
-							c.alternateCodon = lastAlt;
-							usedAltCodons.add(lastAlt);
-						} else {
-							for (String altc : altcodons) {
-								//System.err.println("#INFO ref12=" + refcodon.substring(0, 2) + " / alt12=" + altc.substring(0, 2));
-								if (c.getHgvsG().matches(".*del" + refcodon + "ins" + altc)) {
+						for (String altc : altcodons) {
+
+							if (altcodons.size() == 1 && c.getHgvsG().matches(".*[ACGT]>[ACGT]")) {
+								//System.err.println("00: " + c.getHgvsG() + " / " + refcodon + " / " + altc);
+								c.alternateCodon = altc;
+								usedAltCodons.add(altc);
+								break;
+							} else if (c.getHgvsG().matches(".*del" + refcodon + "ins" + altc)) {
+								//System.err.println("1a: " + c.getHgvsG() + " / " + refcodon + " / " + altc);
+								c.alternateCodon = altc;
+								usedAltCodons.add(altc);
+								break;
+							} else if (c.getHgvsG().matches(
+									".*del" + refcodon.substring(0, 2) + "ins" + altc.substring(0, 2))
+									&&
+									refcodon.substring(2).equalsIgnoreCase(altc.substring(2))
+									) {
+								//System.err.println("1b: " + c.getHgvsG() + " / " + refcodon + " / " + altc);
+								c.alternateCodon = altc;
+								usedAltCodons.add(altc);
+								break;
+							} else if (c.getHgvsG().matches(
+									".*del" + refcodon.substring(1, 3) + "ins" + altc.substring(1, 3))
+									&&
+									refcodon.substring(0, 1).equalsIgnoreCase(altc.substring(0, 1))
+									) {
+								//System.err.println("1c: " + c.getHgvsG() + " / " + refcodon + " / " + altc);
+								c.alternateCodon = altc;
+								usedAltCodons.add(altc);
+								break;
+							}
+						}  // for each remaining alt codon
+						//}
+						altcodons.removeAll(usedAltCodons);
+					} // for each Candidate
+				} // loop
+				
+			} else if (strand == '-') {
+				// reverseComplement
+				
+				// 107582281-2 ..C[CGC]C..
+				// ref = GCG
+				// g.107582282G>A	c.3029C>T
+				// g.107582281_107582282delCGinsTA
+				// g.107582281_107582282delCGinsGA
+				// g.107582281_107582282delCGinsAA
+				// g: ..CGC..
+				// c: ..GCG..
+				
+				int loop = 0;
+				while (usedAltCodons.size() < initialSize && loop <= maxLoops) {
+					loop++;
+					//System.err.println("#INFO loop " + loop);
+					for (Candidate c : candidates) {
+						for (String altc : altcodons) {
+							if (altcodons.size() == 1 && c.getHgvsG().matches(".*[ACGT]>[ACGT]")) {
+								//System.err.println("00: " + c.getHgvsG() + " / " + refcodon + " / " + altc);
+								//System.err.println("#INFO Case REV 00");
+								c.alternateCodon = altc;
+								usedAltCodons.add(altc);
+								break;
+								
+							} else if (c.getHgvsG().matches(".*del[ACGT]+ins[ACGT]+")) {
+								
+								String del = c.getHgvsG().replaceFirst("^.*del([ACGT]+)ins([ACGT]+)$", "$1");
+								String ins = c.getHgvsG().replaceFirst("^.*del([ACGT]+)ins([ACGT]+)$", "$2");
+								String rc_del = reverseComplement(del);
+								String rc_ins = reverseComplement(ins);
+
+								if (refcodon.equals(rc_del) && altc.equals(rc_ins)) {
+									//System.err.println("#INFO Case REV 1a");
 									c.alternateCodon = altc;
 									usedAltCodons.add(altc);
 									break;
-								} else if (c.getHgvsG().matches(
-										".*del" + refcodon.substring(0, 2) + 
-										"ins" + altc.substring(0, 2))) {
+									
+								} else if (refcodon.substring(0,2).equals(rc_del) && altc.substring(0,2).equals(rc_ins)
+										&& refcodon.substring(2).equals(altc.substring(2))) {
+									//System.err.println("#INFO Case REV 1b");
 									c.alternateCodon = altc;
 									usedAltCodons.add(altc);
 									break;
-								} else if (c.getHgvsG().matches(
-										".*del" + refcodon.substring(1, 3) + 
-										"ins" + altc.substring(1, 3))) {
+									
+								} else if (refcodon.substring(1,3).equals(rc_del) && altc.substring(1,3).equals(rc_ins)
+										&& refcodon.substring(0,1).equals(altc.substring(0,1))) {
+									//System.err.println("#INFO Case REV 1c");
 									c.alternateCodon = altc;
 									usedAltCodons.add(altc);
 									break;
 								}
+								
 							}
-						}
+						} // for each remaining alt codon
 						altcodons.removeAll(usedAltCodons);
-					}
-				}
+					} // for each Candidate
+				} // loop
+				
+				
 			} else {
-				System.err.println("#WARN not handling reverse strand yet to determine alternate codons.");
+				System.err.println("#WARN strand information missing ('" + strand + "').");
 			}
 			
 		}
@@ -324,12 +640,14 @@ public class TransvarRecord {
 		return "#sourceGene\tsourceVariant\ttransvarGene\tentrezGeneId"
 			 + "\tstrand"
 			 + "\tgeneModel\ttranscriptId\ttranscriptType\tproteinId"
-			 + "\texonStart\texonEnd"
+			 + "\texonStart\texonEnd\tintronStart\tintronEnd"
 			 + "\tvariantType\tisBestCandidate"
 			 + "\thgvsG\thgvsC\thgvsP"
-			 + "\tchrom"
-			 + "\tcandidate\tcdsStart\tcdsEnd\tcodonNumber\tcodonPos\treferenceCodon\talternateCodon\tcandidateCodons"
-			 + "\tproteinStart\tproteinEnd"
+			 + "\tchrom\tchromStart\tchromEnd"
+			 + "\tcodonNumber\tcodonPos\treferenceCodon\talternateCodon\tcandidateCodons"
+			 + "\tcdsStart\tcdsEnd\tproteinStart\tproteinEnd"
+			 + "\tconsequence"
+			 + "\tcandidate"
 			 + "\thgncId\tmimId\thprdId\taliases\tlocation"
 			;
 	}
@@ -357,21 +675,16 @@ public class TransvarRecord {
 				tsv.append("\t" + strand);
 				tsv.append("\t" + geneModel.toString() + "\t" + transcriptId + "\t" + transcriptType);
 				tsv.append("\t" + proteinId);
-				tsv.append("\t" + exonStart + "\t" + exonEnd);
+				tsv.append("\t" + exonStart + "\t" + exonEnd + "\t" + intronStart + "\t" + intronEnd);
 				tsv.append("\t" + c.type.toString() + "\t" + c.isBestCandidate);
 				tsv.append("\t" + c.getHgvsG() + "\t" + c.getHgvsC() + "\t" + c.getHgvsP());
-				tsv.append("\t" + chr);
-				
-				// TODO get the alternate codon from the (list of) alternate codons by comparing to the current candidateSnv -- they are sorted alphabetically :( and not in the same order as the candidateSnvs :( :(
-				tsv.append("\t" + c);
-				tsv.append("\t" + c.cdsStart + "\t" + c.cdsEnd);
+				tsv.append("\t" + chr + "\t" + c.chromStart + "\t" + c.chromEnd);
 				tsv.append("\t" + c.getCodonNumber() + "\t" + c.getCodonPos());
-				tsv.append("\t" + c.referenceCodon);
-				tsv.append("\t" + c.alternateCodon);
-				tsv.append("\t" + join(c.candidateCodons, ","));
+				tsv.append("\t" + c.referenceCodon + "\t" + c.alternateCodon + "\t" + join(c.candidateCodons, ","));
+				tsv.append("\t" + c.cdsStart + "\t" + c.cdsEnd);
 				tsv.append("\t" + c.proteinStart + "\t" + c.proteinEnd);
-				
 				tsv.append("\t" + consequence);
+				tsv.append("\t" + c);
 				tsv.append("\t" + hgncId + "\t" + mimId + "\t" + hprdId + "\t" + join(aliases, "; ") + "\t" + location);
 			}
 		
@@ -443,50 +756,64 @@ public class TransvarRecord {
 	 * 
 	 * @param args
 	 */
-	public static void main (String[] args) {
-//		System.out.println(Candidate.computeCodonPos(1799) + "\t" + Candidate.computeCodonNumber(1799));
-//		System.out.println();
-//		System.out.println(Candidate.computeCodonPos(1) + "\t" + Candidate.computeCodonNumber(1));
-//		System.out.println(Candidate.computeCodonPos(2) + "\t" + Candidate.computeCodonNumber(2));
-//		System.out.println(Candidate.computeCodonPos(3) + "\t" + Candidate.computeCodonNumber(3));
-//		System.out.println(Candidate.computeCodonPos(4) + "\t" + Candidate.computeCodonNumber(4));
-//		System.out.println(Candidate.computeCodonPos(5) + "\t" + Candidate.computeCodonNumber(5));
-//		System.out.println(Candidate.computeCodonPos(6) + "\t" + Candidate.computeCodonNumber(6));
-//		System.out.println(Candidate.computeCodonPos(7) + "\t" + Candidate.computeCodonNumber(7));
-		
+	public static void main (String[] args) {	
 		String[] tlines = {
-				
-				"WNK1:G890R"
-				+ "\tENST00000537687 (protein_coding)"
-				+ "\tWNK1"
-				+ "\t+"
-				+ "\tchr12:g.977560G>A/c.2668G>A/p.Gly890Arg"
-				+ "\tinside_[cds_in_exon_9]"
-				+ "\tCSQN=Missense;reference_codon=GGG;candidate_codons=AGG,AGA,CGA,CGC,CGG,CGT;"
-				+ "candidate_snv_variants=chr12:g.977560G>C;"
-				+ "candidate_mnv_variants=chr12:g.977560_977562delGGGinsAGA,chr12:g.977560_977562delGGGinsCGA,chr12:g.977560_977562delGGGinsCGC,chr12:g.977560_977562delGGGinsCGT;"
-				+ "aliases=ENSP00000444465;source=Ensembl"
-				
-				, "ZFPM2:V339I"
-				+ "\tNM_012082 (protein_coding)"
-				+ "\tZFPM2"
-				+ "\t+"
-				+ "\tchr8:g.106813325G>A/c.1015G>A/p.Val339Ile"
-				+ "\tinside_[cds_in_exon_8]"
-				+ "\tCSQN=Missense;reference_codon=GTC;candidate_codons=ATC,ATA,ATT;"
-				+ "candidate_mnv_variants=chr8:g.106813325_106813327delGTCinsATA,chr8:g.106813325_106813327delGTCinsATT;"
-				+ "dbxref=GeneID:23414,HGNC:16700,MIM:603693;aliases=NP_036214;source=RefSeq"
-				
-				, "ZNF408:R541C"
-				+ "\tNM_024741 (protein_coding)"
-				+ "\tZNF408"
-				+ "\t+"
-				+ "\tchr11:g.46726871C>T/c.1621C>T/p.Arg541Cys"
-				+ "\tinside_[cds_in_exon_5]"
-				+ "\tCSQN=Missense;reference_codon=CGC;candidate_codons=TGT,TGC;"
-				+ "candidate_mnv_variants=chr11:g.46726871_46726873delCGCinsTGT;"
-				+ "dbxref=GeneID:79797,HGNC:20041,HPRD:18338;aliases=NP_079017;source=RefSeq"
 
+//				"WNK1:G890R"
+//				+ "\tENST00000537687 (protein_coding)"
+//				+ "\tWNK1"
+//				+ "\t+"
+//				+ "\tchr12:g.977560G>A/c.2668G>A/p.Gly890Arg"
+//				+ "\tinside_[cds_in_exon_9]"
+//				+ "\tCSQN=Missense;reference_codon=GGG;candidate_codons=AGG,AGA,CGA,CGC,CGG,CGT;"
+//				+ "candidate_snv_variants=chr12:g.977560G>C;"
+//				+ "candidate_mnv_variants=chr12:g.977560_977562delGGGinsAGA,chr12:g.977560_977562delGGGinsCGA,chr12:g.977560_977562delGGGinsCGC,chr12:g.977560_977562delGGGinsCGT;"
+//				+ "aliases=ENSP00000444465;source=Ensembl"
+//				,
+//				
+//				"ZFPM2:V339I"
+//				+ "\tNM_012082 (protein_coding)"
+//				+ "\tZFPM2"
+//				+ "\t+"
+//				+ "\tchr8:g.106813325G>A/c.1015G>A/p.Val339Ile"
+//				+ "\tinside_[cds_in_exon_8]"
+//				+ "\tCSQN=Missense;reference_codon=GTC;candidate_codons=ATC,ATA,ATT;"
+//				+ "candidate_mnv_variants=chr8:g.106813325_106813327delGTCinsATA,chr8:g.106813325_106813327delGTCinsATT;"
+//				+ "dbxref=GeneID:23414,HGNC:16700,MIM:603693;aliases=NP_036214;source=RefSeq"
+//				,
+//				
+//				"ZNF408:R541C"
+//				+ "\tNM_024741 (protein_coding)"
+//				+ "\tZNF408"
+//				+ "\t+"
+//				+ "\tchr11:g.46726871C>T/c.1621C>T/p.Arg541Cys"
+//				+ "\tinside_[cds_in_exon_5]"
+//				+ "\tCSQN=Missense;reference_codon=CGC;candidate_codons=TGT,TGC;"
+//				+ "candidate_mnv_variants=chr11:g.46726871_46726873delCGCinsTGT;"
+//				+ "dbxref=GeneID:79797,HGNC:20041,HPRD:18338;aliases=NP_079017;source=RefSeq"
+//				,
+				
+//				"A2ML1:R592L\tNM_144670 (protein_coding)\tA2ML1\t+\tchr12:g.9000236G>T/c.1775G>T/p.Arg592Leu"
+//				+ "\tinside_[cds_in_exon_15]\tCSQN=Missense;reference_codon=CGG;"
+//				+ "candidate_codons=CTT,CTG,CTA,CTC,TTA,TTG;"
+//				+ "candidate_mnv_variants="
+//				+ "chr12:g.9000236_9000237delGGinsTT,"
+//				+ "chr12:g.9000236_9000237delGGinsTA,"
+//				+ "chr12:g.9000236_9000237delGGinsTC,"
+//				+ "chr12:g.9000235_9000236delCGinsTT,"
+//				+ "chr12:g.9000235_9000237delCGGinsTTA;"
+//				+ "dbxref=GeneID:144568,HGNC:23336,MIM:610627;aliases=NP_653271;source=RefSeq"
+//				,
+				
+				"ABCA1:A1010V\tNM_005502 (protein_coding)\tABCA1\t-"
+				+ "\tchr9:g.107582282G>A/c.3029C>T/p.Ala1010Val"
+				+ "\tinside_[cds_in_exon_21]"
+				+ "\tCSQN=Missense;"
+				+ "reference_codon=GCG;"
+				+ "candidate_codons=GTA,GTC,GTG,GTT;"
+				+ "candidate_mnv_variants=chr9:g.107582281_107582282delCGinsTA,chr9:g.107582281_107582282delCGinsGA,chr9:g.107582281_107582282delCGinsAA;"
+				+ "dbxref=GeneID:19,HGNC:29,HPRD:02501,MIM:600046;aliases=NP_005493;source=RefSeq"
+		
 		};
 
 		//
@@ -499,6 +826,35 @@ public class TransvarRecord {
 		
 	}
 	
+	
+	public String reverseComplement (String sequence) {
+		String rc = "";
+		for (int i = sequence.length() - 1; i >= 0; i--) {
+			rc += complement(sequence.charAt(i));
+		}
+		return rc;
+	}
+	
+	public char complement (char n) {
+		if (n == 'A') return 'T';
+		if (n == 'C') return 'G';
+		if (n == 'G') return 'C';
+		if (n == 'T') return 'A';
+		return 'N';
+	}
+	
+}
+
+
+/**
+ * 
+ *
+ */
+class Location {
+	public enum LOCATION { UTR3, UTR5, INTERGENIC, EXON, INTRON, SPLICE }
+	public enum CODING { CDS, NONCODING }
+	Set<LOCATION> location = new LinkedHashSet<>();
+	public int position;
 }
 
 
@@ -519,9 +875,9 @@ class Candidate implements Comparable<Candidate> {
 	/** Chromosome: 1..22, X, Y, MT. */
 	public String chr;
 	/** Start position, inclusive, on the chromosome. */
-	public int start;
+	public int chromStart;
 	/** Stop position, inclusive, on the chromosome. */
-	public int stop;
+	public int chromEnd;
 	/** Reference allele (one or multiple nucleotides), as read on the FWD strand. */
 	public String ref;
 	/** Alternate allele (one or multiple nucleotides), as read on the FWD strand. */
@@ -646,8 +1002,8 @@ class Candidate implements Comparable<Candidate> {
 		if (loc[1].startsWith("g.")) g = loc[1];
 		
 		if (loc[1].matches("g\\.\\d+_\\d+.*del.*?ins.*?")) {
-			start = Integer.parseInt(loc[1].replaceFirst("^g\\.(\\d+)_(\\d+).*?$", "$1"));
-			stop  = Integer.parseInt(loc[1].replaceFirst("^g\\.(\\d+)_(\\d+).*?$", "$2"));
+			chromStart = Integer.parseInt(loc[1].replaceFirst("^g\\.(\\d+)_(\\d+).*?$", "$1"));
+			chromEnd   = Integer.parseInt(loc[1].replaceFirst("^g\\.(\\d+)_(\\d+).*?$", "$2"));
 			if (loc[1].matches("g\\.\\d+_\\d+.*del([ACGTN]+)ins([ACGTN]+).*?")) {
 				String ref = loc[1].replaceFirst("^g\\.\\d+_\\d+.*del([ACGTN]+)ins([ACGTN]+).*?$", "$1");
 				String alt = loc[1].replaceFirst("^g\\.\\d+_\\d+.*del([ACGTN]+)ins([ACGTN]+).*?$", "$2");
@@ -658,31 +1014,31 @@ class Candidate implements Comparable<Candidate> {
 			} else
 				setVariantType(TYPE.DELINS);
 		} else if (loc[1].matches("g\\.\\d+.*del.*?ins.*?")) {
-			start = Integer.parseInt(loc[1].replaceFirst("^g\\.(\\d+).*?$", "$1"));
-			stop  = start;
+			chromStart = Integer.parseInt(loc[1].replaceFirst("^g\\.(\\d+).*?$", "$1"));
+			chromEnd   = chromStart;
 			setVariantType(TYPE.DELINS);
 			
 		} else if (loc[1].matches("g\\.\\d+_\\d+.*del.*?")) {
-			start = Integer.parseInt(loc[1].replaceFirst("^g\\.(\\d+)_(\\d+).*?$", "$1"));
-			stop  = Integer.parseInt(loc[1].replaceFirst("^g\\.(\\d+)_(\\d+).*?$", "$2"));
+			chromStart = Integer.parseInt(loc[1].replaceFirst("^g\\.(\\d+)_(\\d+).*?$", "$1"));
+			chromEnd   = Integer.parseInt(loc[1].replaceFirst("^g\\.(\\d+)_(\\d+).*?$", "$2"));
 			setVariantType(TYPE.DEL);
 		} else if (loc[1].matches("g\\.\\d+.*del.*?")) {
-			start = Integer.parseInt(loc[1].replaceFirst("^g\\.(\\d+).*?$", "$1"));
-			stop  = start;
+			chromStart = Integer.parseInt(loc[1].replaceFirst("^g\\.(\\d+).*?$", "$1"));
+			chromEnd   = chromStart;
 			setVariantType(TYPE.DEL);
 			
 		} else if (loc[1].matches("g\\.\\d+_\\d+.*ins.*?")) {
-			start = Integer.parseInt(loc[1].replaceFirst("^g\\.(\\d+)_(\\d+).*?$", "$1"));
-			stop  = Integer.parseInt(loc[1].replaceFirst("^g\\.(\\d+)_(\\d+).*?$", "$2"));
+			chromStart = Integer.parseInt(loc[1].replaceFirst("^g\\.(\\d+)_(\\d+).*?$", "$1"));
+			chromEnd   = Integer.parseInt(loc[1].replaceFirst("^g\\.(\\d+)_(\\d+).*?$", "$2"));
 			setVariantType(TYPE.INS);
 		} else if (loc[1].matches("g\\.\\d+.*ins.*?")) {
-			start = Integer.parseInt(loc[1].replaceFirst("^g\\.(\\d+).*?$", "$1"));
-			stop  = start;
+			chromStart = Integer.parseInt(loc[1].replaceFirst("^g\\.(\\d+).*?$", "$1"));
+			chromEnd   = chromStart;
 			setVariantType(TYPE.INS);
 			
 		} else if (loc[1].matches("g\\.\\d+.*")) {
-			start = Integer.parseInt(loc[1].replaceFirst("^g\\.(\\d+).*?$", "$1"));
-			stop  = start;
+			chromStart = Integer.parseInt(loc[1].replaceFirst("^g\\.(\\d+).*?$", "$1"));
+			chromEnd   = chromStart;
 			setVariantType(TYPE.SNV);
 			
 		} else {
@@ -748,25 +1104,3 @@ class Candidate implements Comparable<Candidate> {
 }
 
 
-/*
-
-Columns:
-
-ABCA1:G948R
-NM_005502 (protein_coding)
-ABCA1
--
-chr9:g.107583774C>T/c.2842G>A/p.Gly948Arg
-inside_[cds_in_exon_20]
-
-
-CSQN=Missense;
-reference_codon=GGG;
-candidate_codons=AGG,AGA,CGA,CGC,CGG,CGT;
-candidate_snv_variants=chr9:g.107583774C>G;
-candidate_mnv_variants=chr9:g.107583772_107583774delCCCinsTCT,chr9:g.107583772_107583774delCCCinsTCG,chr9:g.107583772_107583774delCCCinsGCG,chr9:g.107583772_107583774delCCCinsACG;
-dbxref=GeneID:19,HGNC:29,HPRD:02501,MIM:600046;
-aliases=NP_005493;
-source=RefSeq
-
-*/
