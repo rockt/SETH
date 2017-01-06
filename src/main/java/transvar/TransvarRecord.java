@@ -27,6 +27,7 @@ candidate_codons=AGG,AGA,CGA,CGC,CGG,CGT;
 candidate_snv_variants=chr9:g.107583774C>G;
 candidate_mnv_variants=chr9:g.107583772_107583774delCCCinsTCT,chr9:g.107583772_107583774delCCCinsTCG,chr9:g.107583772_107583774delCCCinsGCG,chr9:g.107583772_107583774delCCCinsACG;
 dbxref=GeneID:19,HGNC:29,HPRD:02501,MIM:600046;
+dbsnp=rs121917993(chr2:166850722G>A);
 aliases=NP_005493;
 source=RefSeq
 </pre>
@@ -51,7 +52,7 @@ so we have seven columns in total in transvar's output:
  */
 public class TransvarRecord {
 
-	/** The gene originally provided as input to TransVar. */
+	/** The gene or chromosome originally provided as input to TransVar. */
 	public String sourceGene;
 	/** The genetic variant provided as input to TransVar. */
 	public String sourceVariant;
@@ -148,16 +149,13 @@ public class TransvarRecord {
 		MULTI_EXON, MULTI_INTRON, 
 		EXON_INTRON, INTRON_EXON,
 		MULTI_EXON_INTRON, MULTI_INTRON_EXON,
-		UTR5, UTR3
+		UTR5, UTR3,
+		UNKNOWN
 	}
-	
-	public LOCATION location;
-	
-	//public String referenceCodon;
-	//public String[] candidateCodons;
-	
-	//public String[] candidateSnvs;
-	//public String[] candidateMnvs;
+	/** The location of this variant wrt. to gene indicated in #transvarGene: inside = single exon/intron, multi-exon/intron, 3'UTR, etc. */
+	public LOCATION location = LOCATION.UNKNOWN;
+	/** Distance from the gene indicated in #transvarGene. 0 if inside; distance in BP if up/downstream. */
+	int distance = 0;
 	
 	public int entrezGeneId;
 	public int hgncId;
@@ -166,6 +164,10 @@ public class TransvarRecord {
 	
 	public String[] aliases;
 	public String proteinId;
+	
+	/** */
+	public int dbSNP;
+	public String dbSNP_variant;
 	
 	public int exonStart;
 	public int exonEnd;
@@ -202,21 +204,35 @@ public class TransvarRecord {
 		r.sourceLevel = sourceLevel;
 
 		String[] cols = line.split("\t");
-		String[] s = cols[0].split(":");
-		r.sourceGene = s[0];
-		r.sourceVariant = s[1];
+		// first column is the original input into Transvar:
+		// "protein:p.variant", "gene:c.variant" or "chromosome:g.variant"
+		String[] src = cols[0].split(":");
+		r.sourceGene = src[0];
+		r.sourceVariant = src[1];
 
 		if (cols[6].equals("no_valid_transcript_found") || cols[6].indexOf("invalid_reference_seq") >= 0) {
 			r.transcriptType = "no_valid_transcript_found";
 			return r;
 		}
 
-		String t[] = cols[1].split(" ");
-		r.transcriptId = t[0];
-		r.transcriptType = t[1].substring(1, t[1].length() - 1);
-
-		r.transvarGene = cols[2];
-		r.strand = cols[3].charAt(0);
+		if (cols[1].equals(".")) { 
+			r.transcriptId = null;
+			r.transcriptType = null;
+		} else {
+			String t[] = cols[1].split(" ");
+			r.transcriptId = t[0];
+			r.transcriptType = t[1].substring(1, t[1].length() - 1);
+		}
+		
+		if (cols[2].equals("."))
+			r.transvarGene = null;
+		else 
+			r.transvarGene = cols[2];
+		
+		if (cols[3].equals("."))
+			r.strand = '.';
+		else
+			r.strand = cols[3].charAt(0);
 
 		// chr9:g.107583774C>T/c.2842G>A/p.Gly948Arg
 		String[] hgvs = cols[4].split("/");
@@ -231,8 +247,7 @@ public class TransvarRecord {
 		// get all other columns from the candidate_snv_variants and candidate_mnv_variants fields, see below
 
 		//
-		r.parseLocation(cols[5]);
-
+		r.parseLocation(cols[5], r.transvarGene);
 
 		// generate a key/value map of consequence fields
 		Map<String, String> cMap = new HashMap<String, String>();
@@ -310,6 +325,15 @@ public class TransvarRecord {
 			if (idMap.containsKey("HPRD")) r.hprdId = idMap.get("HPRD");
 			if (idMap.containsKey("MIM")) r.mimId = idMap.get("MIM");
 		}
+		
+		// dbsnp=rs121917993(chr2:166850722G>A);
+		if (cMap.containsKey("dbsnp")) {
+			String db = cMap.get("dbsnp");
+			String rs = db.replaceFirst("^rs(\\d+).*?$", "$1");
+			String dv = db.replaceFirst("rs(\\d+)\\((.*)\\)$", "$2");
+			if (dv.equals(db)) dv = null;
+			if (rs.matches("\\d+")) r.dbSNP = Integer.parseInt(rs);
+		}
 
 		if (cMap.containsKey("aliases")) r.aliases = cMap.get("aliases").split(",");
 		if (r.aliases != null) {
@@ -326,7 +350,7 @@ public class TransvarRecord {
 	 * @param transvarLocation
 	 * @return
 	 */
-	boolean parseLocation (String transvarLocation) {
+	boolean parseLocation (String transvarLocation, String transvarGene) {
 		full_location = transvarLocation;
 		// inside_[cds_in_exon_100]
 		if (full_location.matches("inside_\\[cds_in_exon_\\d+\\]")) {
@@ -403,9 +427,31 @@ public class TransvarRecord {
 			exonStart = Integer.parseInt(full_location.replaceFirst("^from_\\[(?:noncoding|cds_in)_exon_(\\d+)\\]_to_\\[[35]-UTR;noncoding_exon_(\\d+)\\]$", "$1"));
 			exonEnd   = Integer.parseInt(full_location.replaceFirst("^from_\\[(?:noncoding|cds_in)_exon_(\\d+)\\]_to_\\[[35]-UTR;noncoding_exon_(\\d+)\\]$", "$2"));
 		
+		// inside_[intergenic_between_APLN(82,971_bp_upstream)_and_XPNPEP2(1,372_bp_upstream)]
+		} else if (full_location.matches("inside_\\[intergenic_between_(.+?)\\(([0-9\\,]+)_bp_(upstream|downstream)\\)_and_(.+?)\\(([0-9\\,]+)_bp_(upstream|downstream)\\)\\]")) {
+			// parse out details for the first gene, distance, and direction (l for location)
+			String g1 = full_location.replaceFirst("^inside_\\[intergenic_between_(.+?)\\(([0-9\\,]+)_bp_(upstream|downstream)\\)_and_(.+?)\\(([0-9\\,]+)_bp_(upstream|downstream)\\)\\]$", "$1");
+			// second gene
+			String g2 = full_location.replaceFirst("^inside_\\[intergenic_between_(.+?)\\(([0-9\\,]+)_bp_(upstream|downstream)\\)_and_(.+?)\\(([0-9\\,]+)_bp_(upstream|downstream)\\)\\]$", "$4");
+			// see which gene matches the annotated gene (3rd column of transvar output)
+			if (g1.equals(transvarGene)) {
+				int d1 = Integer.parseInt(full_location
+						.replaceFirst("^inside_\\[intergenic_between_(.+?)\\(([0-9\\,]+)_bp_(upstream|downstream)\\)_and_(.+?)\\(([0-9\\,]+)_bp_(upstream|downstream)\\)\\]$", "$2")
+						.replaceAll(",",""));
+				String l1 = full_location.replaceFirst("^inside_\\[intergenic_between_(.+?)\\(([0-9\\,]+)_bp_(upstream|downstream)\\)_and_(.+?)\\(([0-9\\,]+)_bp_(upstream|downstream)\\)\\]$", "$3");
+				if (l1.equals("upstream")) location = LOCATION.UTR5; else location = LOCATION.UTR3;
+				distance = d1;
+			} else if (g2.equals(transvarGene)) {
+				int d2 = Integer.parseInt(full_location
+						.replaceFirst("^inside_\\[intergenic_between_(.+?)\\(([0-9\\,]+)_bp_(upstream|downstream)\\)_and_(.+?)\\(([0-9\\,]+)_bp_(upstream|downstream)\\)\\]$", "$5")
+						.replaceAll(",",""));
+				String l2 = full_location.replaceFirst("^inside_\\[intergenic_between_(.+?)\\(([0-9\\,]+)_bp_(upstream|downstream)\\)_and_(.+?)\\(([0-9\\,]+)_bp_(upstream|downstream)\\)\\]$", "$6");
+				if (l2.equals("upstream")) location = LOCATION.UTR5; else location = LOCATION.UTR3;
+				distance = d2;
+			}
+			
 		// TODO
 		// from_[5-UTR;intron_between_exon_1_and_2]_to_[5-UTR;noncoding_exon_2]
-			
 			
 		} else {
 			System.err.println("#WARN did not parse location '" + full_location + "'");
@@ -648,7 +694,8 @@ public class TransvarRecord {
 			 + "\tcdsStart\tcdsEnd\tproteinStart\tproteinEnd"
 			 + "\tconsequence"
 			 + "\tcandidate"
-			 + "\thgncId\tmimId\thprdId\taliases\tlocation"
+			 + "\tdbSNP"
+			 + "\thgncId\tmimId\thprdId\taliases\tlocation\tdistance\tfullLocation"
 			;
 	}
 	
@@ -685,7 +732,9 @@ public class TransvarRecord {
 				tsv.append("\t" + c.proteinStart + "\t" + c.proteinEnd);
 				tsv.append("\t" + consequence);
 				tsv.append("\t" + c);
-				tsv.append("\t" + hgncId + "\t" + mimId + "\t" + hprdId + "\t" + join(aliases, "; ") + "\t" + location);
+				tsv.append("\t" + dbSNP);
+				tsv.append("\t" + hgncId + "\t" + mimId + "\t" + hprdId + "\t" + join(aliases, "; "));
+				tsv.append("\t" + location + "\t" + distance + "\t" + full_location);
 			}
 		
 		} // check if any candidates are available

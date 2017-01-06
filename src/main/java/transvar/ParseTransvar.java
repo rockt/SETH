@@ -1,6 +1,7 @@
 package transvar;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -13,9 +14,11 @@ import transvar.TransvarRecord.LEVEL;
  * and documention at <a href="http://transvar.readthedocs.io/en/latest/">transvar.readthedocs.io/en/latest/</a>.
  * <br/><br/>
  * We use TransVar to help mapping detected variants to their chromosomal location and allele(s); since TransVar handles any amino acid and CDS change, this remediates
- * some of the mutations SETH detected and was not able to map to a gene and/or dbSNP ID.
+ * some of the mutations SETH detected and was not able to map to a gene and/or dbSNP ID. In the end, mapping each detected variant to the chromosomal location enables 
+ * us to better integrate variants where nomenclature is ambiguous.
  * <br/><br/>
- * In the end, mapping each detected variant to the chromosomal location enables us to better integrate variants where nomenclature is ambiguous. 
+ * This is a command line interface to parse TransVar output into tab-delimited
+ * files for import into a database table etc. Call with --help to see command line options.
  * 
  * @author Joerg Hakenberg
  */
@@ -32,36 +35,61 @@ public class ParseTransvar {
 			System.exit(1);
 		}
 		
-		String input = args[0];
+		String inputFile = args[0];
 		LEVEL inputLevel = LEVEL.UNKNOWN;
 		
-		if (args.length >= 2) {
-			if (args[1].toLowerCase().matches("\\-?\\-?(a|aa|amino|aminoacid|aachange|fromaa|fromaminoacid|hgvsp|phgvs|p|protein)"))
+//		if (args.length >= 2) {
+//			if (args[1].toLowerCase().matches("\\-?\\-?(a|aa|amino|aminoacid|aachange|fromaa|fromaminoacid|hgvsp|phgvs|p|protein)"))
+//				inputLevel = LEVEL.PROTEIN;
+//			else if (args[1].toLowerCase().matches("\\-?\\-?(cds|fromcds|hgvsc|chgvs|c)"))
+//				inputLevel = LEVEL.CDS;
+//			else if (args[1].toLowerCase().matches("\\-?\\-?(genome|genomic|g|fromgenomic|fromgenome|hgvsg|ghgvs|chr|fromchr|chromosome)"))
+//				inputLevel = LEVEL.GENOMIC;
+//			else {
+//				System.err.println("Unrecognized option: " + args[1]);
+//				System.exit(2);
+//			}
+//		}
+		
+		for (int a = 0; a < args.length; a++) {
+			if (args[a].toLowerCase().matches("\\-?\\-?(a|aa|amino|aminoacid|aachange|fromaa|fromaminoacid|hgvsp|phgvs|p|protein)"))
 				inputLevel = LEVEL.PROTEIN;
-			else if (args[1].toLowerCase().matches("\\-?\\-?(cds|fromcds|hgvsc|chgvs|c)"))
+			else if (args[a].toLowerCase().matches("\\-?\\-?(cds|fromcds|hgvsc|chgvs|c)"))
 				inputLevel = LEVEL.CDS;
-			else if (args[1].toLowerCase().matches("\\-?\\-?(genome|genomic|g|fromgenomic|fromgenome|hgvsg|ghgvs|chr|fromchr|chromosome)"))
+			else if (args[a].toLowerCase().matches("\\-?\\-?(genome|genomic|g|fromgenomic|fromgenome|hgvsg|ghgvs|chr|fromchr|chromosome)"))
 				inputLevel = LEVEL.GENOMIC;
+
 			else {
-				System.err.println("Unrecognized option: " + args[1]);
-				System.exit(2);
+				File temp = new File(args[a]);
+				if (temp.isFile() && temp.canRead()) {
+					inputFile = args[a];
+				} else {
+					System.err.println("Unrecognized option '" + args[1] + "' or cannot read file of that name.");
+					System.exit(2);
+				}
 			}
 		}
 		
+		
 		System.out.println(TransvarRecord.toTsvHeader());
 		try {
-			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(input), "UTF-8"));
+			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile), "UTF-8"));
 			String line;
 			while ((line = br.readLine()) != null) {
 
 				// skip header lines
 				if (line.startsWith("input\ttranscript")) continue;
+				// skip error messages
 				if (line.split("\t")[6].startsWith("Error")) continue;
+				// skip entries with no valid transcripts --> variant on CDS/protein level appears to be "impossible"
+				if (line.split("\t")[6].startsWith("no_valid_transcript_found")) continue;
 				
+				// generate a Record using a factory method
 				TransvarRecord record = TransvarRecord.makeFromTsv(line, inputLevel);
-				
-				if (!record.transcriptType.equalsIgnoreCase("no_valid_transcript_found"))
-					System.out.println(record.toTsv());
+				// and just print to STDOUT
+				String tsv = record.toTsv();
+				if (tsv.length() > 0)
+					System.out.println(tsv);
 			}
 				
 			br.close();
