@@ -1,6 +1,6 @@
-LOAD DATA LOCAL INFILE 'parsed_canno.tsv'
+LOAD DATA LOCAL INFILE 'parsed_ganno.tsv'
 REPLACE
-INTO TABLE transvar_hgvsc
+INTO TABLE transvar_hgvsg
 IGNORE 1 lines
 
 -- 
@@ -49,7 +49,7 @@ show warnings;
 
 -- Update missing gene IDs (Entrez, HGNC, HPRD, OMIM) from NCBI's gene info table where missing
 -- Transvar seems to add those only for RefSeq transcripts.
-update transvar_hgvsc t, nlp_search.gene_info g
+update transvar_hgvsg t, nlp_search.gene_info g
    set t.entrezGeneId = g.gene_id,
        t.hprdId = g.HPRD,
        t.hgncId = g.HGNC,
@@ -60,13 +60,14 @@ update transvar_hgvsc t, nlp_search.gene_info g
 
 -- Update master table of uniq genomic variants (uniq key is genome build, chromosome and HGVS_G
 -- First, insert all new chrom:HGVS_G into the uniq variant table
-insert ignore into uniq_variants (genomeBuild, chrom, hgvsG, `chromStart`, `chromEnd`)
-select 'hg19', chrom, hgvsG, `chromStart`, `chromEnd`
- from transvar_hgvsc where chrom is not null and hgvsG is not null; 
--- Second, copy the newly created genomic variant IDs (gvids) into the HGVS_P table
-update transvar_hgvsc t, uniq_variants u
+-- insert ignore into uniq_variants (genomeBuild, chrom, hgvsG, `chromStart`, `chromEnd`)
+-- select 'hg19', chrom, hgvsG, `chromStart`, `chromEnd`
+--  from transvar_hgvsg where chrom is not null and hgvsG is not null; 
+-- (SKIPPED for hgvsG because they have already been loaded from hgvsP or C
+--  otherwise they would not have been processed)
+-- Second, copy the newly created genomic variant IDs (gvids) into the HGVS_G table
+update transvar_hgvsg t, uniq_variants u
    set t.gvid = u.gvid
  where t.gvid is null
    and t.chrom = u.chrom and t.hgvsG = u.hgvsG;
-;
 
