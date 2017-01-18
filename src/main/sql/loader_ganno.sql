@@ -70,4 +70,12 @@ update transvar_hgvsg t, uniq_variants u
    set t.gvid = u.gvid
  where t.gvid is null
    and t.chrom = u.chrom and t.hgvsG = u.hgvsG;
+-- In- and output for HGVS_g may differ, for example
+--  in: g.100177420_100177421delCAinsAG
+-- out: g.100177420_100177421delinsAG
+update transvar_hgvsg t, uniq_variants u
+   set t.gvid = u.gvid
+ where t.gvid is null
+   and t.chrom = u.chrom and t.sourceVariant = u.hgvsG;
+
 
