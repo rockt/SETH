@@ -23,41 +23,33 @@ import transvar.TransvarRecord.LEVEL;
  * @author Joerg Hakenberg
  */
 public class ParseTransvar {
-
 	
 	public static void main (String[] args) {
-		
+		// print help screen if needed
 		if (args.length == 0 || args[0].toLowerCase().matches("\\-\\-?h(elp)?")) {
 			System.out.println("ParseTransvar <transvar-output-file> [options]");
-			System.out.println("Options: --fromAA -a       -  transvar output based on amino acid changes ('panno') [default]");
-			System.out.println("Options: --fromCDS -c      -  transvar output based on CDS changes ('canno')");
-			System.out.println("Options: --fromGenomic -g  -  transvar output based on genomic coordinates ('ganno')");
+			System.out.println("Options: --fromAA -a       -  transvar output is based on amino acid changes ('panno') [default]");
+			System.out.println("         --fromCDS -c      -  transvar output is based on CDS changes ('canno')");
+			System.out.println("         --fromGenomic -g  -  transvar output is based on genomic coordinates ('ganno')");
+			System.out.println("         --no-header -N    -  Do not print a header line");
 			System.exit(1);
 		}
 		
-		String inputFile = args[0];
-		LEVEL inputLevel = LEVEL.UNKNOWN;
+		// default settings
+		String inputFile = "";
+		LEVEL inputLevel = LEVEL.PROTEIN;
+		boolean printHeader = true;
 		
-//		if (args.length >= 2) {
-//			if (args[1].toLowerCase().matches("\\-?\\-?(a|aa|amino|aminoacid|aachange|fromaa|fromaminoacid|hgvsp|phgvs|p|protein)"))
-//				inputLevel = LEVEL.PROTEIN;
-//			else if (args[1].toLowerCase().matches("\\-?\\-?(cds|fromcds|hgvsc|chgvs|c)"))
-//				inputLevel = LEVEL.CDS;
-//			else if (args[1].toLowerCase().matches("\\-?\\-?(genome|genomic|g|fromgenomic|fromgenome|hgvsg|ghgvs|chr|fromchr|chromosome)"))
-//				inputLevel = LEVEL.GENOMIC;
-//			else {
-//				System.err.println("Unrecognized option: " + args[1]);
-//				System.exit(2);
-//			}
-//		}
-		
+		// parse command line
 		for (int a = 0; a < args.length; a++) {
 			if (args[a].toLowerCase().matches("\\-?\\-?(a|aa|amino|aminoacid|aachange|fromaa|fromaminoacid|hgvsp|phgvs|p|protein)"))
 				inputLevel = LEVEL.PROTEIN;
-			else if (args[a].toLowerCase().matches("\\-?\\-?(cds|fromcds|hgvsc|chgvs|c)"))
+			else if (args[a].toLowerCase().matches("\\-?\\-?(c|cds|fromcds|hgvsc|chgvs)"))
 				inputLevel = LEVEL.CDS;
-			else if (args[a].toLowerCase().matches("\\-?\\-?(genome|genomic|g|fromgenomic|fromgenome|hgvsg|ghgvs|chr|fromchr|chromosome)"))
+			else if (args[a].toLowerCase().matches("\\-?\\-?(g|genome|genomic|fromgenomic|fromgenome|hgvsg|ghgvs|chr|fromchr|chromosome)"))
 				inputLevel = LEVEL.GENOMIC;
+			else if (args[a].toLowerCase().matches("\\-?\\-?(n|no\\-?header)"))
+				printHeader = false;
 
 			else {
 				File temp = new File(args[a]);
@@ -70,8 +62,10 @@ public class ParseTransvar {
 			}
 		}
 		
-		
-		System.out.println(TransvarRecord.toTsvHeader());
+		// print header
+		if (printHeader)
+			System.out.println(TransvarRecord.toTsvHeader());
+		// parse each line of input
 		try {
 			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(inputFile), "UTF-8"));
 			String line;

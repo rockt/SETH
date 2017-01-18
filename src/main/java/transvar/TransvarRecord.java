@@ -647,35 +647,6 @@ public class TransvarRecord {
 		}
 	}
 
-
-	/**
-	 * 
-	 */
-	public void print() {
-		System.out.println("sourceGene="+this.sourceGene);
-		System.out.println("sourceVariant="+this.sourceVariant);
-		System.out.println("transcriptId="+this.transcriptId);
-		System.out.println("transcriptType="+this.transcriptType);
-		System.out.println("strand="+this.strand);
-		System.out.println("geneModel="+this.geneModel.toString());
-		System.out.println("transvarGene="+this.transvarGene);
-		System.out.println("consequence="+this.consequence);
-
-		System.out.println("aliases="+this.aliases);
-		System.out.println("entrezGeneId="+this.entrezGeneId);
-		System.out.println("hgncId="+this.hgncId);
-		System.out.println("mimId="+this.mimId);
-		System.out.println("hprdId="+this.hprdId);
-		
-		//System.out.println("candidateSnvs="+this.candidateSnvs);
-		//System.out.println("candidateMnvs="+this.candidateMnvs);
-		System.out.println("candidateMnvs="+this.candidates);
-		
-		System.out.println("location="+this.location);
-		System.out.println("exonStart="+this.exonStart);
-		System.out.println("exonEnd="+this.exonEnd);
-	}
-	
 	
 	/**
 	 * Returns the header names for tab-delimited output of this record.
