@@ -212,15 +212,15 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
     ws ~ (gt ^^ { SubstString(_) }) ~ ws ~ (Nt.+ ^^ { MutatedString(_) })
   lazy val Del:P                = (Loc ^^ { LocString(_) }) ~ ("del" ^^ { DelString(_) }) ~
     ((Nt.+ ^^ { WildString(_) })| Number).?
+  lazy val Ins:P                = (Loc ^^ { LocString(_) }) ~ ("ins" ^^ { InsString(_) }) ~
+    (Nt.+ ^^ { MutatedString(_) } | Number | RangeLoc | FarLoc | "?") //~ Nest.?
+  lazy val Indel:P              = (NoPointLoc ^^ { LocString(_) }) ~ "del" ~ (Nt.+ ^^ { WildString(_) } | Number).? ~
+    ("ins" ^^ { InsDelString(_) }) ~ ((Nt.+ ^^ { MutatedString(_) }) | Number | RangeLoc | FarLoc) //~ Nest.?
   lazy val Dup:P                = Loc ~ ("dup" ^^ { DupString(_) }) ~ ((Nt.+ ^^ { MutatedString(_) })| Number).? //~ Nest.?
   //FIXME: really? this does not accept 7(TG)3_6
   lazy val AbrSSR:P             = (PtLoc ^^ { LocString(_) }) ~ (Nt.+ ^^ { MutatedString(_) }) ~ "(" ~ Number ~ "_" ~ Number ~ ")"
   lazy val VarSSR:P             = ((PtLoc ^^ { LocString(_) }) ~ (Nt.+ ^^ { MutatedString(_) }) ~ "[" ~ Number ~ "]") |
     (RangeLoc ~ "[" ~ Number ~ "]") | AbrSSR
-  lazy val Ins:P                = (NoPointLoc ^^ { LocString(_) }) ~ (("ins"|">") ^^ { InsString(_) }) ~
-    (Nt.+ ^^ { MutatedString(_) } | Number | RangeLoc | FarLoc | "?") //~ Nest.?
-  lazy val Indel:P              = (NoPointLoc ^^ { LocString(_) }) ~ "del" ~ (Nt.+ ^^ { WildString(_) } | Number).? ~
-    ("ins" ^^ { InsDelString(_) }) ~ ((Nt.+ ^^ { MutatedString(_) }) | Number | RangeLoc | FarLoc) //~ Nest.?
   lazy val Inv:P                = (NoPointLoc ^^ { LocString(_) }) ~ ("inv" ^^ { InvString(_) }) ~ (Nt.+ ^^ { WildString(_) } | Number).? //~ Nest.?
   lazy val Conv:P               = (NoPointLoc ^^ { LocString(_) }) ~ ("con" ^^ { ConString(_) }) ~ FarLoc //~ Nest.?
   lazy val TransLoc:P           = ("t" ^^ { TransLocString(_) }) ~ ChromCoords ~ "(" ~ FarLoc ~ ")"
@@ -267,10 +267,10 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
   lazy val ProteinSubst:P       = ((AA ^^ { WildString(_) })  ~ (Number ^^ { LocString(_) }) ~ ((if(strictNomenclature)("") else (">")) ~AA ^^ { MutatedString(_) })) |
       (AAPtLoc ~ (AA  ^^ { MutatedString(_) }) ~ ("extX" ~ "*".? ~ Number).? | ("Met1" | "M1") ~ ("?" | "ext" ~ Number))
   lazy val ProteinDel:P         = AALoc ~ ("del" ^^ { DelString(_) })
+  lazy val ProteinIns:P         = AALoc ~ ("ins" ^^ { InsString(_) }) ~ ((AA.+) ^^ { MutatedString(_) } | Number)
   lazy val ProteinDup:P         = AALoc ~ ("dup" ^^ { DupString(_) })
   lazy val ProteinEq:P          = AALoc ~ ("=" ^^ { SilentString(_) })
   lazy val ProteinVarSSR:P      = AALoc ~ "(" ~ Number ~ "_" ~ Number ~ ")"
-  lazy val ProteinIns:P         = AALoc ~ ("ins" ^^ { InsString(_) }) ~ ((AA.+) ^^ { MutatedString(_) } | Number)
   lazy val ProteinIndel:P       = AALoc ~ (("delins"|"insdel") ^^ { InsDelString(_) }) ~ ((AA.+ ^^ { MutatedString(_) }) | Number)
   lazy val ProteinFrameShift:P  = LongFS | ShortFS | SubstFS
   //lazy val ShortFS:P            = (AAPtLoc ^^ { LocString(_) })~ ("fs" ^^ { FrameShiftString(_) })
@@ -504,10 +504,10 @@ trait FlattenToMutation extends FlattenToString {
       case mutated:MutatedString => mutation.mutated = abbreviate(flattenToString(mutated.parse))
       case ref:RefSeqString => mutation.ref = flattenToString(ref.parse)
       case typ:DelString => mutation.typ = DELETION
-      case typ:SubstString => mutation.typ = SUBSTITUTION
       case typ:InsString => mutation.typ = INSERTION
-      case typ:DupString => mutation.typ = DUPLICATION
       case typ:InsDelString => mutation.typ = DELETION_INSERTION
+      case typ:SubstString => mutation.typ = SUBSTITUTION
+      case typ:DupString => mutation.typ = DUPLICATION
       case typ:InvString => mutation.typ = INVERSION
       case typ:ConString => mutation.typ = CONVERSION
       case typ:TransLocString => mutation.typ = TRANSLOCATION
