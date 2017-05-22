@@ -30,9 +30,9 @@ public class OldNomenclature {
     final private static Pattern protDeletionPattern = Pattern.compile(prefix +"(?<group>(?<wt>[CISQMNPKDTFAGHLRWVEYBZJX])(?<pos>[1-9][0-9]*)del)" +suffix);
     final private static Pattern protDeletionPatternLong = Pattern.compile(prefix +"(?<group>(?<wt>CYS|ILE|SER|GLN|MET|ASN|PRO|LYS|ASP|THR|PHE|ALA|GLY|HIS|LEU|ARG|TRP|VAL|GLU|TYR)(?<pos>[1-9][0-9]*)del)" +suffix, Pattern.CASE_INSENSITIVE);
 
-    //deltaF508, DeltaF508,
-    final private static Pattern codonDeletionPattern = Pattern.compile(prefix +"(?<group>([dD]elta|Δ)(?<wt>[CISQMNPKDTFAGHLRWVEYBZJX])(?<pos>[1-9][0-9]*))" +suffix);
-    final private static Pattern codonDeletionPattern2 = Pattern.compile(prefix +"(?<group>([dD]elta|Δ)(?<wt>CYS|ILE|SER|GLN|MET|ASN|PRO|LYS|ASP|THR|PHE|ALA|GLY|HIS|LEU|ARG|TRP|VAL|GLU|TYR)(?<pos>[1-9][0-9]*))" +suffix, Pattern.CASE_INSENSITIVE);
+    //deltaF508, DeltaF508, delF12, DelCys12
+    final private static Pattern codonDeletionPattern = Pattern.compile(prefix +"(?<group>([dD]el(?:ta)?|Δ)(?<wt>[CISQMNPKDTFAGHLRWVEYBZJX])(?<pos>[1-9][0-9]*))" +suffix);
+    final private static Pattern codonDeletionPattern2 = Pattern.compile(prefix +"(?<group>([dD]el(?:ta)?|Δ)(?<wt>CYS|ILE|SER|GLN|MET|ASN|PRO|LYS|ASP|THR|PHE|ALA|GLY|HIS|LEU|ARG|TRP|VAL|GLU|TYR)(?<pos>[1-9][0-9]*))" +suffix, Pattern.CASE_INSENSITIVE);
 
 
     //852insA, 852insAT, 852ins, 852ins22, 852-123insA, 852+123insT
