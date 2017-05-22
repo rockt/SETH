@@ -7,6 +7,7 @@ import de.hu.berlin.wbi.objects.dbSNP;
 import de.hu.berlin.wbi.objects.dbSNPNormalized;
 import junit.framework.Assert;
 import junit.framework.TestCase;
+import org.junit.Ignore;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -16,6 +17,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Properties;
 
+@Ignore("Test is ignored due to unavailable database!")
 public class ITSETHNormalization extends TestCase {
     private DatabaseConnection conn;
 
