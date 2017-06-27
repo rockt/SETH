@@ -29,7 +29,11 @@ public class PointMutation extends Mutation {
 
     private char mutResidue;
 
-    private boolean matchesLongForm;
+    private boolean matchesLongForm; //Gives us a strong hint that a mutation is a PSM (we found Ala instead of A)
+
+    //These are only needed to check if a mutation residue is potentially a nucleotide
+    private final Character []  allowedNucleotides= {'A', 'T', 'G', 'C'};
+    private final Set<Character> nucleotidesSet  = new HashSet<>(Arrays.asList(allowedNucleotides));
 
 
     public PointMutation(String position, String wtResidue, String mutResidue) throws MutationException {
@@ -50,19 +54,19 @@ public class PointMutation extends Mutation {
     }
     
     /**
-     * Only Nucleotide Sequence Mutations (NSM) are allowed to have a positional offset of < 0
-     * This method checks if the position of a mutation is valid;
+     * This method checks if a mutation is potentially valid.
+     * For Protein Sequence Mutations (PSM) this is basically always the case here
+     * For Nucleotide Sequence Mutations (NSM) (i.e., with  negative location or non parseable location), we require that the residues are A/T/G/C
+          *
      * @return true if the detected mutation mention is potentially correct
      */
 	public boolean isValid(){
-    	
+
+
     	try{
     		int pos = Integer.parseInt(this.getPosition());
     		    		    		
     		if(pos <= 0){
-    			
-    			Character []  nucleotides= {'A', 'T', 'G', 'C'};  //TODO: Allow set of nucleotides
-    			Set<Character> nucleotidesSet  = new HashSet<Character>(Arrays.asList(nucleotides));
 
     			if(nucleotidesSet.contains(wtResidue) && nucleotidesSet.contains(mutResidue))
     				return true;
@@ -71,17 +75,48 @@ public class PointMutation extends Mutation {
     		}
     		
     	}catch(NumberFormatException nfe){
-            //If position is not a number (e.g., 123-12, or *12) we assume it is true in case of nucleotides
-            Character []  nucleotides= {'A', 'T', 'G', 'C'};
-            Set<Character> nucleotidesSet  = new HashSet<Character>(Arrays.asList(nucleotides));
 
+    	    //If position is not a number (e.g., 123-12, or *12) we assume it is true in case of nucleotides
             if(nucleotidesSet.contains(wtResidue) && nucleotidesSet.contains(mutResidue))
                 return true;
             else
                 return false;
     	}
-    	return true;
+
+    	return true; //For all other mutations (i.e., PSM)
     }
+
+    /**
+     * Thats unfortunately very confusing, but this method works similar to isNsm; but returns false if it is no NSM
+     * Wheareas isValid returns true as last resort
+     * @return
+     */
+    public boolean isNsm(){
+
+	    try {
+            int pos = Integer.parseInt(this.getPosition());
+            if(pos <= 0){
+
+                if(nucleotidesSet.contains(wtResidue) && nucleotidesSet.contains(mutResidue))
+                    return true;
+                else
+                    return false;
+            }
+
+        }catch(NumberFormatException nfe){
+            //If position is not a number (e.g., 123-12, or *12) we assume it is true in case of nucleotides
+            if(nucleotidesSet.contains(wtResidue) && nucleotidesSet.contains(mutResidue))
+                return true;
+            else
+                return false;
+        }
+
+        return false; //We don't know; it could be NSM or PSM
+    }
+
+
+
+
 
     /**
      * Normalize three-letter and full residue names to their one-letter abbreviations. If a residue identity is passed in which does not fall into

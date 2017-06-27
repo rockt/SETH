@@ -370,7 +370,7 @@ public class MutationFinder extends MutationExtractor {
                 	PointMutation pm = new PointMutation(result.group(pos_group).replaceAll("\\s", ""), result.group(wtres_group), result
 	                        .group(mutres_group));
 
-                    //Add only mutation if it is valid (basically checks location)
+                    //Add only mutation if it is valid (basically checks comination of location and extracted residues)
 	                if(pm.isValid() == false)
 	                	continue;
 

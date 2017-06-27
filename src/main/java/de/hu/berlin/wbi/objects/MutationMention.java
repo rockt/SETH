@@ -56,10 +56,10 @@ public class MutationMention {
     /** Used reference sequence (e.g. c., g., ...) */
     protected String ref;
 
-    /** Wildtype residue. */
+    /** Wildtype residue. (can be null)*/
     protected String wtResidue;
 
-    /** Mutated residue. */
+    /** Mutated residue. (can be null)*/
     protected String mutResidue;
 
     /** Location of the mutation wrt residue or nucleotides*/

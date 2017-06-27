@@ -147,6 +147,10 @@ public class SETH {
                         tmpMutation.setPsm(true);
                         tmpMutation.setAmbiguous(false);
                         tmpMutation.setNsm(false);
+                    }else if(pm.isNsm()){
+                        tmpMutation.setPsm(false);
+                        tmpMutation.setAmbiguous(true);
+                        tmpMutation.setNsm(false);
                     }
 
                     mutations.add(tmpMutation);
