@@ -79,7 +79,6 @@ public class OldNomenclature2 {
 
     }
 
-
     private void loadPatterns(String file){
         patterns = new ArrayList<>();
 
@@ -98,8 +97,7 @@ public class OldNomenclature2 {
                 if(line.startsWith("#") || line.matches("^\\s*$"))
                     continue;
 
-
-                StringBuilder sb = new StringBuilder(Pattern.quote(line));
+                StringBuilder sb = new StringBuilder(line);
                 sb.replace(sb.indexOf("<aa>"), sb.indexOf("<aa>")+"<aa>".length(), "(?<amino>CYS|ILE|SER|GLN|MET|ASN|PRO|LYS|ASP|THR|PHE|ALA|GLY|HIS|LEU|ARG|TRP|VAL|GLU|TYR|ALANINE|GLYCINE|LEUCINE|METHIONINE|PHENYLALANINE|TRYPTOPHAN|LYSINE|GLUTAMINE|GLUTAMIC ACID|GLUTAMATE|ASPARTATE|SERINE|PROLINE|VALINE|ISOLEUCINE|CYSTEINE|TYROSINE|HISTIDINE|ARGININE|ASPARAGINE|ASPARTIC ACID|THREONINE|TERM|STOP|AMBER|UMBER|OCHRE|OPAL)");
                 sb.replace(sb.indexOf("<number>"), sb.indexOf("<number>")+"<number>".length(), "(?<pos>[+-]?[1-9][0-9]*(?:\\s?[+-_]\\s?[1-9][0-9]*)?)");
                 sb.replace(sb.indexOf("<kw>"), sb.indexOf("<kw>")+"<kw>".length(), "(?<mod>" +modifications.toString() +")");
@@ -130,15 +128,15 @@ public class OldNomenclature2 {
                 int start = m.start(2);
                 int end   = m.start(2)+m.group("group").length();
 
-                Type type = modificationToType.get(m.group("kw"));
+                Type type = modificationToType.get(m.group("mod"));
 
                 MutationMention mm;
                 switch (type) {
                     case DELETION:
-                        mm = new MutationMention(start, end, text.substring(start, end), "??", m.group("number"), m.group("aa"), null, type, MutationMention.Tool.REGEX);
+                        mm = new MutationMention(start, end, text.substring(start, end), "??", m.group("pos"), m.group("amino"), null, type, MutationMention.Tool.REGEX);
                         break;
                     default:
-                        mm = new MutationMention(start, end, text.substring(start, end), "??", m.group("number"), null, m.group("aa"), type, MutationMention.Tool.REGEX);
+                        mm = new MutationMention(start, end, text.substring(start, end), "??", m.group("pos"), null, m.group("amino"), type, MutationMention.Tool.REGEX);
                 }
 
 
