@@ -26,19 +26,50 @@ public class OldNomenclature2 {
 
 
     private static List<Pattern> patterns; //All patterns
-    private final Map<String, Type> modificationToType;
+    private  Map<String, Type> modificationToType;
 
-
+    private final Map<String, String> abbreviationLookup;
 
     public OldNomenclature2(String regexFile){
         this();
 
         loadPatterns(regexFile);
+
     }
 
 
     public OldNomenclature2(){
         super();
+
+        abbreviationLookup= new HashMap<>();
+        abbreviationLookup.putAll(MutationFinder.populateAminoAcidThreeToOneLookupMap);
+        abbreviationLookup.putAll(MutationFinder.populateAminoAcidNameToOneLookupMap);
+
+        abbreviationLookup.put("A", "A");
+        abbreviationLookup.put("G", "G");
+        abbreviationLookup.put("L", "L");
+        abbreviationLookup.put("M", "M");
+        abbreviationLookup.put("F", "F");
+        abbreviationLookup.put("W", "W");
+        abbreviationLookup.put("K", "K");
+        abbreviationLookup.put("Q", "Q");
+        abbreviationLookup.put("E", "E");
+        abbreviationLookup.put("S", "S");
+        abbreviationLookup.put("P", "P");
+        abbreviationLookup.put("V", "V");
+        abbreviationLookup.put("I", "I");
+        abbreviationLookup.put("C", "C");
+        abbreviationLookup.put("Y", "Y");
+        abbreviationLookup.put("H", "H");
+        abbreviationLookup.put("R", "R");
+        abbreviationLookup.put("N", "N");
+        abbreviationLookup.put("D", "D");
+        abbreviationLookup.put("T", "T");
+        abbreviationLookup.put("B","B");
+        abbreviationLookup.put("Z","Z");
+        abbreviationLookup.put("J","J");
+        abbreviationLookup.put("X", "X");
+        abbreviationLookup.put("*", "X");
 
         modificationToType = new HashMap<>();
         modificationToType.put("deletion", Type.DELETION);
@@ -126,29 +157,62 @@ public class OldNomenclature2 {
             Matcher m = pattern.matcher(text);
             while(m.find()){
                 int start = m.start(2);
-                int end   = m.start(2)+m.group("group").length();
+                int end   = m.start(2) + m.group("group").length();
 
                 Type type = modificationToType.get(m.group("mod"));
+                String amino = m.group("amino");
+                String location = m.group("pos");
+
+                String shortAminoName = amino.toUpperCase();
+                if (abbreviationLookup.containsKey(shortAminoName)) {
+                    shortAminoName = abbreviationLookup.get(shortAminoName);
+                }
+
 
                 MutationMention mm;
                 switch (type) {
                     case DELETION:
-                        mm = new MutationMention(start, end, text.substring(start, end), "??", m.group("pos"), m.group("amino"), null, type, MutationMention.Tool.REGEX);
+                        mm = new MutationMention(start, end, text.substring(start, end), null, location, shortAminoName, null, type, MutationMention.Tool.REGEX);
                         break;
                     default:
-                        mm = new MutationMention(start, end, text.substring(start, end), "??", m.group("pos"), null, m.group("amino"), type, MutationMention.Tool.REGEX);
+                        mm = new MutationMention(start, end, text.substring(start, end), null, location, null, shortAminoName, type, MutationMention.Tool.REGEX);
                 }
 
+                if(amino.length() > 1 && !amino.equals(shortAminoName)){
+                    mm.setPsm(true);
+                    mm.setNsm(false);
+                    mm.setAmbiguous(false);
+                }
 
-                //TODO!!
-                //mm.setPsm(false);
-                //mm.setNsm(true);
-                //mm.setAmbiguous(false);
-                result.add(mm);
+                else if(this.isLikelyNsm(location)){
+                    mm.setPsm(false);
+                    mm.setNsm(true);
+                    mm.setAmbiguous(false);
+                }
+
             }
         }
 
         return result;
+    }
+
+    /**
+     * If a location is negative or throws a number format exception, we assume that it is a NSM and not a PSM
+     * @param location
+     * @return
+     */
+    private boolean isLikelyNsm(String location){
+
+        try{
+            int pos = Integer.parseInt(location);
+            if(pos < 0)
+                return true;
+        }catch(NumberFormatException nfe){
+            System.out.println(location);
+            return true;
+        }
+
+        return false;
     }
 
 }
