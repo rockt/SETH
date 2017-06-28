@@ -129,7 +129,7 @@ public class OldNomenclature2 {
                     continue;
 
                 StringBuilder sb = new StringBuilder(line);
-                sb.replace(sb.indexOf("<aa>"), sb.indexOf("<aa>")+"<aa>".length(), "(?<amino>CYS|ILE|SER|GLN|MET|ASN|PRO|LYS|ASP|THR|PHE|ALA|GLY|HIS|LEU|ARG|TRP|VAL|GLU|TYR|ALANINE|GLYCINE|LEUCINE|METHIONINE|PHENYLALANINE|TRYPTOPHAN|LYSINE|GLUTAMINE|GLUTAMIC ACID|GLUTAMATE|ASPARTATE|SERINE|PROLINE|VALINE|ISOLEUCINE|CYSTEINE|TYROSINE|HISTIDINE|ARGININE|ASPARAGINE|ASPARTIC ACID|THREONINE|TERM|STOP|AMBER|UMBER|OCHRE|OPAL)");
+                sb.replace(sb.indexOf("<aa>"), sb.indexOf("<aa>")+"<aa>".length(), "(?<amino>[ATGC]+|[ISQMNPKDFHLRWVEYBZJX*]|CYS|ILE|SER|GLN|MET|ASN|PRO|LYS|ASP|THR|PHE|ALA|GLY|HIS|LEU|ARG|TRP|VAL|GLU|TYR|ALANINE|GLYCINE|LEUCINE|METHIONINE|PHENYLALANINE|TRYPTOPHAN|LYSINE|GLUTAMINE|GLUTAMIC ACID|GLUTAMATE|ASPARTATE|SERINE|PROLINE|VALINE|ISOLEUCINE|CYSTEINE|TYROSINE|HISTIDINE|ARGININE|ASPARAGINE|ASPARTIC ACID|THREONINE|TERM|STOP|AMBER|UMBER|OCHRE|OPAL)");
                 sb.replace(sb.indexOf("<number>"), sb.indexOf("<number>")+"<number>".length(), "(?<pos>[+-]?[1-9][0-9]*(?:\\s?[+-_]\\s?[1-9][0-9]*)?)");
                 sb.replace(sb.indexOf("<kw>"), sb.indexOf("<kw>")+"<kw>".length(), "(?<mod>" +modifications.toString() +")");
 
@@ -156,10 +156,11 @@ public class OldNomenclature2 {
         for(Pattern pattern : patterns){
             Matcher m = pattern.matcher(text);
             while(m.find()){
+
                 int start = m.start(2);
                 int end   = m.start(2) + m.group("group").length();
 
-                Type type = modificationToType.get(m.group("mod"));
+                Type type = modificationToType.get(m.group("mod").toLowerCase());
                 String amino = m.group("amino");
                 String location = m.group("pos");
 
@@ -167,7 +168,6 @@ public class OldNomenclature2 {
                 if (abbreviationLookup.containsKey(shortAminoName)) {
                     shortAminoName = abbreviationLookup.get(shortAminoName);
                 }
-
 
                 MutationMention mm;
                 switch (type) {
@@ -190,6 +190,7 @@ public class OldNomenclature2 {
                     mm.setAmbiguous(false);
                 }
 
+                result.add(mm);
             }
         }
 
