@@ -12,7 +12,8 @@ import java.io.IOException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * This class can be used to find mutation mentions (deletions, IVS-substitions, insertions, and frameshifts)
  * written in  deprecated nomenclature
@@ -20,23 +21,19 @@ import java.util.regex.Pattern;
  */
 public class OldNomenclature2 {
 
+    final private  Logger logger = LoggerFactory.getLogger(OldNomenclature2.class);
+
     final private static String prefix="(^|[\\s\\(\\)\\[\\'\"/,])"; //>
     final private static String suffix="(?=([\\.,\\s\\)\\(\\]\\'\":;\\-/]|$))";
 
-
-
-    private static List<Pattern> patterns; //All patterns
+    private static List<Pattern> patterns; //All patterns used for finding mutations
     private  Map<String, Type> modificationToType;
-
     private final Map<String, String> abbreviationLookup;
 
     public OldNomenclature2(String regexFile){
         this();
-
         loadPatterns(regexFile);
-
     }
-
 
     public OldNomenclature2(){
         super();
@@ -140,15 +137,12 @@ public class OldNomenclature2 {
             }
             br.close();
         }catch(IOException iox){
-            System.err.println("Problem loading patterns for old nomenclature!");
-            iox.printStackTrace();
+            logger.error("Problem loading patterns for old nomenclature!", iox);
         }
+        logger.info("Loaded {} patterns", patterns.size());
     }
 
     // TODO: Check if we get same results as with old nomenclature
-    // TODO Add normalization of amino acids
-    // TODO Add ATGC and so on for one letter abbreviations
-
     public List<MutationMention> extractFromString(String text){
 
         List<MutationMention> result = new ArrayList<MutationMention>();
@@ -156,6 +150,8 @@ public class OldNomenclature2 {
         for(Pattern pattern : patterns){
             Matcher m = pattern.matcher(text);
             while(m.find()){
+
+                logger.debug("Found mutation mention '{}'", m.group("group"));
 
                 int start = m.start(2);
                 int end   = m.start(2) + m.group("group").length();
