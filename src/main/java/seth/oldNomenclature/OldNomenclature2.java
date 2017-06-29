@@ -234,6 +234,10 @@ public class OldNomenclature2 {
                 int end   = m.start(2) + m.group("group").length();
 
                 Type type = modificationToType.get(m.group("mod").toLowerCase());
+                if ( type == null){
+                    logger.error("Cannot find modification type for '{}'; skipping mention", m.group("mod"));
+                    continue;
+                }
                 String amino = m.group("amino");
                 String location = m.group("pos");
 
