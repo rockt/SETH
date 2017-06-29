@@ -2,13 +2,9 @@ package seth.oldNomenclature;
 
 import de.hu.berlin.wbi.objects.MutationMention;
 import edu.uchsc.ccp.nlp.ei.mutation.MutationFinder;
-import org.apache.oro.text.regex.Perl5Compiler;
 import seth.ner.wrapper.Type;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -23,22 +19,49 @@ public class OldNomenclature2 {
 
     final private  Logger logger = LoggerFactory.getLogger(OldNomenclature2.class);
 
-    final private static String prefix="(^|[\\s\\(\\)\\[\\'\"/,])"; //>
+    final private static String prefix="(^|[_\\s\\(\\)\\[\\'\"/,;:])"; //>
     final private static String suffix="(?=([\\.,\\s\\)\\(\\]\\'\":;\\-/]|$))";
 
-    private static List<Pattern> patterns; //All patterns used for finding mutations
-    private  Map<String, Type> modificationToType;
-    private final Map<String, String> abbreviationLookup;
+    private final List<Pattern> patterns = new ArrayList<>(); //All patterns used for finding mutations
+    private final Map<String, Type> modificationToType = new HashMap<>();
+    private final Map<String, String> abbreviationLookup = new HashMap<>();
 
-    public OldNomenclature2(String regexFile){
-        this();
-        loadPatterns(regexFile);
-    }
+    private final String defaultPatternsPath = "/media/philippe/5f695998-f5a5-4389-a2d8-4cf3ffa1288a/data/pubmed/rawInsDels.sorted.annotated";//TODO set correct path
 
+
+    /**
+     * Initialization of OldNomenclature-Matcher requires a set of regular expressions that will be used to detect deletions/insertions/....
+     * This constructor loads the regular expressions from the packed JAR.
+     * Substitutions in deprecated nomenclature are detected using the MutationFinder module
+     */
     public OldNomenclature2(){
         super();
+        initializeHashMaps();
 
-        abbreviationLookup= new HashMap<>();
+        loadRegularExpressionsFromJar(defaultPatternsPath);
+    }
+
+    /**
+     * Initialization of OldNomenclature-Matcher requires a set of regular expressions that will be used to detect deletions/insertions/....
+     * This constructor loads the regular expressions from a file designated by the filename input parameter.
+     * Substitutions in deprecated nomenclature are detected using the MutationFinder module
+     * <br>
+     * <br>
+     *
+     * @param fileName Name of the file, where the regular expressions can be found
+     */
+    public OldNomenclature2(String fileName){
+        super();
+        initializeHashMaps();
+
+        loadRegularExpressionsFromFile(new File(fileName));
+    }
+
+
+    /**
+     * Method is called in the constructors to initialize the Maps
+     */
+    private void initializeHashMaps(){
         abbreviationLookup.putAll(MutationFinder.populateAminoAcidThreeToOneLookupMap);
         abbreviationLookup.putAll(MutationFinder.populateAminoAcidNameToOneLookupMap);
 
@@ -68,7 +91,6 @@ public class OldNomenclature2 {
         abbreviationLookup.put("X", "X");
         abbreviationLookup.put("*", "X");
 
-        modificationToType = new HashMap<>();
         modificationToType.put("deletion", Type.DELETION);
         modificationToType.put("deletions", Type.DELETION);
         modificationToType.put("deleted", Type.DELETION);
@@ -104,11 +126,65 @@ public class OldNomenclature2 {
 
         modificationToType.put("frameshift", Type.FRAMESHIFT);
         modificationToType.put("fs", Type.FRAMESHIFT);
-
     }
 
-    private void loadPatterns(String file){
-        patterns = new ArrayList<>();
+
+    /*
+    * Loads regular_expressions from file.
+    */
+    private void loadRegularExpressionsFromFile(File file) {
+
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new FileReader(file));
+            loadRegularExpressionsFromStream(br);
+        } catch (FileNotFoundException fnfe) {
+            logger.warn("The file containing regular expressions could not be found: " + file.getAbsolutePath() + File.separator + file.getName() +"\n trying to load from Java Archive");
+            loadRegularExpressionsFromJar(defaultPatternsPath);
+        }
+        finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (Exception e) {
+                    // ignore exception
+                }
+            }
+        }
+    }
+
+
+    /*
+    * Loads regular_expressions from Java-Archive.
+    */
+    private void loadRegularExpressionsFromJar(String file) {
+        logger.info("Loading regular expressions from Java Archive at location '" +file +"'");
+        InputStream is = this.getClass().getResourceAsStream(file);
+        BufferedReader br = new BufferedReader(new InputStreamReader(is));
+        try{
+            loadRegularExpressionsFromStream(br);
+        }catch(Exception ex){
+            logger.error("Error in fallback code for reading mutation-finder file from Java Archive", ex);
+        }
+        finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (Exception e) {
+                    // ignore exception
+                }
+            }
+        }
+    }
+
+
+    /**
+     * Helper method which loads a set of regular expressions from a BufferedReader
+     * This method is used for loading regex from a file or the java-archive
+     * @param br buffer to read the regex from
+     */
+    private void loadRegularExpressionsFromStream(BufferedReader br) {
+
 
         StringBuilder modifications = new StringBuilder();
         for(String key :modificationToType.keySet()){
@@ -119,7 +195,6 @@ public class OldNomenclature2 {
 
 
         try{
-            BufferedReader br = new BufferedReader(new FileReader(new File(file)));
             while(br.ready()){
                 String line = br.readLine();
                 if(line.startsWith("#") || line.matches("^\\s*$"))
@@ -142,7 +217,9 @@ public class OldNomenclature2 {
         logger.info("Loaded {} patterns", patterns.size());
     }
 
+
     // TODO: Check if we get same results as with old nomenclature
+    //TODO: Add pattern line count information
     public List<MutationMention> extractFromString(String text){
 
         List<MutationMention> result = new ArrayList<MutationMention>();
@@ -186,6 +263,8 @@ public class OldNomenclature2 {
                     mm.setAmbiguous(false);
                 }
 
+                //mm.getPatternId();//TODO
+
                 result.add(mm);
             }
         }
@@ -205,7 +284,7 @@ public class OldNomenclature2 {
             if(pos < 0)
                 return true;
         }catch(NumberFormatException nfe){
-            System.out.println(location);
+            logger.trace("Mutation tagged as likely NSM due to {} ", location);
             return true;
         }
 
