@@ -126,6 +126,12 @@ public class OldNomenclature2 {
 
         modificationToType.put("frameshift", Type.FRAMESHIFT);
         modificationToType.put("fs", Type.FRAMESHIFT);
+
+        modificationToType.put("conversion", Type.CONVERSION);
+        modificationToType.put("conversions", Type.CONVERSION);
+        modificationToType.put("converting", Type.CONVERSION);
+        modificationToType.put("converted", Type.CONVERSION);
+        modificationToType.put("conv", Type.CONVERSION);
     }
 
 
@@ -186,13 +192,11 @@ public class OldNomenclature2 {
     private void loadRegularExpressionsFromStream(BufferedReader br) {
 
 
-        StringBuilder modifications = new StringBuilder();
-        for(String key :modificationToType.keySet()){
-            modifications.append(key);
-            modifications.append("|");
-        }
-        modifications.deleteCharAt(modifications.length()-1);
-
+        String aa ="(?<amino>[ATGC]+|(?:A(?:LA(?:NINE)?|MBER|RG(?:ININE)?|S(?:P(?:AR(?:T(?:IC ACID|ATE)|AGINE))?|N|X))|MET(?:HIONINE)?|CYS(?:TEINE)?|L(?:EU(?:CINE)?|YS(?:INE)?)|O(?:CHRE|PAL)|I(?:SOLEUCINE|LE)|UMBER|T(?:ER(?:M)?|R(?:P|YPTOPHAN)|HR(?:EONINE)?|YR(?:OSINE)?)|VAL(?:INE)?|P(?:HE(?:NYLALANINE)?|RO(?:LINE)?)|S(?:T(?:P|OP)|ER(?:INE)?)|GL(?:U(?:TAM(?:ATE|I(?:C ACID|NE)))?|N|Y(?:CINE)?|X)|HIS(?:TIDINE)?|XLE))";
+        String location = "(?<pos>[+-]?[1-9][0-9]*(?:\\s?[+-_]\\s?[1-9][0-9]*)?)";
+        String modification = "(?<mod>"
+                +"conv|conversion|conversions|converted|converting|del|deleted|deleting|deletion|deletions|delta|dup|duplicated|duplicating|duplication|duplications|frameshift|fs|ins|ins/del|insdel|inserted|inserting|insertion|insertions|inv|inversion|inversions|inverted|inverting|translocated|translocation|translocations|Δ"
+                +")";
 
         try{
             while(br.ready()){
@@ -201,14 +205,15 @@ public class OldNomenclature2 {
                     continue;
 
                 StringBuilder sb = new StringBuilder(line);
-                sb.replace(sb.indexOf("<aa>"), sb.indexOf("<aa>")+"<aa>".length(), "(?<amino>[ATGC]+|[ISQMNPKDFHLRWVEYBZJX*]|CYS|ILE|SER|GLN|MET|ASN|PRO|LYS|ASP|THR|PHE|ALA|GLY|HIS|LEU|ARG|TRP|VAL|GLU|TYR|ALANINE|GLYCINE|LEUCINE|METHIONINE|PHENYLALANINE|TRYPTOPHAN|LYSINE|GLUTAMINE|GLUTAMIC ACID|GLUTAMATE|ASPARTATE|SERINE|PROLINE|VALINE|ISOLEUCINE|CYSTEINE|TYROSINE|HISTIDINE|ARGININE|ASPARAGINE|ASPARTIC ACID|THREONINE|TERM|STOP|AMBER|UMBER|OCHRE|OPAL)");
-                sb.replace(sb.indexOf("<number>"), sb.indexOf("<number>")+"<number>".length(), "(?<pos>[+-]?[1-9][0-9]*(?:\\s?[+-_]\\s?[1-9][0-9]*)?)");
-                sb.replace(sb.indexOf("<kw>"), sb.indexOf("<kw>")+"<kw>".length(), "(?<mod>" +modifications.toString() +")");
+                sb.replace(sb.indexOf("<aa>"), sb.indexOf("<aa>")+"<aa>".length(), aa);
+                sb.replace(sb.indexOf("<number>"), sb.indexOf("<number>")+"<number>".length(), location);
+                sb.replace(sb.indexOf("<kw>"), sb.indexOf("<kw>")+"<kw>".length(), modification);
 
                 sb.insert(0, prefix +"(?<group>");
                 sb.append(")" +suffix);
 
-                patterns.add(Pattern.compile(sb.toString(), Pattern.CASE_INSENSITIVE));
+                final Pattern pattern = Pattern.compile(sb.toString(), Pattern.CASE_INSENSITIVE);
+                patterns.add(pattern);
             }
             br.close();
         }catch(IOException iox){
@@ -220,6 +225,7 @@ public class OldNomenclature2 {
 
     // TODO: Check if we get same results as with old nomenclature
     //TODO: Add pattern line count information
+    //TODO: Add long form amino acids for grounding
     public List<MutationMention> extractFromString(String text){
 
         List<MutationMention> result = new ArrayList<MutationMention>();
@@ -293,6 +299,12 @@ public class OldNomenclature2 {
         }
 
         return false;
+    }
+
+    public static void main(String[] args) throws IOException {
+        final OldNomenclature2 oldNomenclature2 = new OldNomenclature2("/media/philippe/5f695998-f5a5-4389-a2d8-4cf3ffa1288a/data/pubmed/rawInsDels.sorted.annotated");
+
+
     }
 
 }
