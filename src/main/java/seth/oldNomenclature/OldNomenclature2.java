@@ -192,11 +192,12 @@ public class OldNomenclature2 {
     private void loadRegularExpressionsFromStream(BufferedReader br) {
 
 
-        String aa ="(?<amino>[ATGC]+|(?:A(?:LA(?:NINE)?|MBER|RG(?:ININE)?|S(?:P(?:AR(?:T(?:IC ACID|ATE)|AGINE))?|N|X))|MET(?:HIONINE)?|CYS(?:TEINE)?|L(?:EU(?:CINE)?|YS(?:INE)?)|O(?:CHRE|PAL)|I(?:SOLEUCINE|LE)|UMBER|T(?:ER(?:M)?|R(?:P|YPTOPHAN)|HR(?:EONINE)?|YR(?:OSINE)?)|VAL(?:INE)?|P(?:HE(?:NYLALANINE)?|RO(?:LINE)?)|S(?:T(?:P|OP)|ER(?:INE)?)|GL(?:U(?:TAM(?:ATE|I(?:C ACID|NE)))?|N|Y(?:CINE)?|X)|HIS(?:TIDINE)?|XLE))";
+        String aa ="(?<amino>[ATGC]+|[CISQMNPKDTFAGHLRWVEYBZJX*]|(?:A(?:LA(?:NINE)?|MBER|RG(?:ININE)?|S(?:P(?:AR(?:T(?:IC ACID|ATE)|AGINE))?|N|X))|MET(?:HIONINE)?|CYS(?:TEINE)?|L(?:EU(?:CINE)?|YS(?:INE)?)|O(?:CHRE|PAL)|I(?:SOLEUCINE|LE)|UMBER|T(?:ER(?:M)?|R(?:P|YPTOPHAN)|HR(?:EONINE)?|YR(?:OSINE)?)|VAL(?:INE)?|P(?:HE(?:NYLALANINE)?|RO(?:LINE)?)|S(?:T(?:P|OP)|ER(?:INE)?)|GL(?:U(?:TAM(?:ATE|I(?:C ACID|NE)))?|N|Y(?:CINE)?|X)|HIS(?:TIDINE)?|XLE))";
         String location = "(?<pos>[+-]?[1-9][0-9]*(?:\\s?[+-_]\\s?[1-9][0-9]*)?)";
         String modification = "(?<mod>"
-                +"conv|conversion|conversions|converted|converting|del|deleted|deleting|deletion|deletions|delta|dup|duplicated|duplicating|duplication|duplications|frameshift|fs|ins|ins/del|insdel|inserted|inserting|insertion|insertions|inv|inversion|inversions|inverted|inverting|translocated|translocation|translocations|Δ"
+                +"conv|conversion|conversions|converted|converting|Δ|del|deleted|deleting|deletion|deletions|delta|dup|duplicated|duplicating|duplication|duplications|frameshift|fs|ins|ins\\/del|insdel|inserted|inserting|insertion|insertions|inv|inversion|inversions|inverted|inverting|translocated|translocation|translocations"
                 +")";
+
 
         try{
             while(br.ready()){
@@ -209,8 +210,10 @@ public class OldNomenclature2 {
                 sb.replace(sb.indexOf("<number>"), sb.indexOf("<number>")+"<number>".length(), location);
                 sb.replace(sb.indexOf("<kw>"), sb.indexOf("<kw>")+"<kw>".length(), modification);
 
-                sb.insert(0, prefix +"(?<group>");
-                sb.append(")" +suffix);
+                sb.insert(0,"(?<group>");
+                sb.insert(0, prefix);
+                sb.append(")" );
+                sb.append(suffix);
 
                 final Pattern pattern = Pattern.compile(sb.toString(), Pattern.CASE_INSENSITIVE);
                 patterns.add(pattern);
