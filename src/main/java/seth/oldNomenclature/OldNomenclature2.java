@@ -192,12 +192,22 @@ public class OldNomenclature2 {
     private void loadRegularExpressionsFromStream(BufferedReader br) {
 
 
-        String aa ="(?<amino>[ATGC]+|[CISQMNPKDTFAGHLRWVEYBZJX*]|(?:A(?:LA(?:NINE)?|MBER|RG(?:ININE)?|S(?:P(?:AR(?:T(?:IC ACID|ATE)|AGINE))?|N|X))|MET(?:HIONINE)?|CYS(?:TEINE)?|L(?:EU(?:CINE)?|YS(?:INE)?)|O(?:CHRE|PAL)|I(?:SOLEUCINE|LE)|UMBER|T(?:ER(?:M)?|R(?:P|YPTOPHAN)|HR(?:EONINE)?|YR(?:OSINE)?)|VAL(?:INE)?|P(?:HE(?:NYLALANINE)?|RO(?:LINE)?)|S(?:T(?:P|OP)|ER(?:INE)?)|GL(?:U(?:TAM(?:ATE|I(?:C ACID|NE)))?|N|Y(?:CINE)?|X)|HIS(?:TIDINE)?|XLE))";
+        //String aa ="(?<amino>[ATGC]+|[CISQMNPKDTFAGHLRWVEYBZJX*]|(?:A(?:LA(?:NINE)?|MBER|RG(?:ININE)?|S(?:P(?:AR(?:T(?:IC ACID|ATE)|AGINE))?|N|X))|MET(?:HIONINE)?|CYS(?:TEINE)?|L(?:EU(?:CINE)?|YS(?:INE)?)|O(?:CHRE|PAL)|I(?:SOLEUCINE|LE)|UMBER|T(?:ER(?:M)?|R(?:P|YPTOPHAN)|HR(?:EONINE)?|YR(?:OSINE)?)|VAL(?:INE)?|P(?:HE(?:NYLALANINE)?|RO(?:LINE)?)|S(?:T(?:P|OP)|ER(?:INE)?)|GL(?:U(?:TAM(?:ATE|I(?:C ACID|NE)))?|N|Y(?:CINE)?|X)|HIS(?:TIDINE)?|XLE))";
+        String aa ="(?<amino>[ATGC]+|[CISQMNPKDTFAGHLRWVEYBZJX*]|(?:[Al]la|[Gg]ly|[Ll]eu|[Mm]et|[Pp]he|[Tt]rp|[Ll]ys|[Gg]ln|[Gg]lu|[Ss]er|[Pp]ro|[Vv]al|[Ii]le|[Cc]ys|[Tt]yr|[Hh]is|[Aa]rg|[Aa]sn|[Aa]sp|[Tt]hr|[Aa]sx|[Gg]lx|[Xx]le|[Tt]er|[Ss]tp" +
+                "|[Aa]lanine|[Gg]lycine|[Ll]eucine|[Mm]ethionine|[Pp]henylalanine|[Tt]ryptophan|[Ll]ysine|[Gg]lutamine|[Gg]lutamic [Aa]cid|[Gg]lutamate|[Aa]spartate|[Ss]erine|[Pp]roline|[Vv]aline|[Ii]soleucine|[Cc]ysteine|[T]yrosine|[Hh]istidine|[Aa]rginine|[Aa]sparagine|[Aa]spartic [Aa]cid|[Tt]hreonine|[Tt]erm|[Ss]top|[Aa]mber|[Uu]mber|[Oo]chre|[Oo]pal))";
+
         String location = "(?<pos>[+-]?[1-9][0-9]*(?:\\s?[+-_]\\s?[1-9][0-9]*)?)";
         String modification = "(?<mod>"
-                +"conv|conversion|conversions|converted|converting|Δ|del|deleted|deleting|deletion|deletions|delta|dup|duplicated|duplicating|duplication|duplications|frameshift|fs|ins|ins\\/del|insdel|inserted|inserting|insertion|insertions|inv|inversion|inversions|inverted|inverting|translocated|translocation|translocations"
+                +"[Cc]onv|[Cc]onversion|[Cc]onversions|[Cc]onverted|[Cc]onverting" +
+                "|Δ|[Dd]el|[Dd]eleted|[Dd]eleting|[Dd]eletion|[Dd]eletions|[Dd]elta" +
+                "|[Dd]up|[Dd]uplicated|[Dd]uplicating|[Dd]uplication|[Dd]uplications" +
+                "|[Ff]rameshift|fs|" +
+                "[Ii]ns|[Ii]ns\\/del|[Ii]nsdel" +
+                "|[Ii]nserted|[Ii]nserting|[Ii]nsertion|[Ii]nsertions" +
+                "|[Ii]nv|[Ii]nversion|[Ii]nversions" +
+                "|[Ii]nverted|[Ii]nverting" +
+                "|[Tt]translocated|[Tt]ranslocation|[Tt]ranslocations"
                 +")";
-
 
         try{
             while(br.ready()){
@@ -215,7 +225,8 @@ public class OldNomenclature2 {
                 sb.append(")" );
                 sb.append(suffix);
 
-                final Pattern pattern = Pattern.compile(sb.toString(), Pattern.CASE_INSENSITIVE);
+                //final Pattern pattern = Pattern.compile(sb.toString(), Pattern.CASE_INSENSITIVE);
+                final Pattern pattern = Pattern.compile(sb.toString());
                 patterns.add(pattern);
             }
             br.close();
@@ -281,6 +292,7 @@ public class OldNomenclature2 {
                 result.add(mm);
             }
         }
+
 
         return result;
     }
