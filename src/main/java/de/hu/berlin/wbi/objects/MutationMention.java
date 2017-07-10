@@ -21,7 +21,7 @@ import java.util.zip.GZIPInputStream;
  * @author Philippe Thomas
  *
  */
-public class MutationMention {
+public class MutationMention implements Comparable<MutationMention>{
 
     private final static Logger logger = LoggerFactory.getLogger(MutationMention.class);
 
@@ -1173,4 +1173,24 @@ public class MutationMention {
         else
             return text;
     }
+
+    @Override
+    public int compareTo(MutationMention other) {
+
+        //First Compare by text-lication
+        if(!this.location.equals(other.location))
+            return this.getLocation().compareTo(other.getLocation());
+
+        //Second compare by Tool-Type
+        if(!this.tool.equals(other.tool))
+            return this.tool.compareTo(other.tool);
+
+        //Third, compare by Type
+        if(!this.type.equals(other.type))
+            return this.type.compareTo(other.type);
+
+
+        return 0;
+    }
+
 }

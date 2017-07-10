@@ -1,6 +1,8 @@
 package seth.oldNomenclature;
 
+import de.hu.berlin.wbi.objects.EntityOffset;
 import de.hu.berlin.wbi.objects.MutationMention;
+import edu.uchsc.ccp.nlp.ei.mutation.Mutation;
 import edu.uchsc.ccp.nlp.ei.mutation.MutationFinder;
 import seth.ner.wrapper.Type;
 
@@ -8,8 +10,12 @@ import java.io.*;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import seth.seth.eval.Entity;
+
 /**
  * This class can be used to find mutation mentions (deletions, IVS-substitions, insertions, and frameshifts)
  * written in  deprecated nomenclature
@@ -22,7 +28,7 @@ public class OldNomenclature2 {
     final private static String prefix="(^|[_\\s\\(\\)\\[\\'\"/,;:])"; //>
     final private static String suffix="(?=([\\.,\\s\\)\\(\\]\\'\":;\\-/]|$))";
 
-    private final List<Pattern> patterns = new ArrayList<>(); //All patterns used for finding mutations
+    private final List<NomenclaturePattern> patterns = new ArrayList<>(); //All patterns used for finding mutations
     private final Map<String, Type> modificationToType = new HashMap<>();
     private final Map<String, String> abbreviationLookup = new HashMap<>();
 
@@ -210,8 +216,10 @@ public class OldNomenclature2 {
                 +")";
 
         try{
+            int nLine=0;
             while(br.ready()){
                 String line = br.readLine();
+                nLine++;
                 if(line.startsWith("#") || line.matches("^\\s*$"))
                     continue;
 
@@ -226,7 +234,8 @@ public class OldNomenclature2 {
                 sb.append(suffix);
 
                 //final Pattern pattern = Pattern.compile(sb.toString(), Pattern.CASE_INSENSITIVE);
-                final Pattern pattern = Pattern.compile(sb.toString());
+                //final Pattern pattern = Pattern.compile(sb.toString());
+                final NomenclaturePattern pattern = new NomenclaturePattern(Pattern.compile(sb.toString()), sb.toString(), nLine);
                 patterns.add(pattern);
             }
             br.close();
@@ -238,14 +247,13 @@ public class OldNomenclature2 {
 
 
     // TODO: Check if we get same results as with old nomenclature
-    //TODO: Add pattern line count information
     //TODO: Add long form amino acids for grounding
     public List<MutationMention> extractFromString(String text){
 
         List<MutationMention> result = new ArrayList<MutationMention>();
 
-        for(Pattern pattern : patterns){
-            Matcher m = pattern.matcher(text);
+        for(NomenclaturePattern pattern : patterns){
+            Matcher m = pattern.getPattern().matcher(text);
             while(m.find()){
 
                 logger.debug("Found mutation mention '{}'", m.group("group"));
@@ -287,9 +295,39 @@ public class OldNomenclature2 {
                     mm.setAmbiguous(false);
                 }
 
-                //mm.getPatternId();//TODO
+                mm.setPatternId(pattern.getId());
 
                 result.add(mm);
+            }
+        }
+
+        /**
+         * This code removes some duplicated items;
+         * Mutation mentions containing a "-" are sometimes found several times; usually with and without a negative location
+         * Here we remove the mention with negative offset
+         * e.g., deletion of Ala-12; the "-" is not used to indicate "-12", but "12"
+         * TODO: Move in seprate metod
+         */
+        Map<EntityOffset, List<MutationMention>> groupByOffset = result.stream().collect(Collectors.groupingBy(w -> w.getLocation()));
+        for(EntityOffset key : groupByOffset.keySet()){
+            List<MutationMention> mentions = groupByOffset.get(key);
+            //?Potential? problem in these cases
+            if(mentions.size() > 1){
+                logger.warn("Found several mentions for String '{}'", text.substring(key.getStart(), key.getStop()));
+
+                List<MutationMention> delete = new ArrayList<>();
+                for(int i =0; i <mentions.size(); i++){
+                    MutationMention mm1 = mentions.get(i);
+                    for(int j =i+1; j < mentions.size(); j++){
+                        MutationMention mm2 = mentions.get(j);
+                        if(mm1.getPosition().startsWith("-") && !mm2.getPosition().startsWith("-"))
+                            delete.add(mm1);
+                        else if (!mm1.getPosition().startsWith("-") && mm2.getPosition().startsWith("-"))
+                            delete.add(mm2);
+                    }
+                }
+
+                result.removeAll(delete);
             }
         }
 

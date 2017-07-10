@@ -6,7 +6,8 @@ package de.hu.berlin.wbi.objects;
  * @author Philippe Thomas
  * 
  */
-public class EntityOffset {
+public class EntityOffset implements Comparable<EntityOffset>{
+
 
 	/** First character, inclusive, zero-based. */
 	private int start;
@@ -89,4 +90,14 @@ public class EntityOffset {
 		return true;
 	}
 
+	@Override
+	public int compareTo(EntityOffset that) {
+		if(this.start != that.start)
+			return this.start - that.start;
+
+		if(this.stop != that.stop)
+			return this.stop - that.stop;
+
+		return 0;
+	}
 }
