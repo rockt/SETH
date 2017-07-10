@@ -197,8 +197,6 @@ public class OldNomenclature2 {
      */
     private void loadRegularExpressionsFromStream(BufferedReader br) {
 
-
-        //String aa ="(?<amino>[ATGC]+|[CISQMNPKDTFAGHLRWVEYBZJX*]|(?:A(?:LA(?:NINE)?|MBER|RG(?:ININE)?|S(?:P(?:AR(?:T(?:IC ACID|ATE)|AGINE))?|N|X))|MET(?:HIONINE)?|CYS(?:TEINE)?|L(?:EU(?:CINE)?|YS(?:INE)?)|O(?:CHRE|PAL)|I(?:SOLEUCINE|LE)|UMBER|T(?:ER(?:M)?|R(?:P|YPTOPHAN)|HR(?:EONINE)?|YR(?:OSINE)?)|VAL(?:INE)?|P(?:HE(?:NYLALANINE)?|RO(?:LINE)?)|S(?:T(?:P|OP)|ER(?:INE)?)|GL(?:U(?:TAM(?:ATE|I(?:C ACID|NE)))?|N|Y(?:CINE)?|X)|HIS(?:TIDINE)?|XLE))";
         String aa ="(?<amino>[ATGC]+|[CISQMNPKDTFAGHLRWVEYBZJX*]|(?:[Al]la|[Gg]ly|[Ll]eu|[Mm]et|[Pp]he|[Tt]rp|[Ll]ys|[Gg]ln|[Gg]lu|[Ss]er|[Pp]ro|[Vv]al|[Ii]le|[Cc]ys|[Tt]yr|[Hh]is|[Aa]rg|[Aa]sn|[Aa]sp|[Tt]hr|[Aa]sx|[Gg]lx|[Xx]le|[Tt]er|[Ss]tp" +
                 "|[Aa]lanine|[Gg]lycine|[Ll]eucine|[Mm]ethionine|[Pp]henylalanine|[Tt]ryptophan|[Ll]ysine|[Gg]lutamine|[Gg]lutamic [Aa]cid|[Gg]lutamate|[Aa]spartate|[Ss]erine|[Pp]roline|[Vv]aline|[Ii]soleucine|[Cc]ysteine|[T]yrosine|[Hh]istidine|[Aa]rginine|[Aa]sparagine|[Aa]spartic [Aa]cid|[Tt]hreonine|[Tt]erm|[Ss]top|[Aa]mber|[Uu]mber|[Oo]chre|[Oo]pal))";
 
@@ -234,7 +232,6 @@ public class OldNomenclature2 {
                 sb.append(suffix);
 
                 //final Pattern pattern = Pattern.compile(sb.toString(), Pattern.CASE_INSENSITIVE);
-                //final Pattern pattern = Pattern.compile(sb.toString());
                 final NomenclaturePattern pattern = new NomenclaturePattern(Pattern.compile(sb.toString()), sb.toString(), nLine);
                 patterns.add(pattern);
             }
@@ -301,13 +298,21 @@ public class OldNomenclature2 {
             }
         }
 
-        /**
-         * This code removes some duplicated items;
-         * Mutation mentions containing a "-" are sometimes found several times; usually with and without a negative location
-         * Here we remove the mention with negative offset
-         * e.g., deletion of Ala-12; the "-" is not used to indicate "-12", but "12"
-         * TODO: Move in seprate metod
-         */
+        result = removeDuplicates(result, text);
+
+
+
+        return result;
+    }
+
+    /**
+     * This code removes some duplicated items;
+     * Mutation mentions containing a "-" are sometimes found several times; usually with and without a negative location
+     * Here we remove the mention with negative offset
+     * e.g., deletion of Ala-12; the "-" is not used to indicate "-12", but "12"
+     */
+    private List<MutationMention> removeDuplicates(List<MutationMention> result, String text){
+
         Map<EntityOffset, List<MutationMention>> groupByOffset = result.stream().collect(Collectors.groupingBy(w -> w.getLocation()));
         for(EntityOffset key : groupByOffset.keySet()){
             List<MutationMention> mentions = groupByOffset.get(key);
@@ -330,8 +335,6 @@ public class OldNomenclature2 {
                 result.removeAll(delete);
             }
         }
-
-
         return result;
     }
 

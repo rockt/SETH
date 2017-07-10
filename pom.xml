@@ -162,6 +162,7 @@
                 <filtering>true</filtering>
                 <includes>
                     <include>mutations.txt</include>
+                    <include>log4j.properties</include>
                 </includes>
             </resource>
 
