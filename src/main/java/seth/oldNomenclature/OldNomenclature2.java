@@ -260,7 +260,8 @@ public class OldNomenclature2 {
 
                 Type type = modificationToType.get(m.group("mod").toLowerCase());
                 if ( type == null){
-                    logger.error("Cannot find modification type for '{}'; skipping mention", m.group("mod"));
+
+                    logger.error("Cannot find modification type for '" +m.group("mod") +"'; skipping mention in text '" +text.substring(start, end) +"'");
                     continue;
                 }
                 String amino = m.group("amino");
