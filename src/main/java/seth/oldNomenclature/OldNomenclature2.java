@@ -97,47 +97,47 @@ public class OldNomenclature2 {
         abbreviationLookup.put("X", "X");
         abbreviationLookup.put("*", "X");
 
-        modificationToType.put("deletion", Type.DELETION);
-        modificationToType.put("deletions", Type.DELETION);
-        modificationToType.put("deleted", Type.DELETION);
-        modificationToType.put("del", Type.DELETION);
-        modificationToType.put("delta", Type.DELETION);
-        modificationToType.put("deleting", Type.DELETION);
+        modificationToType.put("DEL", Type.DELETION);
+        modificationToType.put("DELTA", Type.DELETION);
         modificationToType.put("Δ", Type.DELETION);
+        modificationToType.put("DELETION", Type.DELETION);
+        modificationToType.put("DELETIONS", Type.DELETION);
+        modificationToType.put("DELETED", Type.DELETION);
+        modificationToType.put("DELETING", Type.DELETION);
 
-        modificationToType.put("insertion", Type.INSERTION);
-        modificationToType.put("insertions", Type.INSERTION);
-        modificationToType.put("inserted", Type.INSERTION);
-        modificationToType.put("ins", Type.INSERTION);
-        modificationToType.put("inserting", Type.INSERTION);
+        modificationToType.put("INS", Type.INSERTION);
+        modificationToType.put("INSERTION", Type.INSERTION);
+        modificationToType.put("INSERTIONS", Type.INSERTION);
+        modificationToType.put("INSERTED", Type.INSERTION);
+        modificationToType.put("INSERTING", Type.INSERTION);
 
-        modificationToType.put("duplication", Type.DUPLICATION);
-        modificationToType.put("duplications", Type.DUPLICATION);
-        modificationToType.put("duplicated", Type.DUPLICATION);
-        modificationToType.put("duplicating", Type.DUPLICATION);
-        modificationToType.put("dup", Type.DUPLICATION);
+        modificationToType.put("DUP", Type.DUPLICATION);
+        modificationToType.put("DUPLICATION", Type.DUPLICATION);
+        modificationToType.put("DUPLICATIONS", Type.DUPLICATION);
+        modificationToType.put("DUPLICATED", Type.DUPLICATION);
+        modificationToType.put("DUPLICATING", Type.DUPLICATION);
 
-        modificationToType.put("inversion", Type.INVERSION);
-        modificationToType.put("inversions", Type.INVERSION);
-        modificationToType.put("inverted", Type.INVERSION);
-        modificationToType.put("inv", Type.INVERSION);
-        modificationToType.put("inverting", Type.INVERSION);
+        modificationToType.put("INV", Type.INVERSION);
+        modificationToType.put("INVERSION", Type.INVERSION);
+        modificationToType.put("INVERSIONS", Type.INVERSION);
+        modificationToType.put("INVERTED", Type.INVERSION);
+        modificationToType.put("INVERTING", Type.INVERSION);
 
-        modificationToType.put("translocation", Type.TRANSLOCATION);
-        modificationToType.put("translocations", Type.TRANSLOCATION);
-        modificationToType.put("translocated", Type.TRANSLOCATION);
+        modificationToType.put("TRANSLOCATION", Type.TRANSLOCATION);
+        modificationToType.put("TRANSLOCATIONS", Type.TRANSLOCATION);
+        modificationToType.put("TRANSLOCATED", Type.TRANSLOCATION);
 
-        modificationToType.put("insdel", Type.DELETION_INSERTION);
-        modificationToType.put("ins/del", Type.DELETION_INSERTION);
+        modificationToType.put("INSDEL", Type.DELETION_INSERTION);
+        modificationToType.put("INS/DEL", Type.DELETION_INSERTION);
 
-        modificationToType.put("frameshift", Type.FRAMESHIFT);
-        modificationToType.put("fs", Type.FRAMESHIFT);
+        modificationToType.put("FS", Type.FRAMESHIFT);
+        modificationToType.put("FRAMESHIFT", Type.FRAMESHIFT);
 
-        modificationToType.put("conversion", Type.CONVERSION);
-        modificationToType.put("conversions", Type.CONVERSION);
-        modificationToType.put("converting", Type.CONVERSION);
-        modificationToType.put("converted", Type.CONVERSION);
-        modificationToType.put("conv", Type.CONVERSION);
+        modificationToType.put("CONV", Type.CONVERSION);
+        modificationToType.put("CONVERSION", Type.CONVERSION);
+        modificationToType.put("CONVERSIONS", Type.CONVERSION);
+        modificationToType.put("CONVERTING", Type.CONVERSION);
+        modificationToType.put("CONVERTED", Type.CONVERSION);
     }
 
 
@@ -258,7 +258,8 @@ public class OldNomenclature2 {
                 int start = m.start(2);
                 int end   = m.start(2) + m.group("group").length();
 
-                Type type = modificationToType.get(m.group("mod").toLowerCase());
+                Type type = modificationToType.get(m.group("mod").toUpperCase());
+
                 if ( type == null){
 
                     logger.error("Cannot find modification type for '" +m.group("mod") +"'; skipping mention in text '" +text.substring(start, end) +"'");
