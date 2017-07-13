@@ -29,10 +29,13 @@ public class OldNomenclature2 {
     final private static String suffix="(?=([\\.,\\s\\)\\(\\]\\'\":;\\-/]|$))";
 
     private final List<NomenclaturePattern> patterns = new ArrayList<>(); //All patterns used for finding mutations
+    private final Pattern ivsPattern = Pattern.compile(prefix +"(?<group>(?<pos>IVS[-]?[1-9][0-9]*\\s?[+-]\\s?[1-9][0-9]*)\\s?(?<wt>[ATGC])\\s?(?:-{0,2}>|→|/|\\\\)\\s?(?<mut>[ATGC]))" +suffix);
     private final Map<String, Type> modificationToType = new HashMap<>();
     private final Map<String, String> abbreviationLookup = new HashMap<>();
 
     private final String defaultPatternsPath = "/media/philippe/5f695998-f5a5-4389-a2d8-4cf3ffa1288a/data/pubmed/rawInsDels.sorted.annotated";//TODO set correct path
+
+
 
 
     /**
@@ -244,7 +247,6 @@ public class OldNomenclature2 {
 
 
     // TODO: Check if we get same results as with old nomenclature
-    //TODO: Add long form amino acids for grounding
     public List<MutationMention> extractFromString(String text){
 
         List<MutationMention> result = new ArrayList<MutationMention>();
@@ -298,6 +300,18 @@ public class OldNomenclature2 {
 
                 result.add(mm);
             }
+        }
+
+        Matcher m = ivsPattern.matcher(text);
+        while(m.find()){
+            int start = m.start(2);
+            int end   = m.start(2)+m.group("group").length();
+            MutationMention mm = new MutationMention(start, end, text.substring(start, end), "c.", m.group("pos"),  m.group("wt"), m.group("mut"), Type.SUBSTITUTION, MutationMention.Tool.REGEX);
+
+            mm.setPsm(false);
+            mm.setNsm(true);
+            mm.setAmbiguous(false);
+            result.add(mm);
         }
 
         result = removeDuplicates(result, text);
@@ -358,11 +372,4 @@ public class OldNomenclature2 {
 
         return false;
     }
-
-    public static void main(String[] args) throws IOException {
-        final OldNomenclature2 oldNomenclature2 = new OldNomenclature2("/media/philippe/5f695998-f5a5-4389-a2d8-4cf3ffa1288a/data/pubmed/rawInsDels.sorted.annotated");
-
-
-    }
-
 }
