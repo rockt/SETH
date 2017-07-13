@@ -311,6 +311,7 @@ public class OldNomenclature2 {
             mm.setPsm(false);
             mm.setNsm(true);
             mm.setAmbiguous(false);
+            mm.setPatternId(-1);
             result.add(mm);
         }
 
