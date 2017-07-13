@@ -284,16 +284,25 @@ public class OldNomenclature2 {
                         mm = new MutationMention(start, end, text.substring(start, end), null, location, null, shortAminoName, type, MutationMention.Tool.REGEX);
                 }
 
+                //Likely PSM, if position is positive and we could ground amino acid name
                 if(amino.length() > 1 && !amino.equals(shortAminoName)){
                     mm.setPsm(true);
                     mm.setNsm(false);
                     mm.setAmbiguous(false);
                 }
 
+                //Likely NSM, if position is negative or contains signs such as "12-1; or 15_19"
                 else if(this.isLikelyNsm(location)){
                     mm.setPsm(false);
                     mm.setNsm(true);
                     mm.setAmbiguous(false);
+                }
+                else{
+                    mm.setAmbiguous(true);
+                }
+
+                if(!amino.equals(shortAminoName) && !mm.isPsm()){
+                    logger.warn("Unlikely to happen for '{}'", m.group("group"));
                 }
 
                 mm.setPatternId(pattern.getId());
