@@ -320,7 +320,7 @@ public class OldNomenclature2 {
                 if(amino.length() != 1 || Math.abs(intLocation) > 9 || !parseable)
                     result.add(mm);
                 else
-                    logger.warn("Skipping '{}' mutation mention ", text);
+                    logger.info("Skipping '{}'; as likely false positive ", text.substring(start, end));
             }
         }
 
