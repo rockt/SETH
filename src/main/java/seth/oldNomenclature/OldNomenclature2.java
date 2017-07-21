@@ -271,9 +271,11 @@ public class OldNomenclature2 {
                 String location = m.group("pos");
 
                 String shortAminoName = amino.toUpperCase();
-                if (abbreviationLookup.containsKey(shortAminoName)) {
+                if (abbreviationLookup.containsKey(shortAminoName))
                     shortAminoName = abbreviationLookup.get(shortAminoName);
-                }
+                else
+                    logger.info("Cannot find appropriate mapping for '{}'", shortAminoName);
+
 
                 MutationMention mm;
                 switch (type) {
@@ -284,8 +286,15 @@ public class OldNomenclature2 {
                         mm = new MutationMention(start, end, text.substring(start, end), null, location, null, shortAminoName, type, MutationMention.Tool.REGEX);
                 }
 
+                int intLocation = Integer.MIN_VALUE; boolean parseable = false;
+                try{
+                    intLocation = Integer.parseInt(location);
+                    parseable = true;
+                }catch(NumberFormatException nfe){}
+
+
                 //Likely PSM, if position is positive and we could ground amino acid name
-                if(amino.length() > 1 && !amino.equals(shortAminoName)){
+                if(amino.length() > 1 && !amino.equals(shortAminoName) && intLocation > 0){
                     mm.setPsm(true);
                     mm.setNsm(false);
                     mm.setAmbiguous(false);
@@ -307,7 +316,11 @@ public class OldNomenclature2 {
 
                 mm.setPatternId(pattern.getId());
 
-                result.add(mm);
+                //Here we filter likely false positive mentions (where the String mention is only one char and the location is below 9); e.g., ΔR2; but not ΔR20 or ΔTyr2
+                if(amino.length() != 1 || Math.abs(intLocation) > 9 || !parseable)
+                    result.add(mm);
+                else
+                    logger.warn("Skipping '{}' mutation mention ", text);
             }
         }
 
