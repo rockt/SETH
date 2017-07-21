@@ -271,10 +271,8 @@ public class OldNomenclature2 {
                 String location = m.group("pos");
 
                 String shortAminoName = amino.toUpperCase();
-                if (abbreviationLookup.containsKey(shortAminoName))
+                if (abbreviationLookup.containsKey(shortAminoName)) //Not contained for short mentions (e.g., AATTGC)
                     shortAminoName = abbreviationLookup.get(shortAminoName);
-                else
-                    logger.info("Cannot find appropriate mapping for '{}'", shortAminoName);
 
 
                 MutationMention mm;
@@ -320,7 +318,7 @@ public class OldNomenclature2 {
                 if(amino.length() != 1 || Math.abs(intLocation) > 9 || !parseable)
                     result.add(mm);
                 else
-                    logger.info("Skipping '{}'; as likely false positive ", text.substring(start, end));
+                    logger.debug("Skipping '{}'; as likely false positive ", text.substring(start, end));
             }
         }
 
