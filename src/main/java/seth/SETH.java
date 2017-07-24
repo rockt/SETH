@@ -143,15 +143,18 @@ public class SETH {
                             String.valueOf(pm.getWtResidue()), String.valueOf(pm.getMutResidue()),
                             Type.SUBSTITUTION, MutationMention.Tool.MUTATIONFINDER);
                     tmpMutation.setPatternId(pm.getId());
+
                     if (pm.isMatchesLongForm()) {
                         tmpMutation.setPsm(true);
-                        tmpMutation.setAmbiguous(false);
                         tmpMutation.setNsm(false);
-                    }else if(pm.isNsm()){
+                        tmpMutation.setAmbiguous(false);
+                    } /** We removed the lower part, as this is allready handled in constructor MutationMention
+                    else if(pm.isNsm()){
                         tmpMutation.setPsm(false);
                         tmpMutation.setAmbiguous(true);
                         tmpMutation.setNsm(false);
                     }
+                     */
 
                     mutations.add(tmpMutation);
                 }
