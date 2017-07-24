@@ -1042,6 +1042,35 @@ public class MutationMention implements Comparable<MutationMention>{
         return mutation.replaceAll("[\\s\\(\\)]", "");
     }
 
+
+
+    /**
+     *  Checks if the mutation mention is a NSM
+     * @return true if the mutation is a nucleotide sequence mutation
+     */
+    private boolean isNucleotide() {
+        if (!this.isAminoAcid()) {
+
+            if(this.position == null)
+                return false;
+
+            if (this.position.contains("*") || this.position.contains("+") || this.position.contains("-"))
+                return true;
+
+            try{
+                int position = Integer.parseInt(this.position);
+                // Mutations in locations above this cutoff have to be nucleotides as Titin (33,000 AA) is the currently longest known protein
+                if(position > 35000)
+                    return true;
+            }catch(NumberFormatException nfe){
+                return true; //Protein mutations should always have integers as position
+            }
+        }
+
+        return false;
+    }
+
+
     /**
      * Checks if the mutation mention is a PSM
      * @return true if the mutation mention is a protein sequence mutation
@@ -1076,31 +1105,6 @@ public class MutationMention implements Comparable<MutationMention>{
         }
     }
 
-    /**
-     *  Checks if the mutation mention is a NSM
-     * @return true if the mutation is a nucleotide sequence mutation
-     */
-    private boolean isNucleotide() {
-        if (!this.isAminoAcid()) {
-
-            if(this.position == null)
-                return false;
-
-            if (this.position.contains("*") || this.position.contains("+") || this.position.contains("-"))
-                return true;
-
-            try{
-                int position = Integer.parseInt(this.position);
-                // Mutations in locations above this cutoff have to be nucleotides as Titin (33,000 AA) is the currently longest known protein
-                if(position > 35000)
-                    return true;
-            }catch(NumberFormatException nfe){
-                return true; //Protein mutations should always have integers as position
-            }
-        }
-
-        return false;
-    }
 
     /**
      * Check if mutation is ambiguous
@@ -1126,7 +1130,6 @@ public class MutationMention implements Comparable<MutationMention>{
             return false;
 
         return true;
-
     }
 
     /**
@@ -1140,17 +1143,43 @@ public class MutationMention implements Comparable<MutationMention>{
     }
 
 
+
     /**
-     * (non-Javadoc)
+     * To String method for MutationMention
      *
      * @see Object#toString()
      */
-    @Override
+   @Override
     public String toString() {
         return "MutationMention [span=" + location.getStart() +"-" +location.getStop()
                 + ", mutResidue=" + mutResidue + ", location=" +position + ", wtResidue=" + wtResidue +", text=" +text
                 + ", type=" + getType() + ", tool=" + getTool() + "]";
     }
+
+    /**
+     * Similar to @toString but prints all inforamtion
+     * @return
+     */
+    public String toFullString() {
+        return "MutationMention{" +
+                "type=" + type +
+                ", tool=" + tool +
+                ", location=" + location +
+                ", text='" + text + '\'' +
+                ", ref='" + ref + '\'' +
+                ", wtResidue='" + wtResidue + '\'' +
+                ", mutResidue='" + mutResidue + '\'' +
+                ", position='" + position + '\'' +
+                ", nsm=" + nsm +
+                ", psm=" + psm +
+                ", ambiguous=" + ambiguous +
+                ", patternId=" + patternId +
+                ", normalized=" + normalized +
+                ", transcripts=" + transcripts +
+                '}';
+    }
+
+
 
     /**
      * @return SNP-description following the <wt><aa><mt> nomenclature
