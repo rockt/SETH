@@ -17,7 +17,7 @@ import java.util.List;
  *
  * Tests if a recognized mutation is correctly normalized to mutation nomenclature
  */
-public class HGNCTest {
+public class NormalizeToHGNCTest {
 
     private SETH seth;
 
@@ -30,6 +30,7 @@ public class HGNCTest {
         List<MutationMention> mutationMentions = seth.findMutations(text);
 
         Assert.assertEquals(1, mutationMentions.size()); //We support only texts with one mutation
+        System.out.println(mutationMentions.get(0).toHGVS());
         Assert.assertTrue(hgnc.equals(mutationMentions.get(0).toHGVS())); //Is the string contained in the provided text?
 
     }
