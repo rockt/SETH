@@ -4,7 +4,6 @@ import de.hu.berlin.wbi.objects.MutationMention;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import seth.SETH;
 import seth.oldNomenclature.OldNomenclature2;
 
 import java.util.List;
@@ -27,7 +26,7 @@ public class InsDelFinderTest {
      */
     private void assertSingleMutation(String text) {
 
-        List<MutationMention> mutationMentions = oldNomenclature2.extractFromString(text);
+        List<MutationMention> mutationMentions = oldNomenclature2.extractMutations(text);
 
         if(mutationMentions.size() != 1){
             System.out.println(text);
@@ -40,7 +39,7 @@ public class InsDelFinderTest {
     }
 
     private void assertNoMutation(String text){
-        List<MutationMention> mutationMentions = oldNomenclature2.extractFromString(text);
+        List<MutationMention> mutationMentions = oldNomenclature2.extractMutations(text);
 
         if(mutationMentions.size() != 0){
             System.out.println(text);

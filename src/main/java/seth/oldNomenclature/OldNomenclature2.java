@@ -2,7 +2,6 @@ package seth.oldNomenclature;
 
 import de.hu.berlin.wbi.objects.EntityOffset;
 import de.hu.berlin.wbi.objects.MutationMention;
-import edu.uchsc.ccp.nlp.ei.mutation.Mutation;
 import edu.uchsc.ccp.nlp.ei.mutation.MutationFinder;
 import seth.ner.wrapper.Type;
 
@@ -14,7 +13,6 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import seth.seth.eval.Entity;
 
 /**
  * This class can be used to find mutation mentions (deletions, IVS-substitions, insertions, and frameshifts)
@@ -28,34 +26,30 @@ public class OldNomenclature2 {
     final private static String prefix="(^|[_\\s\\(\\)\\[\\'\"/,;:])"; //>
     final private static String suffix="(?=([\\.,\\s\\)\\(\\]\\'\":;\\-/]|$))";
 
-    private final List<NomenclaturePattern> patterns = new ArrayList<>(); //All patterns used for finding mutations
-    private final Pattern ivsPattern = Pattern.compile(prefix +"(?<group>(?<pos>IVS[-]?[1-9][0-9]*\\s?[+-]\\s?[1-9][0-9]*)\\s?(?<wt>[ATGC])\\s?(?:-{0,2}>|→|/|\\\\)\\s?(?<mut>[ATGC]))" +suffix);
-    private final Map<String, Type> modificationToType = new HashMap<>();
-    private final Map<String, String> abbreviationLookup = new HashMap<>();
+    private final List<NomenclaturePattern> patterns = new ArrayList<>(); //A list of patterns for mutation recognition
+    private final Pattern ivsPattern = Pattern.compile(prefix +"(?<group>(?<pos>IVS[-]?[1-9][0-9]*\\s?[+-]\\s?[1-9][0-9]*)\\s?(?<wt>[ATGC])\\s?(?:-{0,2}>|→|/|\\\\)\\s?(?<mut>[ATGC]))" +suffix); //IVS nomenclature is a separate case
+    private final Map<String, Type> modificationToType = new HashMap<>(); //Map from variation string to mutation type
+    private final Map<String, String> abbreviationLookup = new HashMap<>(); //Map from AA to one letter
 
-    private final String defaultPatternsPath = "/media/philippe/5f695998-f5a5-4389-a2d8-4cf3ffa1288a/data/pubmed/rawInsDels.sorted.annotated";//TODO set correct path
-
-
+    private final String defaultPatternsFile = "/media/philippe/5f695998-f5a5-4389-a2d8-4cf3ffa1288a/data/pubmed/rawInsDels.sorted.annotated";//TODO set correct path
 
 
     /**
-     * Initialization of OldNomenclature-Matcher requires a set of regular expressions that will be used to detect deletions/insertions/....
+     * Initialization of OldNomenclature-Matcher requires a set of regular expressions that will be used to detect deletions/insertions/...
      * This constructor loads the regular expressions from the packed JAR.
-     * Substitutions in deprecated nomenclature are detected using the MutationFinder module
+     * Important: Substitutions in deprecated nomenclature (e.g., Ala12Tyr) are detected using the @{@link MutationFinder} module
      */
     public OldNomenclature2(){
         super();
         initializeHashMaps();
 
-        loadRegularExpressionsFromJar(defaultPatternsPath);
+        loadRegularExpressionsFromJar(defaultPatternsFile);
     }
 
     /**
      * Initialization of OldNomenclature-Matcher requires a set of regular expressions that will be used to detect deletions/insertions/....
      * This constructor loads the regular expressions from a file designated by the filename input parameter.
-     * Substitutions in deprecated nomenclature are detected using the MutationFinder module
-     * <br>
-     * <br>
+     * Substitutions in deprecated nomenclature are detected using the @{@link MutationFinder} module
      *
      * @param fileName Name of the file, where the regular expressions can be found
      */
@@ -154,8 +148,8 @@ public class OldNomenclature2 {
             br = new BufferedReader(new FileReader(file));
             loadRegularExpressionsFromStream(br);
         } catch (FileNotFoundException fnfe) {
-            logger.warn("The file containing regular expressions could not be found: " + file.getAbsolutePath() + File.separator + file.getName() +"\n trying to load from Java Archive");
-            loadRegularExpressionsFromJar(defaultPatternsPath);
+            logger.warn("The file containing regular expressions could not be found: '" + file.getAbsolutePath() + File.separator + file.getName() +"'\nLoading patterns from JAR '" +defaultPatternsFile +"'");
+            loadRegularExpressionsFromJar(defaultPatternsFile);
         }
         finally {
             if (br != null) {
@@ -163,6 +157,7 @@ public class OldNomenclature2 {
                     br.close();
                 } catch (Exception e) {
                     // ignore exception
+                    logger.warn("Problem closing buffered reader", e);
                 }
             }
         }
@@ -187,6 +182,7 @@ public class OldNomenclature2 {
                     br.close();
                 } catch (Exception e) {
                     // ignore exception
+                    logger.warn("Problem closing buffered reader", e);
                 }
             }
         }
@@ -196,14 +192,18 @@ public class OldNomenclature2 {
     /**
      * Helper method which loads a set of regular expressions from a BufferedReader
      * This method is used for loading regex from a file or the java-archive
-     * @param br buffer to read the regex from
+     * @param br BufferedReader to read the regex from
      */
     private void loadRegularExpressionsFromStream(BufferedReader br) {
 
+        //Replace amino acids with this regex
         String aa ="(?<amino>[ATGC]+|[CISQMNPKDTFAGHLRWVEYBZJX*]|(?:[Al]la|[Gg]ly|[Ll]eu|[Mm]et|[Pp]he|[Tt]rp|[Ll]ys|[Gg]ln|[Gg]lu|[Ss]er|[Pp]ro|[Vv]al|[Ii]le|[Cc]ys|[Tt]yr|[Hh]is|[Aa]rg|[Aa]sn|[Aa]sp|[Tt]hr|[Aa]sx|[Gg]lx|[Xx]le|[Tt]er|[Ss]tp" +
                 "|[Aa]lanine|[Gg]lycine|[Ll]eucine|[Mm]ethionine|[Pp]henylalanine|[Tt]ryptophan|[Ll]ysine|[Gg]lutamine|[Gg]lutamic [Aa]cid|[Gg]lutamate|[Aa]spartate|[Ss]erine|[Pp]roline|[Vv]aline|[Ii]soleucine|[Cc]ysteine|[T]yrosine|[Hh]istidine|[Aa]rginine|[Aa]sparagine|[Aa]spartic [Aa]cid|[Tt]hreonine|[Tt]erm|[Ss]top|[Aa]mber|[Uu]mber|[Oo]chre|[Oo]pal))";
 
+        //Replace numbers with this regex
         String location = "(?<pos>[+-]?[1-9][0-9]*(?:\\s?[+-_]\\s?[1-9][0-9]*)?)";
+
+        //Replace all modification mentions with this regex
         String modification = "(?<mod>"
                 +"[Cc]onv|[Cc]onversion|[Cc]onversions|[Cc]onverted|[Cc]onverting" +
                 "|Δ|[Dd]el|[Dd]eleted|[Dd]eleting|[Dd]eletion|[Dd]eletions|[Dd]elta" +
@@ -221,7 +221,7 @@ public class OldNomenclature2 {
             while(br.ready()){
                 String line = br.readLine();
                 nLine++;
-                if(line.startsWith("#") || line.matches("^\\s*$"))
+                if(line.startsWith("#") || line.matches("^\\s*$")) //Skip empty lines and comment lines
                     continue;
 
                 StringBuilder sb = new StringBuilder(line);
@@ -234,7 +234,6 @@ public class OldNomenclature2 {
                 sb.append(")" );
                 sb.append(suffix);
 
-                //final Pattern pattern = Pattern.compile(sb.toString(), Pattern.CASE_INSENSITIVE);
                 final NomenclaturePattern pattern = new NomenclaturePattern(Pattern.compile(sb.toString()), sb.toString(), nLine);
                 patterns.add(pattern);
             }
@@ -246,12 +245,16 @@ public class OldNomenclature2 {
     }
 
 
-    // TODO: Check if we get same results as with old nomenclature
-    public List<MutationMention> extractFromString(String text){
+    /**
+     * Extracts mentions of mutations from natural language text written in deprecated nomenclature
+     * @param text Input natural language text
+     * @return A list of {@link MutationMention} objects
+     */
+    public List<MutationMention> extractMutations(String text){
 
         List<MutationMention> result = new ArrayList<MutationMention>();
 
-        for(NomenclaturePattern pattern : patterns){
+        for(NomenclaturePattern pattern : patterns){ //Iterate patterns
             Matcher m = pattern.getPattern().matcher(text);
             while(m.find()){
 
@@ -328,6 +331,7 @@ public class OldNomenclature2 {
             int end   = m.start(2)+m.group("group").length();
             MutationMention mm = new MutationMention(start, end, text.substring(start, end), "c.", m.group("pos"),  m.group("wt"), m.group("mut"), Type.SUBSTITUTION, MutationMention.Tool.REGEX);
 
+            //IVS is always nucleotide
             mm.setPsm(false);
             mm.setNsm(true);
             mm.setAmbiguous(false);
@@ -344,7 +348,7 @@ public class OldNomenclature2 {
 
     /**
      * This code removes some duplicated items;
-     * Mutation mentions containing a "-" are sometimes found several times; usually with and without a negative location
+     * Mutation mentions containing a "-" are sometimes found several times (by different patterns); usually with and without a negative location
      * Here we remove the mention with negative offset
      * e.g., deletion of Ala-12; the "-" is not used to indicate "-12", but "12"
      */
