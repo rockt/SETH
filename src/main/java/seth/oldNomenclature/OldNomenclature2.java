@@ -27,7 +27,7 @@ public class OldNomenclature2 {
     final private static String suffix="(?=([\\.,\\s\\)\\(\\]\\'\":;\\-/]|$))";
 
     private final List<NomenclaturePattern> patterns = new ArrayList<>(); //A list of patterns for mutation recognition
-    private final Pattern ivsPattern = Pattern.compile(prefix +"(?<group>(?<pos>IVS[-]?[1-9][0-9]*\\s?[+-]\\s?[1-9][0-9]*)\\s?(?<wt>[ATGC])\\s?(?:-{0,2}>|→|/|\\\\)\\s?(?<mut>[ATGC]))" +suffix); //IVS nomenclature is a separate case
+    private final Pattern ivsPattern = Pattern.compile(prefix +"(?<group>(?<pos>IVS[\\-]?[1-9][0-9]*\\s?[+-]\\s?[1-9][0-9]*)\\s?(?<wt>[ATGC])\\s?(?:-{0,2}>|→|/|\\\\)\\s?(?<mut>[ATGC]))" +suffix); //IVS nomenclature is a separate case
     private final Map<String, Type> modificationToType = new HashMap<>(); //Map from variation string to mutation type
     private final Map<String, String> abbreviationLookup = new HashMap<>(); //Map from AA to one letter
 
@@ -201,7 +201,7 @@ public class OldNomenclature2 {
                 "|[Aa]lanine|[Gg]lycine|[Ll]eucine|[Mm]ethionine|[Pp]henylalanine|[Tt]ryptophan|[Ll]ysine|[Gg]lutamine|[Gg]lutamic [Aa]cid|[Gg]lutamate|[Aa]spartate|[Ss]erine|[Pp]roline|[Vv]aline|[Ii]soleucine|[Cc]ysteine|[T]yrosine|[Hh]istidine|[Aa]rginine|[Aa]sparagine|[Aa]spartic [Aa]cid|[Tt]hreonine|[Tt]erm|[Ss]top|[Aa]mber|[Uu]mber|[Oo]chre|[Oo]pal))";
 
         //Replace numbers with this regex
-        String location = "(?<pos>[+-]?[1-9][0-9]*(?:\\s?[+-_]\\s?[1-9][0-9]*)?)";
+        String location = "(?<pos>[\\+\\-]?[1-9][0-9]*(?:\\s?[\\+\\-_]\\s?[1-9][0-9]*)?)";
 
         //Replace all modification mentions with this regex
         String modification = "(?<mod>"
@@ -225,8 +225,8 @@ public class OldNomenclature2 {
                     continue;
 
                 StringBuilder sb = new StringBuilder(line);
-                sb.replace(sb.indexOf("<aa>"), sb.indexOf("<aa>")+"<aa>".length(), aa);
-                sb.replace(sb.indexOf("<number>"), sb.indexOf("<number>")+"<number>".length(), location);
+                sb.replace(sb.indexOf("<aa>"), sb.indexOf("<aa>")+"<aa>".length(), aa );
+                sb.replace(sb.indexOf("<number>"), sb.indexOf("<number>")+"<number>".length(), location );
                 sb.replace(sb.indexOf("<kw>"), sb.indexOf("<kw>")+"<kw>".length(), modification);
 
                 sb.insert(0,"(?<group>");
@@ -397,4 +397,5 @@ public class OldNomenclature2 {
 
         return false;
     }
+
 }
