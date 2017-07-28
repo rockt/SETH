@@ -68,10 +68,9 @@ public class Issue10Test {
     }
 
     @Test
-    @Ignore("Test is ignored due to missing implementation!")
     public void testPmid23017188() throws Exception {
         //Del with upper case
-        assertFoundMutation("Identification of the CFTR p.Phe508Del p.Phe508Ins founder ",
+        assertFoundMutation("Identification of the CFTR p.Phe508Del founder ",
                 "p.Phe508Del");
     }
 

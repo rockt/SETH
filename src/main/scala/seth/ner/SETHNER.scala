@@ -266,9 +266,9 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
     // | "=" | "?" | "0" | "0?"
   lazy val ProteinSubst:P       = ((AA ^^ { WildString(_) })  ~ (Number ^^ { LocString(_) }) ~ ((if(strictNomenclature)("") else (">")) ~AA ^^ { MutatedString(_) })) |
       (AAPtLoc ~ (AA  ^^ { MutatedString(_) }) ~ ("extX" ~ "*".? ~ Number).? | ("Met1" | "M1") ~ ("?" | "ext" ~ Number))
-  lazy val ProteinDel:P         = AALoc ~ ("del" ^^ { DelString(_) })
-  lazy val ProteinIns:P         = AALoc ~ ("ins" ^^ { InsString(_) }) ~ ((AA.+) ^^ { MutatedString(_) } | Number)
-  lazy val ProteinDup:P         = AALoc ~ ("dup" ^^ { DupString(_) })
+  lazy val ProteinDel:P         = AALoc ~ ( if (strictNomenclature) "del" else ("del"|"Del")  ^^ { DelString(_) })
+  lazy val ProteinIns:P         = AALoc ~ (if (strictNomenclature) "ins" else ("ins"|"Ins") ^^ { InsString(_) }) ~ ((AA.+) ^^ { MutatedString(_) } | Number)
+  lazy val ProteinDup:P         = AALoc ~ (if (strictNomenclature) "dup" else ("Dup"|"dup") ^^ { DupString(_) })
   lazy val ProteinEq:P          = AALoc ~ ("=" ^^ { SilentString(_) })
   lazy val ProteinVarSSR:P      = AALoc ~ "(" ~ Number ~ "_" ~ Number ~ ")"
   lazy val ProteinIndel:P       = AALoc ~ (("delins"|"insdel") ^^ { InsDelString(_) }) ~ ((AA.+ ^^ { MutatedString(_) }) | Number)
