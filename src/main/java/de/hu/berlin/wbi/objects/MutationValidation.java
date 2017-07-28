@@ -86,7 +86,7 @@ public class MutationValidation extends MutationMention {
 	 * 
 	 * @param file    Annotated corpus
 	 * @return list of correct mutations
-	 * @throws IOException
+	 * @throws IOException Thrown on problems accessing file
 	 */
 	public static  Map<Integer,List<MutationValidation>> readMutationsValidation(String file)
 			throws  IOException {

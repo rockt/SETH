@@ -1,15 +1,12 @@
 package de.hu.berlin.wbi;
 
 import de.hu.berlin.wbi.objects.MutationMention;
-import junit.framework.TestCase;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
 import seth.SETH;
-
-import static junit.framework.Assert.assertEquals;
 
 /**
  * Created with IntelliJ IDEA.
@@ -395,7 +392,6 @@ public class OldNomenclatureTest {
 
     /**
      * Some unit tests, which we wrote during the development of SETH
-     * @throws Exception
      */
     @Test
     public void testErrors() throws  Exception{

@@ -1158,7 +1158,7 @@ public class MutationMention implements Comparable<MutationMention>{
 
     /**
      * Similar to @toString but prints all inforamtion
-     * @return
+     * @return String containing all properties of a mutation
      */
     public String toFullString() {
         return "MutationMention{" +

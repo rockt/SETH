@@ -23,6 +23,7 @@ public class ITSETHNormalization extends TestCase {
 
     @Override
     protected void setUp() throws Exception {
+        super.setUp();
         Properties properties = new Properties();
         properties.loadFromXML(getClass().getResourceAsStream("/resources/seth_properties.xml"));
         // Assumption is that the database is in {{SETH_DEV_HOME}}/db/dbSNP137
@@ -58,7 +59,7 @@ public class ITSETHNormalization extends TestCase {
         Assert.assertEquals(mentions.size(), 3);
 
         // c.35delG and L90P (c.269T>C)
-        Collections.sort(mentions, new Comparator<MutationMention>() {
+        mentions.sort(new Comparator<MutationMention>() {
             @Override
             public int compare(MutationMention o1, MutationMention o2) {
                 return Integer.compare(o1.getStart(), o2.getStart());

@@ -71,10 +71,9 @@ public class AminoAcidHelper {
      * @return The same three letter string, but the first character is uppercase the others smaller case
      */
     private static String toCorrectCase(String aminoAcid){
-        String result = String.valueOf(Character.toUpperCase(aminoAcid.charAt(0))) +
-                aminoAcid.substring(1).toLowerCase();
 
-        return result;
+        return String.valueOf(Character.toUpperCase(aminoAcid.charAt(0))) +
+                aminoAcid.substring(1).toLowerCase();
     }
 
 }

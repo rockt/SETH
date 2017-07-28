@@ -21,7 +21,7 @@ import java.util.Map;
 public class Mutation {
 
 	private int id; //By which pattern has the mutation been found?
-    private String position;
+    private final String position;
 
     /**
      * 

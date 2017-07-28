@@ -12,7 +12,7 @@ public class PSM {
     private int entrez;
     private int aaLoc;
     private String wildtype;
-	Set<String> mutations;
+	final Set<String> mutations;
 		
 	public PSM(int entrez, int aaLoc, String reference, String mutations) {
 		super();
@@ -39,10 +39,10 @@ public class PSM {
 		
 		if(wildtype == null)
 			return false;
-		
+
 		if(mutations == null || mutations.size() == 0)
 			return false;
-		
+
 		return true;
 	}
 	
@@ -79,8 +79,7 @@ public class PSM {
 			this.mutations.add(mutation);
 	}
 	public void addMutations(Set<String> mutations) {
-		for(String mutation : mutations)
-			this.mutations.add(mutation);
+		this.mutations.addAll(mutations);
 	}
 	@Override
 	public String toString() {

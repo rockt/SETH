@@ -15,7 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This class can be used to find mutation mentions (deletions, IVS-substitions, insertions, and frameshifts)
+ * This class can be used to find mutation mentions (deletions, IVS-substitutions, insertions, and frameshifts)
  * written in  deprecated nomenclature
  * @author Philippe Thomas
  */
@@ -291,7 +291,9 @@ public class OldNomenclature2 {
                 try{
                     intLocation = Integer.parseInt(location);
                     parseable = true;
-                }catch(NumberFormatException nfe){}
+                }catch(NumberFormatException nfe){
+                    logger.trace("Location not parseable",nfe); //This is not a problem, simply a test for number
+                }
 
 
                 //Likely PSM, if position is positive and we could ground amino acid name
@@ -381,8 +383,8 @@ public class OldNomenclature2 {
 
     /**
      * If a location is negative or throws a number format exception, we assume that it is a NSM and not a PSM
-     * @param location
-     * @return
+     * @param location location of the mutation
+     * @return true if the location is NSM
      */
     private boolean isLikelyNsm(String location){
 
@@ -396,6 +398,16 @@ public class OldNomenclature2 {
         }
 
         return false;
+    }
+
+
+    public static void main(String[] args) throws IOException {
+        final OldNomenclature2 oldNomenclature2 = new OldNomenclature2("/media/philippe/5f695998-f5a5-4389-a2d8-4cf3ffa1288a/data/pubmed/rawInsDels.sorted.annotated2");
+
+        List<MutationMention> mentions = oldNomenclature2.extractMutations("translocation of T308");
+        for(MutationMention mm : mentions){
+            System.out.println(mm.getPatternId());
+        }
     }
 
 }

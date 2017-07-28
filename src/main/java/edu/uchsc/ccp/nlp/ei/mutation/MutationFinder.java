@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.apache.oro.text.regex.MalformedPatternException;
 import org.apache.oro.text.regex.MatchResult;
@@ -452,11 +451,11 @@ public class MutationFinder extends MutationExtractor {
                     String id = line.substring(0, firstTabIndex);
                     String text = line.substring(firstTabIndex + 1);
 
-                    String outputLine = id;
+                    StringBuilder outputLine = new StringBuilder(id);
                     Map<Mutation, Set<int[]>> mutations = mf.extractMutations(text);
                     for (Mutation mutation : mutations.keySet()) {
                         for (int i = 0; i < mutations.get(mutation).size(); i++) {
-                            outputLine += ("\t" + ((PointMutation) mutation).toString());
+                            outputLine.append("\t").append(((PointMutation) mutation).toString());
                         }
                     }
                     ps.println(outputLine);

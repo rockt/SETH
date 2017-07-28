@@ -148,7 +148,7 @@ public class SETH {
                         tmpMutation.setPsm(true);
                         tmpMutation.setNsm(false);
                         tmpMutation.setAmbiguous(false);
-                    } /** We removed the lower part, as this is allready handled in constructor MutationMention
+                    } /** We removed the lower part, as this is already handled in constructor MutationMention
                     else if(pm.isNsm()){
                         tmpMutation.setPsm(false);
                         tmpMutation.setAmbiguous(true);
@@ -229,9 +229,9 @@ public class SETH {
     /**
      * Minimal example to perform named entity recognition and normalization using SETH
      *
-     * @param args
-     * @throws SQLException
-     * @throws IOException
+     * @param args arguments are ignored
+     * @throws SQLException thrown on problems accessing database
+     * @throws IOException thrown on problems accessing resource files
      */
     public static void main(String[] args) throws SQLException, IOException {
         String text = "p.A123T and Val158Met";

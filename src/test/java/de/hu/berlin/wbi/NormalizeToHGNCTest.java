@@ -1,7 +1,6 @@
 package de.hu.berlin.wbi;
 
 import de.hu.berlin.wbi.objects.MutationMention;
-import junit.framework.TestCase;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

@@ -14,7 +14,7 @@ public class TranscriptNormalized extends Transcript implements Comparable<Trans
 
     private UniprotFeature feature = null;
 
-    private EnumSet<MatchOptions> matchType;
+    private final EnumSet<MatchOptions> matchType;
 
     public EnumSet<MatchOptions> getMatchType() { return matchType; }
 

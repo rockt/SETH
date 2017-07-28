@@ -1,7 +1,6 @@
 package de.hu.berlin.wbi;
 
 import de.hu.berlin.wbi.objects.MutationMention;
-import junit.framework.TestCase;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -26,7 +25,7 @@ public class ImproveNER {
 
     /**
      * Wrapper function, testing that we identify the provided string as a mutation
-     * @param text
+     * @param text text for which we expect exactly one mutation to be found
      */
     private void assertSingleMutation(String text) {
 

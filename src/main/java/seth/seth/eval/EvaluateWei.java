@@ -38,8 +38,7 @@ public class EvaluateWei {
 		System.err.println(sum +" entities");
 
 		Set<Integer> allPmids = new HashSet<Integer>(goldstandardMap.keySet());
-		for(int i : goldstandardMap.keySet())
-			allPmids.add(i);
+		allPmids.addAll(goldstandardMap.keySet());
 
 		Performance performance = new Performance();
 		for(int pmid : allPmids){

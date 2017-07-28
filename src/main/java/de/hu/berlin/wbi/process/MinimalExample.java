@@ -24,10 +24,8 @@ public class MinimalExample {
 
 	/**
      * Minimal example for SNP normalization
-	 * @throws SQLException 
-	 * @throws IOException 
-	 * @throws FileNotFoundException 
-	 * @throws InvalidPropertiesFormatException 
+	 * @throws SQLException thrown on problems accessing the database
+	 * @throws IOException thrown on problems accessing property file
 	 */
 	public static void main(String[] args) throws SQLException, IOException {
 		final Properties property = new Properties();

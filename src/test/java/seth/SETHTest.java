@@ -2,7 +2,6 @@ package seth;
 
 import de.hu.berlin.wbi.objects.MutationMention;
 import junit.framework.Assert;
-import junit.framework.TestCase;
 import org.junit.Test;
 import seth.ner.wrapper.Type;
 
@@ -21,7 +20,7 @@ public class SETHTest {
         Assert.assertEquals(mentions.size(), 3);
 
         // c.35delG and L90P (c.269T>C)
-        Collections.sort(mentions, new Comparator<MutationMention>() {
+        mentions.sort(new Comparator<MutationMention>() {
             @Override
             public int compare(MutationMention o1, MutationMention o2) {
                 return Integer.compare(o1.getStart(), o2.getStart());

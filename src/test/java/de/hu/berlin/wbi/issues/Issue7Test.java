@@ -2,7 +2,6 @@ package de.hu.berlin.wbi.issues;
 
 
 import de.hu.berlin.wbi.objects.MutationMention;
-import junit.framework.TestCase;
 import org.junit.Assert;
 import org.junit.Test;
 import seth.ner.wrapper.SETHNER;
