@@ -7,7 +7,7 @@ import java.util.*;
 /**
  * this class allows to detect possible mentions of copy number variations
  */
-public class CNVETH {
+class CNVETH {
 
     /**
      * CNVETH object to detect possible mentions of CNV keywords

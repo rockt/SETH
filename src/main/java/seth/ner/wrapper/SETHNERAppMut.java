@@ -11,7 +11,7 @@ import java.util.List;
  * Time: 11:12 AM
  */
 
-public class SETHNERAppMut {
+class SETHNERAppMut {
     public static void main(String[] args) {
         System.out.println(args[0]);
         SETH seth = new SETH("resources/mutations.txt", true, true);

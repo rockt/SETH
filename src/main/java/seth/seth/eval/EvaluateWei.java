@@ -91,7 +91,7 @@ public class EvaluateWei {
 		Pattern p = Pattern.compile("^[1-9][0-9]+");
 
 		BufferedReader br = new BufferedReader(new FileReader(goldFolder));
-		loop:while(br.ready()){
+		while(br.ready()){
 			String line = br.readLine();
 			Matcher m = p.matcher(line);
 

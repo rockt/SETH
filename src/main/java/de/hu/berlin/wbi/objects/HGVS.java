@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
  * @author Philippe Thomas
  *
  */
-public class HGVS {
+class HGVS {
 
     private final static Logger logger = LoggerFactory.getLogger(HGVS.class);
 

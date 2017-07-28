@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
  *
  * This class is used to perform named entity recogntion on the corpus of Wei et al. 2013
  */
-public class ApplyNERToWei {
+class ApplyNERToWei {
 
     private static Pattern titlePattern = Pattern.compile("^[1-9][0-9]+\\|t\\|.*");     //Pattern used to detect Title-lines
     private static Pattern abstractPattern = Pattern.compile("^[1-9][0-9]+\\|a\\|.*");  //Pattern detects abstract lines

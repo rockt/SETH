@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 /**
  * Created by philippe on 7/10/17.
  */
-public class NomenclaturePattern {
+class NomenclaturePattern {
     private final Pattern pattern;	//The Java regex pattern
     private final String regex;		//The pattern used to build the pattern
     private final int id;			//The identifier (line count) of the pattern

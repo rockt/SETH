@@ -16,7 +16,7 @@ import java.util.List;
  * Input corpora are both in the same format, but output is slightly different, as the MutationFinder corpus
  * provides no information about the actual position of a mutation in the text
  */
-public class ApplyNER {
+class ApplyNER {
 
     public static void main(String[] args) throws IOException {
 

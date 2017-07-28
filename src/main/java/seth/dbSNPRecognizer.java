@@ -1,6 +1,8 @@
 package seth;
 
 import de.hu.berlin.wbi.objects.MutationMention;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import seth.ner.wrapper.Type;
 
 import java.util.ArrayList;
@@ -12,7 +14,9 @@ import java.util.regex.Pattern;
  * Detect dnSNP mentions in text (e.g., rs2345)
  * @author  Philippe Thomas
  */
-public class dbSNPRecognizer {
+class dbSNPRecognizer {
+
+    final private Logger logger = LoggerFactory.getLogger(dbSNPRecognizer.class);
 
     final private static String prefix="(^|[\\s\\(\\)\\[\\'\"/,\\-:_])"; //>
     final private static String midfix="((?<wild>[ATGC])\\s?[/\\\\>]\\s?(?<mut>[ATGC]))?";
@@ -43,7 +47,9 @@ public class dbSNPRecognizer {
             try{
                 int rsId = Integer.parseInt(matcher.group(2).substring(2).replaceAll(",",""));
                 mm.normalizeSNP(rsId); //TODO: In general we could check if this rs-id is known in dbSNP?
-            }catch(NumberFormatException nfe){}
+            }catch(NumberFormatException nfe){
+                logger.warn("Cannot parse dbSNP Mention {}", matcher.group(2));
+            }
             result.add(mm);
         }
 

@@ -28,7 +28,7 @@ public class Mutation {
      * @param position --
      *            the sequence position or start position of the mutation
      */
-    public Mutation(int position) throws MutationException {
+    public Mutation(int position) {
         this.position = Integer.toString(position);
     }
     /**

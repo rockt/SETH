@@ -2,7 +2,7 @@ package cnveth;
 
 import java.util.ArrayList;
 
-public class RegionMention {
+class RegionMention {
 
     /** region mention */
     protected String region;

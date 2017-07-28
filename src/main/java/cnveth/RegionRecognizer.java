@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
    custom download containing e.g. entrez gene id, chromosome,
    hgnc id, locus group, locus type, synonyms
  */
-public class RegionRecognizer{
+class RegionRecognizer{
 
     private String file = "resources/regions/chromosomalRegions.txt";
 

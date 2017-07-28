@@ -9,7 +9,7 @@ package seth.seth.eval;
  *
  * Class is used to calculate NER performance on different  corpora
  */
-public class Performance {
+class Performance {
 
         protected int tp;
         protected int tn;

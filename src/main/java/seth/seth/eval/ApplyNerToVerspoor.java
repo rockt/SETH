@@ -14,7 +14,7 @@ import java.util.List;
  *
  * This class is used to perform named entity recogntion on the corpus of Verspoor 2013 et al. 2013
  */
-public class ApplyNerToVerspoor {
+class ApplyNerToVerspoor {
 
     public static void main(String[] args) throws IOException {
 

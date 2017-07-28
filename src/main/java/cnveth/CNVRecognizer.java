@@ -8,7 +8,7 @@ import de.hu.berlin.wbi.objects.MutationMention;
 import seth.ner.wrapper.Type;
 
 
-public class CNVRecognizer {
+class CNVRecognizer {
 
     final private static String prefix = "(^|[\\.\\s\\(\\['\"/,\\-])";
     final private static String cnvKeywords = "(copy number variation|CNV|amplification|polymorphism|increased copy number|copy number gain|copy number loss|copy number alteration|copy number aberration|deletion)";

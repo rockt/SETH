@@ -12,7 +12,7 @@ import java.util.*;
  * Evaluates prediction results of SETH on the corpus consisting of 210 articles from human mutation   and the XY articles from ?? journal
  *
  */
-public class EvaluateNER {
+class EvaluateNER {
 
     public static void main(String[] args) throws IOException {
 

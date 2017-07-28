@@ -10,7 +10,7 @@ import java.util.List;
  * Time: 11:12 AM
  */
 
-public class SETHNERApp {
+class SETHNERApp {
     public static void main(String[] args) {
         System.out.println(args[0]);
         SETHNER seth = new SETHNER(true);

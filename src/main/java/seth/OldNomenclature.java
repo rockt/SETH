@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
  * written in  deprecated nomenclature
  * @author Philippe Thomas
  */
-public class OldNomenclature {
+class OldNomenclature {
 
     final private static String prefix="(^|[\\s\\(\\)\\[\\'\"/,])"; //>
     final private static String suffix="(?=([\\.,\\s\\)\\(\\]\\'\":;\\-/]|$))";//|:?[ATGC]>[ATGC]

@@ -10,7 +10,7 @@ import java.util.EnumSet;
  * @author Philippe Thomas
  *
  */
-public class TranscriptNormalized extends Transcript implements Comparable<TranscriptNormalized>{
+class TranscriptNormalized extends Transcript implements Comparable<TranscriptNormalized>{
 
     private UniprotFeature feature = null;
 

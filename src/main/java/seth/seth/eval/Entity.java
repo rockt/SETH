@@ -7,7 +7,7 @@ package seth.seth.eval;
  * Time: 10:13
  * General representation of a textual mutation mention used for evaluation
  */
-public class Entity {
+class Entity {
     private final String id;   // e.g. T1
     private final String tool; //SETH or MF
 
