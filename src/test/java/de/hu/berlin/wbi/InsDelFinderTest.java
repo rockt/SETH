@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class InsDelFinderTest {
 
-    OldNomenclature2 oldNomenclature2;
+    private OldNomenclature2 oldNomenclature2;
 
     @Before
     public void setUp() {
@@ -130,6 +130,7 @@ public class InsDelFinderTest {
         assertSingleMutation("deletion of Gly-457");
         assertSingleMutation("T-1201 insertion");
         assertSingleMutation("deletion of Gly-457");
+        assertSingleMutation("translocation of T308");
 
         assertNoMutation("*3del");
         assertNoMutation("2282del4");
@@ -147,7 +148,6 @@ public class InsDelFinderTest {
     /**
      * We observed that the component extracts frequent false positives
      * which are quite ambiguous
-     * @throws Exception
      */
     @Test
     public void testMention7() throws Exception {
@@ -168,8 +168,4 @@ public class InsDelFinderTest {
         assertSingleMutation("IVS1-1724 C>G");
         assertSingleMutation("IVS9-28A/G");
     }
-
-
-
-
 }
