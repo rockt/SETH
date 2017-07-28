@@ -126,8 +126,6 @@ public class InsDelFinderTest {
         assertSingleMutation("Trp53Δ");
         assertSingleMutation("ΔF508");
         assertSingleMutation("translocation of Arg-143");
-        assertSingleMutation("deletion of E2F1");
-        assertSingleMutation("deletion of S1P1");
         assertSingleMutation("deletion of Phe508");
         assertSingleMutation("deletion of Gly-457");
         assertSingleMutation("T-1201 insertion");
@@ -142,7 +140,8 @@ public class InsDelFinderTest {
         assertNoMutation("Deletion of P2Y2");
         assertNoMutation("Deletion of P2X7");
         assertNoMutation("Deletion of S100A4");
-
+        assertNoMutation("deletion of E2F1");
+        assertNoMutation("deletion of S1P1");
     }
 
     /**
