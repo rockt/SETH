@@ -24,19 +24,16 @@ public class Issue17Test {
     public void testPmid17678724() throws Exception {
         List<MutationMention> mutationMentions = seth.findMutations("Polymorphism in MHC2TA gene (rs4,774,123G/C) are studied in two groups");
         System.out.println(mutationMentions);
-        Assert.assertEquals(mutationMentions.size(), 2); //Do we actually find a mutation?
+        Assert.assertEquals(1, mutationMentions.size()); //Do we actually find a mutation?
 
-        for(MutationMention mm: mutationMentions){
-            if(!mm.getTool().equals(MutationMention.Tool.DBSNP))
-                continue;
+        MutationMention mm =  mutationMentions.get(0);
 
-            Assert.assertTrue(mm.getTool().equals(MutationMention.Tool.DBSNP));
-            Assert.assertEquals(mm.getText(), "rs4,774,123G/C");
-            Assert.assertEquals(mm.getNormalized().size(), 1);
-            Assert.assertEquals(mm.getNormalized().get(0).getRsID(), 4774123);
-            Assert.assertEquals(mm.getMutResidue(), "C");
-            Assert.assertEquals(mm.getWtResidue(), "G");
-        }
+        Assert.assertTrue(mm.getTool().equals(MutationMention.Tool.DBSNP));
+        Assert.assertEquals(mm.getText(), "rs4,774,123G/C");
+        Assert.assertEquals(mm.getNormalized().size(), 1);
+        Assert.assertEquals(mm.getNormalized().get(0).getRsID(), 4774123);
+        Assert.assertEquals(mm.getMutResidue(), "C");
+        Assert.assertEquals(mm.getWtResidue(), "G");
     }
 
 
@@ -49,7 +46,6 @@ public class Issue17Test {
         Assert.assertEquals(mutationMentions.get(0).getText(), "rs7903146");
         Assert.assertEquals(mutationMentions.get(0).getNormalized().size(),1);
         Assert.assertEquals(mutationMentions.get(0).getNormalized().get(0).getRsID(), 7903146);
-
     }
 
     @Test
