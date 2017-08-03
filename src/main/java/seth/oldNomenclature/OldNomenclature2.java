@@ -342,6 +342,20 @@ public class OldNomenclature2 {
             result.add(mm);
         }
 
+        m = fsPattern.matcher(text);
+        while(m.find()){
+            int start = m.start("group");
+            int end   = m.end("group");
+            MutationMention mm = new MutationMention(start, end, text.substring(start, end), "p.", m.group("pos"),  m.group("wt"), m.group("mut"), Type.FRAMESHIFT, MutationMention.Tool.REGEX);
+
+            mm.setPsm(true);
+            mm.setNsm(false);
+            mm.setAmbiguous(false);
+            mm.setPatternId(-2);
+            result.add(mm);
+        }
+
+
         result = removeDuplicates(result, text);
 
 
