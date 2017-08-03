@@ -50,6 +50,14 @@ public class InsDelFinderTest {
         Assert.assertEquals(0, mutationMentions.size());
     }
 
+    @Test
+    public void testMentionsFs() throws Exception {
+        //Frameshift
+        assertSingleMutation("M245Vfs");
+        assertSingleMutation("M245VfsX");
+        assertSingleMutation("P91QfsX");
+    }
+
     /**
      *   JUnit test classes generated for the pattern
      *   <kw> of <aa><number>
@@ -72,6 +80,8 @@ public class InsDelFinderTest {
     @Test
     public void testMention2() throws Exception {
         assertSingleMutation("Tyr12del");
+        assertSingleMutation("A12del");
+        assertSingleMutation("Tyr15ins");
         assertSingleMutation("T15ins");
         assertSingleMutation("Alanine54dup");
         assertSingleMutation("T-15ins");
