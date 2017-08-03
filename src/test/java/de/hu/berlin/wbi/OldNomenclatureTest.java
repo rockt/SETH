@@ -5,6 +5,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Comparator;
 import java.util.List;
 import seth.SETH;
 
@@ -413,5 +414,20 @@ public class OldNomenclatureTest {
         assertSingleMutation("-134delA");
         //assertSingleMutation("c2403T --> C");
 
+    }
+
+
+    /**
+     * Test that we are able to find overlapping mentions
+     */
+    @Test
+    public void testMultipleMentions() throws  Exception{
+        List<MutationMention> mutationMentions = seth.findMutations("lorum Trp-64 to Phe or Tyr ipsum");
+        mutationMentions.sort((o1, o2) -> o1.getEnd() -o2.getEnd());
+        //System.out.println(mutationMentions);
+
+        Assert.assertEquals(2, mutationMentions.size());
+        Assert.assertEquals("Trp-64 to Phe", mutationMentions.get(0).getText());
+        Assert.assertEquals("Trp-64 to Phe or Tyr", mutationMentions.get(1).getText());
     }
 }
