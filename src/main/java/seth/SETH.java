@@ -4,6 +4,8 @@ import de.hu.berlin.wbi.objects.*;
 import edu.uchsc.ccp.nlp.ei.mutation.MutationException;
 import edu.uchsc.ccp.nlp.ei.mutation.MutationFinder;
 import edu.uchsc.ccp.nlp.ei.mutation.PointMutation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import seth.ner.wrapper.SETHNER;
 import seth.ner.wrapper.Type;
 
@@ -25,6 +27,8 @@ import java.util.*;
  */
 public class SETH {
 
+
+    final private Logger logger = LoggerFactory.getLogger(SETH.class);
 
     /**
      * SETH object for recognizing nomenclature SNPs
@@ -176,20 +180,14 @@ public class SETH {
             loop:for (MutationMention m : result) {
 
                 //This variable is needed to check  whether two mutations are identical. (Important as MF finds overlapping ,mutations Trp-64 to Phe or Tyr)
-                boolean equal = false;
+                //Better handling of potentially null values
+                boolean equal = Objects.equals(mm.getPosition(), m.getPosition()) && Objects.equals(mm.getMutResidue(), m.getMutResidue()) && Objects.equals(mm.getWtResidue(), m.getWtResidue());
 
                 //Debugging purpose
                 //System.out.println("'" + mm.getPosition() + "' -- '" + m.getPosition() + "'");
                 //System.out.println("'" + mm.getMutResidue() + "' -- '" + m.getMutResidue() + "'");
                 //System.out.println("'" + mm.getWtResidue() + "' -- '" + m.getWtResidue() + "'");
 
-
-                //This potentially lead to problematic null pointer exceptions
-                //equal = mm.getPosition().equals(m.getPosition()) && mm.getMutResidue().equals(m.getMutResidue()) && mm.getWtResidue().equals(m.getWtResidue());
-
-
-                //Better handling of potentially null values
-                equal =  Objects.equals(mm.getPosition(), m.getPosition()) && Objects.equals(mm.getMutResidue(), m.getMutResidue()) && Objects.equals(mm.getWtResidue(), m.getWtResidue());
 
                 //In case the two recognized mutation mentions are equally long Tool.DBSNP wins over Tool.SETH  (both tools find mentions like rs123:A>T)
                 if (mm.getStart() == m.getStart() && mm.getEnd() == m.getEnd()) {
@@ -205,16 +203,29 @@ public class SETH {
                 }
 
                 //If the new mention is smaller than the mention contained in the result, ignore the smaller one
-                else if (mm.getStart() >= m.getStart() && mm.getEnd() <= m.getEnd() && equal) {
+                else if (mm.getStart() >= m.getStart() && mm.getEnd() <= m.getEnd() && mm.getTool().equals(m.getTool()) && equal) {
                     contained = true;
                     break loop;
                 }
 
                 //If the new mention is longer, remove the old (smaller) mention and add the new one
-                else if (m.getStart() >= mm.getStart() && m.getEnd() <= mm.getEnd() && equal) {
+                else if (m.getStart() >= mm.getStart() && m.getEnd() <= mm.getEnd() && m.getTool().equals(mm.getTool()) && equal) {
                     result.remove(m);
                     break loop;
                 }
+
+                //In case the mention is differently long, but from different tools
+                else if (mm.getStart() >= m.getStart() && mm.getEnd() <= m.getEnd() && !mm.getTool().equals(m.getTool())) {
+                    contained = true;
+                    break loop;
+                }
+
+                //In case the mention is differently long, but from different tools
+                else if (m.getStart() >= mm.getStart() && m.getEnd() <= mm.getEnd() && !m.getTool().equals(mm.getTool())) {
+                    result.remove(m);
+                    break loop;
+                }
+
             }
 
             if (!contained)
