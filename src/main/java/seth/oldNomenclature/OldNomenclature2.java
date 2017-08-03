@@ -28,6 +28,7 @@ public class OldNomenclature2 {
 
     private final List<NomenclaturePattern> patterns = new ArrayList<>(); //A list of patterns for mutation recognition
     private final Pattern ivsPattern = Pattern.compile(prefix +"(?<group>(?<pos>IVS[\\-]?[1-9][0-9]*\\s?[+-]\\s?[1-9][0-9]*)\\s?(?<wt>[ATGC])\\s?(?:-{0,2}>|→|/|\\\\)\\s?(?<mut>[ATGC]))" +suffix); //IVS nomenclature is a separate case
+    private final Pattern fsPattern = Pattern.compile(prefix +"(?<group>(?<wt>[CISQMNPKDTFAGHLRWVEYBZJ])\\s?(?<pos>[1-9][0-9]*)\\s?(?<mut>[CISQMNPKDTFAGHLRWVEYBZJX])fsX?)" +suffix); //frameshift pattern M245Vfs
     private final Map<String, Type> modificationToType = new HashMap<>(); //Map from variation string to mutation type
     private final Map<String, String> abbreviationLookup = new HashMap<>(); //Map from AA to one letter
 
@@ -208,8 +209,8 @@ public class OldNomenclature2 {
                 +"[Cc]onv|[Cc]onversion|[Cc]onversions|[Cc]onverted|[Cc]onverting" +
                 "|Δ|[Dd]el|[Dd]eleted|[Dd]eleting|[Dd]eletion|[Dd]eletions|[Dd]elta" +
                 "|[Dd]up|[Dd]uplicated|[Dd]uplicating|[Dd]uplication|[Dd]uplications" +
-                "|[Ff]rameshift|fs|" +
-                "[Ii]ns|[Ii]ns\\/del|[Ii]nsdel" +
+                "|[Ff]rameshift|fs|fsX" +
+                "|[Ii]ns|[Ii]ns\\/del|[Ii]nsdel" +
                 "|[Ii]nserted|[Ii]nserting|[Ii]nsertion|[Ii]nsertions" +
                 "|[Ii]nv|[Ii]nversion|[Ii]nversions" +
                 "|[Ii]nverted|[Ii]nverting" +
