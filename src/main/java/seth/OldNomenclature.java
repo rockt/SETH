@@ -24,7 +24,7 @@ class OldNomenclature {
     //852delA, 852delAT, 852del, 852del22, 852-123delA, 852+123delT
     final private static Pattern dnaDeletionPattern = Pattern.compile(prefix +"(?<group>(?<pos>[+-]?[1-9][0-9]*(?:\\s?[+-_]\\s?[1-9][0-9]*)?)\\s?(del)\\s?(?<wt>([ATGC]|[0-9])+))" +suffix);
     //IVS123+12A->T, IVS123-12A->T
-    final private static Pattern ivsPattern = Pattern.compile(prefix +"(?<group>(?<pos>IVS[-]?[1-9][0-9]*\\s?[+-]\\s?[1-9][0-9]*)\\s?(?<wt>[ATGC])\\s?(?:-{0,2}>|→|/|\\\\)\\s?(?<mut>[ATGC]))" +suffix);
+    private final Pattern ivsPattern = Pattern.compile(prefix +"(?<group>(?<pos>IVS[\\-]?[1-9][0-9]*\\s?[+-]\\s?[1-9][0-9]*)\\s?(?<wt>[ATGCatgc])\\s?(?:-{0,2}>|→|/|\\\\)\\s?(?<mut>[ATGCatgc]))" +suffix); //IVS nomenclature is a separate case
 
     //F123del, Phe123del
     final private static Pattern protDeletionPattern = Pattern.compile(prefix +"(?<group>(?<wt>[CISQMNPKDTFAGHLRWVEYBZJX])(?<pos>[1-9][0-9]*)del)" +suffix);
