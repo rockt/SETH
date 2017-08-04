@@ -41,7 +41,8 @@ public class ImproveNER {
         //Some tests where 1-letter and 3-letter versions are interchangebly used
         //<aa><num><aa>
         assertSingleMutation("L292ter");
-        assertSingleMutation("E246STOP");
+        assertSingleMutation("E246Stop");
+        assertSingleMutation("E246stop");
         assertSingleMutation("L212Glu");
         assertSingleMutation("Cys149N");
     }
