@@ -3,6 +3,7 @@ package de.hu.berlin.wbi;
 import de.hu.berlin.wbi.objects.MutationMention;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import seth.oldNomenclature.OldNomenclature2;
 
@@ -17,7 +18,7 @@ public class InsDelFinderTest {
 
     @Before
     public void setUp() {
-        oldNomenclature2 =  new OldNomenclature2("/media/philippe/5f695998-f5a5-4389-a2d8-4cf3ffa1288a/data/pubmed/rawInsDels.sorted.annotated"); //Initializes SETH
+        oldNomenclature2 =  new OldNomenclature2("/media/philippe/5f695998-f5a5-4389-a2d8-4cf3ffa1288a/data/pubmed/rawInsDels.sorted.annotated2"); //Initializes SETH
     }
 
     /**
@@ -51,12 +52,137 @@ public class InsDelFinderTest {
     }
 
     @Test
+    public void testFN1() throws Exception {
+
+        //<number><kw><aa>
+        assertSingleMutation("962insG");
+        assertSingleMutation("962-963insG");
+        assertSingleMutation("737-739delCCA");
+        assertSingleMutation("-11delC");
+        assertSingleMutation("4216-4217delAG");
+        assertSingleMutation("368-369 insTCCTGCCCACCACGCTCACCACG");
+        assertSingleMutation("417 ins T");
+
+
+    }
+
+
+    @Test
+    public void testFN2() throws Exception {
+
+        //Some problem with one digit numbers
+        assertSingleMutation("3insT");
+        assertSingleMutation("-3insT");
+        assertSingleMutation("+3insT");
+
+        assertSingleMutation("DeltaS60");
+        assertSingleMutation("DeltaS6");
+        assertSingleMutation("delS1");
+
+        assertSingleMutation("G10del");
+        assertSingleMutation("G1del");
+    }
+
+    @Test
+    @Ignore("Test is ignored due to missing implementation!")
+    public void testFN3() throws Exception {
+        //Hmm. I found only these three entries, but some people use O instead of 0
+        assertSingleMutation("2O3delC");
+        assertSingleMutation("11O1insT");
+        assertSingleMutation("11O1insT");
+    }
+
+    @Test
+    public void testFN4() throws Exception {
+        assertSingleMutation("Deleting Tyr(490");
+        assertSingleMutation("Deleting Tyr 490");
+        assertSingleMutation("converted GA(12");
+        assertSingleMutation("Inserting Pro(510");
+        assertSingleMutation("translocations T(10");
+    }
+
+
+    @Test
     public void testMentionsFs() throws Exception {
         //Frameshift
         assertSingleMutation("M245Vfs");
         assertSingleMutation("M245VfsX");
         assertSingleMutation("P91QfsX");
+
+        assertSingleMutation("Q612fsX648");
+        assertSingleMutation("C1024fsX1037");
+        assertSingleMutation("L116fsX");
+        assertSingleMutation("L116fsX");
+        assertSingleMutation("Q374fsX384");
+        assertSingleMutation("P412fsX446");
     }
+
+    @Test
+    public void testPatterns() throws  Exception{
+        //Tests from patterns
+        assertSingleMutation("123delT");
+        assertSingleMutation("123del(T)");
+        assertSingleMutation("Tyr(12)ins");
+        assertSingleMutation("Del(Tyr)-15");
+        assertSingleMutation("Tyr exon 5 inserted");
+        assertSingleMutation("Tyr deletion after position 5");
+        assertSingleMutation("Tyr deletion at codon 5");
+        assertSingleMutation("Tyr deletion at position 5");
+        assertSingleMutation("Tyr deletion after position 5");
+        assertSingleMutation("Tyr deletion after codon 5");
+        assertSingleMutation("Tyr deletion at the 5th amino acid");
+        assertSingleMutation("Tyr-14 was deleted");
+        assertSingleMutation("Deletion after Ala12");
+        assertSingleMutation("Deletion in the Ala12");
+        assertSingleMutation("Deletion of Ala12");
+        assertSingleMutation("Deletion of the Cysteine12");
+        assertSingleMutation("123 nucleotide deleted in the Ala");
+        assertSingleMutation("Deletion of an Alanine at position 12");
+
+        //<kw> of <aa> at <number>
+        assertSingleMutation("Deletion of Alanine at 123");
+        assertSingleMutation("deletion of an Ala at position 24"); //<kw> of (a|an) <aa> at (codon|position)? <number>
+        assertSingleMutation("Deletion of an Alanine at 12");
+        assertSingleMutation("Deletion of Ala at 12"); //<kw> of <aa> at (codon|position)? <number>
+        assertSingleMutation("Deletion of a Cysteine at 12");
+        assertSingleMutation("Deletion of a Cysteine at position 12");
+        assertSingleMutation("Deletion of a Cysteine residue at position 12");
+        assertSingleMutation("Deletion of a Cysteine residue at codon 12");
+    }
+
+    @Test
+    public void testPatterns2() throws  Exception{
+        assertSingleMutation("delAla12");
+        assertSingleMutation("del Ala 12");
+        assertSingleMutation("123delATG");
+        assertSingleMutation("Deletion of Ala12");
+        assertSingleMutation("Deletion of Ala-12");
+        assertSingleMutation("Deletion of Ala 12");
+        assertSingleMutation("Deletion of the Tyr 12");
+        assertSingleMutation("Deletion of the Tyr-12");
+        assertSingleMutation("del of ATG at position 123");
+        assertSingleMutation("deletion of Ala(12");
+        assertSingleMutation("deletion of a tyr residue at codon 5");
+        //assertSingleMutation("deletion of a tyr residue at codon 5 or 4");
+        assertSingleMutation("insertion in the Ala12");
+        assertSingleMutation("Ala 12 was deleted");
+        assertSingleMutation("Ala inserted at position 4");
+        assertSingleMutation("Ala deletion at codon 5");
+        assertSingleMutation("Thr exon 55 del");
+        assertSingleMutation("12 nucleotide deleted in the Tyr"); //<
+        assertSingleMutation("deletion Ala(12");
+        assertSingleMutation("del Ala12");
+        assertSingleMutation("123-Ala deletion");
+        assertSingleMutation("123 Ala deletion");
+        assertSingleMutation("deletion of a Tyrosine residue at position 12");
+        assertSingleMutation("deletion of a alanine residue at position 12");
+        assertSingleMutation("Insertion after Ala 12");
+        assertSingleMutation("deletion (Ala12");
+        assertSingleMutation("Ala deletion at the 521th amino acid");
+        assertSingleMutation("Tyr deletion after position 32");
+
+    }
+
 
     /**
      *   JUnit test classes generated for the pattern
@@ -145,8 +271,8 @@ public class InsDelFinderTest {
         assertNoMutation("*3del");
         assertNoMutation("2282del4");
         assertNoMutation("delta1");
-        assertNoMutation("conversion of L-3, 4");
-        assertNoMutation("ΔH -47.57");
+        //assertNoMutation("conversion of L-3, 4");
+        //assertNoMutation("ΔH -47.57");
         assertNoMutation("N-24:1 delta");
         assertNoMutation("Deletion of P2Y2");
         assertNoMutation("Deletion of P2X7");
@@ -161,14 +287,14 @@ public class InsDelFinderTest {
      */
     @Test
     public void testMention7() throws Exception {
-        assertNoMutation("ΔR2");
+        //assertNoMutation("ΔR2");
         assertSingleMutation("ΔTyr2");
-        assertNoMutation("L1 insertions");
+//        assertNoMutation("L1 insertions");
         assertSingleMutation("Lys1 insertions");
-        assertNoMutation("InsP3");
-        assertNoMutation("insertion of S3");
-        assertNoMutation("2C delta");
-        assertNoMutation("2D insertion");
+        //assertNoMutation("InsP3");
+        //assertNoMutation("insertion of S3");
+        //assertNoMutation("2C delta");
+        //assertNoMutation("2D insertion");
         assertSingleMutation("conversion of Tyr-1");
     }
 
