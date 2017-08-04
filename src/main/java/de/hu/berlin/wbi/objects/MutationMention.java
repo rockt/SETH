@@ -1195,6 +1195,18 @@ public class MutationMention implements Comparable<MutationMention>{
             if(this.getType().equals(Type.DELETION))
                 return  wtResidue+position +"del";
 
+            else if(this.getType().equals(Type.INSERTION))
+                return  wtResidue+position +"ins";
+
+            else if(this.getType().equals(Type.DELETION_INSERTION))
+                return  wtResidue+position +"insdel";
+
+            else if(this.getType().equals(Type.CONVERSION))
+                return  wtResidue+position +"con";
+
+            else if(this.getType().equals(Type.DUPLICATION))
+                return  wtResidue+position +"dup";
+
             else
                 return text;
         }
