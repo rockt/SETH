@@ -198,7 +198,7 @@ public class OldNomenclature2 {
     private void loadRegularExpressionsFromStream(BufferedReader br) {
 
         //Replace amino acids with this regex
-        String aa ="(?<amino>[ATGC]+|[CISQMNPKDTFAGHLRWVEYBZJX*]|(?:[Al]la|[Gg]ly|[Ll]eu|[Mm]et|[Pp]he|[Tt]rp|[Ll]ys|[Gg]ln|[Gg]lu|[Ss]er|[Pp]ro|[Vv]al|[Ii]le|[Cc]ys|[Tt]yr|[Hh]is|[Aa]rg|[Aa]sn|[Aa]sp|[Tt]hr|[Aa]sx|[Gg]lx|[Xx]le|[Tt]er|[Ss]tp" +
+        String aa ="(?<amino>[ATGC]+|[CISQMNPKDTFAGHLRWVEYBZJX]|(?:[Al]la|[Gg]ly|[Ll]eu|[Mm]et|[Pp]he|[Tt]rp|[Ll]ys|[Gg]ln|[Gg]lu|[Ss]er|[Pp]ro|[Vv]al|[Ii]le|[Cc]ys|[Tt]yr|[Hh]is|[Aa]rg|[Aa]sn|[Aa]sp|[Tt]hr|[Aa]sx|[Gg]lx|[Xx]le|[Tt]er|[Ss]tp" +
                 "|[Aa]lanine|[Gg]lycine|[Ll]eucine|[Mm]ethionine|[Pp]henylalanine|[Tt]ryptophan|[Ll]ysine|[Gg]lutamine|[Gg]lutamic [Aa]cid|[Gg]lutamate|[Aa]spartate|[Ss]erine|[Pp]roline|[Vv]aline|[Ii]soleucine|[Cc]ysteine|[T]yrosine|[Hh]istidine|[Aa]rginine|[Aa]sparagine|[Aa]spartic [Aa]cid|[Tt]hreonine|[Tt]erm|[Ss]top|[Aa]mber|[Uu]mber|[Oo]chre|[Oo]pal))";
 
         //Replace numbers with this regex
