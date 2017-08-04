@@ -234,6 +234,7 @@ public class OldNomenclature2 {
                 sb.insert(0, prefix);
                 sb.append(")" );
                 sb.append(suffix);
+                //System.out.println(line+"\t" +sb);
 
                 final NomenclaturePattern pattern = new NomenclaturePattern(Pattern.compile(sb.toString()), sb.toString(), nLine);
                 patterns.add(pattern);
@@ -267,7 +268,6 @@ public class OldNomenclature2 {
                 Type type = modificationToType.get(m.group("mod").toUpperCase());
 
                 if ( type == null){
-
                     logger.error("Cannot find modification type for '" +m.group("mod") +"'; skipping mention in text '" +text.substring(start, end) +"'");
                     continue;
                 }
@@ -321,10 +321,10 @@ public class OldNomenclature2 {
                 mm.setPatternId(pattern.getId());
 
                 //Here we filter likely false positive mentions (where the String mention is only one char and the location is below 9); e.g., ΔR2; but not ΔR20 or ΔTyr2
-                if(amino.length() != 1 || Math.abs(intLocation) > 9 || !parseable)
+                //if(amino.length() != 1 || Math.abs(intLocation) > 9 || !parseable)
                     result.add(mm);
-                else
-                    logger.debug("Skipping '{}'; as likely false positive ", text.substring(start, end));
+               // else
+                //    logger.debug("Skipping '{}'; as likely false positive ", text.substring(start, end));
             }
         }
 
