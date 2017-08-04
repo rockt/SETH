@@ -28,7 +28,7 @@ public class OldNomenclature2 {
 
     private final List<NomenclaturePattern> patterns = new ArrayList<>(); //A list of patterns for mutation recognition
     private final Pattern ivsPattern = Pattern.compile(prefix +"(?<group>(?<pos>IVS[\\-]?[1-9][0-9]*\\s?[+-]\\s?[1-9][0-9]*)\\s?(?<wt>[ATGCatgc])\\s?(?:-{0,2}>|to|→|/|\\\\)\\s?(?<mut>[ATGCatgc]))" +suffix); //IVS nomenclature is a separate case
-    private final Pattern fsPattern = Pattern.compile(prefix +"(?<group>(?<wt>[CISQMNPKDTFAGHLRWVEYBZJ])\\s?(?<pos>[1-9][0-9]*)\\s?(?<mut>[CISQMNPKDTFAGHLRWVEYBZJX])fsX?)" +suffix); //frameshift pattern M245Vfs
+    private final Pattern fsPattern = Pattern.compile(prefix +"(?<group>(?<wt>[CISQMNPKDTFAGHLRWVEYBZJ])\\s?(?<pos>[1-9][0-9]*)\\s?(?<mut>[CISQMNPKDTFAGHLRWVEYBZJX])?fsX?(?<length>[1-9][0-9]*)?)" +suffix); //frameshift pattern M245Vfs; M245VfsX; M245fs; M245VfsX123
     private final Map<String, Type> modificationToType = new HashMap<>(); //Map from variation string to mutation type
     private final Map<String, String> abbreviationLookup = new HashMap<>(); //Map from AA to one letter
 
