@@ -1151,7 +1151,7 @@ public class MutationMention implements Comparable<MutationMention>{
      */
    @Override
     public String toString() {
-        return "MutationMention [span=" + location.getStart() +"-" +location.getStop()
+        return "MutationMention [span=" + location.getStart() +"-" +location.getStop() +", pattern=" +patternId
                 + ", mutResidue=" + mutResidue + ", location=" +position + ", wtResidue=" + wtResidue +", text=" +text
                 + ", type=" + getType() + ", tool=" + getTool() + "]";
     }

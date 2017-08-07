@@ -84,15 +84,6 @@ public class InsDelFinderTest {
     }
 
     @Test
-    @Ignore("Test is ignored due to missing implementation!")
-    public void testFN3() throws Exception {
-        //Hmm. I found only these three entries, but some people use O instead of 0
-        assertSingleMutation("2O3delC");
-        assertSingleMutation("11O1insT");
-        assertSingleMutation("11O1insT");
-    }
-
-    @Test
     public void testFN4() throws Exception {
         assertSingleMutation("Deleting Tyr(490");
         assertSingleMutation("Deleting Tyr 490");
@@ -100,7 +91,6 @@ public class InsDelFinderTest {
         assertSingleMutation("Inserting Pro(510");
         assertSingleMutation("translocations T(10");
     }
-
 
     @Test
     public void testMentionsFs() throws Exception {
@@ -112,7 +102,7 @@ public class InsDelFinderTest {
         assertSingleMutation("Q612fsX648");
         assertSingleMutation("C1024fsX1037");
         assertSingleMutation("L116fsX");
-        assertSingleMutation("L116fsX");
+        assertSingleMutation("D272fs");
         assertSingleMutation("Q374fsX384");
         assertSingleMutation("P412fsX446");
     }

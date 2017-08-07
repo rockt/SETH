@@ -210,7 +210,7 @@ public class OldNomenclature2 {
                 +"[Cc]onv|[Cc]onversion|[Cc]onversions|[Cc]onverted|[Cc]onverting" +
                 "|Δ|[Dd]el|[Dd]eleted|[Dd]eleting|[Dd]eletion|[Dd]eletions|[Dd]elta" +
                 "|[Dd]up|[Dd]uplicated|[Dd]uplicating|[Dd]uplication|[Dd]uplications" +
-                "|[Ff]rameshift|fs|fsX" +
+                "|[Ff]rameshift" + //|fs|fsX //Not required, as fs and fsX is covered by previous regular expression
                 "|[Ii]ns|[Ii]ns\\/del|[Ii]nsdel" +
                 "|[Ii]nserted|[Ii]nserting|[Ii]nsertion|[Ii]nsertions" +
                 "|[Ii]nv|[Ii]nversion|[Ii]nversions" +
