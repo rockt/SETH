@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import seth.ner.wrapper.SETHNER;
 import seth.ner.wrapper.Type;
+import seth.oldNomenclature.OldNomenclature2;
 
 
 import java.io.File;
@@ -43,7 +44,7 @@ public class SETH {
     /**
      * Set of regular expressions for finding free text deletions, insertions, etc.
      */
-    private final OldNomenclature bl;
+    private final OldNomenclature2 bl;
 
     /**
      * Detects dbSNP mentions (e.g., rs334)
@@ -61,7 +62,7 @@ public class SETH {
         this.mf = new MutationFinder();
         this.seth = new SETHNER(false);
         this.snpRecognizer = new dbSNPRecognizer();
-        this.bl = new OldNomenclature();
+        this.bl = new OldNomenclature2();
     }
 
     /**
@@ -80,7 +81,28 @@ public class SETH {
         this.snpRecognizer = new dbSNPRecognizer();
 
         if (oldNomenclature)
-            this.bl = new OldNomenclature();
+            this.bl = new OldNomenclature2();
+        else
+            this.bl = null;
+    }
+
+    /**
+     * Initializes {@link MutationFinder} and {@link SETHNER}.
+     * Requires a file with regular expressions for MutationFinder
+     *
+     * @param regexFile       File location with regular expressions for MutationFinder
+     * @param exactGrammar    If true, SETH uses the exact EBNF grammar, otherwise matching is fuzzy
+     * @param oldNomenclatureFile   File location with regular expressions for Nomenclature mentions
+     */
+    public SETH(String regexFile, boolean exactGrammar, String oldNomenclatureFile) {
+        super();
+
+        this.mf = new MutationFinder(regexFile);
+        this.seth = new SETHNER(exactGrammar);
+        this.snpRecognizer = new dbSNPRecognizer();
+
+        if (oldNomenclatureFile != null)
+            this.bl = new OldNomenclature2(oldNomenclatureFile);
         else
             this.bl = null;
     }
@@ -106,7 +128,7 @@ public class SETH {
             this.seth = null;
 
         if (oldNomenclature)
-            this.bl = new OldNomenclature();
+            this.bl = new OldNomenclature2();
         else
             this.bl = null;
     }
