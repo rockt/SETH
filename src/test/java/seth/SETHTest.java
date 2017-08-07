@@ -13,7 +13,7 @@ public class SETHTest {
 
     @Test
     public void testFindMutations() throws Exception {
-        SETH seth = new SETH(getClass().getResource("/resources/mutations.txt").getPath(), false, true);
+        SETH seth = new SETH(getClass().getResource("/resources/mutations.txt").getPath(), false, "resources/patterns.txt");
         String sentence = "Causative GJB2 mutations were identified in 31 (15.2%) patients, and two common mutations, c.35delG and L90P (c.269T>C), accounted for 72.1% and 9.8% of GJB2 disease alleles.";
         List<MutationMention> mentions = seth.findMutations(sentence);
 

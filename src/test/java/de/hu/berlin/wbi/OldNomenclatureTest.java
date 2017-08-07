@@ -24,7 +24,7 @@ public class OldNomenclatureTest {
 
     @Before
     public void setUp() {
-        seth = new SETH("resources/mutations.txt", false, true); //Initializes SETH
+        seth = new SETH("resources/mutations.txt", false, "resources/patterns.txt"); //Initializes SETH
     }
 
     /**

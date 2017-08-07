@@ -22,7 +22,7 @@ public class Issue6Test {
 
 
         //Correct Type
-        SETH sethInexact = new SETH("resources/mutations.txt", false, true);
+        SETH sethInexact = new SETH("resources/mutations.txt", false, "resources/patterns.txt");
         List<MutationMention> ms = sethInexact.findMutations(mutationString);
         Assert.assertEquals(ms.size(), 1);
         Assert.assertEquals(ms.get(0).getType(), Type.DELETION_INSERTION);
@@ -33,7 +33,7 @@ public class Issue6Test {
         String mutationString ="p.Glu746_Thr751delinsAla";
 
         //Incorrect Type
-        SETH sethExact = new SETH("resources/mutations.txt", true, true);
+        SETH sethExact = new SETH("resources/mutations.txt", true, "resources/patterns.txt");
         List<MutationMention> ms = sethExact.findMutations(mutationString);
         Assert.assertEquals(ms.size(), 1);
         Assert.assertEquals(ms.get(0).getType(), Type.DELETION_INSERTION);

@@ -22,7 +22,7 @@ public class NormalizeToHGNCTest {
 
     @Before
     public void setUp() {
-        seth = new SETH("resources/mutations.txt", true, true); //Initializes SETH
+        seth = new SETH("resources/mutations.txt", true, "resources/patterns.txt"); //Initializes SETH
     }
 
     private void assertSingleMutation(String text, String hgnc){
