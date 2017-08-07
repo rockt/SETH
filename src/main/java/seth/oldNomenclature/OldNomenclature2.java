@@ -32,7 +32,7 @@ public class OldNomenclature2 {
     private final Map<String, Type> modificationToType = new HashMap<>(); //Map from variation string to mutation type
     private final Map<String, String> abbreviationLookup = new HashMap<>(); //Map from AA to one letter
 
-    private final String defaultPatternsFile = "/media/philippe/5f695998-f5a5-4389-a2d8-4cf3ffa1288a/data/pubmed/rawInsDels.sorted.annotated";//TODO set correct path
+    private final String defaultPatternsFile = "src/main/resources/patterns.txt"; //TODO correct path
 
 
     /**
@@ -129,6 +129,7 @@ public class OldNomenclature2 {
         modificationToType.put("INS/DEL", Type.DELETION_INSERTION);
 
         modificationToType.put("FS", Type.FRAMESHIFT);
+        modificationToType.put("FSX", Type.FRAMESHIFT);
         modificationToType.put("FRAMESHIFT", Type.FRAMESHIFT);
 
         modificationToType.put("CONV", Type.CONVERSION);
@@ -417,7 +418,7 @@ public class OldNomenclature2 {
 
 
     public static void main(String[] args) throws IOException {
-        final OldNomenclature2 oldNomenclature2 = new OldNomenclature2("/media/philippe/5f695998-f5a5-4389-a2d8-4cf3ffa1288a/data/pubmed/rawInsDels.sorted.annotated2");
+        final OldNomenclature2 oldNomenclature2 = new OldNomenclature2("src/main/resources/patterns.txt");
 
         List<MutationMention> mentions = oldNomenclature2.extractMutations("translocation of T308");
         for(MutationMention mm : mentions){
