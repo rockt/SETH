@@ -304,4 +304,29 @@ public class InsDelFinderTest {
         assertSingleMutation("IVS1-1724 C>G");
         assertSingleMutation("IVS9-28A/G");
     }
+
+    @Test
+    public void testNormalization()throws Exception {
+
+        assertNormalizedMutation("InsP8", "P8ins");
+        assertNormalizedMutation("648dupGTT", "GTT648dup");
+        assertNormalizedMutation("G417AfsX7", "G417AfsX7");
+        assertNormalizedMutation("M2-deleted", "M2del");
+        assertNormalizedMutation("256delGGACAACCTCAAGGGCACCT", "GGACAACCTCAAGGGCACCT256del");
+    }
+
+
+    private void assertNormalizedMutation(String text, String normalized) {
+
+        List<MutationMention> mutationMentions = oldNomenclature2.extractMutations(text);
+
+        if(mutationMentions.size() != 1){
+            System.out.println(text);
+            System.out.println(mutationMentions);
+            System.out.println("----");
+        }
+
+        Assert.assertEquals(1, mutationMentions.size());
+        Assert.assertEquals(normalized, mutationMentions.get(0).toNormalized());
+    }
 }
