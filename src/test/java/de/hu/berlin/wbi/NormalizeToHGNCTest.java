@@ -29,7 +29,6 @@ public class NormalizeToHGNCTest {
         List<MutationMention> mutationMentions = seth.findMutations(text);
 
         Assert.assertEquals(1, mutationMentions.size()); //We support only texts with one mutation
-        System.out.println("'" +mutationMentions.get(0) +"'");
         Assert.assertEquals(hgnc, mutationMentions.get(0).toHGVS());//Is the string contained in the provided text?
     }
 
