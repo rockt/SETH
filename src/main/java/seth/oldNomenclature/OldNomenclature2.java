@@ -32,7 +32,7 @@ public class OldNomenclature2 {
     private final Map<String, Type> modificationToType = new HashMap<>(); //Map from variation string to mutation type
     private final Map<String, String> abbreviationLookup = new HashMap<>(); //Map from AA to one letter
 
-    private final String defaultPatternsFile = "src/main/resources/patterns.txt"; //TODO correct path
+    private final String defaultPatternsFile = "/resources/patterns.txt";
 
 
     /**
