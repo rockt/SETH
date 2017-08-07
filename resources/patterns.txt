@@ -1,39 +1,39 @@
-<aa><number><kw>
-<aa><number> <kw>
-<aa>\-<number> <kw>
-<aa> <number> <kw>
-<aa><number>\-<kw>
-<aa>\(<number>\) <kw>
-<kw><aa><number>
-<number><kw><aa>
-<kw> of <aa><number>
-<kw> of <aa>\-<number>
-<kw> of <aa> <number>
-<kw> of the <aa><number>
-<kw> of <aa> at position <number>
-<kw> of <aa>\(<number>
-<kw> of a <aa> residue at codon <number> or <number>
-<kw> in the <aa><number>
-<kw> <aa> <number>
-<aa> <number> was <kw>
-<aa> <kw> at position <number>
-<aa> <kw> at codon <number>
+<number>[\s\-]?<kw>[\s\-]?\(?<aa>
+<aa>[\s\-]?\(?<number>\)?[\s\-]?<kw>
 <aa> exon <number> <kw>
-<number> nucleotide <kw> in the <aa>
-<kw> <aa>\(<number>
-<kw> <aa><number>
-<number>\-<aa> <kw>
-<number> <aa> <kw>
-<kw> removing <aa> <number>
-<kw> of a <aa> residue at position <number>
-<kw> of a <aa> at position <number>
-<kw> after <aa> <number>
-<kw> \(<aa><number>
+<aa> <kw> after (codon|position) <number>
+<aa> <kw> at (codon|position) <number>
 <aa> <kw> at the <number>th amino acid
-<aa> <kw> after position <number>
-#####TODO: MUltiple deletions 
-#<kw> of <aa><number> to <aa><number>
-#<aa><number>\-<aa><number><kw>
+<aa>[\s\-]?<number> was <kw>
+<kw>[\s\-]?\(?<aa>\)?[\s\-]?\(?<number>
+<kw> after <aa>[\s\-]?<number>
+<kw> in the <aa>[\s\-]?<number>
+<kw> of <aa>[\s\-]?\(?<number>
+<kw> of <aa> residue at [1-9][0-9]* or <number>
+<kw> of the <aa>[\s\-]?<number>
+<kw> removing <aa>[\s\-]?<number>
+<number>[\s\-]?\(?<aa>\)?[\s\-]?<kw>
+<number> nucleotide <kw> in the <aa>
+##########################################For some reasons the expression below is not working; we need to split
+######<kw> of (a|an)? <aa> at (codon|position)? <number>
+<kw> of <aa> at <number>
+<kw> of <aa> at position <number>
+<kw> of <aa> at codon <number>
+<kw> of a <aa> at <number>
+<kw> of a <aa> at position <number>
+<kw> of a <aa> residue at <number>
+<kw> of a <aa> residue at position <number>
+<kw> of a <aa> residue at codon <number>
+<kw> of an <aa> at <number>
+<kw> of an <aa> residue at <number>
+<kw> of an <aa> at position <number>
+<kw> of an <aa> residue at position <number>
+<kw> of an <aa> at codon <number>
+<kw> of an <aa> residue at codon <number>
+############################################
 #<aa><number>_<aa><number> <kw>
-#<kw> of four amino acids residues \(<aa><number>, <aa><number>, <aa><number> and <aa><number>\)
-#<kw> of <aa>\-<number> or <aa>\-<number>
+#<aa><number>\-<aa><number><kw>
+#<kw> of four amino acids residues \(<aa><number>, <aa><number>, <aa><number> and <aa><number>
+#<kw> of <aa><number> to <aa><number>
+##<kw> of <aa>[\s\-]?\(?<number> or <aa>[\s\-]?<number>
+
