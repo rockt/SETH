@@ -1,0 +1,39 @@
+<aa><number><kw>
+<aa><number> <kw>
+<aa>\-<number> <kw>
+<aa> <number> <kw>
+<aa><number>\-<kw>
+<aa>\(<number>\) <kw>
+<kw><aa><number>
+<number><kw><aa>
+<kw> of <aa><number>
+<kw> of <aa>\-<number>
+<kw> of <aa> <number>
+<kw> of the <aa><number>
+<kw> of <aa> at position <number>
+<kw> of <aa>\(<number>
+<kw> of a <aa> residue at codon <number> or <number>
+<kw> in the <aa><number>
+<kw> <aa> <number>
+<aa> <number> was <kw>
+<aa> <kw> at position <number>
+<aa> <kw> at codon <number>
+<aa> exon <number> <kw>
+<number> nucleotide <kw> in the <aa>
+<kw> <aa>\(<number>
+<kw> <aa><number>
+<number>\-<aa> <kw>
+<number> <aa> <kw>
+<kw> removing <aa> <number>
+<kw> of a <aa> residue at position <number>
+<kw> of a <aa> at position <number>
+<kw> after <aa> <number>
+<kw> \(<aa><number>
+<aa> <kw> at the <number>th amino acid
+<aa> <kw> after position <number>
+#####TODO: MUltiple deletions 
+#<kw> of <aa><number> to <aa><number>
+#<aa><number>\-<aa><number><kw>
+#<aa><number>_<aa><number> <kw>
+#<kw> of four amino acids residues \(<aa><number>, <aa><number>, <aa><number> and <aa><number>\)
+#<kw> of <aa>\-<number> or <aa>\-<number>
