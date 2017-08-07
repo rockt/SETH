@@ -299,7 +299,7 @@ public class OldNomenclature2 {
 
 
                 //Likely PSM, if position is positive and we could ground amino acid name
-                if(amino.length() > 1 && !amino.equals(shortAminoName) && intLocation > 0){
+                if((amino.length() > 1 && !amino.equals(shortAminoName) || amino.matches(".*[^ATGC].*") ) && intLocation > 0){
                     mm.setPsm(true);
                     mm.setNsm(false);
                     mm.setAmbiguous(false);
@@ -312,6 +312,8 @@ public class OldNomenclature2 {
                     mm.setAmbiguous(false);
                 }
                 else{
+                    mm.setPsm(false);
+                    mm.setNsm(false);
                     mm.setAmbiguous(true);
                 }
 

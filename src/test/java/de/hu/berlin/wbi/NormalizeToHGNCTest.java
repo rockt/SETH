@@ -29,29 +29,26 @@ public class NormalizeToHGNCTest {
         List<MutationMention> mutationMentions = seth.findMutations(text);
 
         Assert.assertEquals(1, mutationMentions.size()); //We support only texts with one mutation
-        System.out.println(mutationMentions.get(0).toHGVS());
-        Assert.assertTrue(hgnc.equals(mutationMentions.get(0).toHGVS())); //Is the string contained in the provided text?
-
+        System.out.println("'" +mutationMentions.get(0) +"'");
+        Assert.assertEquals(hgnc, mutationMentions.get(0).toHGVS());//Is the string contained in the provided text?
     }
 
 
     @Test
     public void testBeaudet1993() throws Exception {
 
-        assertSingleMutation("deltaT2", "p.Thr2del");
+        assertSingleMutation("deltaT2", "?.2delT");
         assertSingleMutation("Gly376 with alanine", "p.Gly376Ala"); //protein-mutation due to Gly&Alanine
         assertSingleMutation("G376A", "?.376G>A");      //Unknown mutation (G/A) can be DNA/protein
         assertSingleMutation("Thr92Ala", "p.Thr92Ala"); //Protein (Thr)
         assertSingleMutation("Arg648Stop", "p.Arg648Ter"); //Protein
         assertSingleMutation("G-455A", "c.-455G>A"); //DNA (-455)
         assertSingleMutation("DeltaF508", "p.Phe508del");
-        assertSingleMutation("185delAG", "c.185delAG");
-        assertSingleMutation("5382insC", "c.5382insC");
-        assertSingleMutation("D281fs", "?.D281fs");
-        assertSingleMutation("G165fsX8", "?.G165fsX8");
+        assertSingleMutation("185delAG", "?.185delAG");
+        assertSingleMutation("5382insC", "?.5382insC");
+        assertSingleMutation("D281fs", "p.Asp281fs");
+        assertSingleMutation("G165fsX8", "p.Gly165fs");
         assertSingleMutation("rs123", "rs123");
-
     }
-
 
 }

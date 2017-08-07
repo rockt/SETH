@@ -111,7 +111,7 @@ public class InsDelFinderTest {
     public void testPatterns() throws  Exception{
         //Tests from patterns
         assertSingleMutation("123delT");
-        assertSingleMutation("123del(T)");
+        assertSingleMutation("123del(T");
         assertSingleMutation("Tyr(12)ins");
         assertSingleMutation("Del(Tyr)-15");
         assertSingleMutation("Tyr exon 5 inserted");
