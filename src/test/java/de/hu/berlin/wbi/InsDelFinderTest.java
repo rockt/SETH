@@ -18,7 +18,7 @@ public class InsDelFinderTest {
 
     @Before
     public void setUp() {
-        oldNomenclature2 =  new OldNomenclature2("/media/philippe/5f695998-f5a5-4389-a2d8-4cf3ffa1288a/data/pubmed/rawInsDels.sorted.annotated2"); //Initializes SETH
+        oldNomenclature2 =  new OldNomenclature2("resources/patterns.txt"); //Initializes SETH
     }
 
     /**
