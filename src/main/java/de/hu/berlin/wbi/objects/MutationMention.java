@@ -1207,6 +1207,9 @@ public class MutationMention implements Comparable<MutationMention>{
             else if(this.getType().equals(Type.DUPLICATION))
                 return  mutResidue+position +"dup";
 
+            else if(this.getType().equals(Type.INVERSION))
+                return  mutResidue+position +"inv";
+
             else
                 return text;
         }

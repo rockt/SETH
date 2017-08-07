@@ -313,6 +313,10 @@ public class InsDelFinderTest {
         assertNormalizedMutation("G417AfsX7", "G417AfsX7");
         assertNormalizedMutation("M2-deleted", "M2del");
         assertNormalizedMutation("256delGGACAACCTCAAGGGCACCT", "GGACAACCTCAAGGGCACCT256del");
+        assertNormalizedMutation("860insACCT", "ACCT860ins");
+        assertNormalizedMutation("648dupGTT", "GTT648dup");
+        assertNormalizedMutation("converting serine 208", "S208con");
+        assertNormalizedMutation("S2 inversion", "S2inv");
     }
 
 
