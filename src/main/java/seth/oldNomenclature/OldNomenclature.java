@@ -19,9 +19,9 @@ import org.slf4j.LoggerFactory;
  * written in  deprecated nomenclature
  * @author Philippe Thomas
  */
-public class OldNomenclature2 {
+public class OldNomenclature {
 
-    final private  Logger logger = LoggerFactory.getLogger(OldNomenclature2.class);
+    final private  Logger logger = LoggerFactory.getLogger(OldNomenclature.class);
 
     final private static String prefix="(^|[_\\s\\(\\)\\[\\'\"/,;:])"; //>
     final private static String suffix="(?=([\\.,\\s\\)\\(\\]\\'\":;\\-/]|$))";
@@ -40,7 +40,7 @@ public class OldNomenclature2 {
      * This constructor loads the regular expressions from the packed JAR.
      * Important: Substitutions in deprecated nomenclature (e.g., Ala12Tyr) are detected using the @{@link MutationFinder} module
      */
-    public OldNomenclature2(){
+    public OldNomenclature(){
         super();
         initializeHashMaps();
 
@@ -54,7 +54,7 @@ public class OldNomenclature2 {
      *
      * @param fileName Name of the file, where the regular expressions can be found
      */
-    public OldNomenclature2(String fileName){
+    public OldNomenclature(String fileName){
         super();
         initializeHashMaps();
 
@@ -420,9 +420,9 @@ public class OldNomenclature2 {
 
 
     public static void main(String[] args) throws IOException {
-        final OldNomenclature2 oldNomenclature2 = new OldNomenclature2("src/main/resources/patterns.txt");
+        final OldNomenclature oldNomenclature = new OldNomenclature("src/main/resources/patterns.txt");
 
-        List<MutationMention> mentions = oldNomenclature2.extractMutations("translocation of T308");
+        List<MutationMention> mentions = oldNomenclature.extractMutations("translocation of T308");
         for(MutationMention mm : mentions){
             System.out.println(mm.getPatternId());
         }

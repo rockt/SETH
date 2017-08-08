@@ -3,9 +3,8 @@ package de.hu.berlin.wbi;
 import de.hu.berlin.wbi.objects.MutationMention;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-import seth.oldNomenclature.OldNomenclature2;
+import seth.oldNomenclature.OldNomenclature;
 
 import java.util.List;
 
@@ -14,11 +13,11 @@ import java.util.List;
  */
 public class InsDelFinderTest {
 
-    private OldNomenclature2 oldNomenclature2;
+    private OldNomenclature oldNomenclature;
 
     @Before
     public void setUp() {
-        oldNomenclature2 =  new OldNomenclature2("resources/patterns.txt"); //Initializes SETH
+        oldNomenclature =  new OldNomenclature("resources/patterns.txt"); //Initializes SETH
     }
 
     /**
@@ -27,7 +26,7 @@ public class InsDelFinderTest {
      */
     private void assertSingleMutation(String text) {
 
-        List<MutationMention> mutationMentions = oldNomenclature2.extractMutations(text);
+        List<MutationMention> mutationMentions = oldNomenclature.extractMutations(text);
 
         if(mutationMentions.size() != 1){
             System.out.println(text);
@@ -40,7 +39,7 @@ public class InsDelFinderTest {
     }
 
     private void assertNoMutation(String text){
-        List<MutationMention> mutationMentions = oldNomenclature2.extractMutations(text);
+        List<MutationMention> mutationMentions = oldNomenclature.extractMutations(text);
 
         if(mutationMentions.size() != 0){
             System.out.println(text);
@@ -50,7 +49,22 @@ public class InsDelFinderTest {
         }
         Assert.assertEquals(0, mutationMentions.size());
     }
+/**
 
+    InsP3
+            InsP6
+    ΔR2
+            ΔR1
+    ΔT1
+            ΔN6
+    ΔR5
+            ΔD1
+    L1 insertions
+    E1-deleted
+    6N del
+    ΔE1
+            ΔT2
+*/
     @Test
     public void testFN1() throws Exception {
 
@@ -63,7 +77,7 @@ public class InsDelFinderTest {
         assertSingleMutation("368-369 insTCCTGCCCACCACGCTCACCACG");
         assertSingleMutation("417 ins T");
 
-
+        assertSingleMutation("Arg(402-403ins");
     }
 
 
@@ -312,7 +326,7 @@ public class InsDelFinderTest {
 
     private void assertNormalizedMutation(String text, String normalized) {
 
-        List<MutationMention> mutationMentions = oldNomenclature2.extractMutations(text);
+        List<MutationMention> mutationMentions = oldNomenclature.extractMutations(text);
 
         if(mutationMentions.size() != 1){
             System.out.println(text);

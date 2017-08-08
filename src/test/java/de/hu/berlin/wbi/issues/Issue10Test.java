@@ -35,7 +35,7 @@ public class Issue10Test {
 
         Assert.assertTrue(mutationMentions.size() > 0); //Do we actually find a mutation?
         List<String> recognized = mutationMentions.stream().map(MutationMention::getText).collect(Collectors.toList());
-        System.out.println(recognized);
+        //System.out.println(recognized);
         Assert.assertTrue(recognized.contains(mutation)); //Check if the mutation is correctly recognized
     }
 

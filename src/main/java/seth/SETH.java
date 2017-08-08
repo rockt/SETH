@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import seth.ner.wrapper.SETHNER;
 import seth.ner.wrapper.Type;
-import seth.oldNomenclature.OldNomenclature2;
+import seth.oldNomenclature.OldNomenclature;
 
 
 import java.io.File;
@@ -44,7 +44,7 @@ public class SETH {
     /**
      * Set of regular expressions for finding free text deletions, insertions, etc.
      */
-    private final OldNomenclature2 bl;
+    private final OldNomenclature bl;
 
     /**
      * Detects dbSNP mentions (e.g., rs334)
@@ -62,7 +62,7 @@ public class SETH {
         this.mf = new MutationFinder();
         this.seth = new SETHNER(false);
         this.snpRecognizer = new dbSNPRecognizer();
-        this.bl = new OldNomenclature2();
+        this.bl = new OldNomenclature();
     }
 
     /**
@@ -81,7 +81,7 @@ public class SETH {
         this.snpRecognizer = new dbSNPRecognizer();
 
         if (oldNomenclature)
-            this.bl = new OldNomenclature2();
+            this.bl = new OldNomenclature();
         else
             this.bl = null;
     }
@@ -102,7 +102,7 @@ public class SETH {
         this.snpRecognizer = new dbSNPRecognizer();
 
         if (oldNomenclatureFile != null)
-            this.bl = new OldNomenclature2(oldNomenclatureFile);
+            this.bl = new OldNomenclature(oldNomenclatureFile);
         else
             this.bl = null;
     }
@@ -128,7 +128,7 @@ public class SETH {
             this.seth = null;
 
         if (oldNomenclature)
-            this.bl = new OldNomenclature2();
+            this.bl = new OldNomenclature();
         else
             this.bl = null;
     }

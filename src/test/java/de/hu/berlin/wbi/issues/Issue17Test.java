@@ -23,7 +23,7 @@ public class Issue17Test {
     @Test
     public void testPmid17678724() throws Exception {
         List<MutationMention> mutationMentions = seth.findMutations("Polymorphism in MHC2TA gene (rs4,774,123G/C) are studied in two groups");
-        System.out.println(mutationMentions);
+        //System.out.println(mutationMentions);
         Assert.assertEquals(1, mutationMentions.size()); //Do we actually find a mutation?
 
         MutationMention mm =  mutationMentions.get(0);
