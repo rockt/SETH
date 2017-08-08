@@ -243,7 +243,7 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
     "Ter" | "Sec" | "Pyl" | "Asx" | "Glx" | "Xle" | "Xaa" | "Stop" | "stop" | "STOP"
 
   //FIXED: added '*' and '?'
-  lazy val AA:P                 = AA3 | AA1 | "X" | "*" | "?"
+  lazy val AA:P                 = AA3 | AA1 | "X" | "*" | "(*)" | "?"
   lazy val Name:P               = "[a-zA-Z0-9_\\.]".r.+
 
   //Top-level Rule
