@@ -104,8 +104,10 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
   type P = Parser[Any]
   override def skipWhitespace = false
 
+
+
   //optional whitespace
-  lazy val ws:P                 = if (strictNomenclature) "".r else " ".r.*
+  lazy val ws:P                 = if (strictNomenclature) "".r else (" | | | | | ").r.* //Many different whitespace variants as regular expression
   lazy val gt:P                 = if (strictNomenclature) ">" else (">" | "->" | "-->" | "=>" | "→" | "/" )
   //lazy val com:P                = if (strictNomenclature) "," else ("," | "." | ";")
   //lazy val com2:P               = if (strictNomenclature) "," else ("," | "" | "." | ";")
