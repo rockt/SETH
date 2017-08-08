@@ -106,7 +106,7 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
 
   //optional whitespace
   lazy val ws:P                 = if (strictNomenclature) "".r else " ".r.*
-  lazy val gt:P                 = if (strictNomenclature) ">" else (">" | "->" | "-->" | "=>")
+  lazy val gt:P                 = if (strictNomenclature) ">" else (">" | "->" | "-->" | "=>" | "→")
   //lazy val com:P                = if (strictNomenclature) "," else ("," | "." | ";")
   //lazy val com2:P               = if (strictNomenclature) "," else ("," | "" | "." | ";")
 
