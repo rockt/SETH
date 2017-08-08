@@ -14,6 +14,8 @@ import org.apache.oro.text.regex.PatternMatcher;
 import org.apache.oro.text.regex.PatternMatcherInput;
 import org.apache.oro.text.regex.Perl5Compiler;
 import org.apache.oro.text.regex.Perl5Matcher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 
@@ -46,6 +48,8 @@ public class MutationFinder extends MutationExtractor {
     protected final static String POS = "?P<pos>";
 
     protected final static Set<String> ambiguous  = new HashSet<String>();     //Contains a list of ambiguous "mutation"-names (e.g., T47D generally refers to a cell-line and not to a mutation)
+
+    final private Logger logger = LoggerFactory.getLogger(MutationFinder.class);
 
     /*
      * regular_expressions: an interative set of regular expressions to be applied for extracting mutations. These are in the default python syntax
@@ -152,8 +156,7 @@ public class MutationFinder extends MutationExtractor {
             br = new BufferedReader(new FileReader(file));
             loadRegularExpressionsFromStream(br);
         } catch (FileNotFoundException fnfe) {
-            error("The file containing regular expressions could not be found: " + file.getAbsolutePath() + File.separator + file.getName()  +"trying to load from Java Archive");
-            //fnfe.printStackTrace();
+            logger.info("The file containing regular expressions could not be found: " + file.getAbsolutePath() + File.separator + file.getName()  +"trying to load from Java Archive");
             loadRegularExpressionsFromJar("/resources/mutations.txt");
         }
         finally {
@@ -179,15 +182,14 @@ public class MutationFinder extends MutationExtractor {
         try{
             loadRegularExpressionsFromStream(br);
         }catch(Exception ex){
-         error("Error in fallback code for reading mutation-finder file from Java Archive");
-         ex.printStackTrace();
+            logger.error("Error in fallback code for reading mutation-finder file from Java Archive", ex);
         }
         finally {
             if (br != null) {
                 try {
                     br.close();
                 } catch (Exception e) {
-                    // ignore exception
+                    logger.error("Problem with reader", e);
                 }
             }
         }
@@ -216,18 +218,17 @@ public class MutationFinder extends MutationExtractor {
                 }
             }
         } catch (IOException ioe) {
-            error("IO Exception while processing regular expression.");
-            ioe.printStackTrace();
+            logger.error("IO Exception while processing regular expression.", ioe);
         } finally {
             if (br != null) {
                 try {
                     br.close();
                 } catch (Exception e) {
-                    // ignore exception
+                    logger.error("Problem with reader", e);
                 }
             }
         }
-        System.err.println("Completed loading of regular expressions: " + regular_expressions.size() + " loaded.");
+        logger.info("Completed loading of regular expressions: " + regular_expressions.size() + " loaded.");
     }
 
     /**
