@@ -106,7 +106,7 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
 
   //optional whitespace
   lazy val ws:P                 = if (strictNomenclature) "".r else " ".r.*
-  lazy val gt:P                 = if (strictNomenclature) ">" else (">" | "->" | "-->" | "=>" | "→")
+  lazy val gt:P                 = if (strictNomenclature) ">" else (">" | "->" | "-->" | "=>" | "→" | "/" )
   //lazy val com:P                = if (strictNomenclature) "," else ("," | "." | ";")
   //lazy val com2:P               = if (strictNomenclature) "," else ("," | "" | "." | ";")
 
@@ -147,7 +147,7 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
   lazy val UncertainPart:P      = Uncertain | "(" ~ Uncertain ~ ")"
   lazy val UncertainLoc:P       = "*".? ~ UncertainPart ~ "_" ~ "*".? ~ UncertainPart
   lazy val Offset:P             = ("+" | "-") ~ ("u" | "d").? ~ (Number | "?")
-  lazy val RealPtLoc:P          = (("-" | "*").? ~ Number ~ Offset.?) | "?"
+  lazy val RealPtLoc:P          = (("-" | "+" | "*").? ~ Number ~ Offset.?) | "?"
   lazy val IVSLoc:P             = "IVS" ~ Number ~ ("+" | "-") ~ Number
   lazy val PtLoc:P              = IVSLoc | RealPtLoc
   lazy val RealExtent:P         = PtLoc ~ "_".r ~ ("o".? ~ (RefSeqAcc | GeneSymbol) ~ ":").? ~ PtLoc
