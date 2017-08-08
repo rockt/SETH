@@ -240,7 +240,7 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
   lazy val AA3:P                = "Ala" | "Arg" | "Asn" | "Asp" | "Cys" | "Gln" | "Glu" | "Gly" | "His" | "Ile" |
     "Leu" | "Lys" | "Met" | "Phe" | "Pro" | "Ser" | "Thr" | "Trp" | "Tyr" | "Val" |
   //FIXED: added termination, stop codons and ambiguous amino acids
-    "Ter" | "Sec" | "Pyl" | "Asx" | "Glx" | "Xle" | "Xaa" | "Stop"
+    "Ter" | "Sec" | "Pyl" | "Asx" | "Glx" | "Xle" | "Xaa" | "Stop" | "stop" | "STOP"
 
   //FIXED: added '*' and '?'
   lazy val AA:P                 = AA3 | AA1 | "X" | "*" | "?"
@@ -549,7 +549,9 @@ trait FlattenToMutation extends FlattenToString {
     "Glx" -> "Z",
     "Xle" -> "J",
     "Xaa" -> "X",
-    "Stop" -> "X"
+    "Stop" -> "X",
+    "stop" -> "X",
+    "STOP" -> "X"
   )
 
   private def abbreviate(aminoSeq: String): String = {
