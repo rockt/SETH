@@ -108,7 +108,7 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
 
   //optional whitespace
   lazy val ws:P                 = if (strictNomenclature) "".r else (" | | | | | ").r.* //Many different whitespace variants as regular expression
-  lazy val gt:P                 = if (strictNomenclature) ">" else (">" | "->" | "-->" | "=>" | "→" | "/" )
+  lazy val gt:P                 = if (strictNomenclature) ">" else (">" | "->" | "-->" | "=>" | "→" | "/")
   //lazy val com:P                = if (strictNomenclature) "," else ("," | "." | ";")
   //lazy val com2:P               = if (strictNomenclature) "," else ("," | "" | "." | ";")
 
@@ -210,7 +210,7 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
   lazy val AccNumRefRange:P     = "([A-E]|G)[A-Z][A-Z][A-Z]".r | "A[A-Z][A-Z][A-Z][A-Z]".r
 
   //Single Variations
-  lazy val Subst:P              = ((RangeLoc | PtLoc).? ^^ { LocString(_) }) ~ (Nt.+ ^^ { WildString(_) }) ~
+  lazy val Subst:P              = ((RangeLoc | PtLoc).? ^^ { LocString(_) }) ~ ws ~ (Nt.+ ^^ { WildString(_) }) ~
     ws ~ (gt ^^ { SubstString(_) }) ~ ws ~ (Nt.+ ^^ { MutatedString(_) })
   lazy val Del:P                = (Loc ^^ { LocString(_) }) ~ ("del" ^^ { DelString(_) }) ~
     ((Nt.+ ^^ { WildString(_) })| Number).?
@@ -267,7 +267,7 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
     ProteinIns | ProteinEq
     // | "=" | "?" | "0" | "0?"
   //lazy val ProteinSubst:P       = ((AA ^^ { WildString(_) })  ~ (Number ^^ { LocString(_) }) ~ ((if(strictNomenclature)("") else (">")) ~AA ^^ { MutatedString(_) })) |
-  lazy val ProteinSubst:P       = ((AA ^^ { WildString(_) })  ~ (Number ^^ { LocString(_) }) ~ {if(strictNomenclature) "" else gt} ~AA ^^ { MutatedString(_) }) |
+  lazy val ProteinSubst:P       = ((AA ^^ { WildString(_) })  ~ (Number ^^ { LocString(_) }) ~ {if(strictNomenclature) "" else ws ~ gt} ~ AA ^^ { MutatedString(_) }) |
   (AAPtLoc ~ (AA  ^^ { MutatedString(_) }) ~ ("extX" ~ "*".? ~ Number).? | ("Met1" | "M1") ~ ("?" | "ext" ~ Number))
   lazy val ProteinDel:P         = AALoc ~ ( if (strictNomenclature) "del" else ("del"|"Del")  ^^ { DelString(_) })
   lazy val ProteinIns:P         = AALoc ~ (if (strictNomenclature) "ins" else ("ins"|"Ins") ^^ { InsString(_) }) ~ ((AA.+) ^^ { MutatedString(_) } | Number)
