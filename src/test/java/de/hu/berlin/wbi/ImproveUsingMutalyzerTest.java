@@ -26,8 +26,6 @@ public class ImproveUsingMutalyzerTest {
     @Ignore("Test is ignored due to missing implementation!")
     public void testFN1() throws Exception {
 
-
-
         //Using →
         assertMatchesInexact("c.1090C>T");
         assertMatchesInexact("c.1090C→T");
@@ -80,6 +78,10 @@ public class ImproveUsingMutalyzerTest {
         assertMatchesInexact("c.947A>C");
         assertMatchesInexact("c.947G>A");
         assertMatchesInexact("g.-23449C>A");
+        assertMatchesInexact("p.I296V");
+        assertMatchesInexact("p.I296 V");
+
+
         //Same with whitespaces
         assertMatchesInexact("c.238-8A > T"); //Normal Whitespace (32)
         assertMatchesInexact("c.238-8A > G"); //Non Breaking Space (160)
@@ -87,15 +89,18 @@ public class ImproveUsingMutalyzerTest {
         assertMatchesInexact("c.238-8G > A"); //Hair Space (8202)
         assertMatchesInexact("c.238-8G > T"); //four-per-em space (8197)
         assertMatchesInexact("c.238-8G > C"); //em space (8195)
-        assertMatchesInexact("p.I296 V");
         assertMatchesInexact("n.6761C > T");
         assertMatchesInexact("m.7511T > C");
         assertMatchesInexact("c.*9C > T");
-        assertMatchesInexact("c.947 A>C");
         assertMatchesInexact("c.947G > A");
         assertMatchesInexact("g.-23449C > A");
+        assertMatchesInexact("c.947 A>C");
+        assertMatchesInexact("p.I296V");
+    }
 
-
+    @Test
+    @Ignore("Test is ignored due to missing implementation!")
+    public void testFN2() throws Exception {
         //Protein-Substitutions which are not allowed normally
         assertMatchesInexact("p.Ala270Ser");
         assertMatchesInexact("p.270Ala>Ser");
@@ -105,16 +110,17 @@ public class ImproveUsingMutalyzerTest {
         assertMatchesInexact("p.680Asn/Ser");
         assertMatchesInexact("p.284M>I");
         assertMatchesInexact("p.284 M > I");
-
-        //Not using > Nomenclature
-        //assertMatchesInexact("c.G1025A");
-        //assertMatchesInexact("c.G139C");
-
-
-
-
     }
 
+
+    @Test
+    @Ignore("Test is ignored due to missing implementation!")
+    public void testFN3() throws Exception {
+
+        //Nucleotide mutations, which are not using >
+        assertMatchesInexact("c.G1025A");
+        assertMatchesInexact("c.G139C");
+    }
 
     /**
      * Wrapper function, testing that we identify the provided string as a mutation
