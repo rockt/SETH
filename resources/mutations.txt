@@ -22,32 +22,21 @@
 (?:^|[\s\(\[\'"/,;\-])(?P<wt_res>(CYS|ILE|SER|GLN|MET|ASN|PRO|LYS|ASP|THR|PHE|ALA|GLY|HIS|LEU|ARG|TRP|VAL|GLU|TYR|ASX|GLX|XLE|TER|STP)|(GLUTAMINE|GLUTAMIC ACID|LEUCINE|VALINE|ISOLEUCINE|LYSINE|ALANINE|GLYCINE|ASPARTATE|METHIONINE|THREONINE|HISTIDINE|ASPARTIC ACID|ARGININE|ASPARAGINE|TRYPTOPHAN|PROLINE|PHENYLALANINE|CYSTEINE|SERINE|GLUTAMATE|TYROSINE|TERM|STOP|AMBER|UMBER|OPAL)) was substituted by (?P<mut_res>(CYS|ILE|SER|GLN|MET|ASN|PRO|LYS|ASP|THR|PHE|ALA|GLY|HIS|LEU|ARG|TRP|VAL|GLU|TYR|ASX|GLX|XLE|TER|STP)|(GLUTAMINE|GLUTAMIC ACID|LEUCINE|VALINE|ISOLEUCINE|LYSINE|ALANINE|GLYCINE|ASPARTATE|METHIONINE|THREONINE|HISTIDINE|ASPARTIC ACID|ARGININE|ASPARAGINE|TRYPTOPHAN|PROLINE|PHENYLALANINE|CYSTEINE|SERINE|GLUTAMATE|TYROSINE|TERM|STOP|AMBER|UMBER|OPAL)) at residue (?P<pos>[1-9][0-9]*)(?=([.,\s)\]\'":;\-?!/]|$))
 ###############################################################
 #Patterns learned from analyzing false negatives, compared with tmVar
-####(?:^|[\s\(\[\'"/,;])()(?=([.,\s)\]\'":;\-?!/]|$))
+####Prefix = (?:^|[\s\(\[\'"/,;])
+####Suffix = (?=([.,\s)\]\'":;\-?!/]|$))
+####Arrow = \s?(?:-{0,2}>|→)\s?
 ####(?P<wt_res>[CISQMNPKDTFAGHLRWVEYBZJX]|[Cc]ys|[Ii]le|[Ss]er|[Gg]ln|[Mm]et|[Aa]sn|[Pp]ro|[Ll]ys|[Aa]sp|[Tt]hr|[Pp]he|[Aa]la|[Gg]ly|[Hh]is|[Ll]eu|[Aa]rh|[Tt]rp|[Vv]al|[Gg]lu|[Tt]yr|[Gg]lutamine|[Gg]lutamic [Aa]cid|[Ll]eucine|[Vv]aline|[Ii]soleucine|[Ll]ysine|[Aa]lanine|[Gg]lycine|[Aa]spartate|[Mm]ethionine|[Tt]hreonine|[Hh]istidine|[Aa]spartic [Aa]cid|[Aa]rginine|[Aa]sparagine|[Tt]ryptophan|[Pp]roline|[Pp]henylalanine|[Cc]ysteine|[Ss]erine|[Gg]lutamate|[Tt]yrosine|[Ss]top|[Tt]erm?)
 ####(?P<wt_res>[CISQMNPKDTFAGHLRWVEYBZJX])
 ###(?P<mut_res>([CISQMNPKDTFAGHLRWVEYBZJX*]|[Cc]ys|[Ii]le|[Ss]er|[Gg]ln|[Mm]et|[Aa]sn|[Pp]ro|[Ll]ys|[Aa]sp|[Tt]hr|[Pp]he|[Aa]la|[Gg]ly|[Hh]is|[Ll]eu|[Aa]rh|[Tt]rp|[Vv]al|[Gg]lu|[Tt]yr|[Gg]lutamine|[Gg]lutamic [Aa]cid|[Ll]eucine|[Vv]aline|[Ii]soleucine|[Ll]ysine|[Aa]lanine|[Gg]lycine|[Aa]spartate|[Mm]ethionine|[Tt]hreonine|[Hh]istidine|[Aa]spartic [Aa]cid|[Aa]rginine|[Aa]sparagine|[Tt]ryptophan|[Pp]roline|[Pp]henylalanine|[Cc]ysteine|[Ss]erine|[Gg]lutamate|[Tt]yrosine|[Ss]top|[Tt]erm?))
-###(?P<pos>[+-]?[1-9][0-9]+(?:\s?[+-]\s?[1-9][0-9]*)?)
-###(?P<pos>[1-9][0-9]+)
+###Number (nucleotide) = (?P<pos>[+-]?[1-9][0-9]+(?:\s?[+-]\s?[1-9][0-9]*)?)
+###Number (simple) = (?P<pos>[1-9][0-9]+)
 ################################
-#####      <number> (<aa>/<aa>)
-#####      <number> \(<aa>--><aa>\)
-#(?:^|[\s\(\[\'"/,;])((?P<pos>[1-9][0-9]+)\s\((?P<wt_res>[CISQMNPKDTFAGHLRWVEYBZJX])(?:-{0,2}>|→|/)(?P<mut_res>[CISQMNPKDTFAGHLRWVEYBZJX])\))(?=([.,\s)\]\'":;\-?!/]|$))
-#####      <number><aa>><aa>
-#####      <number><aa>-<aa>
-#####      <number> <aa>><aa>
-#####      <number> <aa>----<aa>
-#####      <number> <aa>   >   <aa>
-#####      <aa>-<number>--><aa>
-#####      <aa>-<number> > <aa>
-#####      <aa><number> > <aa>
-#####      <aa><number>><aa>
-#####      <aa>-<number>--<aa>
-#####      <aa>(<number>) --> <aa>
-#####      <number>(<aa> > <aa>)
+#####      <number>\(<aa> > <aa>\)
 #####      <number> (<aa>><aa>)
 #####      <number>(<aa>/<aa>)
 #####      <number>(<aa>><aa>)
-#####      <number><aa>--><aa>
+#####      <number> <aa>   >   <aa>
+#####      <aa>(<number>) --> <aa>
 #####      <aa> for <aa> at residue <number>
 #####      <aa>(<number>)--><aa>
 #####      <aa><number> --> <aa>
