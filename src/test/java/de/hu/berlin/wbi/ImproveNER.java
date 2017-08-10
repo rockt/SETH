@@ -32,6 +32,7 @@ public class ImproveNER {
         List<MutationMention> mutationMentions = seth.findMutations(text);
 
         Assert.assertEquals(1, mutationMentions.size());
+        System.out.println(mutationMentions.get(0).getPatternId());
         Assert.assertEquals(text, mutationMentions.get(0).getText());
     }
 
@@ -45,6 +46,40 @@ public class ImproveNER {
         assertSingleMutation("E246stop");
         assertSingleMutation("L212Glu");
         assertSingleMutation("Cys149N");
+    }
+
+    @Test
+    public void testMf() throws Exception {
+        assertSingleMutation("Ala-12-->Glu");  // <wtaa>-<number>--><mutaa>
+        assertSingleMutation("Ala-12->Glu"); // <aa>-<number> > <aa>
+        assertSingleMutation("Ala12>Glu"); // <aa><number>><aa>
+        assertSingleMutation("Ala-12>Glu"); // <aa><number>><aa>
+        assertSingleMutation("Ala12 > Glu"); // <aa><number> > <aa>
+        assertSingleMutation("Ala-12 > Glu"); // <aa><number> > <aa>
+        //assertSingleMutation("Ala-12--Glu");  // <wtaa>-<number>--<mutaa>
+    }
+
+    @Test
+    public void testMf2() throws Exception {
+        assertSingleMutation("12Ala>Glu"); //<number><aa>><aa>
+        assertSingleMutation("12Ala->Glu");
+        assertSingleMutation("12Ala-->Glu");
+        assertSingleMutation("12 Ala-->Glu");
+        assertSingleMutation("12 Ala->Glu");
+        assertSingleMutation("12 Ala----Glu");
+        //assertSingleMutation("12Ala-Glu");
+    }
+
+
+    @Test
+    public void testMf3() throws Exception {
+        assertSingleMutation("12(Ala>Glu"); //<number>(<aa>><aa>)
+        assertSingleMutation("12(Ala > Glu"); //<number>(<aa> > <aa>)
+        assertSingleMutation("12(Ala> Glu"); //<number>(<aa> > <aa>)
+        assertSingleMutation("12(Ala>Glu"); //<number>(<aa>/<aa>)
+        assertSingleMutation("12 (Ala>Glu"); //<number>(<aa>><aa>)
+        assertSingleMutation("12 (Ala > Glu"); //<number>(<aa> > <aa>)
+        assertSingleMutation("12 (Ala>Glu"); //<number>(<aa>/<aa>)
     }
 
     @Test
