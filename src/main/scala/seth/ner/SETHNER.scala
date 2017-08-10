@@ -374,11 +374,17 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
    * @param input The string from which mutation mentions should be extracted
    * @return A list of spans for mutation mention matches
    */
-  def apply(input: String) = //parse(expr, new PackratReader(new CharSequenceReader(input))) match {
-      parse(expr, input) match {
-        case Success(result, next) => result
-        case failure: NoSuccess => List()
-      }
+  def apply(input: String) = {
+
+    //Fast track for matching; the String has to contain at least a lower case cgmnr character
+    if(!input.matches(".*[cgmnr].*"))
+      List()
+
+    parse(expr, input) match {
+      case Success(result, next) => result
+      case failure: NoSuccess => List()
+    }
+  }
 
   def extractMutations(text: String):List[Mutation] = {
     //tokenize the text using whitespace tokenization
