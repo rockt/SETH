@@ -376,9 +376,9 @@ class SETHNER(val strictNomenclature: Boolean = false) extends RegexParsers with
    */
   def apply(input: String) = {
 
-    //Fast track for matching; the String has to contain at least a lower case cgmnr character
-    if(!input.matches(".*[cgmnr].*"))
-      List()
+    //Fast track for matching; the String has to contain at least a lower case cgmnr character; !!!actually, no speedup
+    //if(!input.matches(".*[cgmnr].*"))
+    //  List()
 
     parse(expr, input) match {
       case Success(result, next) => result
