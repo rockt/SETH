@@ -99,6 +99,10 @@ public class ImproveNER {
         assertSingleMutation("Ala to Tyr at codon 44");
         assertSingleMutation("Ala to Tyr at residue 44");
 
+        //<aa><number> is mutated to <aa>
+        assertSingleMutation("Ala32 is mutated to Tyr");
+        assertSingleMutation("Ala-32 is mutated to Tyr");
+        assertSingleMutation("Ala 32 is mutated to Tyr");
     }
 
     @Test
