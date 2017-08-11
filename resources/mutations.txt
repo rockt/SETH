@@ -33,19 +33,17 @@
 ################################
 #####      <aa> mutations? (at|of) <aa>[-\s]?<number>	8
 (?:^|[\s\(\[\'"/,;])(?P<mut_res>([CISQMNPKDTFAGHLRWVEYBZJX*]|[Cc]ys|[Ii]le|[Ss]er|[Gg]ln|[Mm]et|[Aa]sn|[Pp]ro|[Ll]ys|[Aa]sp|[Tt]hr|[Pp]he|[Aa]la|[Gg]ly|[Hh]is|[Ll]eu|[Aa]rh|[Tt]rp|[Vv]al|[Gg]lu|[Tt]yr|[Gg]lutamine|[Gg]lutamic [Aa]cid|[Ll]eucine|[Vv]aline|[Ii]soleucine|[Ll]ysine|[Aa]lanine|[Gg]lycine|[Aa]spartate|[Mm]ethionine|[Tt]hreonine|[Hh]istidine|[Aa]spartic [Aa]cid|[Aa]rginine|[Aa]sparagine|[Tt]ryptophan|[Pp]roline|[Pp]henylalanine|[Cc]ysteine|[Ss]erine|[Gg]lutamate|[Tt]yrosine|[Ss]top|[Tt]erm?)) mutations? (at|of) (?P<wt_res>[CISQMNPKDTFAGHLRWVEYBZJX]|[Cc]ys|[Ii]le|[Ss]er|[Gg]ln|[Mm]et|[Aa]sn|[Pp]ro|[Ll]ys|[Aa]sp|[Tt]hr|[Pp]he|[Aa]la|[Gg]ly|[Hh]is|[Ll]eu|[Aa]rh|[Tt]rp|[Vv]al|[Gg]lu|[Tt]yr|[Gg]lutamine|[Gg]lutamic [Aa]cid|[Ll]eucine|[Vv]aline|[Ii]soleucine|[Ll]ysine|[Aa]lanine|[Gg]lycine|[Aa]spartate|[Mm]ethionine|[Tt]hreonine|[Hh]istidine|[Aa]spartic [Aa]cid|[Aa]rginine|[Aa]sparagine|[Tt]ryptophan|[Pp]roline|[Pp]henylalanine|[Cc]ysteine|[Ss]erine|[Gg]lutamate|[Tt]yrosine|[Ss]top|[Tt]erm?)[-\s]?(?P<pos>[1-9][0-9]*)(?=([.,\s)\]\'":;\-?!/]|$))
+#####      <aa><number> is replaced by an <aa>	5
+#####      <aa><number> is replaced by a <aa>	5
 #####      <number>\(<aa> > <aa>\)
 #####      <number> (<aa>><aa>)
 #####      <number>(<aa>/<aa>)
 #####      <number>(<aa>><aa>)
 #####      <number> <aa>   >   <aa>
-#####      <aa>(<number>) --> <aa>
-#####      <aa>(<number>)--><aa>
-#####      <aa><number> --> <aa>
 #####      <number> (<aa> to <aa>
 #####      <number> (<aa>/<aa>)
 #####      <number> (<aa>><aa>)
 #####      <aa>-<number> to <aa>
-#####      <aa>(<number>)<aa>
 #####      <number> <aa> leads to <aa>
 #####      <aa> to <aa> at nucleotide position <number>
 #####      <aa> to <aa> mutation at position <number>
@@ -338,9 +336,6 @@
 #####      <aa> <number> substituted with <aa>	5
 #####      <aa>-<number> residue by <aa>	5
 #####      <aa><number>) of <aa>	5
-#####      <aa>(<number>) is replaced with <aa>	5
-#####      <aa><number> is replaced by an <aa>	5
-#####      <aa><number> is replaced by a <aa>	5
 #####      <aa> <number> has been changed to a <aa>	5
 #####      <aa> <number> by the <aa>	5
 #####      <aa> mutants <aa><number>	5
@@ -1263,8 +1258,8 @@
 (?:^|[\s\(\[\'"/,;\-])(?P<wt_res>(CYS|ILE|SER|GLN|MET|ASN|PRO|LYS|ASP|THR|PHE|ALA|GLY|HIS|LEU|ARG|TRP|VAL|GLU|TYR|ASX|GLX|XLE|TER|STP)|(GLUTAMINE|GLUTAMIC ACID|LEUCINE|VALINE|ISOLEUCINE|LYSINE|ALANINE|GLYCINE|ASPARTATE|METHIONINE|THREONINE|HISTIDINE|ASPARTIC ACID|ARGININE|ASPARAGINE|TRYPTOPHAN|PROLINE|PHENYLALANINE|CYSTEINE|SERINE|GLUTAMATE|TYROSINE|TERM|STOP|AMBER|UMBER|OPAL))(?P<pos>[1-9][0-9]*) residue by (?P<mut_res>(CYS|ILE|SER|GLN|MET|ASN|PRO|LYS|ASP|THR|PHE|ALA|GLY|HIS|LEU|ARG|TRP|VAL|GLU|TYR|ASX|GLX|XLE|TER|STP)|(GLUTAMINE|GLUTAMIC ACID|LEUCINE|VALINE|ISOLEUCINE|LYSINE|ALANINE|GLYCINE|ASPARTATE|METHIONINE|THREONINE|HISTIDINE|ASPARTIC ACID|ARGININE|ASPARAGINE|TRYPTOPHAN|PROLINE|PHENYLALANINE|CYSTEINE|SERINE|GLUTAMATE|TYROSINE|TERM|STOP|AMBER|UMBER|OPAL))(?=([.,\s)\]\'":;\-?!/]|$))
 # WRESPPOS mutated to MRES
 (?:^|[\s\(\[\'"/,;\-])(?P<wt_res>(CYS|ILE|SER|GLN|MET|ASN|PRO|LYS|ASP|THR|PHE|ALA|GLY|HIS|LEU|ARG|TRP|VAL|GLU|TYR|ASX|GLX|XLE|TER|STP)|(GLUTAMINE|GLUTAMIC ACID|LEUCINE|VALINE|ISOLEUCINE|LYSINE|ALANINE|GLYCINE|ASPARTATE|METHIONINE|THREONINE|HISTIDINE|ASPARTIC ACID|ARGININE|ASPARAGINE|TRYPTOPHAN|PROLINE|PHENYLALANINE|CYSTEINE|SERINE|GLUTAMATE|TYROSINE|TERM|STOP|AMBER|UMBER|OPAL))(?P<pos>[1-9][0-9]*) mutated to (?P<mut_res>(CYS|ILE|SER|GLN|MET|ASN|PRO|LYS|ASP|THR|PHE|ALA|GLY|HIS|LEU|ARG|TRP|VAL|GLU|TYR|ASX|GLX|XLE|TER|STP)|(GLUTAMINE|GLUTAMIC ACID|LEUCINE|VALINE|ISOLEUCINE|LYSINE|ALANINE|GLYCINE|ASPARTATE|METHIONINE|THREONINE|HISTIDINE|ASPARTIC ACID|ARGININE|ASPARAGINE|TRYPTOPHAN|PROLINE|PHENYLALANINE|CYSTEINE|SERINE|GLUTAMATE|TYROSINE|TERM|STOP|AMBER|UMBER|OPAL))(?=([.,\s)\]\'":;\-?!/]|$))
-# WRESPPOS is replaced with MRES
-(?:^|[\s\(\[\'"/,;\-])(?P<wt_res>(CYS|ILE|SER|GLN|MET|ASN|PRO|LYS|ASP|THR|PHE|ALA|GLY|HIS|LEU|ARG|TRP|VAL|GLU|TYR|ASX|GLX|XLE|TER|STP)|(GLUTAMINE|GLUTAMIC ACID|LEUCINE|VALINE|ISOLEUCINE|LYSINE|ALANINE|GLYCINE|ASPARTATE|METHIONINE|THREONINE|HISTIDINE|ASPARTIC ACID|ARGININE|ASPARAGINE|TRYPTOPHAN|PROLINE|PHENYLALANINE|CYSTEINE|SERINE|GLUTAMATE|TYROSINE|TERM|STOP|AMBER|UMBER|OPAL))(?P<pos>[1-9][0-9]*) is replaced with (?P<mut_res>(CYS|ILE|SER|GLN|MET|ASN|PRO|LYS|ASP|THR|PHE|ALA|GLY|HIS|LEU|ARG|TRP|VAL|GLU|TYR|ASX|GLX|XLE|TER|STP)|(GLUTAMINE|GLUTAMIC ACID|LEUCINE|VALINE|ISOLEUCINE|LYSINE|ALANINE|GLYCINE|ASPARTATE|METHIONINE|THREONINE|HISTIDINE|ASPARTIC ACID|ARGININE|ASPARAGINE|TRYPTOPHAN|PROLINE|PHENYLALANINE|CYSTEINE|SERINE|GLUTAMATE|TYROSINE|TERM|STOP|AMBER|UMBER|OPAL))(?=([.,\s)\]\'":;\-?!/]|$))
+# WRESPPOS is replaced|substituted with MRES
+(?:^|[\s\(\[\'"/,;\-])(?P<wt_res>(CYS|ILE|SER|GLN|MET|ASN|PRO|LYS|ASP|THR|PHE|ALA|GLY|HIS|LEU|ARG|TRP|VAL|GLU|TYR|ASX|GLX|XLE|TER|STP)|(GLUTAMINE|GLUTAMIC ACID|LEUCINE|VALINE|ISOLEUCINE|LYSINE|ALANINE|GLYCINE|ASPARTATE|METHIONINE|THREONINE|HISTIDINE|ASPARTIC ACID|ARGININE|ASPARAGINE|TRYPTOPHAN|PROLINE|PHENYLALANINE|CYSTEINE|SERINE|GLUTAMATE|TYROSINE|TERM|STOP|AMBER|UMBER|OPAL))\(?(?P<pos>[1-9][0-9]*)\)? is (replaced|substituted) with (?:an?\s)?(?P<mut_res>(CYS|ILE|SER|GLN|MET|ASN|PRO|LYS|ASP|THR|PHE|ALA|GLY|HIS|LEU|ARG|TRP|VAL|GLU|TYR|ASX|GLX|XLE|TER|STP)|(GLUTAMINE|GLUTAMIC ACID|LEUCINE|VALINE|ISOLEUCINE|LYSINE|ALANINE|GLYCINE|ASPARTATE|METHIONINE|THREONINE|HISTIDINE|ASPARTIC ACID|ARGININE|ASPARAGINE|TRYPTOPHAN|PROLINE|PHENYLALANINE|CYSTEINE|SERINE|GLUTAMATE|TYROSINE|TERM|STOP|AMBER|UMBER|OPAL))(?=([.,\s)\]\'":;\-?!/]|$))
 # WRESPPOS is changed to MRES
 (?:^|[\s\(\[\'"/,;\-])(?P<wt_res>(CYS|ILE|SER|GLN|MET|ASN|PRO|LYS|ASP|THR|PHE|ALA|GLY|HIS|LEU|ARG|TRP|VAL|GLU|TYR|ASX|GLX|XLE|TER|STP)|(GLUTAMINE|GLUTAMIC ACID|LEUCINE|VALINE|ISOLEUCINE|LYSINE|ALANINE|GLYCINE|ASPARTATE|METHIONINE|THREONINE|HISTIDINE|ASPARTIC ACID|ARGININE|ASPARAGINE|TRYPTOPHAN|PROLINE|PHENYLALANINE|CYSTEINE|SERINE|GLUTAMATE|TYROSINE|TERM|STOP|AMBER|UMBER|OPAL))(?P<pos>[1-9][0-9]*) is changed to (?P<mut_res>(CYS|ILE|SER|GLN|MET|ASN|PRO|LYS|ASP|THR|PHE|ALA|GLY|HIS|LEU|ARG|TRP|VAL|GLU|TYR|ASX|GLX|XLE|TER|STP)|(GLUTAMINE|GLUTAMIC ACID|LEUCINE|VALINE|ISOLEUCINE|LYSINE|ALANINE|GLYCINE|ASPARTATE|METHIONINE|THREONINE|HISTIDINE|ASPARTIC ACID|ARGININE|ASPARAGINE|TRYPTOPHAN|PROLINE|PHENYLALANINE|CYSTEINE|SERINE|GLUTAMATE|TYROSINE|TERM|STOP|AMBER|UMBER|OPAL))(?=([.,\s)\]\'":;\-?!/]|$))
 # WRESPPOS into a MRES

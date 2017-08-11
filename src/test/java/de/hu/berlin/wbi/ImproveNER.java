@@ -150,6 +150,26 @@ public class ImproveNER {
         assertSingleMutation("Ala to-Tyr transition at codon 12");
     }
 
+    @Test
+    public void testMf6() throws Exception {
+        assertSingleMutation("Ala12-->Tyr");   //<aa><number>--><aa>
+        assertSingleMutation("Ala12 --> Tyr"); //<aa><number> --> <aa>
+        assertSingleMutation("Ala(12)-->Tyr"); //<aa>(<number>)--><aa>
+        assertSingleMutation("Ala(12)Tyr");    //<aa>(<number>)<aa>
+        assertSingleMutation("Ala(12) Tyr");    //<aa>(<number>) <aa>
+        assertSingleMutation("Ala(12) --> Tyr"); //<aa>(<number>) --> <aa>
+        assertSingleMutation("Ala(12) --> Tyr"); //<aa>(<number>) > <aa>
+    }
+
+    @Test
+    public void testMf7() throws Exception {
+        assertSingleMutation("Ala12 is replaced with Tyr"); //<aa>(<number>) is replaced with <aa>
+        assertSingleMutation("Ala12 is replaced with a Tyrosine"); //<aa>(<number>) is replaced with <aa>
+        assertSingleMutation("Ala12 is replaced with an Tyrosine"); //<aa>(<number>) is replaced with <aa>
+        assertSingleMutation("Ala12 is substituted with Tyr"); //<aa>(<number>) is substituted with <aa>
+        assertSingleMutation("Ala(12) is replaced with Tyr"); //<aa>(<number>) is replaced with <aa>
+    }
+
 
     @Test
     public void test2() throws Exception {
