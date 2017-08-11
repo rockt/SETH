@@ -31,6 +31,8 @@
 ###(?P<wt_res>[CISQMNPKDTFAGHLRWVEYBZJX]|[Cc]ys|[Ii]le|[Ss]er|[Gg]ln|[Mm]et|[Aa]sn|[Pp]ro|[Ll]ys|[Aa]sp|[Tt]hr|[Pp]he|[Aa]la|[Gg]ly|[Hh]is|[Ll]eu|[Aa]rh|[Tt]rp|[Vv]al|[Gg]lu|[Tt]yr|[Gg]lutamine|[Gg]lutamic [Aa]cid|[Ll]eucine|[Vv]aline|[Ii]soleucine|[Ll]ysine|[Aa]lanine|[Gg]lycine|[Aa]spartate|[Mm]ethionine|[Tt]hreonine|[Hh]istidine|[Aa]spartic [Aa]cid|[Aa]rginine|[Aa]sparagine|[Tt]ryptophan|[Pp]roline|[Pp]henylalanine|[Cc]ysteine|[Ss]erine|[Gg]lutamate|[Tt]yrosine|[Ss]top|[Tt]erm?)
 ###(?P<mut_res>([CISQMNPKDTFAGHLRWVEYBZJX*]|[Cc]ys|[Ii]le|[Ss]er|[Gg]ln|[Mm]et|[Aa]sn|[Pp]ro|[Ll]ys|[Aa]sp|[Tt]hr|[Pp]he|[Aa]la|[Gg]ly|[Hh]is|[Ll]eu|[Aa]rh|[Tt]rp|[Vv]al|[Gg]lu|[Tt]yr|[Gg]lutamine|[Gg]lutamic [Aa]cid|[Ll]eucine|[Vv]aline|[Ii]soleucine|[Ll]ysine|[Aa]lanine|[Gg]lycine|[Aa]spartate|[Mm]ethionine|[Tt]hreonine|[Hh]istidine|[Aa]spartic [Aa]cid|[Aa]rginine|[Aa]sparagine|[Tt]ryptophan|[Pp]roline|[Pp]henylalanine|[Cc]ysteine|[Ss]erine|[Gg]lutamate|[Tt]yrosine|[Ss]top|[Tt]erm?))
 ################################
+#####      <aa> mutations? (at|of) <aa>[-\s]?<number>	8
+(?:^|[\s\(\[\'"/,;])(?P<mut_res>([CISQMNPKDTFAGHLRWVEYBZJX*]|[Cc]ys|[Ii]le|[Ss]er|[Gg]ln|[Mm]et|[Aa]sn|[Pp]ro|[Ll]ys|[Aa]sp|[Tt]hr|[Pp]he|[Aa]la|[Gg]ly|[Hh]is|[Ll]eu|[Aa]rh|[Tt]rp|[Vv]al|[Gg]lu|[Tt]yr|[Gg]lutamine|[Gg]lutamic [Aa]cid|[Ll]eucine|[Vv]aline|[Ii]soleucine|[Ll]ysine|[Aa]lanine|[Gg]lycine|[Aa]spartate|[Mm]ethionine|[Tt]hreonine|[Hh]istidine|[Aa]spartic [Aa]cid|[Aa]rginine|[Aa]sparagine|[Tt]ryptophan|[Pp]roline|[Pp]henylalanine|[Cc]ysteine|[Ss]erine|[Gg]lutamate|[Tt]yrosine|[Ss]top|[Tt]erm?)) mutations? (at|of) (?P<wt_res>[CISQMNPKDTFAGHLRWVEYBZJX]|[Cc]ys|[Ii]le|[Ss]er|[Gg]ln|[Mm]et|[Aa]sn|[Pp]ro|[Ll]ys|[Aa]sp|[Tt]hr|[Pp]he|[Aa]la|[Gg]ly|[Hh]is|[Ll]eu|[Aa]rh|[Tt]rp|[Vv]al|[Gg]lu|[Tt]yr|[Gg]lutamine|[Gg]lutamic [Aa]cid|[Ll]eucine|[Vv]aline|[Ii]soleucine|[Ll]ysine|[Aa]lanine|[Gg]lycine|[Aa]spartate|[Mm]ethionine|[Tt]hreonine|[Hh]istidine|[Aa]spartic [Aa]cid|[Aa]rginine|[Aa]sparagine|[Tt]ryptophan|[Pp]roline|[Pp]henylalanine|[Cc]ysteine|[Ss]erine|[Gg]lutamate|[Tt]yrosine|[Ss]top|[Tt]erm?)[-\s]?(?P<pos>[1-9][0-9]*)(?=([.,\s)\]\'":;\-?!/]|$))
 #####      <number>\(<aa> > <aa>\)
 #####      <number> (<aa>><aa>)
 #####      <number>(<aa>/<aa>)
@@ -213,9 +215,6 @@
 #####      <aa>(<number>) were replaced by <aa>	8
 #####      <aa>-<number> is substituted with <aa>	8
 #####      <aa><number>) by <aa>	8
-#####      <aa> mutations at <aa><number>	8
-#####      <aa> mutation of <aa>-<number>	8
-#####      <aa> mutation at <aa><number>	8
 #####      <aa> mutant <aa><number>	8
 #####      <aa> into <aa> at position <number>	8
 #####      <aa> instead of <aa>-<number>	8
@@ -255,7 +254,6 @@
 #####      <aa>-<number> is substituted by <aa>	7
 #####      <aa> <number> into a <aa>	7
 #####      <aa>-<number>) by <aa>	7
-#####      <aa> mutation of <aa><number>	7
 #####      <aa> in position <number> to <aa>	7
 #####      <aa>-for-<aa> substitution at residue <number>	7
 #####      <aa>-for-<aa> substitution at codon <number>	7
@@ -298,7 +296,6 @@
 #####      <aa> <number> has been replaced with <aa>	6
 #####      <aa><number> has been replaced by a <aa>	6
 #####      <aa> <number> has been replaced by <aa>	6
-#####      <aa> mutation of <aa> <number>	6
 #####      <aa> by <aa> <number>	6
 #####      <aa> at position <number> has been replaced by <aa>	6
 #####      <aa> at amino acid <number> to <aa>	6
@@ -349,7 +346,6 @@
 #####      <aa><number> is replaced by a <aa>	5
 #####      <aa> <number> has been changed to a <aa>	5
 #####      <aa> <number> by the <aa>	5
-#####      <aa> mutations at <aa>-<number>	5
 #####      <aa> mutants <aa><number>	5
 #####      <aa> is replaced by <aa> at position <number>	5
 #####      <aa> instead of <aa> at positions <number>	5
@@ -412,7 +408,6 @@
 #####      <aa> <number> for a <aa>	4
 #####      <aa>-<number> converted to <aa>	4
 #####      <aa>-<number> by <aa>	4
-#####      <aa> mutation at <aa>-<number>	4
 #####      <aa> mutants of <aa>(<number>	4
 #####      <aa> modified <aa><number>	4
 #####      <aa> leads to <aa> at position <number>	4

@@ -103,6 +103,13 @@ public class ImproveNER {
         assertSingleMutation("Ala32 is mutated to Tyr");
         assertSingleMutation("Ala-32 is mutated to Tyr");
         assertSingleMutation("Ala 32 is mutated to Tyr");
+
+        //<aa> mutations at <aa><number>
+        assertSingleMutation("Ala mutation at Tyr12");
+        assertSingleMutation("Ala mutation at Tyr 12");
+        assertSingleMutation("Ala mutations at Tyr12");
+        assertSingleMutation("Ala mutations at Tyr-12");
+        assertSingleMutation("Ala mutations of Tyr-12");
     }
 
     @Test
