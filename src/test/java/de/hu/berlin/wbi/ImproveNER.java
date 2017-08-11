@@ -113,6 +113,37 @@ public class ImproveNER {
     }
 
     @Test
+    public void testMf5() throws Exception {
+        //(replacement|substitution|change|switch|polymorphism)
+        //(?:(codon|position|residue)\s)?
+
+        //<aa> to <aa> replacement at position <number>
+        assertSingleMutation("Ala to Tyr replacement at position 12");
+        assertSingleMutation("Ala to Tyr replacement at residue 12");
+        assertSingleMutation("Ala to Tyr replacement at codon 12");
+        assertSingleMutation("Ala to Tyr replacement at 12");
+
+        //<aa> to <aa> substitution at position <number>
+        assertSingleMutation("Ala to Tyr substitution at position 12");
+        assertSingleMutation("Ala to Tyr substitution at residue 12");
+        assertSingleMutation("Ala to Tyr substitution at codon 12");
+        assertSingleMutation("Ala to Tyr substitution at 12");
+
+        //<aa> to <aa> change at position <number>
+        assertSingleMutation("Ala to Tyr change at position 12");
+        assertSingleMutation("Ala to Tyr change at residue 12");
+        assertSingleMutation("Ala to Tyr change at codon 12");
+        assertSingleMutation("Ala to Tyr change at 12");
+
+        //<aa> to <aa> switch at position <number>
+        assertSingleMutation("Ala to Tyr switch at position 12");
+        assertSingleMutation("Ala to Tyr switch at residue 12");
+        assertSingleMutation("Ala to Tyr switch at codon 12");
+        assertSingleMutation("Ala to Tyr switch at 12");
+
+    }
+
+    @Test
     public void test2() throws Exception {
 
         //Slight derivation of A123T
