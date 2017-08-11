@@ -91,6 +91,14 @@ public class ImproveNER {
         assertSingleMutation("Ala for Tyr at residue 12"); //<aa> for <aa> at residue <number>
         assertSingleMutation("Ala for Tyr at codon 12"); //<aa> for <aa> at codon <number>
         assertSingleMutation("Ala for Tyr at position 12"); //<aa> for <aa> at position <number>
+
+
+        //<aa> to <aa> at position <number>
+        assertSingleMutation("Ala to Tyr at 44");
+        assertSingleMutation("Ala to Tyr at position 44");
+        assertSingleMutation("Ala to Tyr at codon 44");
+        assertSingleMutation("Ala to Tyr at residue 44");
+
     }
 
     @Test
