@@ -1,6 +1,7 @@
 package de.hu.berlin.wbi;
 
 import de.hu.berlin.wbi.objects.MutationMention;
+import edu.uchsc.ccp.nlp.ei.mutation.Mutation;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -31,8 +32,10 @@ public class ImproveNER {
 
         List<MutationMention> mutationMentions = seth.findMutations(text);
 
+        for(MutationMention mm : mutationMentions)
+            System.out.println(mm.getPatternId());
+
         Assert.assertEquals(1, mutationMentions.size());
-        System.out.println(mutationMentions.get(0).getPatternId());
         Assert.assertEquals(text, mutationMentions.get(0).getText());
     }
 
@@ -80,6 +83,14 @@ public class ImproveNER {
         assertSingleMutation("12 (Ala>Glu"); //<number>(<aa>><aa>)
         assertSingleMutation("12 (Ala > Glu"); //<number>(<aa> > <aa>)
         assertSingleMutation("12 (Ala>Glu"); //<number>(<aa>/<aa>)
+    }
+
+    @Test
+    public void testMf4() throws Exception {
+        assertSingleMutation("Ala for Tyr at 12"); //<aa> for <aa> at <number>
+        assertSingleMutation("Ala for Tyr at residue 12"); //<aa> for <aa> at residue <number>
+        assertSingleMutation("Ala for Tyr at codon 12"); //<aa> for <aa> at codon <number>
+        assertSingleMutation("Ala for Tyr at position 12"); //<aa> for <aa> at position <number>
     }
 
     @Test
