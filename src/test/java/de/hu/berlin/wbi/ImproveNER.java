@@ -168,6 +168,14 @@ public class ImproveNER {
         assertSingleMutation("Ala12 is replaced with an Tyrosine"); //<aa>(<number>) is replaced with <aa>
         assertSingleMutation("Ala12 is substituted with Tyr"); //<aa>(<number>) is substituted with <aa>
         assertSingleMutation("Ala(12) is replaced with Tyr"); //<aa>(<number>) is replaced with <aa>
+
+
+        //<aa> to <aa> substitution in position <number>
+        assertSingleMutation("Tyr to Alanine substitution in position 666");
+        assertSingleMutation("Tyr-to-Alanine substitution in position 666");
+        assertSingleMutation("Tyr to Alanine replacement in position 666");
+        assertSingleMutation("Tyr to Alanine replacement in amino acid 666");
+
     }
 
 
