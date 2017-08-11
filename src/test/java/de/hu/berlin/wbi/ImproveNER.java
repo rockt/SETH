@@ -114,7 +114,7 @@ public class ImproveNER {
 
     @Test
     public void testMf5() throws Exception {
-        //(replacement|substitution|change|switch|polymorphism)
+        //(replacement|substitution|change|switch|polymorphism|transition)
         //(?:(codon|position|residue)\s)?
 
         //<aa> to <aa> replacement at position <number>
@@ -141,7 +141,15 @@ public class ImproveNER {
         assertSingleMutation("Ala to Tyr switch at codon 12");
         assertSingleMutation("Ala to Tyr switch at 12");
 
+        //<aa> to <aa> at codon <number>	33
+        assertSingleMutation("Ala to Tyr change at codon 12");
+        assertSingleMutation("Ala to Tyr at 12");
+
+        //<aa>-to-<aa> change at codon <number>
+        assertSingleMutation("Ala to-Tyr change at codon 12");
+        assertSingleMutation("Ala to-Tyr transition at codon 12");
     }
+
 
     @Test
     public void test2() throws Exception {
