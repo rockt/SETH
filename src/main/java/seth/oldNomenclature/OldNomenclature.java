@@ -247,6 +247,17 @@ public class OldNomenclature {
         logger.info("Loaded {} patterns", patterns.size());
     }
 
+    /**
+    private void filterMentions(List<MutationMention> mentions){
+        InsP3
+        InsP(3
+                InsP6
+                InsP(6
+                        InsP4
+                        Ins-P3
+    }
+     */
+
 
     /**
      * Extracts mentions of mutations from natural language text written in deprecated nomenclature
@@ -324,10 +335,10 @@ public class OldNomenclature {
                 mm.setPatternId(pattern.getId());
 
                 //Here we filter likely false positive mentions (where the String mention is only one char and the location is below 9); e.g., ΔR2; but not ΔR20 or ΔTyr2
-                //if(amino.length() != 1 || Math.abs(intLocation) > 9 || !parseable)
+                if(amino.length() != 1 || Math.abs(intLocation) > 9 || !parseable)
                     result.add(mm);
-               // else
-                //    logger.debug("Skipping '{}'; as likely false positive ", text.substring(start, end));
+               else
+                    logger.debug("Skipping '{}'; as likely false positive ", text.substring(start, end));
             }
         }
 

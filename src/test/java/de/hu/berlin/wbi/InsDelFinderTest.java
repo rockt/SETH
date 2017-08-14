@@ -85,16 +85,16 @@ public class InsDelFinderTest {
     public void testFN2() throws Exception {
 
         //Some problem with one digit numbers
-        assertSingleMutation("3insT");
-        assertSingleMutation("-3insT");
-        assertSingleMutation("+3insT");
+        assertNoMutation("3insT");
+        assertNoMutation("-3insT");
+        assertNoMutation("+3insT");
 
         assertSingleMutation("DeltaS60");
-        assertSingleMutation("DeltaS6");
-        assertSingleMutation("delS1");
+        assertNoMutation("DeltaS6");
+        assertNoMutation("delS1");
 
         assertSingleMutation("G10del");
-        assertSingleMutation("G1del");
+        assertNoMutation("G1del");
     }
 
     @Test
@@ -312,15 +312,15 @@ public class InsDelFinderTest {
     @Test
     public void testNormalization()throws Exception {
 
-        assertNormalizedMutation("InsP8", "P8ins");
+        assertNormalizedMutation("InsP88", "P88ins");
         assertNormalizedMutation("648dupGTT", "GTT648dup");
         assertNormalizedMutation("G417AfsX7", "G417AfsX7");
-        assertNormalizedMutation("M2-deleted", "M2del");
+        assertNormalizedMutation("M22-deleted", "M22del");
         assertNormalizedMutation("256delGGACAACCTCAAGGGCACCT", "GGACAACCTCAAGGGCACCT256del");
         assertNormalizedMutation("860insACCT", "ACCT860ins");
         assertNormalizedMutation("648dupGTT", "GTT648dup");
         assertNormalizedMutation("converting serine 208", "S208con");
-        assertNormalizedMutation("S2 inversion", "S2inv");
+        assertNormalizedMutation("S12 inversion", "S12inv");
     }
 
 

@@ -36,7 +36,7 @@ public class NormalizeToHGNCTest {
     @Test
     public void testBeaudet1993() throws Exception {
 
-        assertSingleMutation("deltaT2", "?.2delT");
+        assertSingleMutation("deltaT12", "?.12delT");
         assertSingleMutation("Gly376 with alanine", "p.Gly376Ala"); //protein-mutation due to Gly&Alanine
         assertSingleMutation("G376A", "?.376G>A");      //Unknown mutation (G/A) can be DNA/protein
         assertSingleMutation("Thr92Ala", "p.Thr92Ala"); //Protein (Thr)
