@@ -14,7 +14,6 @@ import java.util.List;
  * Created by philippe on 11/10/16.
  * A set of tests to improve some SETH false negatives
  */
-@Ignore("Test is ignored due to missing implementation!")
 public class ImproveNER {
 
     private SETH seth;
@@ -178,7 +177,7 @@ public class ImproveNER {
 
     }
 
-
+    @Ignore("Test is ignored due to missing implementation!")
     @Test
     public void test2() throws Exception {
 
@@ -189,6 +188,7 @@ public class ImproveNER {
         assertSingleMutation("V281 L");
     }
 
+    @Ignore("Test is ignored due to missing implementation!")
     @Test
     public void test3() throws Exception {
         //<aa><num>--><aa>
@@ -212,6 +212,7 @@ public class ImproveNER {
     }
 
 
+    @Ignore("Test is ignored due to missing implementation!")
     @Test
     public void test4() throws Exception {
         //Problems with Backus Naur
@@ -226,6 +227,7 @@ public class ImproveNER {
         assertSingleMutation("c.6823insA");
     }
 
+    @Ignore("Test is ignored due to missing implementation!")
     @Test
     public void test5() throws Exception {
 
@@ -238,6 +240,7 @@ public class ImproveNER {
         assertSingleMutation("4766(C/T)");
     }
 
+    @Ignore("Test is ignored due to missing implementation!")
     @Test
     public void test6() throws Exception {
 
@@ -249,6 +252,7 @@ public class ImproveNER {
         assertSingleMutation("-500 (G to A");
     }
 
+    @Ignore("Test is ignored due to missing implementation!")
     @Test
     public void test7() throws Exception {
 
@@ -263,6 +267,7 @@ public class ImproveNER {
         assertSingleMutation("G/C-174");
     }
 
+    @Ignore("Test is ignored due to missing implementation!")
     @Test
     public void test8() throws Exception {
 
@@ -285,6 +290,7 @@ public class ImproveNER {
         assertSingleMutation("98 Val leads to Met");
     }
 
+    @Ignore("Test is ignored due to missing implementation!")
     @Test
     public void test9() throws Exception {
 
@@ -295,6 +301,7 @@ public class ImproveNER {
         assertSingleMutation("IVS-I-6 (T-->C)");
     }
 
+    @Ignore("Test is ignored due to missing implementation!")
     @Test
     public void test10() throws Exception {
 
@@ -309,6 +316,7 @@ public class ImproveNER {
         assertSingleMutation("valine by isoleucine at amino acid position");//<aa> by <aa> at amino acid position <num>
     }
 
+    @Ignore("Test is ignored due to missing implementation!")
     @Test
     public void test11() throws Exception {
 
@@ -321,6 +329,7 @@ public class ImproveNER {
         assertSingleMutation("G-->A substitution at nucleotide 1144"); // <aa>--><aa> substitution at nucleotide <num>
     }
 
+    @Ignore("Test is ignored due to missing implementation!")
     @Test
     public void test12() throws Exception {
 
@@ -335,6 +344,7 @@ public class ImproveNER {
         assertSingleMutation("C to T transition in codon 82"); // <aa> to <aa> transition in codon <num>
     }
 
+    @Ignore("Test is ignored due to missing implementation!")
     @Test
     public void test13() throws Exception {
 

@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
  * Created by philippe on 03/08/2017
  * A set of tests to improve some SETH false negatives using tmVar
  */
-@Ignore("Test is ignored due to missing implementation!")
 public class ImproveUsingtmVarTest {
 
     private SETH seth;
@@ -64,7 +63,7 @@ public class ImproveUsingtmVarTest {
         assertSingleMutation("IVS4 + 4A > T");
     }
 
-
+    @Ignore("Test is ignored due to missing implementation!")
     @Test
     public void testNucleotideMentions() throws Exception {
         //Defenitely basepair
@@ -136,6 +135,7 @@ public class ImproveUsingtmVarTest {
     }
 
 
+    @Ignore("Test is ignored due to missing implementation!")
     @Test
     public void testAAMentions() throws Exception {
         //<mutaa> for <wtaa> at position <number>
