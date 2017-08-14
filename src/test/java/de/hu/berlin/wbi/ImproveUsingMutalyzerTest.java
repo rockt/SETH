@@ -23,7 +23,6 @@ public class ImproveUsingMutalyzerTest {
 
 
     @Test
-    @Ignore("Test is ignored due to missing implementation!")
     public void testFN1() throws Exception {
 
         //Using →
@@ -79,8 +78,6 @@ public class ImproveUsingMutalyzerTest {
         assertMatchesInexact("c.947G>A");
         assertMatchesInexact("g.-23449C>A");
         assertMatchesInexact("p.I296V");
-        assertMatchesInexact("p.I296 V");
-
 
         //Same with whitespaces
         assertMatchesInexact("c.238-8A > T"); //Normal Whitespace (32)
@@ -98,8 +95,8 @@ public class ImproveUsingMutalyzerTest {
         assertMatchesInexact("p.I296V");
     }
 
+    @Ignore("Skipping test, requires implementation")
     @Test
-    @Ignore("Test is ignored due to missing implementation!")
     public void testFN2() throws Exception {
         //Protein-Substitutions which are not allowed normally
         assertMatchesInexact("p.Ala270Ser");
@@ -112,15 +109,24 @@ public class ImproveUsingMutalyzerTest {
         assertMatchesInexact("p.284 M > I");
     }
 
-
+    @Ignore("Skipping test, requires implementation")
     @Test
-    @Ignore("Test is ignored due to missing implementation!")
     public void testFN3() throws Exception {
 
         //Nucleotide mutations, which are not using >
         assertMatchesInexact("c.G1025A");
         assertMatchesInexact("c.G139C");
     }
+
+
+    @Ignore("Skipping test, requires implementation")
+    @Test
+    public void testFN4() throws Exception {
+
+        //Whitespace
+        assertMatchesInexact("p.I296 V");
+    }
+
 
     /**
      * Wrapper function, testing that we identify the provided string as a mutation
