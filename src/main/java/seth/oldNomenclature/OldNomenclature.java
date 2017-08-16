@@ -309,8 +309,8 @@ public class OldNomenclature {
                 }
 
 
-                //Likely PSM, if position is positive and we could ground amino acid name
-                if((amino.length() > 1 && !amino.equals(shortAminoName) || amino.matches(".*[^ATGC].*") ) && intLocation > 0){
+                //Likely PSM, if we could normalize amino acid name or the string contains no ATGC char
+                if((amino.length() > 1 && !amino.equals(shortAminoName) || amino.matches(".*[^ATGC].*") )){
                     mm.setPsm(true);
                     mm.setNsm(false);
                     mm.setAmbiguous(false);
@@ -326,10 +326,6 @@ public class OldNomenclature {
                     mm.setPsm(false);
                     mm.setNsm(false);
                     mm.setAmbiguous(true);
-                }
-
-                if(!amino.equals(shortAminoName) && !mm.isPsm()){
-                    logger.warn("Unlikely to happen for '{}'", m.group("group"));
                 }
 
                 mm.setPatternId(pattern.getId());
