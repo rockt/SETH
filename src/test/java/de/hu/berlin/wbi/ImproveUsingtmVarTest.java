@@ -142,15 +142,15 @@ public class ImproveUsingtmVarTest {
         assertSingleMutation("Ala for Pro at position 7");
         assertSingleMutation("Ala for Term at position 7");
         assertSingleMutation("Ala for Ter at position 7");
-
-
         assertSingleMutation("glutamic acid residue in position 266 with aspartic acid");
         assertSingleMutation("Glu(3) was changed into Ile");
-        assertSingleMutation("valine for alanine at amino acid positions 7");
+        assertSingleMutation("Glu (3) was changed into Ile");
+        assertSingleMutation("valine for alanine at amino acid position 77");
         assertSingleMutation("Ala to Val amino acid change at 9");
         assertSingleMutation("serine residue in position 8 is replaced with alanine");
-        assertSingleMutation("proline----histidine substitution (codon 23)");
+        assertSingleMutation("Ala leads to Val at amino acid position 2");
         assertSingleMutation("Ala leads to Val at amino acid positions 2");
+
         assertSingleMutation("leucine replaces glutamic acid as residue 2");
         assertSingleMutation("arginine 4 has been replaced by an alanine");
         assertSingleMutation("Arg3 has been replaced with Ala");
@@ -172,14 +172,11 @@ public class ImproveUsingtmVarTest {
         assertSingleMutation("70Val substituted by Ala");
         assertSingleMutation("Arg4 and Arg6 to alanine");
         assertSingleMutation("Ala281 and Ala282 to Gly");
-
+        assertSingleMutation("Ser-384 mutated to proline");
+        assertSingleMutation("Lys substituted for Glu 88");
 
 
        /**
-
-
-        Ser-384 mutated to proline
-        Lys substituted for Glu 88
         Ser17 substituted with Asn
         Leu86 was changed into Ala
         N481 --> Y
