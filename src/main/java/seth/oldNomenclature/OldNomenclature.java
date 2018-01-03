@@ -34,6 +34,7 @@ public class OldNomenclature {
 
     private final String defaultPatternsFile = "/resources/patterns.txt";
 
+    private final static Set<String> ambiguous  = new HashSet<String>();     //Contains a list of ambiguous "mutation"-names (e.g., T47D generally refers to a cell-line and not to a mutation)
 
     /**
      * Initialization of OldNomenclature-Matcher requires a set of regular expressions that will be used to detect deletions/insertions/...
@@ -43,6 +44,7 @@ public class OldNomenclature {
     public OldNomenclature(){
         super();
         initializeHashMaps();
+        initializeAmbiguousMentions();
 
         loadRegularExpressionsFromJar(defaultPatternsFile);
     }
@@ -57,6 +59,7 @@ public class OldNomenclature {
     public OldNomenclature(String fileName){
         super();
         initializeHashMaps();
+        initializeAmbiguousMentions();
 
         loadRegularExpressionsFromFile(new File(fileName));
     }
@@ -137,6 +140,27 @@ public class OldNomenclature {
         modificationToType.put("CONVERSIONS", Type.CONVERSION);
         modificationToType.put("CONVERTING", Type.CONVERSION);
         modificationToType.put("CONVERTED", Type.CONVERSION);
+    }
+
+
+    /**
+     * Add some ambiguous mentions, which often refer to other concepts instead of mutations
+     */
+    private void initializeAmbiguousMentions(){
+        ambiguous.add("G47Δ");      //Virus Vector
+        ambiguous.add("ΔG30");      //Insulin Index
+        ambiguous.add("deltaV1-1"); //Protein Kinase
+        ambiguous.add("InsP3");     //Inositol trisphosphate receptor
+        ambiguous.add("InsP(3");
+        ambiguous.add("Ins-P3");
+        ambiguous.add("InsP6");     //Inositol hexakisphosphate
+        ambiguous.add("InsP(6");
+        ambiguous.add("InsP4");
+        ambiguous.add("Ins(P4");
+    }
+
+    private List<MutationMention>  filterFrequentFalsePositives(List<MutationMention> mentions){
+        return  mentions.stream().filter(p -> !ambiguous.contains(p.getText())).collect(Collectors.toList());
     }
 
 
@@ -247,16 +271,8 @@ public class OldNomenclature {
         logger.info("Loaded {} patterns", patterns.size());
     }
 
-    /**
-    private void filterMentions(List<MutationMention> mentions){
-        InsP3
-        InsP(3
-                InsP6
-                InsP(6
-                        InsP4
-                        Ins-P3
-    }
-     */
+
+
 
 
     /**
@@ -368,7 +384,7 @@ public class OldNomenclature {
 
         result = removeDuplicates(result, text);
 
-
+        result = filterFrequentFalsePositives(result);
 
         return result;
     }
