@@ -63,6 +63,8 @@ public class OldNomenclatureTest {
     @Test
     public void testBeaudet1993() throws Exception {
 
+        assertSingleMutation("517_519ΔVal");
+
         //Insertions (one string one mutation)
         assertSingleMutation("435insA");
         assertSingleMutation("1154insTC");
