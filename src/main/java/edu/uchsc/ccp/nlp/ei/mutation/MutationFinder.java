@@ -209,7 +209,7 @@ public class MutationFinder extends MutationExtractor {
         try {
             while ((line = br.readLine()) != null) {
                 lineNumber++;
-                if (!line.startsWith("#")) {
+                if (!line.startsWith("#") && !line.matches("^$")) {
                     processPythonRegex(line, lineNumber);
 
                     if (lineNumber % 100 == 0) {
