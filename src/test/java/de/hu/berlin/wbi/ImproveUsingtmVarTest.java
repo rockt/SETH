@@ -31,6 +31,9 @@ public class ImproveUsingtmVarTest {
         List<MutationMention> mutationMentions = seth.findMutations(text);
         System.out.println(mutationMentions);
 
+        if(mutationMentions.size() == 0)
+            System.out.print("No match for '" +text +"'");
+
         Assert.assertEquals(1, mutationMentions.size());
         Assert.assertEquals(text, mutationMentions.get(0).getText());
     }
@@ -150,30 +153,30 @@ public class ImproveUsingtmVarTest {
         assertSingleMutation("serine residue in position 8 is replaced with alanine");
         assertSingleMutation("Ala leads to Val at amino acid position 2");
         assertSingleMutation("Ala leads to Val at amino acid positions 2");
-
         assertSingleMutation("leucine replaces glutamic acid as residue 2");
+        assertSingleMutation("Tyr7-->Gln");
         assertSingleMutation("arginine 4 has been replaced by an alanine");
-        assertSingleMutation("Arg3 has been replaced with Ala");
+        assertSingleMutation("Tyr 7 has been replaced with Ala");
+        assertSingleMutation("Tyr 77 has been replaced with Ala");
         assertSingleMutation("arginine residue at position 7 was replaceable with alanine");
         assertSingleMutation("arginine for lysine at aa 3");
         assertSingleMutation("isoleucine with leucine at amino acid positions 5");
-        assertSingleMutation("alanine to a valine residue in 5");
         assertSingleMutation("Ser(2) replaced by aspartic acid");
         assertSingleMutation("Ser(9) were mutated to Ala");
-        assertSingleMutation("(L181) --> Tyr");
         assertSingleMutation("Ile --> (79)Val");
-        assertSingleMutation("E7-->Gln");
-        assertSingleMutation("Cys134 is mutated to Ser");
-        assertSingleMutation("Leu to Pro change at 623");
-        assertSingleMutation("Ser for Pro at codon 587");
-        assertSingleMutation("Ala replacement of Ile-6");
-        assertSingleMutation("Glu895 and Tyr955 to Ala");
         assertSingleMutation("Lys206 is mutated to Glu");
+        assertSingleMutation("Ala replacement of Ile-6");
+        assertSingleMutation("Ala replacement of Ile 6");
+        assertSingleMutation("Ala replacement of Ile6");
         assertSingleMutation("70Val substituted by Ala");
-        assertSingleMutation("Arg4 and Arg6 to alanine");
-        assertSingleMutation("Ala281 and Ala282 to Gly");
         assertSingleMutation("Ser-384 mutated to proline");
+        assertSingleMutation("Ser 384 mutated to proline");
         assertSingleMutation("Lys substituted for Glu 88");
+        assertSingleMutation("Lys substituted for Glu-88");
+        assertSingleMutation("Lys substituted for Glu88");
+
+
+
 
 
        /**
