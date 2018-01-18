@@ -5,4 +5,5 @@ See http://rockt.github.com/SETH/
 - Philippe Thomas
 - Tim Rocktäschel
 - Yvonne Mayer
+- Johannes Kirschnick
 - Eugene Brevdo
