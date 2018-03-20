@@ -30,7 +30,12 @@ TODO:
     * convert description xml to java class, use [JCasGen](https://uima.apache.org/d/uimaj-current/tools.html#ugr.tools.jcasgen): 
         * requires UIMA SDK [installed](https://uima.apache.org/doc-uima-examples.html) 
         * execute: `PATH/TO/UIMA-SDK/bin/jcasgen.sh PATH/TO/INPUT_DESCRIPTION.xml PATH/TO/OUTPUT/DIRECTORY`
-            example: `/opt/apache-uima/bin/jcasgen.sh /home/arne/devel/Java/SETH/desc/SethTypeSystem.xml /home/arne/devel/Java/SETH/src/main/java`
+            * example: `/opt/apache-uima/bin/jcasgen.sh /home/arne/devel/Java/SETH/desc/SethTypeSystem.xml /home/arne/devel/Java/SETH/src/main/java`
     * create an [Analysis Engine Descriptor file](https://uima.apache.org/d/uimaj-3.0.0/tutorials_and_users_guides.html#ugr.tug.aae.xml_intro_ae_descriptor)
     * test
         * using [UIMA Document Analyzer](https://uima.apache.org/d/uimaj-3.0.0/tutorials_and_users_guides.html#ugr.tug.aae.testing_your_annotator)
+            * see [how to use UIMA shell scripts](https://uima.apache.org/d/uimaj-3.0.0/tutorials_and_users_guides.html#ugr.tug.aae.using_shell_scripts)
+            * build SETH jar package with maven
+            * add jar (incl. dependencies) to UIMA classpath, e.g. with: `export UIMA_CLASSPATH="/home/arne/devel/Java/SETH/target/seth-1.3.1-Snapshot-jar-with-dependencies.jar"`
+            * start UIMA analyzer: `PATH/TO/UIMA-SDK/bin/documentAnalyzer.sh`
+
