@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--  Descriptor for the MutationAnnotator. -->
+<analysisEngineDescription xmlns="http://uima.apache.org/resourceSpecifier">
+    <frameworkImplementation>org.apache.uima.java</frameworkImplementation>
+    <primitive>true</primitive>
+    <annotatorImplementationName>
+        seth.fimda.MutationAnnotator
+    </annotatorImplementationName>
+    <analysisEngineMetaData>
+        <name>SETH Mutation Annotator</name>
+        <description>A mutation annotator using SETH (SNP Extraction Tool for Human Variations).</description>
+        <version>1.0</version>
+        <vendor>Deutsches Forschungszentrum für Künstliche Intelligenz (DFKI)</vendor>
+        <typeSystemDescription>
+            <imports>
+                <import location="SethTypeSystem.xml"/>
+            </imports>
+        </typeSystemDescription>
+        <capabilities>
+            <capability>
+                <inputs />
+                <outputs>
+                    <!--<type>seth.fimda.MutationAnnotation</type>
+                    <feature>seth.fimda.MutationAnnotation:wtResidue</feature>-->
+                    <type allAnnotatorFeatures ="true">seth.fimda.MutationAnnotation</type>
+                </outputs>
+            </capability>
+        </capabilities>
+    </analysisEngineMetaData>
+</analysisEngineDescription>

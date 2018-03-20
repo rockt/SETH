@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <typeSystemDescription xmlns="http://uima.apache.org/resourceSpecifier">
-    <name>SETHTypeSystem</name>
+    <name>SethTypeSystem</name>
     <description>Type System Definition for SETH</description>
     <vendor>Apache Software Foundation</vendor>
     <version>1.0</version>
     <types>
         <typeDescription>
             <name>seth.fimda.MutationAnnotation</name>
-            <description></description>
+            <description>Mutation annotation created with SETH</description>
             <supertypeName>uima.tcas.Annotation</supertypeName>
             <features>
                 <featureDescription>
