@@ -1,7 +1,7 @@
 
 
    
-/* Apache UIMA v3 - First created by JCasGen Tue Mar 20 15:30:56 CET 2018 */
+/* Apache UIMA v3 - First created by JCasGen Tue Mar 20 18:44:06 CET 2018 */
 
 package seth.fimda;
 
@@ -18,9 +18,9 @@ import org.apache.uima.jcas.JCasRegistry;
 import org.apache.uima.jcas.tcas.Annotation;
 
 
-/** 
- * Updated by JCasGen Tue Mar 20 15:30:56 CET 2018
- * XML source: /home/arne/devel/Java/SETH/desc/SethTypeSystem.xml
+/** Mutation annotation created with SETH
+ * Updated by JCasGen Tue Mar 20 18:44:06 CET 2018
+ * XML source: /home/arne/devel/Java/SETH/src/main/desc/SethTypeSystem.xml
  * @generated */
 public class MutationAnnotation extends Annotation {
  

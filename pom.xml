@@ -159,6 +159,11 @@
             <artifactId>uimaj-core</artifactId>
             <version>3.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.uima</groupId>
+            <artifactId>uimaj-json</artifactId>
+            <version>3.0.0</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -174,7 +179,7 @@
 
             <resource>
                 <targetPath>${basedir}/target/classes/desc</targetPath>
-                <directory>${basedir}/desc</directory>
+                <directory>src/main/resources/seth/fimda</directory>
             </resource>
         </resources>
 
