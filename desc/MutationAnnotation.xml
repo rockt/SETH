@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<typeSystemDescription xmlns="http://uima.apache.org/resourceSpecifier">
+    <name>SETHTypeSystem</name>
+    <description>Type System Definition for SETH</description>
+    <vendor>Apache Software Foundation</vendor>
+    <version>1.0</version>
+    <types>
+        <typeDescription>
+            <name>seth.fimda.MutationAnnotation</name>
+            <description></description>
+            <supertypeName>uima.tcas.Annotation</supertypeName>
+            <features>
+                <featureDescription>
+                    <name>mtType</name>
+                    <description>mutation type</description>
+                    <!--<rangeTypeName>seth.ner.wrapper.Type</rangeTypeName>-->
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+                <featureDescription>
+                    <name>wtResidue</name>
+                    <description>wtResidue</description>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+                <featureDescription>
+                    <name>mtResidue</name>
+                    <description>mtResidue</description>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+                <featureDescription>
+                    <name>position</name>
+                    <description>mutation position</description>
+                    <rangeTypeName>uima.cas.String</rangeTypeName>
+                </featureDescription>
+            </features>
+        </typeDescription>
+    </types>
+</typeSystemDescription>
