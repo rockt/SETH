@@ -319,6 +319,28 @@
                 </configuration>
             </plugin>
 
+            <!-- FIMDA: generate UIMA CAS type classes from description file -->
+            <plugin>
+                <groupId>org.apache.uima</groupId>
+                <artifactId>jcasgen-maven-plugin</artifactId>
+                <version>3.0.0</version>  <!-- change this to the latest version -->
+                <executions>
+                <execution>
+                    <goals><goal>generate</goal></goals>  <!-- this is the only goal -->
+                    <!-- runs in phase process-resources by default -->
+                    <configuration>
+
+                        <!-- REQUIRED -->
+                        <typeSystemIncludes>
+                            <!-- one or more ant-like file patterns
+                                 identifying top level descriptors -->
+                            <typeSystemInclude>src/main/resources/seth/fimda/SethTypeSystem.xml</typeSystemInclude>
+                        </typeSystemIncludes>
+                    </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
 
