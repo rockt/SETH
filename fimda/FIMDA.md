@@ -31,6 +31,7 @@ TODO:
         * requires UIMA SDK [installed](https://uima.apache.org/doc-uima-examples.html) 
         * execute: `PATH/TO/UIMA-SDK/bin/jcasgen.sh PATH/TO/INPUT_DESCRIPTION.xml PATH/TO/OUTPUT/DIRECTORY`
             * example: `/opt/apache-uima/bin/jcasgen.sh /home/arne/devel/Java/SETH/src/main/desc/SethTypeSystem.xml /home/arne/devel/Java/SETH/src/main/java`
+        * HANDLED BY MAVEN: [jcasgen-maven-plugin](https://uima.apache.org/d/uimaj-3.0.0/tools.html#ugr.tools.jcasgen.maven_plugin)
     * create an [Analysis Engine Descriptor file](https://uima.apache.org/d/uimaj-3.0.0/tutorials_and_users_guides.html#ugr.tug.aae.xml_intro_ae_descriptor)
     * test
         * using [UIMA Document Analyzer](https://uima.apache.org/d/uimaj-3.0.0/tutorials_and_users_guides.html#ugr.tug.aae.testing_your_annotator)
