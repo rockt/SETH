@@ -43,7 +43,7 @@ TODO:
     * identify relevant features
     * identify feature types
     * define mappings to CAS primitive types and/or integrate required SETH types into SethTypeSystem.xml
-- [ ] move to full [UIMA application](https://uima.apache.org/d/uimaj-3.0.0/tutorials_and_users_guides.html#ugr.tug.application)
+- [x] move to full [UIMA application](https://uima.apache.org/d/uimaj-3.0.0/tutorials_and_users_guides.html#ugr.tug.application)
     * [JSON serialization](https://uima.apache.org/d/uimaj-3.0.0/references.html#ugr.ref.json)
 - [ ] think about logging
 - [ ] think about multi threading (see [UIMA Multi-threaded Applications](https://uima.apache.org/d/uimaj-3.0.0/tutorials_and_users_guides.html#ugr.tug.applications.multi_threaded))
