@@ -39,11 +39,13 @@ TODO:
             * build SETH jar package with maven
             * add jar (incl. dependencies) to UIMA classpath, e.g. with: `export UIMA_CLASSPATH="/home/arne/devel/Java/SETH/target/seth-1.3.1-Snapshot-jar-with-dependencies.jar"`
             * start UIMA analyzer: `PATH/TO/UIMA-SDK/bin/documentAnalyzer.sh`
-- [ ] implement complete MutationAnnotation CAS type
-    * identify relevant features
-    * identify feature types
-    * define mappings to CAS primitive types and/or integrate required SETH types into SethTypeSystem.xml
 - [x] move to full [UIMA application](https://uima.apache.org/d/uimaj-3.0.0/tutorials_and_users_guides.html#ugr.tug.application)
     * [JSON serialization](https://uima.apache.org/d/uimaj-3.0.0/references.html#ugr.ref.json)
 - [ ] think about logging
 - [ ] think about multi threading (see [UIMA Multi-threaded Applications](https://uima.apache.org/d/uimaj-3.0.0/tutorials_and_users_guides.html#ugr.tug.applications.multi_threaded))
+- [X] implement rest service (MVP)
+    * use spring-mvc: [guide](https://spring.io/guides/gs/rest-service/)
+- [ ] implement complete MutationAnnotation CAS type
+    * identify relevant features
+    * identify feature types
+    * define mappings to CAS primitive types and/or integrate required SETH types into SethTypeSystem.xml
