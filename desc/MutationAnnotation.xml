@@ -27,7 +27,7 @@
                     <rangeTypeName>uima.cas.String</rangeTypeName>
                 </featureDescription>
                 <featureDescription>
-                    <name>position</name>
+                    <name>mtPosition</name>
                     <description>mutation position</description>
                     <rangeTypeName>uima.cas.String</rangeTypeName>
                 </featureDescription>

@@ -1,7 +1,7 @@
 
 
    
-/* Apache UIMA v3 - First created by JCasGen Tue Mar 20 14:44:11 CET 2018 */
+/* Apache UIMA v3 - First created by JCasGen Tue Mar 20 15:12:13 CET 2018 */
 
 package seth.fimda;
 
@@ -19,7 +19,7 @@ import org.apache.uima.jcas.tcas.Annotation;
 
 
 /** 
- * Updated by JCasGen Tue Mar 20 14:44:11 CET 2018
+ * Updated by JCasGen Tue Mar 20 15:12:13 CET 2018
  * XML source: /home/arne/devel/Java/SETH/desc/MutationAnnotation.xml
  * @generated */
 public class MutationAnnotation extends Annotation {
@@ -54,7 +54,7 @@ public class MutationAnnotation extends Annotation {
   public final static String _FeatName_mtType = "mtType";
   public final static String _FeatName_wtResidue = "wtResidue";
   public final static String _FeatName_mtResidue = "mtResidue";
-  public final static String _FeatName_position = "position";
+  public final static String _FeatName_mtPosition = "mtPosition";
 
 
   /* Feature Adjusted Offsets */
@@ -64,8 +64,8 @@ public class MutationAnnotation extends Annotation {
   private final static MethodHandle _FH_wtResidue = _FC_wtResidue.dynamicInvoker();
   private final static CallSite _FC_mtResidue = TypeSystemImpl.createCallSite(MutationAnnotation.class, "mtResidue");
   private final static MethodHandle _FH_mtResidue = _FC_mtResidue.dynamicInvoker();
-  private final static CallSite _FC_position = TypeSystemImpl.createCallSite(MutationAnnotation.class, "position");
-  private final static MethodHandle _FH_position = _FC_position.dynamicInvoker();
+  private final static CallSite _FC_mtPosition = TypeSystemImpl.createCallSite(MutationAnnotation.class, "mtPosition");
+  private final static MethodHandle _FH_mtPosition = _FC_mtPosition.dynamicInvoker();
 
    
   /** Never called.  Disable default constructor
@@ -172,20 +172,20 @@ public class MutationAnnotation extends Annotation {
    
     
   //*--------------*
-  //* Feature: position
+  //* Feature: mtPosition
 
-  /** getter for position - gets mutation position
+  /** getter for mtPosition - gets mutation position
    * @generated
    * @return value of the feature 
    */
-  public String getPosition() { return _getStringValueNc(wrapGetIntCatchException(_FH_position));}
+  public String getMtPosition() { return _getStringValueNc(wrapGetIntCatchException(_FH_mtPosition));}
     
-  /** setter for position - sets mutation position 
+  /** setter for mtPosition - sets mutation position 
    * @generated
    * @param v value to set into the feature 
    */
-  public void setPosition(String v) {
-    _setStringValueNfc(wrapGetIntCatchException(_FH_position), v);
+  public void setMtPosition(String v) {
+    _setStringValueNfc(wrapGetIntCatchException(_FH_mtPosition), v);
   }    
     
   }

@@ -1,13 +1,33 @@
 package seth.fimda;
 
 import de.hu.berlin.wbi.objects.MutationMention;
+import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_component.JCasAnnotator_ImplBase;
 import org.apache.uima.jcas.JCas;
+import org.apache.uima.resource.ResourceInitializationException;
 import seth.SETH;
 
 import java.util.List;
 
 public class MutationAnnotator extends JCasAnnotator_ImplBase {
+
+    private SETH seth;
+
+    /**
+     * @see AnalysisComponent#initialize(UimaContext)
+     */
+    public void initialize(UimaContext aContext)
+            throws ResourceInitializationException {
+        super.initialize(aContext);
+
+        // Get config. parameter values
+        //String[] patternStrings =
+        //        (String[]) aContext.getConfigParameterValue("Patterns");
+        //mLocations =
+        //        (String[]) aContext.getConfigParameterValue("Locations");
+
+        seth = new SETH("resources/mutations.txt", true, true);
+    }
 
 
     public void process(JCas aJCas) {
@@ -19,7 +39,6 @@ public class MutationAnnotator extends JCasAnnotator_ImplBase {
         // get document text from JCas
         String docText = aJCas.getDocumentText();
 
-        SETH seth = new SETH("resources/mutations.txt", true, true);
         //SETH seth = new SETH();
         List<MutationMention> mutations = seth.findMutations(docText);
         try {
@@ -28,11 +47,11 @@ public class MutationAnnotator extends JCasAnnotator_ImplBase {
 
                 // match found - create the match as annotation in
                 // the JCas with some additional meta information
-                // TODO: expand this!
                 MutationAnnotation annotation = new MutationAnnotation(aJCas);
+                // TODO: expand this!
                 annotation.setBegin(mutation.getStart());
                 annotation.setEnd(mutation.getEnd());
-                annotation.setPosition(mutation.getPosition());
+                annotation.setMtPosition(mutation.getPosition());
                 annotation.setMtResidue(mutation.getMutResidue());
                 annotation.setWtResidue(mutation.getWtResidue());
                 annotation.setMtType(mutation.getType().toString());
