@@ -48,14 +48,14 @@ public class MutationAnnotator extends JCasAnnotator_ImplBase {
                 // match found - create the match as annotation in
                 // the JCas with some additional meta information
                 MutationAnnotation annotation = new MutationAnnotation(aJCas);
-                // TODO: expand this!
                 annotation.setBegin(mutation.getStart());
                 annotation.setEnd(mutation.getEnd());
                 annotation.setMtPosition(mutation.getPosition());
                 annotation.setMtResidue(mutation.getMutResidue());
                 annotation.setWtResidue(mutation.getWtResidue());
                 annotation.setMtType(mutation.getType().toString());
-
+                annotation.setHgvs(mutation.toHGVS());
+                annotation.setAnTool("SETH");
                 annotation.addToIndexes();
 
             }
