@@ -60,6 +60,12 @@ And add the following dependency, which uses the release 1.3.1 version
 </dependency>
 ```
 
+## UIMA wrapper for SETH
+In [fimda](https://github.com/Erechtheus/fimda) SETH is provided with an UIMA wrapper, as well as integrated web-service provided as docker container. FIMDA is originally developed for the integration of SETH into the [openminted platform](https://services.openminted.eu/home).
+
+## Scalable web-service for SETH
+In [sia](https://github.com/Erechtheus/sia) SETH is bundled into a web-service for the [Becalm platform](http://becalm.eu/api).
+
 # Cite SETH
 [SETH detects and normalizes genetic variants in text.](http://www.ncbi.nlm.nih.gov/pubmed/?term=27256315)
 
