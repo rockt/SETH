@@ -32,6 +32,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <jersey.version>1.19</jersey.version>
     </properties>
 
     <developers>
@@ -152,6 +153,24 @@
             <artifactId>log4j</artifactId>
             <version>1.2.17</version>
         </dependency>
+
+        <!-- Libraries for REST Service -->
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-servlet</artifactId>
+            <version>${jersey.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-json</artifactId>
+            <version>${jersey.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-client</artifactId>
+            <version>${jersey.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -315,7 +334,7 @@
         <pluginRepository>
             <id>scala</id>
             <name>Scala Tools</name>
-            <url>http://scala-tools.org/repo-releases/</url>
+            <url>https://scala-tools.org/repo-releases/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -327,7 +346,7 @@
         <pluginRepository>
             <id>central</id>
             <name>Maven Plugin Repository</name>
-            <url>http://repo1.maven.org/maven2</url>
+            <url>https://repo1.maven.org/maven2</url>
             <layout>default</layout>
             <snapshots>
                 <enabled>false</enabled>
@@ -345,7 +364,7 @@
             <id>central</id>
             <name>Maven Repository Switchboard</name>
             <layout>default</layout>
-            <url>http://repo1.maven.org/maven2</url>
+            <url>https://repo1.maven.org/maven2</url>
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
@@ -355,7 +374,7 @@
         <repository>
             <id>scala</id>
             <name>Scala Tools</name>
-            <url>http://scala-tools.org/repo-releases/</url>
+            <url>https://scala-tools.org/repo-releases/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -365,7 +384,7 @@
         </repository>
         <repository>
             <id>repo.codahale.com</id>
-            <url>http://repo.codahale.com</url>
+            <url>https://repo.codahale.com</url>
         </repository>
     </repositories>
 </project>
