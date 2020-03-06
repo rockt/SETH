@@ -67,6 +67,73 @@ In [fimda](https://github.com/Erechtheus/fimda) SETH is provided with an UIMA wr
 ## Scalable web-service for SETH
 In [sia](https://github.com/Erechtheus/sia) SETH is bundled into a web-service for the [Becalm platform](http://becalm.eu/api).
 
+## Docker runner for SETH
+We also provide Named Entity Recognition facilities using a REST-API and a [docker container](https://hub.docker.com/repository/docker/erechtheus79/seth).
+
+### Download docker container from docker-hub
+```bash
+docker pull erechtheus79/seth
+docker run -d -p 8080:8080 --network host  erechtheus79/seth
+```
+### Annotate document using GET request
+Annotate the string "*Two common mutations, c.35delG and L90P accounted for 72.1...*", by sending the string to http://localhost:8080/rest/message/get/.
+
+ ```bash
+curl http://localhost:8080/rest/message/get/Two%20common%20mutations,%20c.35delG%20and%20L90P%20accounted%20for%2072.1.
+```
+
+Result:
+```json
+[
+  {
+    "type": "SUBSTITUTION",
+    "tool": "MUTATIONFINDER",
+    "location": {
+      "start": 35,
+      "stop": 39
+    },
+    "text": "L90P",
+    "ref": null,
+    "wtResidue": "L",
+    "mutResidue": "P",
+    "position": "90",
+    "nsm": false,
+    "psm": true,
+    "ambiguous": false,
+    "patternId": 25,
+    "normalized": null,
+    "transcripts": null,
+    "start": 35,
+    "end": 39,
+    "bestNormalized": null
+  },
+  {
+    "type": "DELETION",
+    "tool": "SETH",
+    "location": {
+      "start": 22,
+      "stop": 30
+    },
+    "text": "c.35delG",
+    "ref": "c.",
+    "wtResidue": "G",
+    "mutResidue": null,
+    "position": "35",
+    "nsm": false,
+    "psm": false,
+    "ambiguous": false,
+    "patternId": 0,
+    "normalized": null,
+    "transcripts": null,
+    "start": 22,
+    "end": 30,
+    "bestNormalized": null
+  }
+]
+```
+
+
+
 # Cite SETH
 [SETH detects and normalizes genetic variants in text.](http://www.ncbi.nlm.nih.gov/pubmed/?term=27256315)
 
