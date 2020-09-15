@@ -3,6 +3,7 @@ package de.hu.berlin.wbi.process;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -19,6 +20,8 @@ import de.hu.berlin.wbi.objects.MutationValidation;
 import de.hu.berlin.wbi.objects.UniprotFeature;
 import de.hu.berlin.wbi.objects.dbSNP;
 import de.hu.berlin.wbi.objects.dbSNPNormalized;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class is used to evaluate snp-normalizer; 
@@ -26,7 +29,9 @@ import de.hu.berlin.wbi.objects.dbSNPNormalized;
  * @author Philippe Thomas
  */
 public class Evaluate {
-	
+	private final static Logger logger = LoggerFactory.getLogger(Evaluate.class);
+
+
 	public static void main(String[] args) throws IOException {
 		
 		if(args.length != 2){
@@ -63,7 +68,33 @@ public class Evaluate {
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
-		
+
+
+		//This piece of code checks if we have newer dbSNP/rs-Ids for our normalized mutations
+		if (property.containsKey("database.mergeItems")){
+			try {
+				for(int pmid : mutations.keySet()){
+					for(MutationValidation mutation:mutations.get(pmid)) {    //Iterate over mutations loaded from "mutationsFile"
+
+
+						mysql.query("SELECT * FROM mergeItems WHERE old_snp_id = " +mutation.getDbSNP() +";");
+						final ResultSet rs = mysql.getRs();
+						while (rs.next()) {
+
+							int newSNPId = rs.getInt("new_snp_id");
+							//int oldSNPId = rs.getInt("old_snp_id");
+							int versionId = rs.getInt("dbSNP_version");
+
+							mutation.setDbSNP(newSNPId);
+						}
+					}
+				}
+			}catch (SQLException e) {
+				logger.error("Problem accessing database\nMaybe the table +'" +"' does not exist", e);
+				throw new RuntimeException(e);
+			}
+		}
+
         System.err.println("Corpus description: " +mutationsFile);
         System.err.println(mutations.keySet().size() +" documents");
         int sum = 0;
