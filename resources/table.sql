@@ -57,8 +57,16 @@ CREATE TABLE seth_transcripts (
        ENSG varchar(15)  NOT NULL,
        ENST varchar(15)  NOT NULL,
        ENSP varchar(15) DEFAULT NULL,
-       protein_sequence CLOB,
-       coding_sequence CLOB);
+       protein_sequence TEXT,
+       coding_sequence TEXT);
 
 CREATE INDEX entrez_transcript  ON seth_transcripts(entrez_id);
+
+-- Map about which item was merged from which (old_snp_id) to new ID (new_snp_id)
+CREATE TABLE mergeItems(
+       new_snp_id INT NOT NULL,
+       old_snp_id INT NOT NULL,
+       dbSNP_version INT NOT NULL,
+       UNIQUE(old_snp_id)
+);
 
