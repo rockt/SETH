@@ -30,16 +30,16 @@ public class ParseXMLToFile extends DefaultHandler {
 
 	private static BufferedWriter psHGVS;
 	private static BufferedWriter psmHGVS;
+	private static BufferedWriter mergeItemWriter;
 
-	//private static PreparedStatement psHGVS;
-	//private static PreparedStatement psmHGVS;
 
 	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, SQLException {
 
 		psHGVS  = new BufferedWriter(new OutputStreamWriter( new FileOutputStream(new File("hgvs.tsv")), "UTF-8"));
 		psmHGVS = new BufferedWriter(new OutputStreamWriter( new FileOutputStream(new File("PSM.tsv")), "UTF-8"));
+        mergeItemWriter = new BufferedWriter(new OutputStreamWriter( new FileOutputStream(new File("mergeItems.tsv")), "UTF-8"));
 
-		String xmlFolder = "/home/philippe/workspace/snp-normalizer/data/dat/";
+		String xmlFolder = "/media/philippe/Elements/SETH/dbSNP/";
 		if (args.length == 1)
 			xmlFolder = args[0];
 
@@ -62,7 +62,8 @@ public class ParseXMLToFile extends DefaultHandler {
 		}
 		psHGVS.close();
 		psmHGVS.close();
-	}
+        mergeItemWriter.close();
+    }
 
 	@Override
 	public void startElement(String namespaceURI, String localName,
@@ -72,7 +73,12 @@ public class ParseXMLToFile extends DefaultHandler {
 			snp = new SNP(Integer.parseInt(atts.getValue("rsId")));
 		}
 
-		if (qName.equals("FxnSet")) {
+        //Merge History contains other mutations which are associated with this rs-ID
+        if (qName.equals("MergeHistory")) {
+            snp.addMergeItem(new MergeItem(Integer.parseInt(atts.getValue("rsId")), Integer.parseInt(atts.getValue("buildId"))));
+        }
+
+        if (qName.equals("FxnSet")) {
 
 			String geneId = atts.getValue("geneId");
 			String aaPos = atts.getValue("aaPosition");
@@ -120,6 +126,7 @@ public class ParseXMLToFile extends DefaultHandler {
 			snp.addHgvs(hgvs.toString());
 			hgvs = null;
 		}
+
 
 		if (qName.equals("Rs")) {
 
@@ -176,6 +183,16 @@ public class ParseXMLToFile extends DefaultHandler {
 					System.exit(1);
 				}
 			}
+            try {
+                for (MergeItem mergeItems : snp.getMergeItems()) {
+                    mergeItemWriter.append(String.valueOf(snp.getRsId())).append("\t").append(String.valueOf(mergeItems.getRsId())).append("\t").append(String.valueOf(mergeItems.getBuildId()));
+                    mergeItemWriter.append("\n");
+                }
+            } catch (IOException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                System.exit(1);
+            }
+
 		}
 	}
 
