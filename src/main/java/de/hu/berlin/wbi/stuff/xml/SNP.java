@@ -6,10 +6,11 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Represents a SNP 
+ * Represents a dbSNP-entry loaded from XML
  *  consisting of dbSNP id
  *  several (at least one) protein sequence mutations
  *  several HGVS representations
+ *
  * @author Philippe Thomas 
  *
  */
@@ -17,12 +18,15 @@ public class SNP {
 	private final int rsId;
 	private final Set<PSM>   psms;
 	private final List<String> hgvs;
-	
+	private final List<MergeItem> mergeItems;
+
+
 	public SNP(int rsId) {
 		super();
 		this.rsId = rsId;
 		psms = new HashSet<PSM>();
-		hgvs = new ArrayList<String>();		
+		hgvs = new ArrayList<String>();
+		mergeItems = new ArrayList<MergeItem>();
 	}
 
 	public void addPSM(PSM psm){
@@ -43,6 +47,10 @@ public class SNP {
 			psms.add(psm);
 		}
 	}
+
+	public void addMergeItem(MergeItem me){
+		mergeItems.add(me);
+	}
 	
 	public void addHgvs(String hgvs){
 		this.hgvs.add(hgvs);
@@ -58,6 +66,10 @@ public class SNP {
 
 	public List<String> getHgvs() {
 		return hgvs;
+	}
+
+	public List<MergeItem> getMergeItems() {
+		return mergeItems;
 	}
 
 	@Override
@@ -81,7 +93,5 @@ public class SNP {
 		return sb.toString();
 	}
 
-	
-	
-	
+
 }
