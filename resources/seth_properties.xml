@@ -13,6 +13,7 @@
     <entry key="database.uniprot">uniprot</entry>
     <entry key="database.transcript">transcripts</entry>
     <entry key="database.geneTable">genes</entry> 
-    <entry key="database.gene2pubmed">gene2Pubmed</entry> 
+    <entry key="database.gene2pubmed">gene2pubmed</entry>
+    <entry key="database.mergeItems">mergeItems</entry>
 
 </properties>
