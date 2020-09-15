@@ -24,7 +24,7 @@ import java.util.zip.GZIPInputStream;
 public class MutationValidation extends MutationMention {
 
 	/** manually annotated {@link dbSNP} entry from gold-standard. */
-	private final int dbSNP;
+	private int dbSNP;
 
 	/** Either NSM or PSM. */
 	private final String mutationType;
@@ -61,6 +61,14 @@ public class MutationValidation extends MutationMention {
 	 */
 	public int getDbSNP() {
 		return dbSNP;
+	}
+
+	/**
+	 * This setter is only invoked in case that we have a new dbSNP ID for a mutation
+	 * @param dbSNP
+	 */
+	public void setDbSNP(int dbSNP) {
+		this.dbSNP = dbSNP;
 	}
 
 	/**
