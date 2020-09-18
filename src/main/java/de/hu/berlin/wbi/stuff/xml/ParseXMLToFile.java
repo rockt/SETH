@@ -35,15 +35,21 @@ public class ParseXMLToFile extends DefaultHandler {
 
 	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, SQLException {
 
-		psHGVS  = new BufferedWriter(new OutputStreamWriter( new FileOutputStream(new File("hgvs.tsv")), "UTF-8"));
-		psmHGVS = new BufferedWriter(new OutputStreamWriter( new FileOutputStream(new File("PSM.tsv")), "UTF-8"));
-        mergeItemWriter = new BufferedWriter(new OutputStreamWriter( new FileOutputStream(new File("mergeItems.tsv")), "UTF-8"));
 
 		String xmlFolder = "/media/philippe/Elements/SETH/dbSNP/";
-		if (args.length == 1)
+		String outFolder = "";
+		if (args.length == 1 || args.length == 2)
 			xmlFolder = args[0];
 
+		if(args.length == 2)
+			outFolder = args[1];
+
+		psHGVS  = new BufferedWriter(new OutputStreamWriter( new FileOutputStream(new File(outFolder+"hgvs.tsv")), "UTF-8"));
+		psmHGVS = new BufferedWriter(new OutputStreamWriter( new FileOutputStream(new File(outFolder+"PSM.tsv")), "UTF-8"));
+		mergeItemWriter = new BufferedWriter(new OutputStreamWriter( new FileOutputStream(new File(outFolder+"mergeItems.tsv")), "UTF-8"));
+
 		System.err.println("Extracting data from the following file/folder '" +xmlFolder +"'");
+		System.err.println("Writing data to folder '" +outFolder+"'");
 
 		File[] files = new File(xmlFolder).listFiles();
 		Arrays.sort(files);
