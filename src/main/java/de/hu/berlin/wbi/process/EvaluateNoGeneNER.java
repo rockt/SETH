@@ -1,6 +1,8 @@
 package de.hu.berlin.wbi.process;
 
 import de.hu.berlin.wbi.objects.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -11,12 +13,15 @@ import java.text.DecimalFormat;
 import java.util.*;
 
 /**
- * Class is used to evaluate snp-normalizer; 
+ * Class is used to evaluate snp-normalizer and assumes there is no previous gene-NER/NEN step.
+ * In other words we assume that we have "perfect" gene-NER. So for every mutation we know the correct gene
  * Corpus is not provided due to licence restrictions but a link is provided in the paper..
  * @author Philippe Thomas
  */
 public class EvaluateNoGeneNER {
-	
+	private final static Logger logger = LoggerFactory.getLogger(EvaluateNoGeneNER.class);
+
+
 	public static void main(String[] args) throws IOException, SQLException {
 		
 		if(args.length != 2){
@@ -52,6 +57,31 @@ public class EvaluateNoGeneNER {
 			UniprotFeature.init(mysql, property.getProperty("database.uniprot"));
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
+		}
+
+		//This piece of code checks if we have newer dbSNP/rs-Ids for our normalized mutations
+		if (property.containsKey("database.mergeItems")){
+			try {
+				for(int pmid : mutations.keySet()){
+					for(MutationValidation mutation:mutations.get(pmid)) {    //Iterate over mutations loaded from "mutationsFile"
+
+
+						mysql.query("SELECT * FROM mergeItems WHERE old_snp_id = " +mutation.getDbSNP() +";");
+						final ResultSet rs = mysql.getRs();
+						while (rs.next()) {
+
+							int newSNPId = rs.getInt("new_snp_id");
+							//int oldSNPId = rs.getInt("old_snp_id");
+							int versionId = rs.getInt("dbSNP_version");
+
+							mutation.setDbSNP(newSNPId);
+						}
+					}
+				}
+			}catch (SQLException e) {
+				logger.error("Problem accessing database\nMaybe the table +'" +"' does not exist", e);
+				throw new RuntimeException(e);
+			}
 		}
 
 
