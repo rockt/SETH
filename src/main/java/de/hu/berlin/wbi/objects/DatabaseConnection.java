@@ -101,8 +101,8 @@ public class DatabaseConnection {
         }
 
         String connectionString = host +database;
-        if(driver.contains("mysql"))
-            connectionString+="?connectTimeout=30000&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;autoReconnect=true&amp;failOverReadOnly=false&amp;maxReconnects=10";
+        //if(driver.contains("mysql"))
+        //    connectionString+="?connectTimeout=30000&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;autoReconnect=true&amp;failOverReadOnly=false&amp;maxReconnects=10";
         //connectionString+="?characterEncoding=UTF8";
 
         try {
