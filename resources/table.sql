@@ -41,9 +41,9 @@ CREATE INDEX id_genes  ON genes (id);
 
 -- Mapping from Entrez-Gene to PubMed (downloaded from NCBI)
 CREATE TABLE gene2pubmed(
-       taxId INT UNSIGNED NOT NULL,
-       geneId INT UNSIGNED NOT NULL,
-       pmid INT UNSIGNED NOT NULL,
+       taxId INT NOT NULL,
+       geneId INT NOT NULL,
+       pmid INT  NOT NULL,
        UNIQUE(taxId, geneId, pmid)
 );
 CREATE INDEX id_gene2pubmed  ON gene2pubmed (geneId);
