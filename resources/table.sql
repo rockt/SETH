@@ -16,7 +16,7 @@ CREATE TABLE hgvs(
        snp_id INT NOT NULL,
        hgvs VARCHAR(256) NOT NULL,
        refseq VARCHAR(64) NOT NULL,
-       UNIQUE(locus_id, snp_id, hgvs)
+       UNIQUE(locus_id, snp_id, hgvs, refseq)
 );
 CREATE INDEX snp_hgvs ON hgvs(snp_id);
 
