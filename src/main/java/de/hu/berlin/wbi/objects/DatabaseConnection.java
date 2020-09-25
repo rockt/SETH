@@ -18,26 +18,23 @@ public class DatabaseConnection {
 	private final String password;
 	private final String database;
 	private final String host;
-	private final String driver;
 	private ResultSet rs;
 
 	protected Connection conn;
     protected Statement stmt;
 
     /**
-     * Set up a database connection by providing all reelevant connection information
+     * Set up a database connection by providing all relevant connection information
      * @param user Username
      * @param password  Userpassword
      * @param database database name
      * @param host hostname
-     * @param driver JDBC-driver
      */
-    public DatabaseConnection(String user, String password, String database, String host, String driver) {
+    public DatabaseConnection(String user, String password, String database, String host) {
         this.user = user;
         this.password = password;
         this.database = database;
         this.host = host;
-        this.driver = driver;
     }
 
     /**
@@ -50,7 +47,6 @@ public class DatabaseConnection {
 		this.password = property.getProperty("database.password");
 		this.database = property.getProperty("database.name");
 		this.host = property.getProperty("database.host");
-		this.driver = property.getProperty("database.driver");
 	}
 
     /**
@@ -94,11 +90,15 @@ public class DatabaseConnection {
 	 */
 	public void connect() {
 
-        try {
-            Class.forName(driver).newInstance();
+		// register JDBC driver, optional, since java 1.6
+		/**
+
+		try {
+			Class.forName(driver).newInstance();
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
             throw new IllegalStateException("Cannot instantiate instance of driver: '" + this.driver +"'", e);
         }
+		 */
 
         String connectionString = host +database;
         //if(driver.contains("mysql"))
@@ -138,7 +138,6 @@ public class DatabaseConnection {
     @Override
     public String toString() {
         return "DatabaseConnection{" +
-                "driver='" + driver + '\'' +
                 ", user='" + user + '\'' +
                 ", password='" + password + '\'' +
                 ", database='" + database + '\'' +
