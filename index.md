@@ -345,72 +345,12 @@ Bioinformatics, 29(11), 1433–1439.
 F1000Research 2014, 3:18 
 
 # Rebuilding the database used for SNP normalization
-**WARNING:** We provide a stand-alone (embedded) [Derby database](https://drive.google.com/file/d/0B9uTfq0OyHAsS0hoNDFRR0ZyOUE/view?usp=sharing). 
-The following steps are only needed if you want to build the database from scratch.
 This database is **only** required for normalization to either dbSNP or UniProt.
+The following steps are needed if you want to build the database from scratch.
+We provide an (old/ancient/prehistoric) stand-alone (embedded) [Derby database](https://drive.google.com/file/d/0B9uTfq0OyHAsS0hoNDFRR0ZyOUE/view?usp=sharing). 
 
-
-The import script is tailored towards a mySQL database, but theoretically any other database can be used. 
-However, in this case you have to adopt the following description to your database type. 
+The import script is tailored towards a PostgreSQL-database, but *theoretically* any other database can be used. 
 We would be happy to get feedback about using SETH with other databases.
-
-## Set up the database with all necessary tables
-	CREATE DATABASE dbSNP137 CHARACTER SET latin1;
-	mysql <dbName> -h <hostname> -u <username> -p<password> resources/table.sql
-
-
-## Download the necessary files 
-
-### Download a XML dump from dbSNP
-	wget ftp://ftp.ncbi.nih.gov/snp/organisms/human_9606/XML/ds\*.gz
-	
-### Download gene2pubmed links from NCBI-Entrez gene
-	wget ftp://ftp.ncbi.nih.gov/gene/DATA/gene2pubmed.gz
-	gunzip gene2pubmed.gz
-	
-### Download UniProt-KB
-	wget ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.xml.gz
-	
-### Download UniProt to Entrez gene mapping 
-	wget ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping/idmapping.dat.gz
-	
-## Import the data files needed for normalization
-
-### Parse dbSNP-XML dump
-This takes some compute resources and disk-space. 
-
-	time java -cp seth.jar de.hu.berlin.wbi.stuff.xml.ParseXMLToFile  /path/with/dbSNP-XML/files/... #Parse dbSNP dump
-	cat hgvs.tsv | cut -f 1-3 > hgvs2.tsv #Remove refseq information for derby-DB (only necessary to reduce database size)
-	#Remove duplicated entries 
-	split -l100000000 hgvs2.tsv '_tmp'; 
-	ls -1 _tmp* | while read FILE; do echo $FILE; sort $FILE -o $FILE ; done; #Individual sort
-	sort -u -m _tmp* -o hgvs.tsv.sorted #Merge sort
-
-	mysqlimport  --fields-terminated-by='\t' --delete --local --verbose --host <hostname> --user=<username> --password=<password> <dbName> PSM.tsv
-	mysqlimport  --fields-terminated-by='\t' --delete --local --verbose --host <hostname> --user=<username> --password=<password> <dbName> hgvs.tsv.sorted
-
-	
-### Parse UniProt-XML for protein-sequence mutations (PSM) and post-translational modifications (*e.g.* signaling peptides) 
-	
-Requires as input the UniProt-KB dump (uniprot_sprot.xml.gz) and the mapping from Entrez to UniProt (idmapping.dat.gz).
-Produces uniprot.dat and PSM.dat files
-
-	java -cp seth.jar seth.Uniprot2Tab uniprot_sprot.xml.gz idmapping.dat.gz uniprot.dat PSM.dat
-
-	
-### Import  gene2pubmed, UniProt and PSM into the mySQL Database
-
-	mysqlimport  --fields-terminated-by='\t' --delete --local --verbose --host <hostname> --user=<username> --password=<password> <dbName> gene2pubmed
-	mysqlimport  --fields-terminated-by='\t' --delete --local --verbose --host <hostname> --user=<username> --password=<password> <dbName> uniprot.dat
-	mysqlimport  --fields-terminated-by='\t' --local --verbose --host <hostname> --user=<username> --password=<password> <dbName> PSM.dat
-
-Additionally, we included results from the gene name recognition tool GNAT applied on all of PubMed and PubMed Central.
-This data is only meant as a starting point, we recommend integrating other gene-NER tools.
-Updated gene-ner results are available on the GeneView web site (http://bc3.informatik.hu-berlin.de/download)
-
-## Database migration 
-Finally, to allow for a better portability of SETH, we converted the original mySQL database into an embedded Derby database.
-For this we used Apache [ddlUtils](http://db.apache.org/ddlutils/). For large databases we observed a high memory requirement using ddlutils. Therefore, we implemented a rather simple migration "script", which exports the MySQL database to CSV and bulk imports the CSV files to a local Derby database. This script is only added for documentation purposes and should not be executed on the command shell. The script can be found [here](https://github.com/rockt/SETH/blob/master/resources/migrate/migrate.sh).
 
 ## Latest derby database (18th May 2016)
 Due to public request, we now also provide a derby database for the (currently) latest human dbSNP dump [dbSNP147](https://drive.google.com/open?id=0BxyKVvNXUobTMDJYcG81Uzdhb28). Please be warned that the download is 7.5GB compressed and requires 51 GB uncompressed space. Runtime requirements for normalization also substantially increases with this version of dbSNP in comparison to the smaller dump. For example, normalization of the 296 documents from Thomas *et al.* (2011) increases from approximately 30 seconds to 140 seconds on a commodity laptop. We highly encourage the use of an dedicated database, such as MySQL or PostgreSQL to increase runtime.  
@@ -425,7 +365,59 @@ On both corpora we observe an increase in recall, accompanied with a decrease in
 For a detailed analysis, a larger normalization corpus with articles from different time periods would be required.
 
 
+## Download the necessary files 
 
+### Download XML dump from dbSNP
+	wget ftp://ftp.ncbi.nih.gov/snp/organisms/human_9606/XML/ds\*.gz
+	
+### Download gene2pubmed links from NCBI-Entrez gene
+	wget ftp://ftp.ncbi.nih.gov/gene/DATA/gene2pubmed.gz
+	gunzip gene2pubmed.gz
+	
+### Download UniProt-KB and Id-Mapping
+	wget ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.xml.gz
+	wget ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping/idmapping.dat.gz
+		
+## Convert dumps into TSV-files
+
+### Parse dbSNP-XML dump
+
+	time java -cp seth.jar -Djdk.xml.totalEntitySizeLimit=0 -DentityExpansionLimit=0 de.hu.berlin.wbi.stuff.xml.ParseXMLToFile  /path/with/dbSNP-XML/files/... /path/importDir
+	
+### Parse UniProt-XML for protein-sequence mutations (PSM) and post-translational modifications (*e.g.* signaling peptides) 
+	
+Requires as input the UniProt-KB dump (uniprot_sprot.xml.gz) and the mapping from Entrez to UniProt (idmapping.dat.gz).
+Produces uniprot.dat and PSM.dat files at specified location.
+
+	java -cp seth.jar seth.Uniprot2Tab uniprot_sprot.xml.gz idmapping.dat.gz uniprot.dat PSM.dat
+
+### Some postprocessing steps, to ensure that the import data is unique
+    sort -u uniprot.dat -o uniprot.dat
+    sort -u hgvs.tsv -o hgvs.tsv
+    sort PSM.tsv PSM.dat  -u -o PSM.tsv
+    grep -v "-" PSM.tsv > foo.bar && mv foo.bar PSM.tsv
+
+
+## Set up PostgreSQL (Docker container)
+Please set variables $DatabasePassword and $importData accordingly.
+
+    docker pull postgres
+    docker run --name pg-docker -e POSTGRES_PASSWORD=${DatabasePassword} -d -p 5432:5432 --mount type=bind,source=${importData},target=/var/lib/importData,readonly postgres
+	
+## Set up the database with all necessary tables
+    createdb  -h localhost -U postgres dbsnp    
+    psql -h localhost -U postgres -d dbsnp < SETHDirectory/resources/table.sql 
+	
+### Import  gene2pubmed, UniProt, PSM, mergeItems, and gene2pubmed into the Database
+
+    psql -h localhost -U postgres -d dbsnp
+    
+    COPY psm FROM '/var/lib/importData/PSM.tsv' DELIMITER E'\t';
+    COPY hgvs FROM '/var/lib/importData/hgvs.tsv' DELIMITER E'\t';
+    COPY uniprot FROM '/var/lib/importData/uniprot.dat' DELIMITER E'\t';
+    COPY mergeItems FROM '/var/lib/importData/mergeItems.tsv' DELIMITER E'\t';
+    COPY gene2pubmed FROM PROGRAM 'tail -n +2 /var/lib/importData/gene2pubmed' DELIMITER E'\t';
+    DELETE FROM gene2pubmed where taxid != 9606;
 
 # Bug reports
 Issues and feature requests can be filed [online](https://github.com/rockt/SETH/issues)
@@ -433,4 +425,4 @@ Issues and feature requests can be filed [online](https://github.com/rockt/SETH/
 # Contact
 For questions and  remarks please contact Philippe Thomas:
 
-thomas \[at\] informatik \[dot\] hu-berlin \[dot\] de
+https://www.dfki.de/en/web/about-us/employee/person/phth01/
