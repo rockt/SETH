@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
-    <entry key="database.user"></entry>
-    <entry key="database.password"></entry>
-    <entry key="database.host">jdbc:derby:/path/to/derby/database/</entry>
-    <entry key="database.name">dbSNP137</entry> 
-    <entry key="database.driver">org.apache.derby.jdbc.EmbeddedDriver</entry>
+    <entry key="database.user">postgres</entry>
+    <entry key="database.password">RmELKOvCUrAdxIg0GEmugc3SY</entry>
+    <entry key="database.host">jdbc:postgresql://127.0.0.1:5432/</entry>
+    <entry key="database.name">dbsnp</entry>
 
     <!-- Table names of derby database. Requires in general no adaptation. -->
     <entry key="database.hgvs_view">hgvs</entry>
