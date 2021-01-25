@@ -1,6 +1,7 @@
 package de.hu.berlin.wbi.objects;
 
 
+import java.io.Serializable;
 import java.util.EnumSet;
 
 /**
@@ -10,7 +11,7 @@ import java.util.EnumSet;
  * @author Philippe Thomas
  *
  */
-public class TranscriptNormalized extends Transcript implements Comparable<TranscriptNormalized>{
+public class TranscriptNormalized extends Transcript implements Comparable<TranscriptNormalized>, Serializable {
 
     private UniprotFeature feature = null;
 

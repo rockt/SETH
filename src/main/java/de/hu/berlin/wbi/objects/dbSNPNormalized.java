@@ -1,5 +1,6 @@
 package de.hu.berlin.wbi.objects;
 
+import java.io.Serializable;
 import java.util.EnumSet;
 
 /**
@@ -9,7 +10,7 @@ import java.util.EnumSet;
  * @author Philippe Thomas
  * 
  */
-public class dbSNPNormalized extends dbSNP implements Comparable<dbSNPNormalized>{
+public class dbSNPNormalized extends dbSNP implements Comparable<dbSNPNormalized>, Serializable {
 
     /**
 	 * {@link MutationMention} mention is derived using a specific uniprotfeature

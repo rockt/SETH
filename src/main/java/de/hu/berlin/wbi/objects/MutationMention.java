@@ -5,10 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import seth.ner.wrapper.Type;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -21,7 +18,7 @@ import java.util.zip.GZIPInputStream;
  * @author Philippe Thomas
  *
  */
-public class MutationMention {
+public class MutationMention implements Serializable {
 
     private final static Logger logger = LoggerFactory.getLogger(MutationMention.class);
 
