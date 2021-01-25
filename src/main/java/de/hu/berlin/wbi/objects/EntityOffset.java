@@ -1,12 +1,14 @@
 package de.hu.berlin.wbi.objects;
 
+import java.io.Serializable;
+
 /**
  * Represents the text span of entity mentions ({@link MutationMention}, {@link Gene}, etc.).
  * 
  * @author Philippe Thomas
  * 
  */
-public class EntityOffset {
+public class EntityOffset implements Serializable {
 
 	/** First character, inclusive, zero-based. */
 	private int start;
