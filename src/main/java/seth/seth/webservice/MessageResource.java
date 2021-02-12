@@ -33,10 +33,10 @@ public class MessageResource     {
 
     //curl -X POST http://localhost:8080/rest/message/post/p.T123C%20and%20Val158Tyr
     @POST
-    @Path("/post/{param}")
+    @Path("/post/")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createTrackInJSON(@PathParam("param") String msg) {
+    public Response createTrackInJSON(String msg) {
 
         List<MutationMention> mentions = seth.findMutations(msg);
 
