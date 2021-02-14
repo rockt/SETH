@@ -2,7 +2,8 @@ FROM openjdk:8-jdk-alpine
 
 #RUN mvn clean compile assembly:single
 
-COPY target/seth-1.3.1-Snapshot-jar-with-dependencies.jar /app/seth.jar
+COPY target/seth-1.3.2-Snapshot-jar-with-dependencies.jar /app/seth.jar
+COPY resources/mutations.txt /app/resources/mutations.txt
 WORKDIR /app
 
 EXPOSE 8080
