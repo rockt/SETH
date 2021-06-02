@@ -8,12 +8,15 @@ layout: default
 
 SETH is a software that performs named entity recognition (NER) of genetic variants (with an emphasis on single nucleotide polymorphisms (SNPs) and other short sequence variations) from natural language texts. 
 SETH allows to recognize the following mutation subtypes: substitution, deletion, insertion, duplication, insertion-deletion (insdel), inversion, conversion, translocation, frameshift, short-sequence repeat, and literal dbSNP mention.
-Recognized mutation mentions can be grounded to the Human Mutation Nomenclature (HGVS) and normalized to dbSNP identifiers or UniProt sequences. For NER SETH builds on four individual components:
+Recognized mutation mentions can be grounded to the Human Mutation Nomenclature (HGVS) and normalized to dbSNP identifiers or UniProt sequences. 
+For named entity recognition, SETH builds on four individual components:
 
-1.) Mutations following the [HGVS nomenclature](http://www.hgvs.org/mutnomen/) (den Dunnen and Antonarakis, 2000) are recognized by implementing an Extended Backus–Naur (EBNF) grammar proposed by Laros *et al.* (2011) using Scala combinators. We modified this grammar to allow to detect frequently observed deviations from the nomenclature 
+1.) Mutations following the [HGVS nomenclature](http://www.hgvs.org/mutnomen/) (den Dunnen and Antonarakis, 2000) are recognized by implementing an Extended Backus–Naur (EBNF) grammar proposed by Laros *et al.* (2011) using Scala combinators. 
+We modified this grammar to allow the detection of frequently observed deviations from the nomenclature.
 
 2.)To get hold of substitutions not following the nomenclature, SETH integrates MutationFinder (Caporaso *et al.*, 2007).
-SETH modifies MutationFinder's original capabilities in order to match a wider scope of substitutions (DNA substitutions, nonsense mutations, and ambiguous mutations) not following the HGVS nomenclature. This is done by modifying the original MutationFinder implementation together with additional and modified regular expressions.
+SETH modifies MutationFinder's original capabilities in order to match a wider scope of substitutions (DNA substitutions, nonsense mutations, and ambiguous mutations) not following the HGVS nomenclature. 
+This is done by modifying the original MutationFinder implementation together with additional and modified regular expressions.
 
 3.) Mutations (substitutions, deletions, insersions, frameshifts, ...) not following the HGVS nomenclature, but earlier proposals for a nomenclature,  are recognized using a separate set of regular expressions.
 
@@ -28,21 +31,44 @@ If possible, extracted SNP mentions are linked to [dbSNP](http://www.ncbi.nlm.ni
 This process  is referred to as named entity normalization (NEN). 
 For normalization SETH requires a list of potential entrez gene candidates/identifiers as well as a local dbSNP or UniProt database. 
 Gene names may either come from dedicated gene name recognition and normaluzation tools, such as [GNAT](http://gnat.sourceforge.net/).
-Alternatively, we recomend the use of NCBI's gene2pubmed [database](ftp://ftp.ncbi.nlm.nih.gov/gene/DATA/gene2pubmed.gz).
+Alternatively, we recommend the use of NCBI's gene2pubmed [database](ftp://ftp.ncbi.nlm.nih.gov/gene/DATA/gene2pubmed.gz).
 SETH currently uses these two data-sources but can easily extended with other gene-NER tools.
+
+
+# Cite SETH
+[SETH detects and normalizes genetic variants in text.](http://www.ncbi.nlm.nih.gov/pubmed/?term=27256315)
+
+### BibTeX
+	@Article{SETH2016,
+	  Title= {SETH detects and normalizes genetic variants in text.},
+	  Author= {Thomas, Philippe and Rockt{\"{a}}schel, Tim and Hakenberg, J{\"{o}}rg and Lichtblau, Yvonne and Leser, Ulf},
+	  Journal= {Bioinformatics},
+	  Year= {2016},
+	  Month= {Jun},
+	  Doi= {10.1093/bioinformatics/btw234},  
+	  Language = {eng},
+	  Medline-pst = {aheadofprint},
+	  Pmid = {27256315},
+	  Url = {http://dx.doi.org/10.1093/bioinformatics/btw234}
+	}
+
+
+### Text
+	Thomas, P., Rocktäschel, T., Hakenberg, J., Mayer, L., and Leser, U. (2016). SETH detects and normalizes genetic variants in text. Bioinformatics (2016)
 
 # Get SETH
 
-## Download ready-to-use version 1.3.1 (released 12.12.2016) [from](https://github.com/rockt/SETH/releases/tag/1.3.1)
+## 1.) Download JAR file
+Ready-to-use releases available at [https://github.com/rockt/SETH/releases/](https://github.com/rockt/SETH/releases/).
 
-## Or build SETH on your own:
+## 2.) Build SETH on your own using Maven:
 	git clone https://github.com/rockt/SETH.git
 	cd SETH
 	mvn clean compile assembly:single
 	mv ./target/seth-1.2-Snapshot-jar-with-dependencies.jar seth.jar
 	
-## Or import in Maven from jitpack
-For maven, add a new repository pointing to jitpack.
+## 3.) Import in Maven from jitpack
+For maven, add a new repository pointing to [jitpack](https://jitpack.io/#rockt/SETH).
 
 ```xml
 <repository>
@@ -61,14 +87,14 @@ And add the following dependency, which uses the release 1.3.1 version
 </dependency>
 ```
 
-## UIMA wrapper for SETH
+## 4.) UIMA wrapper for SETH
 In [fimda](https://github.com/Erechtheus/fimda) SETH is provided with an UIMA wrapper, as well as integrated web-service provided as docker container. FIMDA is originally developed for the integration of SETH into the [openminted platform](https://services.openminted.eu/home).
 
-## Scalable web-service for SETH
+## 5.) Scalable web-service for SETH
 In [sia](https://github.com/Erechtheus/sia) SETH is bundled into a web-service for the [Becalm platform](http://becalm.eu/api).
 
-## Docker runner for SETH
-We also provide Named Entity Recognition facilities using a REST-API and a [docker container](https://hub.docker.com/repository/docker/erechtheus79/seth).
+## 6.) Docker container for SETH
+We also provide **Named Entity Recognition** facilities using a REST-API and a [docker container](https://hub.docker.com/repository/docker/erechtheus79/seth).
 
 ### Download docker container from docker-hub
 ```bash
@@ -132,34 +158,11 @@ Result:
 ]
 ```
 
+## 7.) Download precomputed PubMed results
 
+Precomputed results are available in [GeneView](http://www.ncbi.nlm.nih.gov/pubmed/22693219)  [here](http://bc3.informatik.hu-berlin.de/annotations/mutations.tsv.gz).
 
-# Cite SETH
-[SETH detects and normalizes genetic variants in text.](http://www.ncbi.nlm.nih.gov/pubmed/?term=27256315)
-
-### BibTeX
-	@Article{SETH2016,
-	  Title= {SETH detects and normalizes genetic variants in text.},
-	  Author= {Thomas, Philippe and Rockt{\"{a}}schel, Tim and Hakenberg, J{\"{o}}rg and Lichtblau, Yvonne and Leser, Ulf},
-	  Journal= {Bioinformatics},
-	  Year= {2016},
-	  Month= {Jun},
-	  Doi= {10.1093/bioinformatics/btw234},  
-	  Language = {eng},
-	  Medline-pst = {aheadofprint},
-	  Pmid = {27256315},
-	  Url = {http://dx.doi.org/10.1093/bioinformatics/btw234}
-	}
-
-	
-### Text	
-	Thomas, P., Rocktäschel, T., Hakenberg, J., Mayer, L., and Leser, U. (2016). SETH detects and normalizes genetic variants in text. Bioinformatics (2016)
-
-# Download precomputed PubMed results
-
-Precomputed results are available in [GeneView](http://www.ncbi.nlm.nih.gov/pubmed/22693219)  [here](http://bc3.informatik.hu-berlin.de/annotations/mutations.tsv.gz)	or in [RVS](http://www.ncbi.nlm.nih.gov/pubmed/26746786) [here](https://rvs.u.hpc.mssm.edu/rest/)
-
-# Examples for NER
+# Examples for named entity recognition
 
 ## Command-line Usage
 
@@ -167,22 +170,26 @@ Precomputed results are available in [GeneView](http://www.ncbi.nlm.nih.gov/pubm
 	MutationMention [span=91-99, location=35, wtResidue=G, text=c.35delG, type=DELETION, tool=SETH]
 	MutationMention [span=104-108, mutResidue=P, location=90, wtResidue=L, text=L90P, type=SUBSTITUTION, tool=MUTATIONFINDER]
 	MutationMention [span=110-118, mutResidue=C, location=269, wtResidue=T, text=c.269T>C, type=SUBSTITUTION, tool=SETH]
-           
+            
     java -cp seth.jar seth.ner.wrapper.SETHNERAppMut "G-banding and spectral karyotyping showed 46,XX,t(9;11)(p22;p15)."
 	MutationMention [span=42-64, text=46,XX,t(9;11)(p22;p15), type=COPY_NUMBER_VARIATION, tool=SETH]	
 
-# NEN
-Given mentions of SNPs and a list of genes (*i.e.* [Entrez gene](http://www.ncbi.nlm.nih.gov/gene) identifiers), SETH normalizes SNPs to
+# Examples for named entity normalization
+Given mutation mentions and a list of potential genes (*i.e.* [Entrez gene](http://www.ncbi.nlm.nih.gov/gene) identifiers), SETH normalizes SNPs to
 dbSNP identifiers.
 To extract gene mentions, we use the output of the tool [GNAT](http://gnat.sourceforge.net/) (Hakenberg *et al.*, 2011)
 together with the gene2pubmed information from NCBI.
 Parts of the [dbSNP database](http://www.ncbi.nlm.nih.gov/projects/SNP/) have to be locally installed for speeding up
 the normalization process.
-For user convenience, we provide a [dump as embedded Derby database](https://drive.google.com/open?id=0B9uTfq0OyHAsS0hoNDFRR0ZyOUE) (~2GB).
+For user convenience, we provide a [dbSNP137 as embedded Derby database](https://drive.google.com/open?id=0B9uTfq0OyHAsS0hoNDFRR0ZyOUE) (~2GB).
+We also provide a derby database for a more recent human dbSNP dump [dbSNP147](https://drive.google.com/open?id=0BxyKVvNXUobTMDJYcG81Uzdhb28). 
+Please be warned that the download is 7.5GB compressed and requires 51 GB uncompressed space. 
+Runtime requirements for normalization also substantially increases with this version of dbSNP in comparison to the smaller dump. 
+For example, normalization of the 296 documents from Thomas *et al.* (2011) increases from approximately 30 seconds to 140 seconds on a commodity laptop. 
+We highly encourage the use of an dedicated database, such as MySQL or PostgreSQL to increase runtime.
 Please note, that this derby database dump contains only human data (UniProt, dbSNP, GNAT, gene2Pubmed). 
-Otherwise the resulting derby database becomes too large for distribution.
+Otherwise, the resulting derby database becomes too large for distribution.
 At the end of this readme we describe the process to generate the derby database. 
-This process can be adapted for other species.
 Feel free to contact us if you observe any problems, or if you would like to host database dumps for species other than human.
 
 ## Command-line Usage
@@ -223,7 +230,7 @@ SETH should normalize to dbSNP (*i.e.* rs numbers).
 SETH allows simple integration into your Java-Projects.  A complete pipeline performing all steps (NER+NEN) can be found here:
 [Java-Code](https://github.com/rockt/SETH/blob/master/src/main/java/seth/SETH.java#L203-L254)
 
-# Reproducing our results
+# Reproducing our results for NER and NEN
 
 ## Evaluate NER
 
@@ -344,26 +351,12 @@ Bioinformatics, 29(11), 1433–1439.
 **[Mutation extraction tools can be combined for robust recognition of genetic variants in the literature](http://www.ncbi.nlm.nih.gov/pubmed/25285203)**
 F1000Research 2014, 3:18 
 
-# Rebuilding the database used for SNP normalization
+# Rebuilding the database for SNP normalization
 This database is **only** required for normalization to either dbSNP or UniProt.
 The following steps are needed if you want to build the database from scratch.
 We provide an (old/ancient/prehistoric) stand-alone (embedded) [Derby database](https://drive.google.com/file/d/0B9uTfq0OyHAsS0hoNDFRR0ZyOUE/view?usp=sharing). 
-
 The import script is tailored towards a PostgreSQL-database, but *theoretically* any other database can be used. 
 We would be happy to get feedback about using SETH with other databases.
-
-## Latest derby database (18th May 2016)
-Due to public request, we now also provide a derby database for the (currently) latest human dbSNP dump [dbSNP147](https://drive.google.com/open?id=0BxyKVvNXUobTMDJYcG81Uzdhb28). Please be warned that the download is 7.5GB compressed and requires 51 GB uncompressed space. Runtime requirements for normalization also substantially increases with this version of dbSNP in comparison to the smaller dump. For example, normalization of the 296 documents from Thomas *et al.* (2011) increases from approximately 30 seconds to 140 seconds on a commodity laptop. We highly encourage the use of an dedicated database, such as MySQL or PostgreSQL to increase runtime.  
-Performance of this model on the previously introduced normalization corpora: 
-
-|Corpus|Precision|Recall|F₁|
-| --- | --- | --- | ---| 
-| Thomas| 0.89 | 0.59 | 0.71 |
-| Osiris | 0.94 | 0.69 | 0.79 |
-
-On both corpora we observe an increase in recall, accompanied with a decrease in precision. This behaviour is expected, as the larger database contains many more SNP candidates than the smaller database. 
-For a detailed analysis, a larger normalization corpus with articles from different time periods would be required.
-
 
 ## Download the necessary files 
 
@@ -418,6 +411,19 @@ Please set variables $DatabasePassword and $importData accordingly.
     COPY mergeItems FROM '/var/lib/importData/mergeItems.tsv' DELIMITER E'\t';
     COPY gene2pubmed FROM PROGRAM 'tail -n +2 /var/lib/importData/gene2pubmed' DELIMITER E'\t';
     DELETE FROM gene2pubmed where taxid != 9606;
+
+## Latest derby database (18th May 2016)
+Due to public request, we now also provide a derby database for the (currently) latest human dbSNP dump [dbSNP147](https://drive.google.com/open?id=0BxyKVvNXUobTMDJYcG81Uzdhb28). Please be warned that the download is 7.5GB compressed and requires 51 GB uncompressed space. Runtime requirements for normalization also substantially increases with this version of dbSNP in comparison to the smaller dump. For example, normalization of the 296 documents from Thomas *et al.* (2011) increases from approximately 30 seconds to 140 seconds on a commodity laptop. We highly encourage the use of an dedicated database, such as MySQL or PostgreSQL to increase runtime.  
+Performance of this model on the previously introduced normalization corpora:
+
+|Corpus|Precision|Recall|F₁|
+| --- | --- | --- | ---| 
+| Thomas| 0.89 | 0.59 | 0.71 |
+| Osiris | 0.94 | 0.69 | 0.79 |
+
+On both corpora we observe an increase in recall, accompanied by a decrease in precision. This behaviour is expected, as the larger database contains many more SNP candidates than the smaller database.
+For a detailed analysis, a larger normalization corpus with articles from different time periods would be required.
+
 
 # Bug reports
 Issues and feature requests can be filed [online](https://github.com/rockt/SETH/issues)
