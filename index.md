@@ -359,21 +359,41 @@ The import script is tailored towards a PostgreSQL-database, but *theoretically*
 We would be happy to get feedback about using SETH with other databases.
 
 ## Download the necessary files 
+Please be aware that downloading the necessary files takes substantial amounts of time and space.
+The script was last tested with **build 153** on 3rd of June 2021 and total download size was approx 200 GB.
 
-### Download XML dump from dbSNP
-	wget ftp://ftp.ncbi.nih.gov/snp/organisms/human_9606/XML/ds\*.gz
-	
-### Download gene2pubmed links from NCBI-Entrez gene
-	wget ftp://ftp.ncbi.nih.gov/gene/DATA/gene2pubmed.gz
-	gunzip gene2pubmed.gz
-	
-### Download UniProt-KB and Id-Mapping
-	wget ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.xml.gz
-	wget ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping/idmapping.dat.gz
-		
-## Convert dumps into TSV-files
+### 1.) Download XML dump from dbSNP 
+Creates a directory *dbSNP* and stores data into this folder.
 
-### Parse dbSNP-XML dump
+    mkdir dbSNP
+	wget --continue --directory-prefix=dbSNP/ ftp://ftp.ncbi.nih.gov/snp/organisms/human_9606/XML/ds\*.gz
+	
+### 2.) Download gene2pubmed links from NCBI-Entrez gene
+Creates a directory *entrezGene* and stores data into this folder.
+
+    mkdir entrezGene
+	wget --directory-prefix=entrezGene/ ftp://ftp.ncbi.nih.gov/gene/DATA/gene2pubmed.gz
+	gunzip entrezGene/gene2pubmed.gz
+	
+### 3.) Download UniProt-KB and Id-Mapping
+Creates a directory *uniProt* and stores data into this folder.
+
+    mkdir uniProt
+	wget --directory-prefix=uniProt/ ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.xml.gz
+	wget --directory-prefix=uniProt/ ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping/idmapping.dat.gz
+
+### 4.) Check gzip compression
+We identify corrupted files by testing the gzip-compression.
+Please delete and re-initiate download for all corrupted files.
+Corrupt files can be identified by  an error similar to:
+`gzip: ./dbSNP/ds_ch18.xml.gz: invalid compressed data--format violated`
+
+    find . -name *.gz -exec gunzip --test {} \;
+
+## Convert dbSNP-, UniProt-, Entrez-dumps into TSV-files
+
+### 1.) Parse dbSNP-XML dump
+Requires as input the file paths with all dbSNP XML files. 
 
 	time java -cp seth.jar -Djdk.xml.totalEntitySizeLimit=0 -DentityExpansionLimit=0 de.hu.berlin.wbi.stuff.xml.ParseXMLToFile  /path/with/dbSNP-XML/files/... /path/importDir
 	
