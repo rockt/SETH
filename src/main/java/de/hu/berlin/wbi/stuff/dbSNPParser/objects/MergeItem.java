@@ -1,4 +1,4 @@
-package de.hu.berlin.wbi.stuff.xml;
+package de.hu.berlin.wbi.stuff.dbSNPParser.objects;
 
 public class MergeItem {
 

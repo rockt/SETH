@@ -1,4 +1,4 @@
-package de.hu.berlin.wbi.stuff.xml;
+package de.hu.berlin.wbi.stuff.dbSNPParser.objects;
 
 import java.util.ArrayList;
 import java.util.HashSet;

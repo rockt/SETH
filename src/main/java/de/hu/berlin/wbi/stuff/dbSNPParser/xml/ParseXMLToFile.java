@@ -1,4 +1,4 @@
-package de.hu.berlin.wbi.stuff.xml;
+package de.hu.berlin.wbi.stuff.dbSNPParser.xml;
 
 import java.io.*;
 import java.sql.SQLException;
@@ -12,6 +12,9 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import de.hu.berlin.wbi.stuff.dbSNPParser.objects.MergeItem;
+import de.hu.berlin.wbi.stuff.dbSNPParser.objects.PSM;
+import de.hu.berlin.wbi.stuff.dbSNPParser.objects.SNP;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
