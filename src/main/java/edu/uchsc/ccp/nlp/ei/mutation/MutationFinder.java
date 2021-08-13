@@ -153,7 +153,7 @@ public class MutationFinder extends MutationExtractor {
             br = new BufferedReader(new FileReader(file));
             loadRegularExpressionsFromStream(br);
         } catch (FileNotFoundException fnfe) {
-            error("The file containing regular expressions could not be found: " + file.getAbsolutePath() + File.separator + file.getName());
+            error("The file containing regular expressions could not be found: " + file.getAbsolutePath());
             //fnfe.printStackTrace();
             loadRegularExpressionsFromJar("/resources/mutations.txt");
         }
