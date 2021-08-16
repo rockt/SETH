@@ -57,6 +57,7 @@ SETH currently uses these two data-sources but can easily extended with other ge
 	Thomas, P., Rocktäschel, T., Hakenberg, J., Mayer, L., and Leser, U. (2016). SETH detects and normalizes genetic variants in text. Bioinformatics (2016)
 
 # Get SETH
+Here we descirbe alternative ways to work with SETH
 
 ## 1.) Download JAR file
 Ready-to-use releases available at [https://github.com/rockt/SETH/releases/](https://github.com/rockt/SETH/releases/).
@@ -393,22 +394,22 @@ Corrupt files can be identified by  an error similar to:
 ## Convert dbSNP-, UniProt-, Entrez-dumps into TSV-files
 
 ### 1.) Parse dbSNP-XML dump
-Requires as input the file paths with all dbSNP XML files. 
+Requires as input the file paths with all dbSNP XML files. (346m processing time)
 
-	time java -cp seth.jar -Djdk.xml.totalEntitySizeLimit=0 -DentityExpansionLimit=0 de.hu.berlin.wbi.stuff.xml.ParseXMLToFile  /path/with/dbSNP-XML/files/... /path/importDir
+	time java -cp seth.jar -Djdk.xml.totalEntitySizeLimit=0 -DentityExpansionLimit=0 de.hu.berlin.wbi.stuff.dbSNPParser.xml.ParseXMLToFile  /path/with/dbSNP-XML/files/... Out_XML/
 	
-### Parse UniProt-XML for protein-sequence mutations (PSM) and post-translational modifications (*e.g.* signaling peptides) 
+### Parse UniProt-XML for protein-sequence mutations (PSM) and post-translational modifications (*e.g.* signaling peptides)  (16m processing time)
 	
 Requires as input the UniProt-KB dump (uniprot_sprot.xml.gz) and the mapping from Entrez to UniProt (idmapping.dat.gz).
 Produces uniprot.dat and PSM.dat files at specified location.
 
-	java -cp seth.jar seth.Uniprot2Tab uniprot_sprot.xml.gz idmapping.dat.gz uniprot.dat PSM.dat
+	java -cp seth.jar seth.Uniprot2Tab uniProt/uniprot_sprot.xml.gz uniProt/idmapping.dat.gz uniProt/uniprot.dat uniProt/PSM.dat
 
 ### Some postprocessing steps, to ensure that the import data is unique
-    sort -u uniprot.dat -o uniprot.dat
-    sort -u hgvs.tsv -o hgvs.tsv
-    sort PSM.tsv PSM.dat  -u -o PSM.tsv
-    grep -v "-" PSM.tsv > foo.bar && mv foo.bar PSM.tsv
+    time sort -u uniProt/uniprot.dat -o uniProt/uniprot.dat
+    time sort -u Out_XML/hgvs.tsv -o Out_XML/hgvs.tsv
+    time sort Out_XML/PSM.tsv uniProt/PSM.dat  -u -o Out_XML/PSM.tsv
+    grep -v "-" Out_XML/PSM.tsv > foo.bar && mv foo.bar Out_XML/PSM.tsv
 
 
 ## Set up PostgreSQL (Docker container)
