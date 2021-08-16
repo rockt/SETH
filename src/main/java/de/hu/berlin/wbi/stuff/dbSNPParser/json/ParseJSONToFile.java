@@ -17,8 +17,14 @@ import org.codehaus.jettison.json.JSONObject;
 public class ParseJSONToFile {
 
     public static void main(String[] args) throws IOException, CompressorException {
-        String xmlFolder = "/home/philippe/Downloads/dbsnp/";
-        String outFolder = "/home/philippe/Downloads/parsed/";
+
+        String xmlFolder = "/media/philippe/Elements/SETH/dbSNP/";
+        String outFolder = "";
+        if (args.length == 1 || args.length == 2)
+            xmlFolder = args[0];
+
+        if(args.length == 2)
+            outFolder = args[1];
 
         BufferedWriter mergeItemWriter = new BufferedWriter(new OutputStreamWriter( new FileOutputStream(new File(outFolder+"mergeItems.tsv")), "UTF-8"));
         BufferedWriter citationItemWriter = new BufferedWriter(new OutputStreamWriter( new FileOutputStream(new File(outFolder+"citations.tsv")), "UTF-8"));
