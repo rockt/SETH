@@ -5,8 +5,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import de.hu.berlin.wbi.stuff.dbSNPParser.objects.MergeItem;
-import de.hu.berlin.wbi.stuff.dbSNPParser.objects.SNP;
 import org.apache.commons.compress.compressors.CompressorException;
 import org.apache.commons.compress.compressors.CompressorInputStream;
 import org.apache.commons.compress.compressors.CompressorStreamFactory;
@@ -143,15 +141,21 @@ public class ParseJSONToFile {
 
                                             if(rna.has("protein")) {
 
-                                                final JSONObject spdi = rna.getJSONObject("protein").getJSONObject("variant").getJSONObject("spdi");
-                                                if(rsID == 334){
-                                                    System.out.println(spdi);
+                                                if(rna.getJSONObject("protein").getJSONObject("variant").has("spdi")){
+                                                    final JSONObject spdi = rna.getJSONObject("protein").getJSONObject("variant").getJSONObject("spdi");
+                                                    if(rsID == 334){
+                                                        System.out.println(spdi);
+                                                    }
+
+                                                    int pos = 1 + spdi.getInt("position");
+                                                    String wildtype = spdi.getString("deleted_sequence");
+                                                    String mutated =spdi.getString("inserted_sequence");
+                                                    psmWriter.append(rsID +"\t" +entrez +"\t" +pos +"\t" +mutated +"\t" +wildtype +"\n");
+                                                }
+                                                else{
+                                                    //System.out.println(rna.getJSONObject("protein").getJSONObject("variant"));
                                                 }
 
-                                                int pos = 1 + spdi.getInt("position");
-                                                String wildtype = spdi.getString("deleted_sequence");
-                                                String mutated =spdi.getString("inserted_sequence");
-                                                psmWriter.append(rsID +"\t" +entrez +"\t" +pos +"\t" +mutated +"\t" +wildtype +"\n");
                                             }
                                         }
                                     }
