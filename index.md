@@ -397,7 +397,8 @@ Corrupt files can be identified by  an error similar to:
 Requires as input the file paths with all dbSNP XML files. (346m processing time)
 
 	time java -cp seth.jar -Djdk.xml.totalEntitySizeLimit=0 -DentityExpansionLimit=0 de.hu.berlin.wbi.stuff.dbSNPParser.xml.ParseXMLToFile  /path/with/dbSNP-XML/files/... Out_XML/
-	
+	time java -cp SETH/target/seth-1.3.2-Snapshot-jar-with-dependencies.jar de.hu.berlin.wbi.stuff.dbSNPParser.json.ParseJSONToFile  JSON/ Out_JSON/
+
 ### Parse UniProt-XML for protein-sequence mutations (PSM) and post-translational modifications (*e.g.* signaling peptides)  (16m processing time)
 	
 Requires as input the UniProt-KB dump (uniprot_sprot.xml.gz) and the mapping from Entrez to UniProt (idmapping.dat.gz).
@@ -415,6 +416,9 @@ Produces uniprot.dat and PSM.dat files at specified location.
 ## Set up PostgreSQL (Docker container)
 Please set variables $DatabasePassword and $importData accordingly.
 
+    DatabasePassword=yourPwd
+    importData=yourPath
+
     docker pull postgres
     docker run --name pg-docker -e POSTGRES_PASSWORD=${DatabasePassword} -d -p 5432:5432 --mount type=bind,source=${importData},target=/var/lib/importData,readonly postgres
 	
@@ -426,11 +430,11 @@ Please set variables $DatabasePassword and $importData accordingly.
 
     psql -h localhost -U postgres -d dbsnp
     
-    COPY psm FROM '/var/lib/importData/PSM.tsv' DELIMITER E'\t';
-    COPY hgvs FROM '/var/lib/importData/hgvs.tsv' DELIMITER E'\t';
-    COPY uniprot FROM '/var/lib/importData/uniprot.dat' DELIMITER E'\t';
-    COPY mergeItems FROM '/var/lib/importData/mergeItems.tsv' DELIMITER E'\t';
-    COPY gene2pubmed FROM PROGRAM 'tail -n +2 /var/lib/importData/gene2pubmed' DELIMITER E'\t';
+    COPY psm FROM '/var/lib/importData/Out_XML/PSM.tsv' DELIMITER E'\t';
+    COPY hgvs FROM '/var/lib/importData/Out_XML/hgvs.tsv' DELIMITER E'\t';
+    COPY uniprot FROM '/var/lib/importData/uniProt/uniprot.dat' DELIMITER E'\t';
+    COPY mergeItems FROM '/var/lib/importData/Out_XML/mergeItems.tsv' DELIMITER E'\t';
+    COPY gene2pubmed FROM PROGRAM 'tail -n +2 /var/lib/importData/entrezGene/gene2pubmed' DELIMITER E'\t';
     DELETE FROM gene2pubmed where taxid != 9606;
 
 ## Latest derby database (18th May 2016)
