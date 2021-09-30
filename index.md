@@ -397,7 +397,7 @@ Corrupt files can be identified by  an error similar to:
 Requires as input the file paths with all dbSNP XML files. (346m processing time)
 
 	time java -cp seth.jar -Djdk.xml.totalEntitySizeLimit=0 -DentityExpansionLimit=0 de.hu.berlin.wbi.stuff.dbSNPParser.xml.ParseXMLToFile  /path/with/dbSNP-XML/files/... Out_XML/
-	time java -cp SETH/target/seth-1.3.2-Snapshot-jar-with-dependencies.jar de.hu.berlin.wbi.stuff.dbSNPParser.json.ParseJSONToFile  JSON/ Out_JSON/
+	time java -cp seth.jar de.hu.berlin.wbi.stuff.dbSNPParser.json.ParseJSONToFile  JSON/ Out_JSON/
 
 ### Parse UniProt-XML for protein-sequence mutations (PSM) and post-translational modifications (*e.g.* signaling peptides)  (16m processing time)
 	
