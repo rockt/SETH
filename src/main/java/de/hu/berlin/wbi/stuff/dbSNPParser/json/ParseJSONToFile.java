@@ -107,6 +107,8 @@ public class ParseJSONToFile {
                     }
                      */
 
+                    Set<String> hgvsElements = new HashSet<>();
+                    Set<String> psmElements = new HashSet<>();
                     final JSONArray allele_annotations = obj.getJSONObject("primary_snapshot_data").getJSONArray("allele_annotations");
                     for (int i = 0, size = allele_annotations.length(); i < size; i++) {
                         final JSONObject  allele_annotation = allele_annotations.getJSONObject(i);
@@ -136,7 +138,8 @@ public class ParseJSONToFile {
                                                     System.out.println("rs" +rsID);
                                                     continue;
                                                 }
-                                                hgvsWriter.append(entrez+"\t" +rsID +"\t" +split[0] +"\t" +split[1] +"\n"); //Locus dbSNP hgvs refseq
+                                                hgvsElements.add(entrez+"\t" +rsID +"\t" +split[0] +"\t" +split[1]);
+                                                //hgvsWriter.append(entrez+"\t" +rsID +"\t" +split[0] +"\t" +split[1] +"\n"); //Locus dbSNP hgvs refseq
                                             }
 
                                             if(rna.has("protein")) {
@@ -150,7 +153,8 @@ public class ParseJSONToFile {
                                                     int pos = 1 + spdi.getInt("position");
                                                     String wildtype = spdi.getString("deleted_sequence");
                                                     String mutated =spdi.getString("inserted_sequence");
-                                                    psmWriter.append(rsID +"\t" +entrez +"\t" +pos +"\t" +mutated +"\t" +wildtype +"\n");
+                                                    psmElements.add(rsID +"\t" +entrez +"\t" +pos +"\t" +mutated +"\t" +wildtype);
+                                                    //psmWriter.append(rsID +"\t" +entrez +"\t" +pos +"\t" +mutated +"\t" +wildtype +"\n");
                                                 }
                                                 else{
                                                     //System.out.println(rna.getJSONObject("protein").getJSONObject("variant"));
@@ -161,6 +165,15 @@ public class ParseJSONToFile {
                                     }
                                 }
                             }
+                    }
+                    for (String hgvs : hgvsElements){
+                        hgvsWriter.append(hgvs);
+                        hgvsWriter.append("\n");
+                    }
+
+                    for(String psm : psmElements){
+                        psmWriter.append(psm);
+                        psmWriter.append("\n");
                     }
 
                 }catch(JSONException ex){ //Catch Exceptions from parsing the JSON
