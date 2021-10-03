@@ -410,7 +410,11 @@ Produces uniprot.dat and PSM.dat files at specified location.
     time sort -u uniProt/uniprot.dat -o uniProt/uniprot.dat
     time sort -u Out_XML/hgvs.tsv -o Out_XML/hgvs.tsv
     time sort Out_XML/PSM.tsv uniProt/PSM.dat  -u -o Out_XML/PSM.tsv
-    grep -v "-" Out_XML/PSM.tsv > foo.bar && mv foo.bar Out_XML/PSM.tsv
+    time grep -v "-" Out_XML/PSM.tsv > foo.bar && mv foo.bar Out_XML/PSM.tsv
+
+    time sort -u Out_JSON/hgvs.tsv -o Out_JSON/hgvs.tsv
+    time sort Out_JSON/PSM.tsv uniProt/PSM.dat  -u -o Out_JSON/PSM.tsv
+    time grep -v "-" Out_JSON/PSM.tsv > foo.bar && mv foo.bar Out_JSON/PSM.tsv
 
 
 ## Set up PostgreSQL (Docker container)
@@ -434,6 +438,13 @@ Please set variables $DatabasePassword and $importData accordingly.
     COPY hgvs FROM '/var/lib/importData/Out_XML/hgvs.tsv' DELIMITER E'\t';
     COPY uniprot FROM '/var/lib/importData/uniProt/uniprot.dat' DELIMITER E'\t';
     COPY mergeItems FROM '/var/lib/importData/Out_XML/mergeItems.tsv' DELIMITER E'\t';
+    COPY gene2pubmed FROM PROGRAM 'tail -n +2 /var/lib/importData/entrezGene/gene2pubmed' DELIMITER E'\t';
+    DELETE FROM gene2pubmed where taxid != 9606;
+
+    COPY psm FROM '/var/lib/importData/Out_JSON/PSM.tsv' DELIMITER E'\t';
+    COPY hgvs FROM '/var/lib/importData/Out_JSON/hgvs.tsv' DELIMITER E'\t';
+    COPY uniprot FROM '/var/lib/importData/uniProt/uniprot.dat' DELIMITER E'\t';
+    COPY mergeItems FROM '/var/lib/importData/Out_JSON/mergeItems.tsv' DELIMITER E'\t';
     COPY gene2pubmed FROM PROGRAM 'tail -n +2 /var/lib/importData/entrezGene/gene2pubmed' DELIMITER E'\t';
     DELETE FROM gene2pubmed where taxid != 9606;
 
