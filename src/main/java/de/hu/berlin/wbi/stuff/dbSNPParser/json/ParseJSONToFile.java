@@ -138,7 +138,7 @@ public class ParseJSONToFile {
                                                     System.out.println("rs" +rsID);
                                                     continue;
                                                 }
-                                                hgvsElements.add(entrez+"\t" +rsID +"\t" +split[0] +"\t" +split[1]);
+                                                hgvsElements.add(entrez+"\t" +rsID +"\t" +split[1] +"\t" +split[0]);
                                                 //hgvsWriter.append(entrez+"\t" +rsID +"\t" +split[0] +"\t" +split[1] +"\n"); //Locus dbSNP hgvs refseq
                                             }
 
