@@ -408,6 +408,7 @@ Produces uniprot.dat and PSM.dat files at specified location.
 
 ### Some postprocessing steps, to ensure that the import data is unique
     time sort -u uniProt/uniprot.dat -o uniProt/uniprot.dat
+
     time sort -u Out_XML/hgvs.tsv -o Out_XML/hgvs.tsv
     time sort Out_XML/PSM.tsv uniProt/PSM.dat  -u -o Out_XML/PSM.tsv
     time grep -v "-" Out_XML/PSM.tsv > foo.bar && mv foo.bar Out_XML/PSM.tsv
@@ -441,12 +442,6 @@ Please set variables $DatabasePassword and $importData accordingly.
     COPY gene2pubmed FROM PROGRAM 'tail -n +2 /var/lib/importData/entrezGene/gene2pubmed' DELIMITER E'\t';
     DELETE FROM gene2pubmed where taxid != 9606;
 
-    COPY psm FROM '/var/lib/importData/Out_JSON/PSM.tsv' DELIMITER E'\t';
-    COPY hgvs FROM '/var/lib/importData/Out_JSON/hgvs.tsv' DELIMITER E'\t';
-    COPY uniprot FROM '/var/lib/importData/uniProt/uniprot.dat' DELIMITER E'\t';
-    COPY mergeItems FROM '/var/lib/importData/Out_JSON/mergeItems.tsv' DELIMITER E'\t';
-    COPY gene2pubmed FROM PROGRAM 'tail -n +2 /var/lib/importData/entrezGene/gene2pubmed' DELIMITER E'\t';
-    DELETE FROM gene2pubmed where taxid != 9606;
 
 ## Latest derby database (18th May 2016)
 Due to public request, we now also provide a derby database for the (currently) latest human dbSNP dump [dbSNP147](https://drive.google.com/open?id=0BxyKVvNXUobTMDJYcG81Uzdhb28). Please be warned that the download is 7.5GB compressed and requires 51 GB uncompressed space. Runtime requirements for normalization also substantially increases with this version of dbSNP in comparison to the smaller dump. For example, normalization of the 296 documents from Thomas *et al.* (2011) increases from approximately 30 seconds to 140 seconds on a commodity laptop. We highly encourage the use of an dedicated database, such as MySQL or PostgreSQL to increase runtime.  
