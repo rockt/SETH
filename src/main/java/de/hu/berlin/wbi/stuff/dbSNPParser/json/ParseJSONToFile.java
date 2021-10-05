@@ -62,8 +62,10 @@ public class ParseJSONToFile {
 
                     //Step 1: Analyze all merged items
                     final JSONArray merges = obj.getJSONArray("dbsnp1_merges");
-                    if(rsID == 10634176){
+                    if(rsID == 3034552 || rsID==3034557){
+                        System.out.println("rsId=" +rsID);
                         System.out.println(merges);
+                        System.out.println("-----");
                     }
                     for (int i = 0, size = merges.length(); i < size; i++) {
                         JSONObject merge = merges.getJSONObject(i); //{"merged_rsid":"2557863","revision":"130","merge_date":"2008-05-24T00:59Z"}
