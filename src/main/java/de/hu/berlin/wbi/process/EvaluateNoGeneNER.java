@@ -129,6 +129,7 @@ public class EvaluateNoGeneNER {
 				}
 	 
 				if(ids.contains(mutation.getDbSNP())){		//Check if found rsID's  is correct
+					System.out.println("TP" +"\t" +pmid +"\t" +mutation.toString() +"\t" +mutation.getDbSNP() +"\t found");
 					tp++;			
 					ids.remove(mutation.getDbSNP());
 				}			
