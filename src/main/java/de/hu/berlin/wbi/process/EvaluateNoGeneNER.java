@@ -106,7 +106,7 @@ public class EvaluateNoGeneNER {
                 rs.close();
 
                 if(genes.size() ==0 ){
-                    System.err.println("!No associated gene found for mutation " +mutation.getDbSNP());
+                    System.out.println("!No associated gene found for mutation " +mutation.getDbSNP());
                 }
 
 
