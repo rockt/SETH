@@ -426,6 +426,8 @@ Please set variables $DatabasePassword and $importData accordingly.
 
     docker pull postgres
     docker run --name pg-docker -e POSTGRES_PASSWORD=${DatabasePassword} -d -p 5432:5432 --mount type=bind,source=${importData},target=/var/lib/importData,readonly postgres
+docker run --name pg-docker-new -e POSTGRES_PASSWORD=${DatabasePassword} -d -p 5430:5432 -v /media/philippe/5f695998-f5a5-4389-a2d8-4cf3ffa1288a/postgres-docker/:/var/lib/postgresql/data  --mount type=bind,source=${importData},target=/var/lib/importData,readonly  postgres
+
 	
 ## Set up the database with all necessary tables
     createdb  -h localhost -U postgres dbsnp    
@@ -439,6 +441,17 @@ Please set variables $DatabasePassword and $importData accordingly.
     COPY hgvs FROM '/var/lib/importData/Out_XML/hgvs.tsv' DELIMITER E'\t';
     COPY uniprot FROM '/var/lib/importData/uniProt/uniprot.dat' DELIMITER E'\t';
     COPY mergeItems FROM '/var/lib/importData/Out_XML/mergeItems.tsv' DELIMITER E'\t';
+    COPY gene2pubmed FROM PROGRAM 'tail -n +2 /var/lib/importData/entrezGene/gene2pubmed' DELIMITER E'\t';
+    DELETE FROM gene2pubmed where taxid != 9606;
+
+
+    ALTER TABLE psm ALTER COLUMN wildtype TYPE VARCHAR(512);
+    ALTER TABLE psm ALTER COLUMN residue TYPE VARCHAR(512);
+    ALTER TABLE hgvs ALTER COLUMN hgvs TYPE TEXT;
+    COPY psm FROM '/var/lib/importData/Out_JSON/PSM.tsv' DELIMITER E'\t';
+    COPY hgvs FROM '/var/lib/importData/Out_JSON/hgvs.tsv' DELIMITER E'\t';
+    COPY uniprot FROM '/var/lib/importData/uniProt/uniprot.dat' DELIMITER E'\t';
+    COPY mergeItems FROM '/var/lib/importData/Out_JSON/mergeItems.tsv' DELIMITER E'\t';
     COPY gene2pubmed FROM PROGRAM 'tail -n +2 /var/lib/importData/entrezGene/gene2pubmed' DELIMITER E'\t';
     DELETE FROM gene2pubmed where taxid != 9606;
 
