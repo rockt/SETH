@@ -16,10 +16,10 @@ public class ParseJSONToFile {
 
     public static void main(String[] args) throws IOException, CompressorException {
 
-        String xmlFolder = "/media/philippe/Elements/SETH/dbSNP/";
+        String jsonFolder = "/media/philippe/Elements/SETH/dbSNP/";
         String outFolder = "";
         if (args.length == 1 || args.length == 2)
-            xmlFolder = args[0];
+            jsonFolder = args[0];
 
         if(args.length == 2)
             outFolder = args[1];
@@ -29,12 +29,12 @@ public class ParseJSONToFile {
         BufferedWriter hgvsWriter = new BufferedWriter(new OutputStreamWriter( new FileOutputStream(new File(outFolder+"hgvs.tsv")), "UTF-8"));
         BufferedWriter psmWriter = new BufferedWriter(new OutputStreamWriter( new FileOutputStream(new File(outFolder+"PSM.tsv")), "UTF-8"));
 
-        System.err.println("Extracting data from the following file/folder '" +xmlFolder +"'");
+        System.err.println("Extracting data from the following file/folder '" +jsonFolder +"'");
         System.err.println("Writing data to folder '" +outFolder+"'");
 
 
 
-        File[] files = new File(xmlFolder).listFiles();
+        File[] files = new File(jsonFolder).listFiles();
         Set<String> temp = new HashSet<>();
         Arrays.sort(files);
         for (File file : files) {
@@ -79,44 +79,13 @@ public class ParseJSONToFile {
                         citationItemWriter.append(rsID +"\t" +citation +"\n");
                     }
 
-                    //Problem in the entries from placement_with_allele we do not get the locus-ID
-                    //Solution: We could build a mapping from RefSeq 2 locus
-                    //CUrrently we neglect these entries
-                    /**
-                    final JSONArray  mutations = obj.getJSONObject("primary_snapshot_data").getJSONArray("placements_with_allele");
-                    for (int i = 0, size = mutations.length(); i < size; i++) {
-                        final JSONObject  mutation = mutations.getJSONObject(i);
-                        //System.out.println(mutation);
-                        String seqID = mutation.getString("seq_id");
-                        String seq_type = mutation.getJSONObject("placement_annot").getString("seq_type");
-                        String mol_type = mutation.getJSONObject("placement_annot").getString("mol_type");
-                        //System.out.println(seq_type +"\t" +mol_type);
-
-                        //We ignore offsets on predicted reference sequences
-                        if(seq_type.contains("pred"))
-                            continue;
-
-                        temp.add(seq_type +"\t" +mol_type);
-
-
-                        final JSONArray alleles = mutation.getJSONArray("alleles");
-                        for (int j = 0, sizeJ = alleles.length(); j < sizeJ; j++) {
-                            final JSONObject allele = alleles.getJSONObject(j);
-                            final String hgvs = allele.getString("hgvs");
-                            hgvsWriter.append(rsID +"\t" +hgvs +"\n"); //locus SNP HGVS refSeq
-                            if (allele.getJSONObject("allele").has("spdi")) {
-                                final JSONObject spdi = allele.getJSONObject("allele").getJSONObject("spdi");
-                                //System.out.println(spdi);
-                            }
-                        }
-                    }
-                     */
 
                     Set<String> hgvsElements = new HashSet<>();
                     Set<String> psmElements = new HashSet<>();
                     final JSONArray allele_annotations = obj.getJSONObject("primary_snapshot_data").getJSONArray("allele_annotations");
                     for (int i = 0, size = allele_annotations.length(); i < size; i++) {
                         final JSONObject  allele_annotation = allele_annotations.getJSONObject(i);
+                        //System.out.println(allele_annotation);
 
                             final JSONArray assembly_annotations = allele_annotation.getJSONArray("assembly_annotation");
                             for (int j = 0; j< assembly_annotations.length(); j++) {
@@ -128,11 +97,12 @@ public class ParseJSONToFile {
 
                                     for(int k =0; k < genes.length(); k++){
                                         final JSONObject  gene = genes.getJSONObject(k);
+                                        //System.out.println(gene);
 
                                         final int entrez = gene.getInt("id");
                                         final JSONArray rnas = gene.getJSONArray("rnas");
 
-                                        for (int l =0; k < rnas.length(); k++){
+                                        for (int l =0; l < rnas.length(); l++){
                                             final JSONObject  rna = rnas.getJSONObject(l);
 
                                             if(rna.has("hgvs")) {
