@@ -438,8 +438,8 @@ docker run --name pg-docker-new -e POSTGRES_PASSWORD=${DatabasePassword} -d -p 5
     psql -h localhost -U postgres -d dbsnp
     
     COPY psm FROM '/var/lib/importData/Out_XML/PSM.tsv' DELIMITER E'\t';
-    COPY hgvs FROM '/var/lib/importData/Out_XML/hgvs.tsv' DELIMITER E'\t';
     COPY uniprot FROM '/var/lib/importData/uniProt/uniprot.dat' DELIMITER E'\t';
+    COPY hgvs FROM '/var/lib/importData/Out_XML/hgvs.tsv' DELIMITER E'\t';
     COPY mergeItems FROM '/var/lib/importData/Out_XML/mergeItems.tsv' DELIMITER E'\t';
     COPY gene2pubmed FROM PROGRAM 'tail -n +2 /var/lib/importData/entrezGene/gene2pubmed' DELIMITER E'\t';
     DELETE FROM gene2pubmed where taxid != 9606;
@@ -449,8 +449,8 @@ docker run --name pg-docker-new -e POSTGRES_PASSWORD=${DatabasePassword} -d -p 5
     ALTER TABLE psm ALTER COLUMN residue TYPE VARCHAR(512);
     ALTER TABLE hgvs ALTER COLUMN hgvs TYPE TEXT;
     COPY psm FROM '/var/lib/importData/Out_JSON/PSM.tsv' DELIMITER E'\t';
-    COPY hgvs FROM '/var/lib/importData/Out_JSON/hgvs.tsv' DELIMITER E'\t';
     COPY uniprot FROM '/var/lib/importData/uniProt/uniprot.dat' DELIMITER E'\t';
+    COPY hgvs FROM '/var/lib/importData/Out_JSON/hgvs.tsv' DELIMITER E'\t';
     COPY mergeItems FROM '/var/lib/importData/Out_JSON/mergeItems.tsv' DELIMITER E'\t';
     COPY gene2pubmed FROM PROGRAM 'tail -n +2 /var/lib/importData/entrezGene/gene2pubmed' DELIMITER E'\t';
     DELETE FROM gene2pubmed where taxid != 9606;
