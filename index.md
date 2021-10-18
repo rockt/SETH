@@ -426,9 +426,10 @@ Please set variables $DatabasePassword and $importData accordingly.
 
     docker pull postgres
     docker run --name pg-docker -e POSTGRES_PASSWORD=${DatabasePassword} -d -p 5432:5432 --mount type=bind,source=${importData},target=/var/lib/importData,readonly postgres
-docker run --name pg-docker-new -e POSTGRES_PASSWORD=${DatabasePassword} -d -p 5430:5432 -v /media/philippe/5f695998-f5a5-4389-a2d8-4cf3ffa1288a/postgres-docker/:/var/lib/postgresql/data  --mount type=bind,source=${importData},target=/var/lib/importData,readonly  postgres
+docker run --name pg-docker-new -e POSTGRES_PASSWORD=${DatabasePassword} -d -p 5432:5432 -v /media/philippe/5f695998-f5a5-4389-a2d8-4cf3ffa1288a/postgres-docker/:/var/lib/postgresql/data  --mount type=bind,source=${importData},target=/var/lib/importData,readonly  postgres:12.8
 
-	
+
+
 ## Set up the database with all necessary tables
     createdb  -h localhost -U postgres dbsnp    
     psql -h localhost -U postgres -d dbsnp < SETHDirectory/resources/table.sql 
