@@ -108,6 +108,13 @@ public class ParseJSONToFile {
                                             if(rna.has("hgvs")) {
                                                 final String hgvs = rna.getString("hgvs");
                                                 String split[] = hgvs.split(":");
+
+                                                //See http://www.ncbi.nlm.nih.gov/books/NBK21091/table/ch18.T.refseq_accession_numbers_and_mole/?report=objectonly
+                                                //Skip XM, XR, and XP, which are are automatically derived annotation pipelines
+                                                //NC_ NM_ NG_ NR_ NP_ NT_ NW_
+                                                if(split[0].startsWith("XM_") || split[0].startsWith("XR_") || split[0].startsWith("XP_") || split[0].startsWith("GPC_") ||split[0].startsWith("YP_"))
+                                                    continue;
+
                                                 if (split.length != 2) {
                                                     System.out.println("Split size " + split.length + " instead of 2 for '" + hgvs + "'");
                                                     System.out.println("rs" +rsID);
