@@ -138,6 +138,14 @@ public class ParseJSONToFile {
                                                     int pos = 1 + spdi.getInt("position");
                                                     String wildtype = spdi.getString("deleted_sequence");
                                                     String mutated =spdi.getString("inserted_sequence");
+
+                                                    if (wildtype.length() > 128 || mutated.length() > 128)    //These entries lead to an SQL-Exception otherwise
+                                                        continue;
+
+                                                    if (wildtype.equals(mutated)) // We only want non-synonymous mutations
+                                                        continue;
+
+
                                                     psmElements.add(rsID +"\t" +entrez +"\t" +pos +"\t" +mutated +"\t" +wildtype);
                                                     //psmWriter.append(rsID +"\t" +entrez +"\t" +pos +"\t" +mutated +"\t" +wildtype +"\n");
                                                 }
