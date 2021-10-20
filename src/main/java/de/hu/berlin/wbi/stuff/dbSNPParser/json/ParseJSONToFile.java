@@ -109,7 +109,7 @@ public class ParseJSONToFile {
                                                 final String hgvs = rna.getString("hgvs");
                                                 String split[] = hgvs.split(":");
 
-                                                if (split[1].length() >= 256)    //Exclude  this HGVS entry
+                                                if (split[1].length() >= 255)    //Exclude  this HGVS entry
                                                     continue;
 
                                                 //See http://www.ncbi.nlm.nih.gov/books/NBK21091/table/ch18.T.refseq_accession_numbers_and_mole/?report=objectonly
