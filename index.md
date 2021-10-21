@@ -368,6 +368,9 @@ Creates a directory *dbSNP* and stores data into this folder.
 
     mkdir dbSNP
 	wget --continue --directory-prefix=dbSNP/ ftp://ftp.ncbi.nih.gov/snp/organisms/human_9606/XML/ds\*.gz
+
+    mkdir dbSNP-json
+    wget --continue --directory-prefix=dbSNP-json/ ftp://ftp.ncbi.nlm.nih.gov/snp/redesign/latest_release/JSON/refsnp-chr\*.bz2
 	
 ### 2.) Download gene2pubmed links from NCBI-Entrez gene
 Creates a directory *entrezGene* and stores data into this folder.
