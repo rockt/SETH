@@ -96,7 +96,10 @@ public class ApplyNENToJSONCorpora {
 						rs.close();
 
 						if(genes.size() ==0 ){
-							System.out.println("!No associated gene found for rs" +rsId);
+							//System.out.println("!No associated gene found for rs" +rsId);
+						}
+						else{
+							System.out.println("Found associated genes!");
 						}
 
 
