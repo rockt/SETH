@@ -60,11 +60,15 @@ public class ApplyNENToJSONCorpora {
 		JSONParser parser = new JSONParser();
 		//Parse goldstandard
 		try{
+			JSONArray jsonDocuments = new JSONArray(); //Store all results here
+
 			Object obj = parser.parse(new FileReader(goldstandardFile));
 			JSONObject jsonObject =  (JSONObject) obj;
 			JSONArray documents = (JSONArray) jsonObject.get("documents");
 			Iterator<JSONObject> documentInterator = documents.iterator();
 			while(documentInterator.hasNext()){ // Iterate documents
+				JSONObject jsonDocument = new JSONObject();
+
 				JSONObject document = documentInterator.next();
 
 				JSONArray entities = (JSONArray) ((JSONObject) document.get("document")).get("entities");
@@ -72,6 +76,7 @@ public class ApplyNENToJSONCorpora {
 
 
 				Iterator<JSONObject> entityInterator = entities.iterator();
+				JSONArray jsonEntities = new JSONArray();
 				while(entityInterator.hasNext()){ //Iterate entities in doc
 					JSONObject entity = entityInterator.next();
 
@@ -87,7 +92,6 @@ public class ApplyNENToJSONCorpora {
 						//This allows us to 1.) ignore the impact of gene-NER and 2.) indirectly checks if we know the dbSNP ID at all
 
 						mysql.query("SELECT DISTINCT locus_id FROM PSM WHERE snp_id = " +rsId  +" UNION SELECT  locus_id FROM hgvs WHERE snp_id = " +rsId);
-						System.out.println("SELECT DISTINCT locus_id FROM PSM WHERE snp_id = " +rsId  +" UNION SELECT  locus_id FROM hgvs WHERE snp_id = " +rsId);
 						ResultSet rs = mysql.getRs();
 						Set<Integer> genes = new HashSet<Integer>();
 						while(rs.next()){
@@ -122,34 +126,28 @@ public class ApplyNENToJSONCorpora {
 							}
 						}
 
-						//TODO: Write the result to the result-file
-						//Write code
-			/*
-			JSONArray jsonDocuments = new JSONArray();
+						//Save all dbSNPIds
+						JSONArray jsonDbSNPPredictions = new JSONArray();
+						for (Integer dbSNPId : dbSNPIds){
+							jsonDbSNPPredictions.add(dbSNPId);
+						}
 
-			JSONArray jsonDbSNPPredictions = new JSONArray();
-			jsonDbSNPPredictions.add("rs123");
-			jsonDbSNPPredictions.add("rs234");
+						//Save the entitiy
+						JSONObject jsonEntity = new JSONObject();
+						jsonEntity.put("ID", entityID);
+						jsonEntity.put("rs", jsonDbSNPPredictions);
 
-			JSONObject jsonEntity = new JSONObject();
-			jsonEntity.put("ID", "T123");
-			jsonEntity.put("rs", jsonDbSNPPredictions);
 
-			JSONArray jsonEntities = new JSONArray();
-			jsonEntities.add(jsonEntity);
-
-			JSONObject jsonDocument = new JSONObject();
-			jsonDocument.put("PMID", "123");
-			jsonDocument.put("entities", jsonEntities);
-
-			jsonDocuments.add(jsonDocument);
-
-			//Write documents
-			System.out.println(jsonDocuments.toJSONString());
-			*/
+						jsonEntities.add(jsonEntity);
 					}
+
+				jsonDocument.put("ID", documentID);
+				jsonDocument.put("entities", jsonEntities);
+				jsonDocuments.add(jsonDocument);
+
 				}
 			}
+			System.out.println(jsonDocuments.toJSONString());
 		}
 		catch(Exception ex){
 			ex.printStackTrace();
