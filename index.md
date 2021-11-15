@@ -366,11 +366,11 @@ The script was last tested with **build 153** on 3rd of June 2021 and total down
 ### 1.) Download XML dump from dbSNP 
 Creates a directory *dbSNP* and stores data into this folder.
 
-    mkdir dbSNP
-	wget --continue --directory-prefix=dbSNP/ ftp://ftp.ncbi.nih.gov/snp/organisms/human_9606/XML/ds\*.gz
+    mkdir XML
+	wget --continue --directory-prefix=XML/ ftp://ftp.ncbi.nih.gov/snp/organisms/human_9606/XML/ds\*.gz
 
-    mkdir dbSNP-json
-    wget --continue --directory-prefix=dbSNP-json/ ftp://ftp.ncbi.nlm.nih.gov/snp/redesign/latest_release/JSON/refsnp-chr\*.bz2
+    mkdir JSON
+    wget --continue --directory-prefix=JSON/ ftp://ftp.ncbi.nlm.nih.gov/snp/redesign/latest_release/JSON/refsnp-chr\*.bz2
 	
 ### 2.) Download gene2pubmed links from NCBI-Entrez gene
 Creates a directory *entrezGene* and stores data into this folder.
@@ -396,10 +396,10 @@ Corrupt files can be identified by  an error similar to:
 
 ## Convert dbSNP-, UniProt-, Entrez-dumps into TSV-files
 
-### 1.) Parse dbSNP-XML dump
+### 1.) Parse dbSNP dump (either XML or JSON-files)
 Requires as input the file paths with all dbSNP XML files. (346m processing time)
 
-	time java -cp seth.jar -Djdk.xml.totalEntitySizeLimit=0 -DentityExpansionLimit=0 de.hu.berlin.wbi.stuff.dbSNPParser.xml.ParseXMLToFile  /path/with/dbSNP-XML/files/... Out_XML/
+	time java -cp seth.jar -Djdk.xml.totalEntitySizeLimit=0 -DentityExpansionLimit=0 de.hu.berlin.wbi.stuff.dbSNPParser.xml.ParseXMLToFile  XML/ Out_XML/
 	time java -cp seth.jar de.hu.berlin.wbi.stuff.dbSNPParser.json.ParseJSONToFile  JSON/ Out_JSON/
 
 ### Parse UniProt-XML for protein-sequence mutations (PSM) and post-translational modifications (*e.g.* signaling peptides)  (16m processing time)
@@ -416,7 +416,6 @@ Produces uniprot.dat and PSM.dat files at specified location.
     time sort Out_XML/PSM.tsv uniProt/PSM.dat  -u -o Out_XML/PSM.tsv
     time grep -v "-" Out_XML/PSM.tsv > foo.bar && mv foo.bar Out_XML/PSM.tsv
 
-    time sort -u Out_JSON/hgvs.tsv -o Out_JSON/hgvs.tsv
     time sort Out_JSON/PSM.tsv uniProt/PSM.dat  -u -o Out_JSON/PSM.tsv
     time grep -v "-" Out_JSON/PSM.tsv > foo.bar && mv foo.bar Out_JSON/PSM.tsv
 
@@ -452,6 +451,7 @@ docker run --name pg-docker-new -e POSTGRES_PASSWORD=${DatabasePassword} -d -p 5
     ALTER TABLE psm ALTER COLUMN wildtype TYPE VARCHAR(512);
     ALTER TABLE psm ALTER COLUMN residue TYPE VARCHAR(512);
     ALTER TABLE hgvs ALTER COLUMN hgvs TYPE TEXT;
+
     COPY psm FROM '/var/lib/importData/Out_JSON/PSM.tsv' DELIMITER E'\t';
     COPY uniprot FROM '/var/lib/importData/uniProt/uniprot.dat' DELIMITER E'\t';
     COPY hgvs FROM '/var/lib/importData/Out_JSON/hgvs.tsv' DELIMITER E'\t';
