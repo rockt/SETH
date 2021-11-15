@@ -57,6 +57,7 @@ public class ApplyNENToJSONCorpora {
 			throw new RuntimeException(e);
 		}
 
+		Set<Integer> dbSNPWithoutGene = new HashSet<>();
 		JSONParser parser = new JSONParser();
 		//Parse goldstandard
 		try{
@@ -102,9 +103,7 @@ public class ApplyNENToJSONCorpora {
 
 						if(genes.size() ==0 ){
 							//System.out.println("!No associated gene found for rs" +rsId);
-						}
-						else{
-							System.out.println("Found associated genes!");
+							dbSNPWithoutGene.add(rsId);
 						}
 
 
@@ -148,6 +147,7 @@ public class ApplyNENToJSONCorpora {
 				}
 			}
 			System.out.println(jsonDocuments.toJSONString());
+			System.out.println("Cannot retrieve genes for the following dbSNP entries: " +dbSNPWithoutGene);
 		}
 		catch(Exception ex){
 			ex.printStackTrace();
