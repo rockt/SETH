@@ -75,7 +75,8 @@ public class ApplyNENToJSONCorpora {
 
 				Iterator<JSONObject> entityInterator = entities.iterator();
 				JSONArray jsonEntities = new JSONArray();
-				while(entityInterator.hasNext()){ //Iterate entities in doc
+				//Iterate entities in doc
+				while(entityInterator.hasNext()){
 					JSONObject entity = entityInterator.next();
 
 					//{"dbSNP":"17235409","end":758,"ID":"T0","text":"D543N","type":"ProteinMutation","begin":753}
@@ -134,12 +135,10 @@ public class ApplyNENToJSONCorpora {
 
 						jsonEntities.add(jsonEntity);
 					}
-
-				jsonDocument.put("ID", documentID);
-				jsonDocument.put("entities", jsonEntities);
-				jsonDocuments.add(jsonDocument);
-
 				}
+			jsonDocument.put("ID", documentID);
+			jsonDocument.put("entities", jsonEntities);
+			jsonDocuments.add(jsonDocument);
 			}
 			BufferedWriter bw = new BufferedWriter(new FileWriter(new File(predictionFile)));
 			bw.append(jsonDocuments.toJSONString());
