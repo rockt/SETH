@@ -8,10 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import seth.SETH;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
@@ -146,7 +143,9 @@ public class ApplyNENToJSONCorpora {
 
 				}
 			}
-			System.out.println(jsonDocuments.toJSONString());
+			BufferedWriter bw = new BufferedWriter(new FileWriter(new File(predictionFile)));
+			bw.append(jsonDocuments.toJSONString());
+			bw.close();
 			System.out.println("Cannot retrieve genes for the following dbSNP entries: " +dbSNPWithoutGene);
 		}
 		catch(Exception ex){
