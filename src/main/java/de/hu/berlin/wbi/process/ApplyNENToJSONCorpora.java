@@ -82,9 +82,8 @@ public class ApplyNENToJSONCorpora {
 
 					String entityID=(String) entity.get("ID");
 					String entityString = (String) entity.get("text");
-					if(entity.containsKey("dbSNP")){ //If a mutation is normalizable
+					if(entity.containsKey("dbSNP")){ //If a mutation is normalizable, we try to normalize it as well
 
-						System.out.println("parsing '" +(String) entity.get("dbSNP")+"'");
 						int rsId = Integer.parseInt((String) entity.get("dbSNP"));
 						//Retrieves gene associated with a dbSNP entry
 						//This allows us to 1.) ignore the impact of gene-NER and 2.) indirectly checks if we know the dbSNP ID at all
@@ -116,7 +115,6 @@ public class ApplyNENToJSONCorpora {
 
 								// Print information
 								for (dbSNPNormalized snp : normalized) {
-									System.out.println(mention + " --- rs" + snp.getRsID());
 									dbSNPIds.add(snp.getRsID());
 								}
 							}
