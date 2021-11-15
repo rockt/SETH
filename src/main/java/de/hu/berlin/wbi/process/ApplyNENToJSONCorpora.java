@@ -87,6 +87,7 @@ public class ApplyNENToJSONCorpora {
 						//This allows us to 1.) ignore the impact of gene-NER and 2.) indirectly checks if we know the dbSNP ID at all
 
 						mysql.query("SELECT DISTINCT locus_id FROM PSM WHERE snp_id = " +rsId  +" UNION SELECT  locus_id FROM hgvs WHERE snp_id = " +rsId);
+						System.out.println("SELECT DISTINCT locus_id FROM PSM WHERE snp_id = " +rsId  +" UNION SELECT  locus_id FROM hgvs WHERE snp_id = " +rsId);
 						ResultSet rs = mysql.getRs();
 						Set<Integer> genes = new HashSet<Integer>();
 						while(rs.next()){
