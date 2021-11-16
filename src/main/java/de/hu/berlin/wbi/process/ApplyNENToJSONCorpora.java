@@ -130,6 +130,7 @@ public class ApplyNENToJSONCorpora {
 						//Save the entitiy
 						JSONObject jsonEntity = new JSONObject();
 						jsonEntity.put("ID", entityID);
+						jsonEntity.put("text", entityString);
 						jsonEntity.put("rs", jsonDbSNPPredictions);
 
 
