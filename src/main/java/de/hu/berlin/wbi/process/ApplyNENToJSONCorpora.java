@@ -70,7 +70,7 @@ public class ApplyNENToJSONCorpora {
 				JSONObject document = documentInterator.next();
 
 				JSONArray entities = (JSONArray) ((JSONObject) document.get("document")).get("entities");
-				Integer documentID = Integer.parseInt((String) ((JSONObject) document.get("document")).get("ID"));
+				String documentID = (String) ((JSONObject) document.get("document")).get("ID");
 
 
 				Iterator<JSONObject> entityInterator = entities.iterator();
