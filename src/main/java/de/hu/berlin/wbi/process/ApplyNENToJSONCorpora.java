@@ -54,7 +54,7 @@ public class ApplyNENToJSONCorpora {
 			throw new RuntimeException(e);
 		}
 
-		Set<Integer> dbSNPWithoutGene = new HashSet<>();
+		Set<Long> dbSNPWithoutGene = new HashSet<>();
 		JSONParser parser = new JSONParser();
 		//Parse goldstandard
 		try{
@@ -85,7 +85,7 @@ public class ApplyNENToJSONCorpora {
 					String entityString = (String) entity.get("text");
 					if(entity.containsKey("dbSNP")){ //If a mutation is normalizable, we try to normalize it as well
 
-						int rsId = Integer.parseInt((String) entity.get("dbSNP"));
+						long rsId = Long.parseLong((String) entity.get("dbSNP"));
 						//Retrieves gene associated with a dbSNP entry
 						//This allows us to 1.) ignore the impact of gene-NER and 2.) indirectly checks if we know the dbSNP ID at all
 
