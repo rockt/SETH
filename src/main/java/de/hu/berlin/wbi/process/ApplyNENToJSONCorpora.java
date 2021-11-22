@@ -111,7 +111,7 @@ public class ApplyNENToJSONCorpora {
 							final List<UniprotFeature> features = UniprotFeature.getFeatures(gene);    //Get all associated UniProt features
 
 							for(MutationMention mention : mentions){
-								mention.normalizeSNP(potentialSNPs, features, false);
+								mention.normalizeSNP(potentialSNPs, features, true);
 								List<dbSNPNormalized> normalized = mention.getNormalized();    //Get list of all dbSNP entries with which I could successfully associate the mutation
 
 								// Print information
