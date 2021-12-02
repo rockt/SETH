@@ -392,7 +392,9 @@ Please delete and re-initiate download for all corrupted files.
 Corrupt files can be identified by  an error similar to:
 `gzip: ./dbSNP/ds_ch18.xml.gz: invalid compressed data--format violated`
 
-    find . -name *.gz -exec gunzip --test {} \;
+    find XML/ -name *.gz -exec gunzip --test {} \;
+    find uniProt/ -name *.gz -exec gunzip --test {} \;
+    find JSON/ -name *.bz2 -exec bunzip2 --test {} \;
 
 ## Convert dbSNP-, UniProt-, Entrez-dumps into TSV-files
 
@@ -428,7 +430,7 @@ Please set variables $DatabasePassword and $importData accordingly.
 
     docker pull postgres
     docker run --name pg-docker -e POSTGRES_PASSWORD=${DatabasePassword} -d -p 5432:5432 --mount type=bind,source=${importData},target=/var/lib/importData,readonly postgres
-docker run --name pg-docker-new -e POSTGRES_PASSWORD=${DatabasePassword} -d -p 5432:5432 -v /media/philippe/5f695998-f5a5-4389-a2d8-4cf3ffa1288a/postgres-docker/:/var/lib/postgresql/data  --mount type=bind,source=${importData},target=/var/lib/importData,readonly  postgres:12.8
+    docker run --name pg-docker-new -e POSTGRES_PASSWORD=${DatabasePassword} -d -p 5432:5432 -v /media/philippe/5f695998-f5a5-4389-a2d8-4cf3ffa1288a/postgres-docker/:/var/lib/postgresql/data  --mount type=bind,source=${importData},target=/var/lib/importData,readonly  postgres:12.8
 
 
 
@@ -438,7 +440,7 @@ docker run --name pg-docker-new -e POSTGRES_PASSWORD=${DatabasePassword} -d -p 5
 	
 ### Import  gene2pubmed, UniProt, PSM, mergeItems, and gene2pubmed into the Database
 
-    psql -h localhost -U postgres -d dbsnp
+    psql -h localhost -U postgres -d dbsnp-xml
     
     COPY psm FROM '/var/lib/importData/Out_XML/PSM.tsv' DELIMITER E'\t';
     COPY uniprot FROM '/var/lib/importData/uniProt/uniprot.dat' DELIMITER E'\t';
@@ -447,7 +449,7 @@ docker run --name pg-docker-new -e POSTGRES_PASSWORD=${DatabasePassword} -d -p 5
     COPY gene2pubmed FROM PROGRAM 'tail -n +2 /var/lib/importData/entrezGene/gene2pubmed' DELIMITER E'\t';
     DELETE FROM gene2pubmed where taxid != 9606;
 
-
+    psql -h localhost -U postgres -d dbsnp-json
     ALTER TABLE psm ALTER COLUMN wildtype TYPE VARCHAR(512);
     ALTER TABLE psm ALTER COLUMN residue TYPE VARCHAR(512);
     ALTER TABLE hgvs ALTER COLUMN hgvs TYPE TEXT;
