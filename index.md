@@ -401,8 +401,11 @@ Corrupt files can be identified by  an error similar to:
 ### 1.) Parse dbSNP dump (either XML or JSON-files)
 Requires as input the file paths with all dbSNP XML files. (346m processing time)
 
+    mkdir Out_XML/
 	time java -cp seth.jar -Djdk.xml.totalEntitySizeLimit=0 -DentityExpansionLimit=0 de.hu.berlin.wbi.stuff.dbSNPParser.xml.ParseXMLToFile  XML/ Out_XML/
-	time java -cp seth.jar de.hu.berlin.wbi.stuff.dbSNPParser.json.ParseJSONToFile  JSON/ Out_JSON/
+	
+    mkdir Out_JSON/
+    time java -cp seth.jar de.hu.berlin.wbi.stuff.dbSNPParser.json.ParseJSONToFile  JSON/ Out_JSON/
 
 ### Parse UniProt-XML for protein-sequence mutations (PSM) and post-translational modifications (*e.g.* signaling peptides)  (16m processing time)
 	
