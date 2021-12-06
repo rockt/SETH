@@ -104,6 +104,7 @@ public class ApplyNENToJSONCorpora {
 						}
 
 
+						//Find (potentially 0-N) mutation mentions for one mention string
 						List<MutationMention> mentions = sethNer.findMutations(entityString);
 						Set<Integer> dbSNPIds = new HashSet<>();
 						for(Integer gene : genes){
@@ -112,12 +113,15 @@ public class ApplyNENToJSONCorpora {
 
 							for(MutationMention mention : mentions){
 								mention.normalizeSNP(potentialSNPs, features, true);
-								List<dbSNPNormalized> normalized = mention.getNormalized();    //Get list of all dbSNP entries with which I could successfully associate the mutation
+								//List<dbSNPNormalized> normalized = mention.getNormalized();    //Get list of all dbSNP entries with which I could successfully associate the mutation
+							}
+						}
 
-								// Print information
-								for (dbSNPNormalized snp : normalized) {
-									dbSNPIds.add(snp.getRsID());
-								}
+						//Generate a set of all potentiall IDs
+						for(MutationMention mention : mentions){
+							// Print information
+							for (dbSNPNormalized snp : mention.getNormalized()) {
+								dbSNPIds.add(snp.getRsID());
 							}
 						}
 
