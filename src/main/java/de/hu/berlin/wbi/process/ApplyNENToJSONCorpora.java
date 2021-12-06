@@ -119,9 +119,11 @@ public class ApplyNENToJSONCorpora {
 
 						//Generate a set of all potentiall IDs
 						for(MutationMention mention : mentions){
-							// Print information
-							for (dbSNPNormalized snp : mention.getNormalized()) {
-								dbSNPIds.add(snp.getRsID());
+							List<dbSNPNormalized> normalized = mention.getNormalized();
+							if (normalized != null){
+								for (dbSNPNormalized snp : normalized) {
+									dbSNPIds.add(snp.getRsID());
+								}
 							}
 						}
 
