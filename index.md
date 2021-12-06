@@ -415,7 +415,7 @@ Produces uniprot.dat and PSM.dat files at specified location.
 	java -cp seth.jar seth.Uniprot2Tab uniProt/uniprot_sprot.xml.gz uniProt/idmapping.dat.gz uniProt/uniprot.dat uniProt/PSM.dat
 
 ### Some postprocessing steps, to ensure that the import data is unique
-    time sort -u uniProt/uniprot.dat -o uniProt/uniprot.dat
+    time sort -u uniProt/uniprot.dat -o uniProt/uniprot.dat #Make uniprot-data unique
 
     time sort -u Out_XML/hgvs.tsv -o Out_XML/hgvs.tsv
     time sort Out_XML/PSM.tsv uniProt/PSM.dat  -u -o Out_XML/PSM.tsv
@@ -437,11 +437,17 @@ Please set variables $DatabasePassword and $importData accordingly.
 
 
 
-## Set up the database with all necessary tables
+## Create the database with all necessary tables
     createdb  -h localhost -U postgres dbsnp    
     psql -h localhost -U postgres -d dbsnp < SETHDirectory/resources/table.sql 
 	
 ### Import  gene2pubmed, UniProt, PSM, mergeItems, and gene2pubmed into the Database
+DELETE FROM psm;
+DELETE FROM uniprot;
+DELETE FROM hgvs;
+DELETE FROM mergeItems;
+DELETE FROM gene2pubmed;
+VACUUM FULL;
 
     psql -h localhost -U postgres -d dbsnp-xml
     
@@ -453,6 +459,7 @@ Please set variables $DatabasePassword and $importData accordingly.
     DELETE FROM gene2pubmed where taxid != 9606;
 
     psql -h localhost -U postgres -d dbsnp-json
+
     ALTER TABLE psm ALTER COLUMN wildtype TYPE VARCHAR(512);
     ALTER TABLE psm ALTER COLUMN residue TYPE VARCHAR(512);
     ALTER TABLE hgvs ALTER COLUMN hgvs TYPE TEXT;
@@ -466,22 +473,23 @@ Please set variables $DatabasePassword and $importData accordingly.
 
 
 ## Latest derby database (18th May 2016)
-Due to public request, we now also provide a derby database for the (currently) latest human dbSNP dump [dbSNP147](https://drive.google.com/open?id=0BxyKVvNXUobTMDJYcG81Uzdhb28). Please be warned that the download is 7.5GB compressed and requires 51 GB uncompressed space. Runtime requirements for normalization also substantially increases with this version of dbSNP in comparison to the smaller dump. For example, normalization of the 296 documents from Thomas *et al.* (2011) increases from approximately 30 seconds to 140 seconds on a commodity laptop. We highly encourage the use of an dedicated database, such as MySQL or PostgreSQL to increase runtime.  
-Performance of this model on the previously introduced normalization corpora:
+Due to public request, we now also provide a derby database for the (currently latest/ as of May 2016) human dbSNP dump [dbSNP147](https://drive.google.com/open?id=0BxyKVvNXUobTMDJYcG81Uzdhb28).
+**We highly encourage the use of a dedicated database, such as PostgreSQL to increase runtime.**
+**You can build your own database by following the steps explained above (Rebuilding the database for SNP normalization).**
+Please be warned that the derby database is 7.5GB compressed and requires 51 GB uncompressed space. 
+Runtime requirements for normalization also substantially increases with this version of dbSNP in comparison to previous versions. 
+For example, normalization of the 296 documents from Thomas *et al.* (2011) increases from approximately 30 seconds to 140 seconds on a commodity laptop. 
+Performance of this model on the previously introduced normalization corpora Osiris and Thomas *et al.* (2011):
 
 |Corpus|Precision|Recall|F₁|
 | --- | --- | --- | ---| 
-| Thomas| 0.89 | 0.59 | 0.71 |
+| Thomas *et al.* (2011) | 0.89 | 0.59 | 0.71 |
 | Osiris | 0.94 | 0.69 | 0.79 |
-
-On both corpora we observe an increase in recall, accompanied by a decrease in precision. This behaviour is expected, as the larger database contains many more SNP candidates than the smaller database.
-For a detailed analysis, a larger normalization corpus with articles from different time periods would be required.
 
 
 # Bug reports
 Issues and feature requests can be filed [online](https://github.com/rockt/SETH/issues)
 
 # Contact
-For questions and  remarks please contact Philippe Thomas:
-
-https://www.dfki.de/en/web/about-us/employee/person/phth01/
+For questions and remarks please contact Philippe Thomas.
+For more details [https://www.dfki.de/en/web/about-us/employee/person/phth01/](https://www.dfki.de/en/web/about-us/employee/person/phth01/).
