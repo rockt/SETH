@@ -88,6 +88,11 @@ public class ParseJSONToFile {
                         //System.out.println(allele_annotation);
 
                             final JSONArray assembly_annotations = allele_annotation.getJSONArray("assembly_annotation");
+
+                            if(rsID == 121917714){
+                                System.out.println(assembly_annotations);
+                            }
+
                             for (int j = 0; j< assembly_annotations.length(); j++) {
 
 
