@@ -138,13 +138,10 @@ public class ParseJSONToFile {
                                                     String wildtype = spdi.getString("deleted_sequence");
                                                     String mutated =spdi.getString("inserted_sequence");
 
-                                                    if (wildtype.length() > 128 || mutated.length() > 128)    //These entries lead to an SQL-Exception otherwise
-                                                        continue;
-
-                                                    if (wildtype.equals(mutated)) // We only want non-synonymous mutations
-                                                        continue;
-
-                                                    psmElements.add(rsID +"\t" +entrez +"\t" +pos +"\t" +mutated +"\t" +wildtype);
+                                                    //Only elements below 128 length and where wiltype != mutated
+                                                    if (wildtype.length() <= 128 &&  mutated.length() <= 128 && wildtype.equals(mutated) == false){
+                                                        psmElements.add(rsID +"\t" +entrez +"\t" +pos +"\t" +mutated +"\t" +wildtype);
+                                                    }
                                                 }
                                                 else{
                                                     //System.out.println(rna.getJSONObject("protein").getJSONObject("variant"));
