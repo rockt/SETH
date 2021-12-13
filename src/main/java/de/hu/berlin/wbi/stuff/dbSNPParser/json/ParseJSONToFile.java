@@ -106,27 +106,30 @@ public class ParseJSONToFile {
                                                 final String hgvs = rna.getString("hgvs");
                                                 String split[] = hgvs.split(":");
 
-                                                if (split[1].length() >= 255)    //Exclude  this HGVS entry
-                                                    continue;
-
-                                                //See http://www.ncbi.nlm.nih.gov/books/NBK21091/table/ch18.T.refseq_accession_numbers_and_mole/?report=objectonly
-                                                //Skip XM, XR, and XP, which are are automatically derived annotation pipelines
-                                                //NC_ NM_ NG_ NR_ NP_ NT_ NW_
-                                                if(split[0].startsWith("XM_") || split[0].startsWith("XR_") || split[0].startsWith("XP_") || split[0].startsWith("GPC_") ||split[0].startsWith("YP_"))
-                                                    continue;
-
                                                 if (split.length != 2) {
                                                     System.out.println("Split size " + split.length + " instead of 2 for '" + hgvs + "'");
                                                     System.out.println("rs" +rsID);
                                                     continue;
                                                 }
-                                                hgvsElements.add(entrez+"\t" +rsID +"\t" +split[1] +"\t" +split[0]);
+
+                                                //Skip extremely long HGVS-sequences -> This helps to keep the size of the database "small"
+                                                if (split[1].length() <= 255){
+
+                                                    //See http://www.ncbi.nlm.nih.gov/books/NBK21091/table/ch18.T.refseq_accession_numbers_and_mole/?report=objectonly
+                                                    //Skip XM, XR, and XP, which are are automatically derived annotation pipelines
+                                                    //NC_ NM_ NG_ NR_ NP_ NT_ NW_
+                                                    if(split[0].startsWith("XM_") || split[0].startsWith("XR_") || split[0].startsWith("XP_") || split[0].startsWith("GPC_") ||split[0].startsWith("YP_")){ }
+                                                    else{
+                                                        hgvsElements.add(entrez+"\t" +rsID +"\t" +split[1] +"\t" +split[0]);
+                                                    }
+                                                }
                                             }
 
                                             if(rna.has("protein")) {
 
                                                 if(rna.getJSONObject("protein").getJSONObject("variant").has("spdi")){
                                                     final JSONObject spdi = rna.getJSONObject("protein").getJSONObject("variant").getJSONObject("spdi");
+
                                                     if(rsID == 386833587){
                                                         System.out.println(spdi);
                                                     }
@@ -141,13 +144,11 @@ public class ParseJSONToFile {
                                                     if (wildtype.equals(mutated)) // We only want non-synonymous mutations
                                                         continue;
 
-
                                                     psmElements.add(rsID +"\t" +entrez +"\t" +pos +"\t" +mutated +"\t" +wildtype);
                                                 }
                                                 else{
                                                     //System.out.println(rna.getJSONObject("protein").getJSONObject("variant"));
                                                 }
-
                                             }
                                         }
                                     }
