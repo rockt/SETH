@@ -56,7 +56,7 @@ public class ParseJSONToFile {
                     final JSONObject obj = new JSONObject(line);
                     final int rsID = obj.getInt("refsnp_id");
 
-                    if(rsID == 334){
+                    if(rsID == 386833587){
                         //System.out.println(line);
                     }
 
@@ -85,7 +85,7 @@ public class ParseJSONToFile {
 
                             final JSONArray assembly_annotations = allele_annotation.getJSONArray("assembly_annotation");
 
-                            if(rsID == 121917714){
+                            if(rsID == 386833587){
                                 System.out.println(assembly_annotations);
                             }
 
@@ -132,7 +132,7 @@ public class ParseJSONToFile {
 
                                                 if(rna.getJSONObject("protein").getJSONObject("variant").has("spdi")){
                                                     final JSONObject spdi = rna.getJSONObject("protein").getJSONObject("variant").getJSONObject("spdi");
-                                                    if(rsID == 334){
+                                                    if(rsID == 386833587){
                                                         System.out.println(spdi);
                                                     }
 
