@@ -63,14 +63,14 @@ public class ParseJSONToFile {
                     //Step 1: Analyze all merged items
                     final JSONArray merges = obj.getJSONArray("dbsnp1_merges");
 
-                    for (int i = 0, size = merges.length(); i < size; i++) {
+                    for (int i = 0; i < merges.length(); i++) {
                         JSONObject merge = merges.getJSONObject(i); //{"merged_rsid":"2557863","revision":"130","merge_date":"2008-05-24T00:59Z"}
                         mergeItemWriter.append(rsID +"\t" +merge.getInt("merged_rsid") +"\t" +merge.getInt("revision") +"\n"); //newSNP oldSNP dbSNP-Version
                     }
 
                     //Step 2: Analyze all citations
                     final JSONArray citations = obj.getJSONArray("citations"); // A set of integers
-                    for (int i = 0, size = citations.length(); i < size; i++) {
+                    for (int i = 0; i < citations.length(); i++) {
                         final int  citation = citations.getInt(i);
                         citationItemWriter.append(rsID +"\t" +citation +"\n");
                     }
@@ -79,10 +79,9 @@ public class ParseJSONToFile {
                     Set<String> hgvsElements = new HashSet<>();
                     Set<String> psmElements = new HashSet<>();
                     final JSONArray allele_annotations = obj.getJSONObject("primary_snapshot_data").getJSONArray("allele_annotations");
-                    for (int i = 0, size = allele_annotations.length(); i < size; i++) {
+                    for (int i = 0; i < allele_annotations.length(); i++) {
                         final JSONObject  allele_annotation = allele_annotations.getJSONObject(i);
-                        //System.out.println(allele_annotation);
-
+                            //System.out.println(allele_annotation);
                             final JSONArray assembly_annotations = allele_annotation.getJSONArray("assembly_annotation");
 
                             if(rsID == 386833587){
@@ -90,16 +89,13 @@ public class ParseJSONToFile {
                             }
 
                             for (int j = 0; j< assembly_annotations.length(); j++) {
-
-
+                                final JSONObject assembly_annotation = assembly_annotations.getJSONObject(j);
                                 
-                                if(assembly_annotations.getJSONObject(j).has("genes")){
-                                    final JSONArray  genes = assembly_annotations.getJSONObject(j).getJSONArray("genes");
+                                if(assembly_annotation.has("genes")){
+                                    final JSONArray  genes = assembly_annotation.getJSONArray("genes");
 
                                     for(int k =0; k < genes.length(); k++){
                                         final JSONObject  gene = genes.getJSONObject(k);
-                                        //System.out.println(gene);
-
                                         final int entrez = gene.getInt("id");
                                         final JSONArray rnas = gene.getJSONArray("rnas");
 
@@ -125,7 +121,6 @@ public class ParseJSONToFile {
                                                     continue;
                                                 }
                                                 hgvsElements.add(entrez+"\t" +rsID +"\t" +split[1] +"\t" +split[0]);
-                                                //hgvsWriter.append(entrez+"\t" +rsID +"\t" +split[0] +"\t" +split[1] +"\n"); //Locus dbSNP hgvs refseq
                                             }
 
                                             if(rna.has("protein")) {
@@ -148,7 +143,6 @@ public class ParseJSONToFile {
 
 
                                                     psmElements.add(rsID +"\t" +entrez +"\t" +pos +"\t" +mutated +"\t" +wildtype);
-                                                    //psmWriter.append(rsID +"\t" +entrez +"\t" +pos +"\t" +mutated +"\t" +wildtype +"\n");
                                                 }
                                                 else{
                                                     //System.out.println(rna.getJSONObject("protein").getJSONObject("variant"));
