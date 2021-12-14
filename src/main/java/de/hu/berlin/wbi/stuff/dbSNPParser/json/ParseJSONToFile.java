@@ -57,7 +57,7 @@ public class ParseJSONToFile {
                     final int rsID = obj.getInt("refsnp_id");
 
                     if(rsID == 386833587){
-                        //System.out.println(line);
+                        System.out.println(line);
                     }
 
                     //Step 1: Analyze all merged items
