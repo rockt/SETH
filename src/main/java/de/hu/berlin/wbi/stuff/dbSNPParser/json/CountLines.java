@@ -11,7 +11,7 @@ import java.util.Set;
 
 public class CountLines {
     public static void main(String[] args) throws IOException, CompressorException {
-        String jsonFolder = "/media/philippe/Elements/SETH/dbSNP/";
+        String jsonFolder = "JSON/";
 
 
         File[] files = new File(jsonFolder).listFiles();
