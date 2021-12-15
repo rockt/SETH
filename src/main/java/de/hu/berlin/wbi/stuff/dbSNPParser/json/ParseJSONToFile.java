@@ -38,6 +38,7 @@ public class ParseJSONToFile {
         Set<String> temp = new HashSet<>();
         Arrays.sort(files);
         for (File file : files) {
+
             if (!file.getAbsolutePath().endsWith(".bz2"))
                 continue;
 
@@ -49,6 +50,7 @@ public class ParseJSONToFile {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(input));
 
             String line = bufferedReader.readLine();
+            int nLines = 0;
             while(line != null){
 
 
@@ -164,15 +166,14 @@ public class ParseJSONToFile {
 
                 }catch(JSONException ex){ //Catch Exceptions from parsing the JSON
                     ex.printStackTrace();
-                    //System.err.println(line);
-                    //System.err.println("----------------");
+                    System.err.println(line);
+                    System.err.println("----------------");
                 }
 
-
-
                 line = bufferedReader.readLine();
+                nLines++;
             }
-
+            System.out.println("Read " +nLines +" lines from " +file.getAbsolutePath());
         }
         mergeItemWriter.close();
         citationItemWriter.close();
