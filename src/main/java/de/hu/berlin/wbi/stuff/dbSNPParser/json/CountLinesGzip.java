@@ -17,7 +17,7 @@ public class CountLinesGzip {
         Arrays.sort(files);
         for (File file : files) {
 
-            if (!file.getAbsolutePath().endsWith(".bz2"))
+            if (!file.getAbsolutePath().endsWith(".gz"))
                 continue;
 
             System.out.println("Parsing " + file.getAbsolutePath());
