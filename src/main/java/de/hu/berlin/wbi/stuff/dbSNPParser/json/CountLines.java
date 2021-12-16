@@ -2,12 +2,10 @@ package de.hu.berlin.wbi.stuff.dbSNPParser.json;
 
 import org.apache.commons.compress.compressors.CompressorException;
 import org.apache.commons.compress.compressors.CompressorInputStream;
-import org.apache.commons.compress.compressors.CompressorStreamFactory;
+import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 
 import java.io.*;
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 public class CountLines {
     public static void main(String[] args) throws IOException, CompressorException {
@@ -25,13 +23,12 @@ public class CountLines {
 
             FileInputStream fin = new FileInputStream(file);
             BufferedInputStream bis = new BufferedInputStream(fin);
-            CompressorInputStream input = new CompressorStreamFactory().createCompressorInputStream(bis);
+            CompressorInputStream input = new BZip2CompressorInputStream(bis);
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(input));
 
-            String line = bufferedReader.readLine();
+            String line;
             int nLines = 0;
-            while(line != null){
-                line = bufferedReader.readLine();
+            while ((line = bufferedReader.readLine()) != null) {
                 nLines++;
             }
             System.out.println("Read " +nLines +" lines from " +file.getAbsolutePath());
