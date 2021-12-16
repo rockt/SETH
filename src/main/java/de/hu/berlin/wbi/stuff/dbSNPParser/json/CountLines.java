@@ -26,12 +26,15 @@ public class CountLines {
             CompressorInputStream input = new BZip2CompressorInputStream(bis);
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(input));
 
+            String prevLine ="";
             String line;
             int nLines = 0;
             while ((line = bufferedReader.readLine()) != null) {
                 nLines++;
+                prevLine = line;
             }
             System.out.println("Read " +nLines +" lines from " +file.getAbsolutePath());
+            System.out.print(prevLine.substring(0, 100));
         }
     }
 }
