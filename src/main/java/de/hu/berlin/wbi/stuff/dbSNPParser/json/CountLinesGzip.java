@@ -22,7 +22,7 @@ public class CountLinesGzip {
 
             System.out.println("Parsing " + file.getAbsolutePath());
 
-            InputStream bufferedReader = new BufferedReader(new BufferedInputStream(new GZIPInputStream(new FileInputStream(file))));
+            BufferedReader bufferedReader = new BufferedReader(new GZIPInputStream(new FileInputStream(file)));
 
             String prevLine ="";
             String line;
