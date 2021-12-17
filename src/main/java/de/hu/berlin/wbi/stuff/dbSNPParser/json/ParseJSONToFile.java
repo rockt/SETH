@@ -8,6 +8,7 @@ import java.util.Set;
 import org.apache.commons.compress.compressors.CompressorException;
 import org.apache.commons.compress.compressors.CompressorInputStream;
 import org.apache.commons.compress.compressors.CompressorStreamFactory;
+import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -46,7 +47,7 @@ public class ParseJSONToFile {
 
             FileInputStream fin = new FileInputStream(file);
             BufferedInputStream bis = new BufferedInputStream(fin);
-            CompressorInputStream input = new CompressorStreamFactory().createCompressorInputStream(bis);
+            CompressorInputStream input = new BZip2CompressorInputStream(bis, true);
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(input));
 
             String line = bufferedReader.readLine();

@@ -23,7 +23,7 @@ public class CountLines {
 
             FileInputStream fin = new FileInputStream(file);
             BufferedInputStream bis = new BufferedInputStream(fin);
-            CompressorInputStream input = new BZip2CompressorInputStream(bis);
+            CompressorInputStream input = new BZip2CompressorInputStream(bis, true);
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(input));
 
             String prevLine ="";
