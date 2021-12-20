@@ -442,12 +442,6 @@ Please set variables $DatabasePassword and $importData accordingly.
     psql -h localhost -U postgres -d dbsnp < SETHDirectory/resources/table.sql 
 	
 ### Import  gene2pubmed, UniProt, PSM, mergeItems, and gene2pubmed into the Database
-DELETE FROM psm;
-DELETE FROM uniprot;
-DELETE FROM hgvs;
-DELETE FROM mergeItems;
-DELETE FROM gene2pubmed;
-VACUUM FULL;
 
     psql -h localhost -U postgres -d dbsnp-xml
     
@@ -460,10 +454,6 @@ VACUUM FULL;
 
     psql -h localhost -U postgres -d dbsnp-json
 
-    ALTER TABLE psm ALTER COLUMN wildtype TYPE VARCHAR(512);
-    ALTER TABLE psm ALTER COLUMN residue TYPE VARCHAR(512);
-    ALTER TABLE hgvs ALTER COLUMN hgvs TYPE TEXT;
-
     COPY psm FROM '/var/lib/importData/Out_JSON/PSM.tsv' DELIMITER E'\t';
     COPY uniprot FROM '/var/lib/importData/uniProt/uniprot.dat' DELIMITER E'\t';
     COPY hgvs FROM '/var/lib/importData/Out_JSON/hgvs.tsv' DELIMITER E'\t';
@@ -472,8 +462,8 @@ VACUUM FULL;
     DELETE FROM gene2pubmed where taxid != 9606;
 
 
-## Latest derby database (18th May 2016)
-Due to public request, we now also provide a derby database for the (currently latest/ as of May 2016) human dbSNP dump [dbSNP147](https://drive.google.com/open?id=0BxyKVvNXUobTMDJYcG81Uzdhb28).
+## Derby database from 18th May 2016
+We now also provide a derby database for the human dbSNP dump [dbSNP147](https://drive.google.com/open?id=0BxyKVvNXUobTMDJYcG81Uzdhb28).
 **We highly encourage the use of a dedicated database, such as PostgreSQL to increase runtime.**
 **You can build your own database by following the steps explained above (Rebuilding the database for SNP normalization).**
 Please be warned that the derby database is 7.5GB compressed and requires 51 GB uncompressed space. 
