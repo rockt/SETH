@@ -18,10 +18,10 @@ public class ParseJSONToFile {
 
         String jsonFolder = "/media/philippe/Elements/SETH/dbSNP/";
         String outFolder = "";
-        if (args.length == 1 || args.length == 2)
+        if (args.length >= 1 )
             jsonFolder = args[0];
 
-        if(args.length == 2)
+        if(args.length >= 2)
             outFolder = args[1];
 
         boolean writeRefSeq = true;
