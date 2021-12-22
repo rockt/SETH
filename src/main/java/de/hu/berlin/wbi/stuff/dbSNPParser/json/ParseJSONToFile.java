@@ -7,7 +7,6 @@ import java.util.Set;
 
 import org.apache.commons.compress.compressors.CompressorException;
 import org.apache.commons.compress.compressors.CompressorInputStream;
-import org.apache.commons.compress.compressors.CompressorStreamFactory;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
@@ -24,6 +23,12 @@ public class ParseJSONToFile {
 
         if(args.length == 2)
             outFolder = args[1];
+
+        boolean writeRefSeq = true;
+        if (args.length == 3 && args[2].trim().equals("--noRefSeq")) {
+            writeRefSeq = false;
+            System.out.println("Ignoring refseq in output");
+        }
 
         BufferedWriter mergeItemWriter = new BufferedWriter(new OutputStreamWriter( new FileOutputStream(new File(outFolder+"mergeItems.tsv")), "UTF-8"));
         BufferedWriter citationItemWriter = new BufferedWriter(new OutputStreamWriter( new FileOutputStream(new File(outFolder+"citations.tsv")), "UTF-8"));
@@ -123,7 +128,7 @@ public class ParseJSONToFile {
                                                     //NC_ NM_ NG_ NR_ NP_ NT_ NW_
                                                     if(split[0].startsWith("XM_") || split[0].startsWith("XR_") || split[0].startsWith("XP_") || split[0].startsWith("GPC_") ||split[0].startsWith("YP_")){ }
                                                     else{
-                                                        hgvsElements.add(entrez+"\t" +rsID +"\t" +split[1] +"\t" +split[0]);
+                                                        hgvsElements.add(entrez+"\t" +rsID +"\t" +(writeRefSeq ? split[1] : "-") +"\t" +split[0]);
                                                     }
                                                 }
                                             }
@@ -143,7 +148,7 @@ public class ParseJSONToFile {
 
                                                     //Only elements below 128 length and where wiltype != mutated
                                                     if (wildtype.length() <= 128 &&  mutated.length() <= 128 && wildtype.equals(mutated) == false){
-                                                        psmElements.add(rsID +"\t" +entrez +"\t" +pos +"\t" +mutated +"\t" +wildtype);
+                                                        psmElements.add(rsID +"\t" +entrez +"\t" +pos +"\t" +mutated.replaceAll("\\*", "X") +"\t" +wildtype.replaceAll("\\*", "X"));
                                                     }
                                                 }
                                                 else{

@@ -161,9 +161,9 @@ public class ParseXMLToFile extends DefaultHandler {
 					psmHGVS.append("\t");
 					psmHGVS.append(String.valueOf(psm.getAaLoc()));
 					psmHGVS.append("\t");
-					psmHGVS.append(psm.getMutations());
+					psmHGVS.append(psm.getMutations().replaceAll("\\*", "X"));
 					psmHGVS.append("\t");
-					psmHGVS.append(psm.getWildtype());
+					psmHGVS.append(psm.getWildtype().replaceAll("\\*", "X"));
 					psmHGVS.append("\n");
 				} catch (IOException e) {
 					e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
