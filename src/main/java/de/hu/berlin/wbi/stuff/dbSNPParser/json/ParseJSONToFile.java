@@ -128,7 +128,7 @@ public class ParseJSONToFile {
                                                     //NC_ NM_ NG_ NR_ NP_ NT_ NW_
                                                     if(split[0].startsWith("XM_") || split[0].startsWith("XR_") || split[0].startsWith("XP_") || split[0].startsWith("GPC_") ||split[0].startsWith("YP_")){ }
                                                     else{
-                                                        hgvsElements.add(entrez+"\t" +rsID +"\t" +(writeRefSeq ? split[1] : "-") +"\t" +split[0]);
+                                                        hgvsElements.add(entrez+"\t" +rsID +"\t" +split[1] +"\t" +(writeRefSeq ? split[0] : "-"));
                                                     }
                                                 }
                                             }
