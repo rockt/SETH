@@ -363,8 +363,11 @@ We would be happy to get feedback about using SETH with other databases.
 Please be aware that downloading the necessary files takes substantial amounts of time and space.
 The script was last tested with **build 153** on 3rd of June 2021 and total download size was approx 200 GB.
 
-### 1.) Download XML dump from dbSNP 
-Creates a directory *dbSNP* and stores data into this folder.
+### 1.) Download XML or JSON dump from dbSNP 
+First, we download the relevant files from dbSNP (either XML or JSON). 
+We can either choose XML or JSON as input format. 
+XML is much smaller in download-size, faster to process, produces a smaller database, but has inferior normalization performance.
+In general, precision is worse in XML and recall is comparable. 
 
     mkdir XML
 	wget --continue --directory-prefix=XML/ ftp://ftp.ncbi.nih.gov/snp/organisms/human_9606/XML/ds\*.gz
@@ -386,8 +389,8 @@ Creates a directory *uniProt* and stores data into this folder.
 	wget --directory-prefix=uniProt/ ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.xml.gz
 	wget --directory-prefix=uniProt/ ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping/idmapping.dat.gz
 
-### 4.) Check gzip compression
-We identify corrupted files by testing the gzip-compression.
+### 4.) Check compression
+We identify corrupted files by testing the compression.
 Please delete and re-initiate download for all corrupted files.
 Corrupt files can be identified by  an error similar to:
 `gzip: ./dbSNP/ds_ch18.xml.gz: invalid compressed data--format violated`
@@ -399,13 +402,15 @@ Corrupt files can be identified by  an error similar to:
 ## Convert dbSNP-, UniProt-, Entrez-dumps into TSV-files
 
 ### 1.) Parse dbSNP dump (either XML or JSON-files)
-Requires as input the file paths with all dbSNP XML files. (346m processing time)
+Requires as input the file paths with all dbSNP XML (or JSON) files.
+Parsing took  255 minutes for XML and 3,821 minutes for JSON.
+The result is ~5GB for XML and 62GB for JSON.
 
     mkdir Out_XML/
 	time java -cp seth.jar -Djdk.xml.totalEntitySizeLimit=0 -DentityExpansionLimit=0 de.hu.berlin.wbi.stuff.dbSNPParser.xml.ParseXMLToFile  XML/ Out_XML/
 	
     mkdir Out_JSON/
-    time java -cp seth.jar de.hu.berlin.wbi.stuff.dbSNPParser.json.ParseJSONToFile  JSON/ Out_JSON/
+    time java -cp seth.jar de.hu.berlin.wbi.stuff.dbSNPParser.json.ParseJSONToFile  JSON/ Out_JSON/ --noRefSeq
 
 ### Parse UniProt-XML for protein-sequence mutations (PSM) and post-translational modifications (*e.g.* signaling peptides)  (16m processing time)
 	
@@ -433,13 +438,15 @@ Please set variables $DatabasePassword and $importData accordingly.
 
     docker pull postgres
     docker run --name pg-docker -e POSTGRES_PASSWORD=${DatabasePassword} -d -p 5432:5432 --mount type=bind,source=${importData},target=/var/lib/importData,readonly postgres
-    docker run --name pg-docker-new -e POSTGRES_PASSWORD=${DatabasePassword} -d -p 5432:5432 -v /media/philippe/5f695998-f5a5-4389-a2d8-4cf3ffa1288a/postgres-docker/:/var/lib/postgresql/data  --mount type=bind,source=${importData},target=/var/lib/importData,readonly  postgres:12.8
-
 
 
 ## Create the database with all necessary tables
-    createdb  -h localhost -U postgres dbsnp    
-    psql -h localhost -U postgres -d dbsnp < SETHDirectory/resources/table.sql 
+    createdb  -h localhost -U postgres dbsnp-xml    
+    psql -h localhost -U postgres -d dbsnp-xml < SETHDirectory/resources/table.sql 
+
+    createdb  -h localhost -U postgres dbsnp-json    
+    psql -h localhost -U postgres -d dbsnp-json < SETHDirectory/resources/table.sql 
+
 	
 ### Import  gene2pubmed, UniProt, PSM, mergeItems, and gene2pubmed into the Database
 
@@ -457,10 +464,10 @@ Please set variables $DatabasePassword and $importData accordingly.
     COPY psm FROM '/var/lib/importData/Out_JSON/PSM.tsv' DELIMITER E'\t';
     COPY uniprot FROM '/var/lib/importData/uniProt/uniprot.dat' DELIMITER E'\t';
     COPY hgvs FROM '/var/lib/importData/Out_JSON/hgvs.tsv' DELIMITER E'\t';
-    COPY mergeItems FROM '/var/lib/importData/Out_JSON/mergeItems.tsv' DELIMITER E'\t';
     COPY gene2pubmed FROM PROGRAM 'tail -n +2 /var/lib/importData/entrezGene/gene2pubmed' DELIMITER E'\t';
     DELETE FROM gene2pubmed where taxid != 9606;
 
+    -- COPY mergeItems FROM '/var/lib/importData/Out_JSON/mergeItems.tsv' DELIMITER E'\t';
 
 ## Derby database from 18th May 2016
 We now also provide a derby database for the human dbSNP dump [dbSNP147](https://drive.google.com/open?id=0BxyKVvNXUobTMDJYcG81Uzdhb28).
