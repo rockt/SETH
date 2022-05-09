@@ -375,12 +375,20 @@ In general, precision is worse in XML and recall is comparable.
     mkdir JSON
     wget --continue --directory-prefix=JSON/ ftp://ftp.ncbi.nlm.nih.gov/snp/redesign/latest_release/JSON/refsnp-chr\*.bz2
 	
-### 2.) Download gene2pubmed links from NCBI-Entrez gene
+### 2.1) Download gene2pubmed links from NCBI-Entrez gene
 Creates a directory *entrezGene* and stores data into this folder.
 
     mkdir entrezGene
 	wget --directory-prefix=entrezGene/ ftp://ftp.ncbi.nih.gov/gene/DATA/gene2pubmed.gz
 	gunzip entrezGene/gene2pubmed.gz
+
+### 2.2) Download gene-NER results from the PubTatorCentral repository
+Creates a directory *pubtator* and stores data into this folder.
+
+    mkdir pubtator
+	wget --directory-prefix=pubtator/ https://ftp.ncbi.nlm.nih.gov/pub/lu/PubTatorCentral/gene2pubtatorcentral.gz
+	gunzip pubtator/gene2pubtatorcentral.gz
+
 	
 ### 3.) Download UniProt-KB and Id-Mapping
 Creates a directory *uniProt* and stores data into this folder.
