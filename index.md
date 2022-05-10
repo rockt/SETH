@@ -445,6 +445,7 @@ Please set variables $DatabasePassword and $importData accordingly.
     importData=yourPath
 
     docker pull postgres
+    --mount type=volume,source=$HOME/docker/volumes/postgres,target=/var/lib/postgresql/data
     docker run --name pg-docker -e POSTGRES_PASSWORD=${DatabasePassword} -d -p 5432:5432 --mount type=bind,source=${importData},target=/var/lib/importData,readonly postgres
 
 
