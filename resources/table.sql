@@ -70,3 +70,14 @@ CREATE TABLE mergeItems(
        UNIQUE(old_snp_id)
 );
 
+-- Mapping from NER/NEN results to PubMed (downloaded from NCBI PubTatorCentral)                                                                              
+CREATE TABLE gene2pubtatorcentral(
+       pmid INT NOT NULL,
+       entityType VARCHAR(16) NOT NULL,
+       geneIDText TEXT NOT NULL,
+       entity TEXT NOT NULL,
+       toolText TEXT NOT NULL
+);
+CREATE INDEX pmid_gene2pubtatorcentral  ON gene2pubtatorcentral (pmid);
+
+
