@@ -478,6 +478,28 @@ Please set variables $DatabasePassword and $importData accordingly.
 
     -- COPY mergeItems FROM '/var/lib/importData/Out_JSON/mergeItems.tsv' DELIMITER E'\t';
 
+### Import  gene2pubmed, UniProt, PSM, mergeItems, and gene2pubmed into the Database
+    COPY gene2pubtatorcentral FROM '/var/lib/importData/pubtator/gene2pubtatorcentral' DELIMITER E'\t';
+    
+    -- Remove all entries, where the gene-ID is unknown
+    DELETE FROM gene2pubtatorcentral WHERE geneIDText = 'None';
+    
+    -- Add an array covering all entrez-gene ID's
+    ALTER TABLE gene2pubtatorcentral ADD COLUMN geneID BIGINT[];
+    UPDATE gene2pubtatorcentral SET geneID = string_to_array(geneIDText, ';'):: bigint[];
+    CREATE INDEX id_gene2pubtatorcentral  ON gene2pubtatorcentral USING GIN  (geneId) ;
+    ALTER TABLE gene2pubtatorcentral DROP geneIDText;
+    
+    -- Add an array covering all tools
+    CREATE TYPE datasources AS ENUM ('BioGRID', 'CRAFT', 'CTD', 'gene2pubmed', 'gene_interactions', 'generifs_basic', 'GNormPlus', 'GWAS', 'HPRD', 'MESH', 'MGI', 'RGD', 'TAIR', 'ZFIN');
+    ALTER TABLE gene2pubtatorcentral ADD COLUMN tools datasources[];
+    UPDATE gene2pubtatorcentral SET tools = string_to_array(toolText, '|')::datasources[];
+    CREATE INDEX datasources_gene2pubtatorcentral  ON gene2pubtatorcentral (datasources) ;
+    ALTER TABLE gene2pubtatorcentral DROP toolText;
+    
+    VACUUM FULL;
+
+
 ## Derby database from 18th May 2016
 We now also provide a derby database for the human dbSNP dump [dbSNP147](https://drive.google.com/open?id=0BxyKVvNXUobTMDJYcG81Uzdhb28).
 **We highly encourage the use of a dedicated database, such as PostgreSQL to increase runtime.**
