@@ -494,7 +494,7 @@ Please set variables $DatabasePassword and $importData accordingly.
     CREATE TYPE datasources AS ENUM ('BioGRID', 'CRAFT', 'CTD', 'gene2pubmed', 'gene_interactions', 'generifs_basic', 'GNormPlus', 'GWAS', 'HPRD', 'MESH', 'MGI', 'RGD', 'TAIR', 'ZFIN');
     ALTER TABLE gene2pubtatorcentral ADD COLUMN tools datasources[];
     UPDATE gene2pubtatorcentral SET tools = string_to_array(toolText, '|')::datasources[];
-    CREATE INDEX datasources_gene2pubtatorcentral  ON gene2pubtatorcentral (datasources) ;
+    CREATE INDEX tools_gene2pubtatorcentral  ON gene2pubtatorcentral (tools) ;
     ALTER TABLE gene2pubtatorcentral DROP toolText;
     
     VACUUM FULL;
