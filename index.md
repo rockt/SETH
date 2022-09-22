@@ -498,7 +498,10 @@ Please set variables $DatabasePassword and $importData accordingly.
     ALTER TABLE gene2pubtatorcentral DROP toolText;
     
     VACUUM FULL;
-
+    
+### Backup database and restore 
+pg_dump -h localhost -U postgres dbsnp-xml > dbsnp-xml.sql
+lzma --best dbsnp-xml.sql
 
 ## Derby database from 18th May 2016
 We now also provide a derby database for the human dbSNP dump [dbSNP147](https://drive.google.com/open?id=0BxyKVvNXUobTMDJYcG81Uzdhb28).
