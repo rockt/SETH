@@ -500,8 +500,11 @@ Please set variables $DatabasePassword and $importData accordingly.
     VACUUM FULL;
     
 ### Backup database and restore 
-pg_dump -h localhost -U postgres dbsnp-xml > dbsnp-xml.sql
-lzma --best dbsnp-xml.sql
+	pg_dump -h localhost -U postgres dbsnp-xml > dbsnp-xml.sql
+	lzma --best dbsnp-xml.sql
+
+	createdb  -h localhost -U postgres dbsnp-xml
+	lzcat dbsnp-xml.sql.lzma |  psql -h localhost -U postgres dbsnp-xml
 
 ## Derby database from 18th May 2016
 We now also provide a derby database for the human dbSNP dump [dbSNP147](https://drive.google.com/open?id=0BxyKVvNXUobTMDJYcG81Uzdhb28).
