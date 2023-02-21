@@ -2,7 +2,6 @@ package de.hu.berlin.wbi;
 
 import de.hu.berlin.wbi.objects.MutationMention;
 import junit.framework.TestCase;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -15,7 +14,7 @@ import java.util.List;
  * A set of tests to improve some SETH false negatives
  */
 @Ignore("Test is ignored due to missing implementation!")
-public class ImproveNER {
+public class ImproveNER extends TestCase {
 
     private SETH seth;
 
@@ -29,11 +28,11 @@ public class ImproveNER {
      * @param text
      */
     private void assertSingleMutation(String text) {
-
+        System.out.println(text);
         List<MutationMention> mutationMentions = seth.findMutations(text);
-
-        Assert.assertEquals(1, mutationMentions.size());
-        Assert.assertEquals(text, mutationMentions.get(0).getText());
+        System.out.println(mutationMentions);
+        assertEquals(1, mutationMentions.size());
+        assertEquals(text, mutationMentions.get(0).getText());
     }
 
     @Test

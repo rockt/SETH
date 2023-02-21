@@ -16,7 +16,6 @@ import annotation.tailrec
  * Scala app for command line use of SETH
  */
 object SETHNERApp extends App {
-  //val SETH = new SETHNER
   val SETH = new SETHNER()
   if (args.size > 0) {
     for (sentence <- args(0).split("\n")) {

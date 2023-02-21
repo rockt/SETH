@@ -2,7 +2,6 @@ package de.hu.berlin.wbi;
 
 import de.hu.berlin.wbi.objects.MutationMention;
 import junit.framework.TestCase;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import seth.SETH;
@@ -17,7 +16,7 @@ import java.util.List;
  *
  * Tests if a recognized mutation is correctly normalized to mutation nomenclature
  */
-public class HGNCTest {
+public class HGNCTest extends TestCase {
 
     private SETH seth;
 
@@ -29,8 +28,8 @@ public class HGNCTest {
     private void assertSingleMutation(String text, String hgnc){
         List<MutationMention> mutationMentions = seth.findMutations(text);
 
-        Assert.assertEquals(1, mutationMentions.size()); //We support only texts with one mutation
-        Assert.assertTrue(hgnc.equals(mutationMentions.get(0).toHGVS())); //Is the string contained in the provided text?
+        assertEquals(1, mutationMentions.size()); //We support only texts with one mutation
+        assertTrue(hgnc.equals(mutationMentions.get(0).toHGVS())); //Is the string contained in the provided text?
 
     }
 

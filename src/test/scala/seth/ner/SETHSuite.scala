@@ -1,7 +1,12 @@
 package seth.ner
 
-import org.scalatest.{GivenWhenThen, FunSpec, FunSuite}
-import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.GivenWhenThen
+import org.scalatest.funspec.AnyFunSpec
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
+
+
+
 
 /**
  * User: rockt
@@ -9,8 +14,8 @@ import org.scalatest.matchers.ShouldMatchers
  * Time: 9:09 AM
  */
 
-class SETHSuite extends FunSpec with ShouldMatchers with GivenWhenThen{
-  val SETH = new SETHNER
+class SETHSuite extends AnyFunSpec with Matchers with GivenWhenThen{
+  val SETH = new SETHNER()
 
   def isValid(input: String, parser: SETH.Parser[Any]) = SETH.isValid(input, parser)
   def accept(input: String)(implicit parser: SETH.Parser[Any]) =
@@ -647,7 +652,7 @@ class SETHSuite extends FunSpec with ShouldMatchers with GivenWhenThen{
   }
 }
 
-class SingleTest extends FunSuite {
+class SingleTest extends AnyFunSuite {
   val SETH = new SETHNER(false)
   //val SETH = new SETHNER(true)
   test("Mutation object creation") {

@@ -61,7 +61,7 @@ object Uniprot2Tab extends App {
   val idReader = Source fromInputStream(new GZIPInputStream(new FileInputStream(args(1)))) bufferedReader()
   var line = idReader readLine()
   while (line != null) {
-    counter ++;
+    counter ++ ()
     val splits = line split("\t")
     if (splits(1) == "GeneID") mapping += splits(0) -> splits(2)
     line = idReader readLine()
@@ -93,7 +93,7 @@ object Uniprot2Tab extends App {
   var pos = ""
   var lastFeature: Feature = Feature("") //Avoid Nullpointer exception
   while (line != null) {
-    counter ++;
+    counter ++ ()
     line = line.trim
     if (line.startsWith("<accession>")) ids = line.substring(11, line.length-12) :: ids
     else if (line.startsWith("<feature") && line.contains("type=")) {
