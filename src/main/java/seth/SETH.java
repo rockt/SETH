@@ -9,8 +9,8 @@ import seth.ner.wrapper.Type;
 
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -161,7 +161,7 @@ public class SETH {
 
         //Post-processing:
         //Some mentions can be found be different tools. Thus, we remove all duplicates by preserving the longest element
-        //E.g., IVS2 + 1G>A is recognized  Mutationfinder (2+1G>A) and correctly Tool.Regex
+        //E.g., IVS2 + 1G>A is recognized  MutationFinder (2+1G>A) and correctly Tool.Regex
         List<MutationMention> result = new ArrayList<MutationMention>(mutations.size());
         for (MutationMention mm : mutations) {
 
@@ -189,10 +189,10 @@ public class SETH {
 
                     if (mm.getTool() == MutationMention.Tool.SETH && m.getTool() == MutationMention.Tool.DBSNP) {
                         contained = true;
-                        break loop;
+                        break;
                     } else if (m.getTool() == MutationMention.Tool.SETH && mm.getTool() == MutationMention.Tool.DBSNP) {
                         result.remove(m);
-                        break loop;
+                        break;
                     }
                     //else we do return two mutations!!
                 }
@@ -200,7 +200,7 @@ public class SETH {
                 //If the new mention is smaller than the mention contained in the result, ignore the smaller one
                 else if (mm.getStart() >= m.getStart() && mm.getEnd() <= m.getEnd() && equal) {
                     contained = true;
-                    break loop;
+                    break;
                 }
 
                 //If the new mention is longer, remove the old (smaller) mention and add the new one
@@ -222,9 +222,9 @@ public class SETH {
     /**
      * Minimal example to perform named entity recognition and normalization using SETH
      *
-     * @param args
-     * @throws SQLException
-     * @throws IOException
+     * @param args -- args
+     * @throws SQLException -- SQLException
+     * @throws IOException -- IOException
      */
     public static void main(String[] args) throws SQLException, IOException {
         String text = "p.A123T and Val158Met";
@@ -242,11 +242,11 @@ public class SETH {
         }
 
 
-        /** Part 2: Normalization of mutation mentions to dbSNP
-         * This part communicates with a local database dump
+        /* Part 2: Normalization of mutation mentions to dbSNP
+          This part communicates with a local database dump
          */
         final Properties property = new Properties();
-        property.loadFromXML(new FileInputStream(new File("myProperty.xml"))); //Load property file
+        property.loadFromXML(Files.newInputStream(new File("myProperty.xml").toPath())); //Load property file
         final DatabaseConnection dbConnection = new DatabaseConnection(property);
 
         //Connect with local derby database and initialize prepared statements
@@ -255,10 +255,10 @@ public class SETH {
         UniprotFeature.init(dbConnection, property.getProperty("database.uniprot"));
         Gene.init(dbConnection, property.getProperty("database.geneTable"), property.getProperty("gene2Pubmed"));
 
-        /**
-         * For mutation normalization, SETH requires target gene(s) to normalize the mutation
-         * For simpler use, SETH ships with a set of precomputed NER results from GNAT and gene2Pubmed
-         * but in practise an arbitrary gene name recognition tool can be used. As long it normalizes to Entrez-Gene IDs
+        /*
+          For mutation normalization, SETH requires target gene(s) to normalize the mutation
+          For simpler use, SETH ships with a set of precomputed NER results from GNAT and gene2Pubmed
+          but in practise an arbitrary gene name recognition tool can be used. As long as it normalizes to Entrez-Gene IDs
          */
         //Set<Gene> recognizedGenes = Gene.queryGenesForArticle(1572656); //Retrieve all genes recognized by GNAT and gene2pubmed
         Set<Integer> genes = new HashSet<Integer>(Collections.singletonList(1312));  //Manually define a list of Entrez Gene IDs, against which we want to compare; Alternatively you can include a custom gene-NER here

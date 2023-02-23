@@ -9,7 +9,6 @@ import org.junit.Test;
 import java.util.List;
 import seth.SETH;
 
-import static junit.framework.Assert.assertEquals;
 
 /**
  * Created with IntelliJ IDEA.
@@ -20,7 +19,7 @@ import static junit.framework.Assert.assertEquals;
  * JUnit tests derived from publications describing the current state of mutation nomenclature
  *
  */
-public class OldNomenclatureTest {
+public class OldNomenclatureTest extends TestCase {
 
     private SETH seth;
 
@@ -39,9 +38,9 @@ public class OldNomenclatureTest {
     private void assertSingleMutation(String text, String mutation){
         List<MutationMention> mutationMentions = seth.findMutations(text);
 
-        Assert.assertTrue(text.contains(mutation)); //Is the string contained in the provided text?
-        Assert.assertEquals(1, mutationMentions.size()); //We support only texts with one mutation
-        Assert.assertEquals(mutation, mutationMentions.get(0).getText()); //Is the substring identified?
+        assertTrue(text.contains(mutation)); //Is the string contained in the provided text?
+        assertEquals(1, mutationMentions.size()); //We support only texts with one mutation
+        assertEquals(mutation, mutationMentions.get(0).getText()); //Is the substring identified?
     }
 
     /**

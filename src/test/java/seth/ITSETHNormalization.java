@@ -5,7 +5,6 @@ import de.hu.berlin.wbi.objects.MutationMention;
 import de.hu.berlin.wbi.objects.UniprotFeature;
 import de.hu.berlin.wbi.objects.dbSNP;
 import de.hu.berlin.wbi.objects.dbSNPNormalized;
-import junit.framework.Assert;
 import junit.framework.TestCase;
 import org.junit.Ignore;
 
@@ -55,7 +54,7 @@ public class ITSETHNormalization extends TestCase {
         String sentence = "Causative GJB2 mutations were identified in 31 (15.2%) patients, and two common mutations, c.35delG and L90P (c.269T>C), accounted for 72.1% and 9.8% of GJB2 disease alleles.";
         List<MutationMention> mentions = seth.findMutations(sentence);
 
-        Assert.assertEquals(mentions.size(), 3);
+        assertEquals(mentions.size(), 3);
 
         // c.35delG and L90P (c.269T>C)
         Collections.sort(mentions, new Comparator<MutationMention>() {
@@ -73,20 +72,20 @@ public class ITSETHNormalization extends TestCase {
             m.normalizeSNP(potentialSNPs, features, true);
 
         // c.35delG
-        Assert.assertTrue(mentions.get(0).getNormalized().size() >= 1);
+        assertTrue(mentions.get(0).getNormalized().size() >= 1);
         dbSNPNormalized n1 = mentions.get(0).getNormalized().get(0);
         // We do this here because for dbsnp138+, rsid 1801002 no longer contains
         // this deletion.
-        Assert.assertTrue(n1.getRsID() == 80338939 || n1.getRsID() == 1801002);
+        assertTrue(n1.getRsID() == 80338939 || n1.getRsID() == 1801002);
 
         // L90P
-        Assert.assertEquals(mentions.get(1).getNormalized().size(), 1);
+        assertEquals(mentions.get(1).getNormalized().size(), 1);
         dbSNPNormalized n2 = mentions.get(1).getNormalized().get(0);
-        Assert.assertEquals(n2.getRsID(), 80338945);
+        assertEquals(n2.getRsID(), 80338945);
 
         // c.269T>C
-        Assert.assertEquals(mentions.get(2).getNormalized().size(), 1);
+        assertEquals(mentions.get(2).getNormalized().size(), 1);
         dbSNPNormalized n3 = mentions.get(2).getNormalized().get(0);
-        Assert.assertEquals(n3.getRsID(), 80338945);
+        assertEquals(n3.getRsID(), 80338945);
     }
 }
