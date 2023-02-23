@@ -41,14 +41,12 @@
     <developers>
         <developer>
             <name>Philippe Thomas</name>
-            <email></email>
             <organization>Humboldt Universitaet zu Berlin</organization>
             <organizationUrl>https://www.informatik.hu-berlin.de/de/forschung/gebiete/wbi</organizationUrl>
         </developer>
 
         <developer>
             <name>Tim Rocktaeschel</name>
-            <email></email>
             <organization>Humboldt Universitaet zu Berlin</organization>
             <organizationUrl>https://www.informatik.hu-berlin.de/de/forschung/gebiete/wbi</organizationUrl>
         </developer>
@@ -57,14 +55,12 @@
     <contributors>
         <contributor>
             <name>Yvonne Mayer</name>
-            <email></email>
             <organization>Humboldt Universitaet zu Berlin</organization>
             <organizationUrl>https://www.informatik.hu-berlin.de/de/forschung/gebiete/wbi</organizationUrl>
         </contributor>
 
         <contributor>
             <name>Eugene Brevdo</name>
-            <email></email>
             <url>https://github.com/ebrevdo</url>
             <organization>Department of Electrical Engineering at Princeton University</organization>
             <organizationUrl>http://ee.princeton.edu/</organizationUrl>
@@ -140,16 +136,19 @@
         <!--  log4j as the underlying logging framework -->
         <dependency>
             <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>1.7.22</version>
+            <artifactId>slf4j-reload4j</artifactId>
+            <version>2.0.6</version>
+            <scope>test</scope>
         </dependency>
 
-        <!-- log4j -->
+
+        <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
         <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.17</version>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>2.20.0</version>
         </dependency>
+
 
         <!-- Libraries for REST Service -->
         <dependency>
@@ -158,9 +157,9 @@
             <version>${jersey.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.sun.jersey</groupId>
-            <artifactId>jersey-json</artifactId>
-            <version>${jersey.version}</version>
+            <groupId>org.codehaus.jettison</groupId>
+            <artifactId>jettison</artifactId>
+            <version>1.5.3</version>
         </dependency>
         <dependency>
             <groupId>com.sun.jersey</groupId>
