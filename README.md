@@ -1,5 +1,5 @@
 
-See http://rockt.github.com/SETH/
+See http://rockt.github.io/SETH/
 
 ## Contributors
 
