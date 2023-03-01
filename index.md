@@ -66,7 +66,7 @@ Ready-to-use releases available at [https://github.com/rockt/SETH/releases/](htt
 	git clone https://github.com/rockt/SETH.git
 	cd SETH
 	mvn clean compile assembly:single
-	mv ./target/seth-1.2-Snapshot-jar-with-dependencies.jar seth.jar
+	mv ./target/seth-1.4.0-Snapshot-jar-with-dependencies.jar seth.jar
 	
 ## 3.) Import in Maven from jitpack
 For maven, add a new repository pointing to [jitpack](https://jitpack.io/#rockt/SETH).
@@ -78,13 +78,13 @@ For maven, add a new repository pointing to [jitpack](https://jitpack.io/#rockt/
 </repository>
 ```
 
-And add the following dependency, which uses the release 1.3.1 version
+And add the following dependency, and specify the release version 
 
 ```xml
 <dependency>
 	<groupId>com.github.rockt</groupId>
 	<artifactId>SETH</artifactId>
-	<version>1.3.1</version>
+	<version>1.4.0</version>
 </dependency>
 ```
 
