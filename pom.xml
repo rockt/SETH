@@ -6,7 +6,7 @@
 
     <groupId>de.hu.berlin.wbi</groupId>
     <artifactId>seth</artifactId>
-    <version>1.3.2-Snapshot</version>
+    <version>1.4.0-Snapshot</version>
     <packaging>jar</packaging>
 
     <name>SETH: SNP Extraction Tool for Human Variations</name>
